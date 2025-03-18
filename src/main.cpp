@@ -1,20 +1,18 @@
-#include <SDL2/SDL.h>
+#include "game/game.h"
+
+Game *game = nullptr;
 
 int main() {
-	SDL_Window* window = nullptr;
-	SDL_Renderer* renderer = nullptr;
-	
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_CreateWindowAndRenderer(640, 480, 0, &window, &renderer);
+	game = new Game("Cool Game", 1920, 1080);
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
+	while (game->running()) {
+		game->handleEvents();
+		game->update();
+		game->render();
+	}
 
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawPoint(renderer, 320, 240);
+	game->clean();
 
-	SDL_RenderPresent(renderer);
-	SDL_Delay(10000);
-
+	delete game;
 	return 0;
 }
