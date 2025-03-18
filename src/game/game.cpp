@@ -1,18 +1,33 @@
 #include "game/game.h"
 #include <iostream>
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
+#include "game/renderManager.h"
+
+SDL_Texture* playerTex;
 
 Game::Game(const char* title, int width, int height) {
 	window = nullptr;
 	renderer = nullptr;
 
+	// Check that SDL initializes
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		std::cout << "SDL could not be initialized: " << SDL_GetError();
+		std::cout << "SDL could not be initialized:\n" << SDL_GetError();
 	}
 
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
 	isRunning = true;
+
+	int flagsIMG = IMG_INIT_PNG;
+	if ((IMG_Init(flagsIMG) & flagsIMG) != flagsIMG) {
+		std::cout << "SDL Image could not be initialized\n";
+		isRunning = false;
+	}
+
+	playerTex = RenderManager::LoadTexture("assets/Player.png", renderer);
+
 	std::cout << "Initialized Game\n";
 }
 
@@ -37,10 +52,11 @@ void Game::update() {
 }
 
 void Game::render() {
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
 	
 	// Add stuff to render
-	SDL_RenderDrawPoint(renderer, 500, 500);
+	SDL_RenderCopy(renderer, playerTex, NULL, NULL);
 	
 	SDL_RenderPresent(renderer);
 

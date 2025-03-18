@@ -7,11 +7,16 @@ set(CMAKE_CXX_EXTENSIONS Off)
 SET(SOURCE_FILES
 "src/main.cpp"
 "src/game/game.cpp"
+"src/game/renderManager.cpp"
 )
 
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+find_package(SDL2_image REQUIRED)
 
 add_executable(game ${SOURCE_FILES})
-target_link_libraries(game ${SDL2_LIBRARIES})
-target_include_directories(game PRIVATE include)
+target_link_libraries(game PUBLIC ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+target_include_directories(game 
+	PRIVATE include
+	PUBLIC ${SDL2_INCLUDE_DIRS}
+	PUBLIC ${SDL2IMAGE_INCLUDE_DIRS}
+)
