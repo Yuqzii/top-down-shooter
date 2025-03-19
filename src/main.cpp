@@ -10,15 +10,15 @@ int main(int argc, char ** argv) {
 		return 1;
 	}
 
-	Game game("Cool Game", 480*3, 280*3);
+	Game::initialize("Cool Game", 480*3, 280*3);
 
-	while (game.running()) {
-		game.handleEvents();
-		game.update();
-		game.render();
+	while (Game::isRunning) {
+		Game::handleEvents();
+		Game::update();
+		Game::render();
 	}
 
-	game.clean();
+	Game::clean();
 
 	return 0;
 }

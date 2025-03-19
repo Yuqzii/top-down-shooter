@@ -2,11 +2,11 @@
 #include "game/renderManager.h"
 #include "game/game.h"
 
-GameObject::GameObject(std::string textureSheet, SDL_Renderer* renderer, 
-		vector2Df startPosition) : position(startPosition.x, startPosition.y) {
+GameObject::GameObject(std::string textureSheet, vector2Df startPosition)
+	: position(startPosition.x, startPosition.y) {
 	
 	// Load texture
-	texture = RenderManager::LoadTexture(textureSheet, renderer);
+	texture = RenderManager::LoadTexture(textureSheet);
 
 	// Initialize rectangles
 	srcRect.h = srcRect.w = 32;

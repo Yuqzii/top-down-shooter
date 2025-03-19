@@ -7,8 +7,7 @@
 class GameObject {
 
 public:
-	GameObject(std::string textureSheet, SDL_Renderer* renderer,
-			vector2Df position);
+	GameObject(std::string textureSheet, vector2Df position);
 	~GameObject();
 
 	void update(double deltaTime);

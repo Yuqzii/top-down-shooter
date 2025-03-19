@@ -9,9 +9,16 @@
 
 std::unique_ptr<GameObject> player;
 
-Game::Game(const char* title, int width, int height) {
-	window = nullptr;
-	renderer = nullptr;
+SDL_Renderer* Game::renderer = nullptr;
+SDL_Window* Game::window = nullptr;
+
+bool Game::isRunning = false;
+Uint64 Game::prevTime = 0;
+double Game::deltaTime = 0;
+
+std::vector<std::unique_ptr<GameObject>> Game::gameObjects;
+
+void Game::initialize(const char* title, int width, int height) {
 
 	// Check that SDL initializes
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -32,13 +39,9 @@ Game::Game(const char* title, int width, int height) {
 	prevTime = SDL_GetPerformanceCounter();
 
 	// Testing stuff
-	player = std::make_unique<GameObject>("Player.png", renderer, vector2Df(0, 0));
+	player = std::make_unique<GameObject>("Player.png", vector2Df(0, 0));
 
 	std::cout << "Initialized Game\n";
-}
-
-Game::~Game() {
-
 }
 
 void Game::handleEvents() {
