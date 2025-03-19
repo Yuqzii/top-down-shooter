@@ -1,8 +1,13 @@
 #include "game/game.h"
 #include <iostream>
+#include <memory>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "game/renderManager.h"
+#include "game/gameObject.h"
+#include "SDL2/SDL_timer.h"
+
+std::unique_ptr<GameObject> player;
 
 Game::Game(const char* title, int width, int height) {
 	window = nullptr;
@@ -24,12 +29,10 @@ Game::Game(const char* title, int width, int height) {
 		isRunning = false;
 	}
 
+	prevTime = SDL_GetPerformanceCounter();
+
 	// Testing stuff
-	playerTex = RenderManager::LoadTexture("Player.png", renderer);
-	playerRect.x = 400;
-	playerRect.y = 400;
-	playerRect.w = 100;
-	playerRect.h = 100;
+	player = std::make_unique<GameObject>("Player.png", renderer, vector2Df(0, 0));
 
 	std::cout << "Initialized Game\n";
 }
@@ -48,21 +51,30 @@ void Game::handleEvents() {
 		default:
 			break;
 	}
-
 }
 
 void Game::update() {
+	Uint64 nowTime = SDL_GetPerformanceCounter();
+	deltaTime = (double)(nowTime - prevTime) 
+		/ double(SDL_GetPerformanceFrequency());
+	prevTime = nowTime;
+
+	// Update all gameObjects
+	for (auto& object : gameObjects) {
+		object->update(deltaTime);
+	}
 }
 
 void Game::render() {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
 	
-	// Add stuff to render
-	SDL_RenderCopy(renderer, playerTex, NULL, &playerRect);
-	
-	SDL_RenderPresent(renderer);
+	// Render all gameObjects
+	for (auto& object : gameObjects) {
+		object->render(renderer);
+	}
 
+	SDL_RenderPresent(renderer);
 }
 
 void Game::clean() {

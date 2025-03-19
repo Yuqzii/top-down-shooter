@@ -1,6 +1,9 @@
 #pragma once
 
 #include "SDL2/SDL.h"
+#include "game/gameObject.h"
+#include <memory>
+#include <vector>
 
 class Game {
 
@@ -15,12 +18,14 @@ public:
 
 	bool running() { return isRunning; };
 
+	double deltaTime;
+
+	std::vector<std::unique_ptr<GameObject>> gameObjects;
+
 private:
 	bool isRunning;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 
-	// Testing
-	SDL_Texture* playerTex;
-	SDL_Rect playerRect;
+	Uint64 prevTime;
 };
