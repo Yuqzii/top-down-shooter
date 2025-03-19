@@ -19,4 +19,8 @@ private:
 	bool isRunning;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
+
+	// Testing
+	SDL_Texture* playerTex;
+	SDL_Rect playerRect;
 };

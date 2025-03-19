@@ -4,8 +4,6 @@
 #include "SDL2/SDL_image.h"
 #include "game/renderManager.h"
 
-SDL_Texture* playerTex;
-
 Game::Game(const char* title, int width, int height) {
 	window = nullptr;
 	renderer = nullptr;
@@ -26,7 +24,12 @@ Game::Game(const char* title, int width, int height) {
 		isRunning = false;
 	}
 
-	playerTex = RenderManager::LoadTexture("assets/Player.png", renderer);
+	// Testing stuff
+	playerTex = RenderManager::LoadTexture("Player.png", renderer);
+	playerRect.x = 400;
+	playerRect.y = 400;
+	playerRect.w = 100;
+	playerRect.h = 100;
 
 	std::cout << "Initialized Game\n";
 }
@@ -56,7 +59,7 @@ void Game::render() {
 	SDL_RenderClear(renderer);
 	
 	// Add stuff to render
-	SDL_RenderCopy(renderer, playerTex, NULL, NULL);
+	SDL_RenderCopy(renderer, playerTex, NULL, &playerRect);
 	
 	SDL_RenderPresent(renderer);
 

@@ -1,10 +1,18 @@
 #include "game/renderManager.h"
 #include <SDL2/SDL_surface.h>
+#include <filesystem>
+#include <string>
+#include <iostream>
 
-SDL_Texture* RenderManager::LoadTexture(const char* filename, SDL_Renderer* renderer) {
-	SDL_Surface* image = IMG_Load(filename);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, image);
-	SDL_FreeSurface(image);
+std::string RenderManager::assetsPath = "";
 
-	return texture;
+SDL_Texture* RenderManager::LoadTexture(std::string filename, SDL_Renderer* renderer) {
+	std::string path = RenderManager::assetsPath + filename;
+	if (!std::filesystem::exists(path)) {
+		std::cout << "File " << filename << 
+			" could not be found, are you sure this is the correct name?"
+			<< std::endl;
+		return NULL;
+	}
+	return IMG_LoadTexture(renderer, (path).c_str());
 }

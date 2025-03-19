@@ -1,5 +1,7 @@
 #include "SDL2/SDL_image.h"
+#include <string>
 
 namespace RenderManager {
-	SDL_Texture* LoadTexture(const char* filename, SDL_Renderer* renderer);
+	extern std::string assetsPath;
+	SDL_Texture* LoadTexture(std::string filename, SDL_Renderer* renderer);
 }

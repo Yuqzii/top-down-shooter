@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./game "@IMAGES_PATH@"
