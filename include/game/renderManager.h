@@ -3,5 +3,5 @@
 
 namespace RenderManager {
 	extern std::string assetsPath;
-	SDL_Texture* LoadTexture(std::string filename);
+	SDL_Texture* LoadTexture(std::string filename, SDL_Renderer* renderer);
 }
