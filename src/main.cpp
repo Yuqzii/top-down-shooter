@@ -1,4 +1,5 @@
 #include "game/game.h"
+#include "game/gameObject.h"
 #include "game/renderManager.h"
 #include <iostream>
 
@@ -11,6 +12,8 @@ int main(int argc, char ** argv) {
 	}
 
 	Game game("Cool Game", 480*3, 280*3);
+	auto player = std::make_shared<GameObject>();
+	player->initialize("Player.png", vector2Df(128, 128), &game);
 
 	while (game.running()) {
 		game.handleEvents();

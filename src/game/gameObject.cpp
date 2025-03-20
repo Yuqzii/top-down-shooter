@@ -2,11 +2,22 @@
 #include "game/renderManager.h"
 #include "game/game.h"
 
-GameObject::GameObject(std::string textureSheet, SDL_Renderer* renderer, 
-		vector2Df startPosition) : position(startPosition.x, startPosition.y) {
-	
+GameObject::GameObject() {
+}
+
+GameObject::~GameObject() {
+}
+
+void GameObject::initialize(std::string textureSheet, vector2Df startPosition, Game* game) {
 	// Load texture
-	texture = RenderManager::LoadTexture(textureSheet, renderer);
+	texture = RenderManager::LoadTexture(textureSheet, game->getRenderer());
+
+	// Update Game class
+	game->addGameObject(shared_from_this());
+
+	// Initialze position
+	position.x = startPosition.x;
+	position.y = startPosition.y;
 
 	// Initialize rectangles
 	srcRect.h = srcRect.w = 32;
@@ -14,9 +25,6 @@ GameObject::GameObject(std::string textureSheet, SDL_Renderer* renderer,
 
 	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3
 	destRect.h = srcRect.h * 3;
-}
-
-GameObject::~GameObject() {
 }
 
 void GameObject::update(double deltaTime) {

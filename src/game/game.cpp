@@ -7,19 +7,16 @@
 #include "game/gameObject.h"
 #include "SDL2/SDL_timer.h"
 
-std::unique_ptr<GameObject> player;
-
 Game::Game(const char* title, int width, int height) {
-	window = nullptr;
-	renderer = nullptr;
-
 	// Check that SDL initializes
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		std::cout << "SDL could not be initialized:\n" << SDL_GetError();
 	}
 
+	// Create window and renderer
+	window = nullptr;
+	renderer = nullptr;
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
-	//SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	
 	isRunning = true;
 
@@ -32,13 +29,15 @@ Game::Game(const char* title, int width, int height) {
 	prevTime = SDL_GetPerformanceCounter();
 
 	// Testing stuff
-	player = std::make_unique<GameObject>("Player.png", renderer, vector2Df(0, 0));
-
 	std::cout << "Initialized Game\n";
 }
 
 Game::~Game() {
 
+}
+
+void Game::addGameObject(std::shared_ptr<GameObject> gameObject) {
+	gameObjects.push_back(gameObject);
 }
 
 void Game::handleEvents() {
