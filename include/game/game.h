@@ -1,9 +1,10 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-#include "game/gameObject.h"
 #include <memory>
 #include <vector>
+#include "SDL2/SDL.h"
+#include "game/gameObject.h"
+#include "game/vector2D.h"
 
 class GameObject;
 
@@ -27,7 +28,7 @@ public:
 	bool input[256]{};
 
 	double deltaTime;
-	static SDL_Event event;
+	vector2D mousePos;
 
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
 

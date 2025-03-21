@@ -49,10 +49,13 @@ void Game::handleEvents() {
 				isRunning = false;
 				break;
 			case SDL_KEYDOWN:
-				input[event.key.keysym.scancode] = true;
+				input[event.key.keysym.scancode] = true; // Set key to true
 				break;
 			case SDL_KEYUP:
-				input[event.key.keysym.scancode] = false;
+				input[event.key.keysym.scancode] = false; // Set key to false
+				break;
+			case SDL_MOUSEMOTION:
+				mousePos = { event.motion.x, event.motion.y }; // Update mouse position
 				break;
 			default:
 				break;

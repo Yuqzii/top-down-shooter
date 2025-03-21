@@ -1,3 +1,5 @@
+#pragma once
+
 #include "game/gameObject.h"
 
 class Player : public GameObject {
