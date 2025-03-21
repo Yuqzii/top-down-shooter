@@ -42,6 +42,8 @@ void Game::addGameObject(std::shared_ptr<GameObject> gameObject) {
 }
 
 void Game::handleEvents() {
+	memset(mouseInput, 0, sizeof(mouseInput)); // Reset mouseInput
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -56,6 +58,9 @@ void Game::handleEvents() {
 				break;
 			case SDL_MOUSEMOTION:
 				mousePos = { event.motion.x, event.motion.y }; // Update mouse position
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				mouseInput[event.button.button] = true;
 				break;
 			default:
 				break;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <map>
 #include <memory>
 #include <vector>
 #include "SDL2/SDL.h"
@@ -15,6 +17,7 @@ public:
 
 	void addGameObject(std::shared_ptr<GameObject> gameObject);
 	
+	// Game loop
 	void handleEvents();
 	void update();
 	void render();
@@ -22,10 +25,12 @@ public:
 
 	bool running() { return isRunning; };
 
+	// SDL stuff
 	SDL_Window* getWindow() { return window; };
 	SDL_Renderer* getRenderer() { return renderer; };
 
 	bool input[256]{};
+	bool mouseInput[32]{};
 
 	double deltaTime;
 	vector2D mousePos;

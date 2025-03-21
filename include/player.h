@@ -5,6 +5,8 @@
 class Player : public GameObject {
 public:
 	void update(Game* game, double deltaTime) override;
+
+	void shoot(Game* game);
 private:
 	void pointToMouse(Game* game);
 

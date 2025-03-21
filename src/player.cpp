@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include "SDL2/SDL_scancode.h"
 #include "player.h"
 
@@ -35,6 +36,10 @@ void Player::update(Game* game, double deltaTime) {
 	position.y += moveDir.y * moveSpeed * deltaTime;
 
 	pointToMouse(game);
+
+	if (game->mouseInput[SDL_BUTTON_LEFT]) {
+		shoot(game);
+	}
 }
 
 void Player::pointToMouse(Game* game) {
@@ -42,4 +47,8 @@ void Player::pointToMouse(Game* game) {
 	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
 	double angle = std::atan2(direction.y, direction.x) * 180 / M_PI;
 	rotation = angle + 90;
+}
+
+void Player::shoot(Game* game) {
+	std::cout << "Shoot!\n";
 }
