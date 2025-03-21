@@ -12,6 +12,7 @@ SET(SOURCE_FILES
 "src/game/game.cpp"
 "src/game/renderManager.cpp"
 "src/game/gameObject.cpp"
+"src/player.cpp"
 )
 
 find_package(SDL2 REQUIRED)

@@ -24,7 +24,10 @@ public:
 	SDL_Window* getWindow() { return window; };
 	SDL_Renderer* getRenderer() { return renderer; };
 
+	bool input[256]{};
+
 	double deltaTime;
+	static SDL_Event event;
 
 	std::vector<std::shared_ptr<GameObject>> gameObjects;
 

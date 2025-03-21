@@ -27,7 +27,7 @@ void GameObject::initialize(std::string textureSheet, vector2Df startPosition, G
 	destRect.h = srcRect.h * 3;
 }
 
-void GameObject::update(double deltaTime) {
+void GameObject::update(Game* game, double deltaTime) {
 	destRect.x = round(position.x);
 	destRect.y = round(position.y);
 }

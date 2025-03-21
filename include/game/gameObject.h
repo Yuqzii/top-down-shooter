@@ -13,12 +13,12 @@ public:
 	GameObject();
 	~GameObject();
 
-	void initialize(std::string textureSheet, vector2Df position, Game* game);
-	void update(double deltaTime);
+	virtual void initialize(std::string textureSheet, vector2Df position, Game* game);
+	virtual void update(Game* game, double deltaTime);
 	void render(SDL_Renderer* renderer);
-private:
-	vector2Df position;
 
+	vector2Df position;
+private:
 	SDL_Texture* texture;
 	SDL_Rect srcRect, destRect;
 };
