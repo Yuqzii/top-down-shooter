@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 struct vector2D {
 	int x;
 	int y;
@@ -23,5 +25,13 @@ struct vector2Df {
 	}
 	vector2Df() {
 		x = y = 0;
+	}
+
+	void normalize() {
+		float length = std::sqrt(std::pow(x, 2.0) + std::pow(y, 2.0));
+		if (length > 0) {
+			x /= length;
+			y /= length;
+		}
 	}
 };

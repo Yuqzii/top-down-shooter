@@ -25,6 +25,10 @@ void GameObject::initialize(std::string textureSheet, vector2Df startPosition, G
 
 	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3
 	destRect.h = srcRect.h * 3;
+
+	// Reset rotation
+	rotation = 0;
+	flipType = SDL_FLIP_NONE;
 }
 
 void GameObject::update(Game* game, double deltaTime) {
@@ -33,5 +37,5 @@ void GameObject::update(Game* game, double deltaTime) {
 }
 
 void GameObject::render(SDL_Renderer* renderer) {
-	SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
+	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, NULL, flipType);
 }

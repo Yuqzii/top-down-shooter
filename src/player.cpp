@@ -29,14 +29,17 @@ void Player::update(Game* game, double deltaTime) {
 		moveDir.y = 1;
 	}
 
-	// Ensure vector is normalized, so that diagonal movement is not faster
-	float moveDirLength = std::sqrt(std::pow(moveDir.x, 2.0) + std::pow(moveDir.y, 2.0));
-	if (moveDirLength > 0) {
-		moveDir.x /= moveDirLength;
-		moveDir.y /= moveDirLength;
-	}
-
+	moveDir.normalize(); // Normalize vector so that diagonal movement is not faster
 	// Apply movement
 	position.x += moveDir.x * moveSpeed * deltaTime;
 	position.y += moveDir.y * moveSpeed * deltaTime;
+
+	pointToMouse(game);
+}
+
+void Player::pointToMouse(Game* game) {
+	vector2Df midPos = midPosition();
+	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
+	double angle = std::atan2(direction.y, direction.x) * 180 / M_PI;
+	rotation = angle + 90;
 }
