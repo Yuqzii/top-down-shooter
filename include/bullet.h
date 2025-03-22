@@ -14,6 +14,6 @@ private:
 	vector2Df direction;
 	constexpr static const float speed = 1000;
 
-	const float startTime = 10;
+	constexpr static const float startTime = 4;
 	float timeLeft = startTime;
 };

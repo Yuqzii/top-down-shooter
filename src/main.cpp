@@ -13,7 +13,7 @@ int main(int argc, char ** argv) {
 	}
 
 	Game game("Cool Game", 480*3, 280*3);
-	Player* player = game.instantiate<Player>("Player.png", vector2Df(500, 250));
+	Player* player = game.instantiate<Player>("player.png", vector2Df(500, 250));
 
 	while (game.running()) {
 		game.handleEvents();

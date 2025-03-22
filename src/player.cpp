@@ -40,6 +40,7 @@ void Player::update(Game* game, const double& deltaTime) {
 	}
 }
 
+// Points player towards the mouse
 inline void Player::pointToMouse(Game* game) {
 	vector2Df midPos = midPosition();
 	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
@@ -47,11 +48,14 @@ inline void Player::pointToMouse(Game* game) {
 }
 
 inline void Player::shoot(Game* game) const {
-	// TODO: Swap "Player.png" for actual bullet sprite
-	// Instantiate bullet
-	Bullet* bullet = game->instantiate<Bullet>("Player.png", position);
 	float radians = (rotation - 90) * M_PI / 180; // Convert player rotation to radians
+	// Get direction as vector
+	vector2Df direction((float)std::cos(radians), (float)std::sin(radians));
+	// Instantiate bullet
+	constexpr float distMultiplier = 40; // How much further than player center should bullet spawn
+	Bullet* bullet = game->instantiate<Bullet>("bullet.png",
+					vector2Df(position.x + direction.x * distMultiplier,
+					position.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
-	bullet->initializeDirection(vector2Df((float)std::cos(radians),
-								(float)std::sin(radians)), rotation);
+	bullet->initializeDirection(direction, rotation);
 }
