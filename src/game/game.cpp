@@ -5,8 +5,9 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_timer.h"
 #include "SDL2/SDL_keyboard.h"
-#include "bullet.h"
 #include "game/game.h"
+#include "bullet.h"
+#include "enemy.h"
 
 Game::Game(const char* title, int width, int height) {
 	isRunning = true;
@@ -35,6 +36,8 @@ Game::Game(const char* title, int width, int height) {
 
 	// Instantiate player
 	player = instantiate<Player>("player.png", vector2Df(500, 500));
+
+	auto enemy = instantiate<Enemy>("player.png", vector2Df(0, 0));
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -111,6 +114,7 @@ void Game::clean() {
 	std::cout << "Game Cleaned\n";
 }
 
+// Function to instantiate GameObjects, returns raw pointer to instantiated object
 template<class T>
 T* Game::instantiate(const std::string textureSheet, const vector2Df position) {
 	// Compile time check that we don't try to instantiate a non-GameObject
@@ -121,9 +125,12 @@ T* Game::instantiate(const std::string textureSheet, const vector2Df position) {
 	std::unique_ptr<T> newObject = std::make_unique<T>();
 	newObject->initialize(textureSheet, position, this); // Initialize GameObject
 	gameObjects.push_back(std::move(newObject)); // Add GameObject to list
-
-	return static_cast<T*>(gameObjects.back().get()); // Returns the newest GameObject, e.g. the one created now
+	
+	// Returns the newest GameObject, e.g. the one created now
+	return static_cast<T*>(gameObjects.back().get());
 }
+// Create all valid templates
 template GameObject* Game::instantiate<GameObject>(const std::string textureSheet, const vector2Df position);
 template Player* Game::instantiate<Player>(const std::string textureSheet, const vector2Df position);
 template Bullet* Game::instantiate<Bullet>(const std::string textureSheet, const vector2Df position);
+template Enemy* Game::instantiate<Enemy>(const std::string textureSheet, const vector2Df position);

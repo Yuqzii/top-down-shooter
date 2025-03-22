@@ -14,6 +14,7 @@ SET(SOURCE_FILES
 "src/game/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
+"src/enemy.cpp"
 )
 
 find_package(SDL2 REQUIRED)

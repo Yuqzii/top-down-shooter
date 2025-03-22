@@ -16,7 +16,6 @@ public:
 	~Game();
 
 	// Function to instantiate GameObjects
-	// Returns a raw pointer to the instantiated object
 	template<class T>
 	T* instantiate(const std::string textureSheet, const vector2Df position);
 	
