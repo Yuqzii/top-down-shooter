@@ -1,12 +1,11 @@
 #include <cmath>
 #include <iostream>
 #include "SDL2/SDL_scancode.h"
+#include "bullet.h"
 #include "player.h"
 
-float Player::moveSpeed = 200;
-
 // Do player specific processing here
-void Player::update(Game* game, double deltaTime) {
+void Player::update(Game* game, const double& deltaTime) {
 	GameObject::update(game, deltaTime); // Call base GameObject update
 	
 	// Get input
@@ -45,10 +44,14 @@ void Player::update(Game* game, double deltaTime) {
 void Player::pointToMouse(Game* game) {
 	vector2Df midPos = midPosition();
 	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
-	double angle = std::atan2(direction.y, direction.x) * 180 / M_PI;
-	rotation = angle + 90;
+	rotation = direction.toDegrees() + 90;
 }
 
-void Player::shoot(Game* game) {
+void Player::shoot(Game* game) const {
 	std::cout << "Shoot!\n";
+	
+	vector2Df midPos = midPosition();
+	std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>(
+		vector2Df(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y));
+	bullet->initialize("Player.png", position, game);
 }

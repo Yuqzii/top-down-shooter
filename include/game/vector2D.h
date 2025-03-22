@@ -34,4 +34,8 @@ struct vector2Df {
 			y /= length;
 		}
 	}
+
+	int toDegrees() const {
+		return std::atan2(y, x) * 180 / M_PI;
+	}
 };

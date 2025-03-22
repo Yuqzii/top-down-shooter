@@ -8,7 +8,8 @@ GameObject::GameObject() {
 GameObject::~GameObject() {
 }
 
-void GameObject::initialize(std::string textureSheet, vector2Df startPosition, Game* game) {
+void GameObject::initialize(const std::string textureSheet, const vector2Df startPosition,
+							Game* game) {
 	// Load texture
 	texture = RenderManager::LoadTexture(textureSheet, game->getRenderer());
 
@@ -31,11 +32,11 @@ void GameObject::initialize(std::string textureSheet, vector2Df startPosition, G
 	flipType = SDL_FLIP_NONE;
 }
 
-void GameObject::update(Game* game, double deltaTime) {
+void GameObject::update(Game* game, const double& deltaTime) {
 	destRect.x = round(position.x);
 	destRect.y = round(position.y);
 }
 
-void GameObject::render(SDL_Renderer* renderer) {
+void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, NULL, flipType);
 }

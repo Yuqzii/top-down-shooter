@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <map>
 #include <memory>
 #include <vector>
 #include "SDL2/SDL.h"
@@ -20,7 +18,7 @@ public:
 	// Game loop
 	void handleEvents();
 	void update();
-	void render();
+	void render() const;
 	void clean();
 
 	bool running() { return isRunning; };
@@ -35,7 +33,9 @@ public:
 	double deltaTime;
 	vector2D mousePos;
 
-	std::vector<std::shared_ptr<GameObject>> gameObjects;
+	// TODO: Change to unique_ptr
+	// Create Instantiate function returning pointer to instantiated object
+	std::vector<std::shared_ptr<GameObject>> gameObjects; 
 
 private:
 	bool isRunning;
