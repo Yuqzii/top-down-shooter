@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 #include "SDL2/SDL_scancode.h"
 #include "bullet.h"
 #include "player.h"
@@ -41,17 +40,18 @@ void Player::update(Game* game, const double& deltaTime) {
 	}
 }
 
-void Player::pointToMouse(Game* game) {
+inline void Player::pointToMouse(Game* game) {
 	vector2Df midPos = midPosition();
 	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
 	rotation = direction.toDegrees() + 90;
 }
 
-void Player::shoot(Game* game) const {
-	std::cout << "Shoot!\n";
-	
-	vector2Df midPos = midPosition();
-	std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>(
-		vector2Df(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y));
-	bullet->initialize("Player.png", position, game);
+inline void Player::shoot(Game* game) const {
+	// TODO: Swap "Player.png" for actual bullet sprite
+	// Instantiate bullet
+	Bullet* bullet = game->instantiate<Bullet>("Player.png", position);
+	float radians = (rotation - 90) * M_PI / 180; // Convert player rotation to radians
+	// Initialize bullet with correct rotation
+	bullet->initializeDirection(vector2Df((float)std::cos(radians),
+								(float)std::sin(radians)), rotation);
 }

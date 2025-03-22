@@ -10,9 +10,13 @@
 #include "game/gameObject.h"
 
 Game::Game(const char* title, int width, int height) {
+	isRunning = true;
+
 	// Check that SDL initializes
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		std::cout << "SDL could not be initialized:\n" << SDL_GetError();
+		std::cerr << "SDL could not be initialized:\n" << SDL_GetError();
+		isRunning = false;
+		return;
 	}
 
 	// Create window and renderer
@@ -20,25 +24,21 @@ Game::Game(const char* title, int width, int height) {
 	renderer = nullptr;
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 	
-	isRunning = true;
 
 	int flagsIMG = IMG_INIT_PNG;
 	if ((IMG_Init(flagsIMG) & flagsIMG) != flagsIMG) {
-		std::cout << "SDL Image could not be initialized\n";
+		std::cerr << "SDL Image could not be initialized" << std::endl;
 		isRunning = false;
+		return;
 	}
 
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
 
-	std::cout << "Initialized Game\n";
+	std::cout << "Initialized Game" << std::endl;
 }
 
 Game::~Game() {
 
-}
-
-void Game::addGameObject(std::shared_ptr<GameObject> gameObject) {
-	gameObjects.push_back(gameObject);
 }
 
 void Game::handleEvents() {
@@ -74,10 +74,19 @@ void Game::update() {
 		/ double(SDL_GetPerformanceFrequency());
 	prevTime = nowTime;
 
-	// Update all gameObjects
+	// Update all GameObjects
 	for (auto& object : gameObjects) {
 		object->update(this, deltaTime);
 	}
+
+	// Delete objects marked for deletion
+	for (auto it = gameObjects.begin(); it != gameObjects.end();) {
+		if (it->get()->deleteObject) {
+			it = gameObjects.erase(it); // Delete GameObject
+		}
+		else it++;
+	}
+
 }
 
 void Game::render() const {
@@ -99,3 +108,4 @@ void Game::clean() {
 
 	std::cout << "Game Cleaned\n";
 }
+

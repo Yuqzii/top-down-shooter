@@ -4,10 +4,16 @@
 
 class Bullet : public GameObject {
 public:
-	Bullet(const vector2Df direction);
+	Bullet();
+
 	void update(Game* game, const double& deltaTime) override;
+
+	void initializeDirection(const vector2Df direction, const float rotation);
 
 private:
 	vector2Df direction;
-	static float speed;
+	constexpr static const float speed = 1000;
+
+	const float startTime = 10;
+	float timeLeft = startTime;
 };

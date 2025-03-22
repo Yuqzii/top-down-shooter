@@ -1,16 +1,23 @@
 #include "bullet.h"
-#include <iostream>
 
-float Bullet::speed = 350;
-
-Bullet::Bullet(const vector2Df direction) {
-	this->direction = direction;
-	rotation = direction.toDegrees();
+Bullet::Bullet() {
+	
 }
 
 void Bullet::update(Game* game, const double& deltaTime) {
+	GameObject::update(game, deltaTime);
+
 	position.x += speed * direction.x * deltaTime;
 	position.y += speed * direction.y * deltaTime;
 
-	std::cout << "Updating bullet at position " << position.x << "   " << position.y << std::endl;
+	timeLeft -= deltaTime;
+	if (timeLeft <= 0) {
+		// Delete bullet
+		deleteObject = true;
+	}
+}
+
+void Bullet::initializeDirection(const vector2Df direction, const float rotation) {
+	this->direction = direction;
+	this->rotation = rotation;
 }

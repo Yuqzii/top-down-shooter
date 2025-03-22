@@ -3,6 +3,7 @@
 #include "game/game.h"
 
 GameObject::GameObject() {
+	deleteObject = false;
 }
 
 GameObject::~GameObject() {
@@ -12,9 +13,6 @@ void GameObject::initialize(const std::string textureSheet, const vector2Df star
 							Game* game) {
 	// Load texture
 	texture = RenderManager::LoadTexture(textureSheet, game->getRenderer());
-
-	// Update Game class
-	game->addGameObject(shared_from_this());
 
 	// Initialze position
 	position.x = startPosition.x;
