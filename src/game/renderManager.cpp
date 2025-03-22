@@ -1,18 +1,41 @@
 #include "game/renderManager.h"
 #include <SDL2/SDL_surface.h>
+#include <cassert>
 #include <filesystem>
 #include <string>
 #include <iostream>
 
-std::string RenderManager::assetsPath = "";
+#ifndef NDEBUG
+#	define ASSERT(condition, message) \
+	do { \
+		if (!(condition)) { \
+			std::cerr << "Assertion '" #condition "' failed in " << __FILE__ \
+					<< " line " << __LINE__ << ": " << message << std::endl; \
+			std::terminate(); \
+		} \
+	} while (false)
+#else
+	#define ASSERT(condition, message) do { } while (false)
+#endif
 
-SDL_Texture* RenderManager::LoadTexture(std::string filename, SDL_Renderer* renderer) {
-	std::string path = RenderManager::assetsPath + filename;
-	if (!std::filesystem::exists(path)) {
-		std::cout << "File " << filename << 
-			" could not be found, are you sure this is the correct name?"
-			<< std::endl;
-		return NULL;
+namespace RenderManager {
+	namespace {
+		std::unordered_map<std::string, SDL_Texture*> loadedTextures;
 	}
-	return IMG_LoadTexture(renderer, (path).c_str());
+
+	std::string assetsPath = "";
+
+	SDL_Texture* LoadTexture(const std::string filename, SDL_Renderer* renderer) {
+		// Load texture if it is not already loaded
+		if (!loadedTextures.count(filename)) {
+			const std::string path = RenderManager::assetsPath + filename;
+			// Check that file exists
+			ASSERT(std::filesystem::exists(path), "Could not load texture");
+			// Store loaded textures to avoid unnecessary load calls
+			loadedTextures[filename] = IMG_LoadTexture(renderer, (path).c_str());
+		}
+
+		return loadedTextures[filename];
+	}
 }
+
