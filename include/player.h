@@ -2,6 +2,8 @@
 
 #include "game/gameObject.h"
 
+class Game;
+
 class Player : public GameObject {
 public:
 	void update(Game* game, const double& deltaTime) override;

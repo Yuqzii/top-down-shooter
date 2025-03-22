@@ -1,7 +1,8 @@
 #include <cmath>
 #include "SDL2/SDL_scancode.h"
-#include "bullet.h"
+#include "game/game.h"
 #include "player.h"
+#include "bullet.h"
 
 // Do player specific processing here
 void Player::update(Game* game, const double& deltaTime) {

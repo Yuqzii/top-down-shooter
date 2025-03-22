@@ -12,15 +12,16 @@ int main(int argc, char ** argv) {
 		return 1;
 	}
 
-	Game game("Cool Game", 480*3, 280*3);
-	Player* player = game.instantiate<Player>("player.png", vector2Df(500, 250));
+	Game game("Cool Game", 480*3, 280*3); // Create Game instance
 
+	// Game loop
 	while (game.running()) {
 		game.handleEvents();
 		game.update();
 		game.render();
 	}
 
+	// Game closed
 	game.clean();
 
 	return 0;

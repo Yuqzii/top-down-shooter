@@ -1,8 +1,5 @@
 #include "bullet.h"
-
-Bullet::Bullet() {
-	
-}
+#include "game/game.h"
 
 void Bullet::update(Game* game, const double& deltaTime) {
 	GameObject::update(game, deltaTime);

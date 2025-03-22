@@ -38,3 +38,7 @@ void GameObject::update(Game* game, const double& deltaTime) {
 void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, NULL, flipType);
 }
+
+vector2Df GameObject::midPosition() const {
+	return vector2Df(position.x + destRect.w / 2, position.y + destRect.h / 2);
+}

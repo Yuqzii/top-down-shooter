@@ -2,10 +2,10 @@
 
 #include "game/gameObject.h"
 
+class Game;
+
 class Bullet : public GameObject {
 public:
-	Bullet();
-
 	void update(Game* game, const double& deltaTime) override;
 
 	void initializeDirection(const vector2Df direction, const float rotation);
