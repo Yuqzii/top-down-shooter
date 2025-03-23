@@ -7,6 +7,7 @@ void Enemy::initialize(const std::string& textureSheet,
 	GameObject::initialize(textureSheet, startPosition, game); // Call base initialize
 	
 	circleCollider.radius = 35;
+	health = startHealth;
 }
 
 void Enemy::update(Game* game, const double& deltaTime) {
@@ -26,4 +27,17 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	if (Collision::checkCollision(circleCollider, game->player->circleCollider)) {
 		// Damage player or something
 	}
+}
+
+void Enemy::takeDamage(const float& damage) {
+	health -= damage;
+	
+	if (health <= 0) {
+		die();
+	}
+}
+
+void Enemy::die() {
+	// Death effects here
+	deleteObject = true; // Delete object when dying
 }

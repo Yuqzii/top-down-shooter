@@ -25,7 +25,7 @@ void Bullet::update(Game* game, const double& deltaTime) {
 	for (Enemy* enemy : game->getEnemySpawner().getEnemies()) {
 		if (Collision::checkCollision(circleCollider, enemy->circleCollider)) {
 			// Bullet collided with enemy
-			enemy->deleteObject = true; // Delete hit enemy
+			enemy->takeDamage(damage); // Damage enemy
 			deleteObject = true; // Delete bullet
 		}
 	}
