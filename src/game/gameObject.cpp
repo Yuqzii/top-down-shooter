@@ -24,15 +24,23 @@ void GameObject::initialize(const std::string textureSheet, const vector2Df star
 
 	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3
 	destRect.h = srcRect.h * 3;
+	destRect.x = round(position.x);
+	destRect.y = round(position.y);
 
 	// Reset rotation
 	rotation = 0;
 	flipType = SDL_FLIP_NONE;
+
+	// Initialize collider
+	circleCollider.radius = (float)destRect.w / 2;
 }
 
 void GameObject::update(Game* game, const double& deltaTime) {
 	destRect.x = round(position.x);
 	destRect.y = round(position.y);
+	
+	circleCollider.position.x = round(midPosition().x);
+	circleCollider.position.y = round(midPosition().y);
 }
 
 void GameObject::render(SDL_Renderer* renderer) const {
@@ -40,5 +48,5 @@ void GameObject::render(SDL_Renderer* renderer) const {
 }
 
 vector2Df GameObject::midPosition() const {
-	return vector2Df(position.x + destRect.w / 2, position.y + destRect.h / 2);
+	return vector2Df(position.x + (float)destRect.w / 2, position.y + (float)destRect.h / 2);
 }

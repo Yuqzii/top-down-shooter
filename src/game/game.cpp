@@ -33,6 +33,9 @@ Game::Game(const char* title, int width, int height) {
 	}
 
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
+	
+	// Create EnemySpawner
+	enemySpawner = EnemySpawner();
 
 	// Instantiate player
 	player = instantiate<Player>("player.png", vector2Df(500, 500));
@@ -84,6 +87,9 @@ void Game::update() {
 		object->update(this, deltaTime);
 	}
 
+	// Update EnemySpawner list
+	enemySpawner.update(this, deltaTime);
+
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {
 		if (it->get()->deleteObject) {
@@ -116,7 +122,7 @@ void Game::clean() {
 
 // Function to instantiate GameObjects, returns raw pointer to instantiated object
 template<class T>
-T* Game::instantiate(const std::string textureSheet, const vector2Df position) {
+T* Game::instantiate(const std::string textureSheet, const vector2Df& position) {
 	// Compile time check that we don't try to instantiate a non-GameObject
 	static_assert(std::is_base_of<GameObject, T>(),
 	"Object to instantiate must inherit from GameObject");
@@ -130,7 +136,7 @@ T* Game::instantiate(const std::string textureSheet, const vector2Df position) {
 	return static_cast<T*>(gameObjects.back().get());
 }
 // Create all valid templates
-template GameObject* Game::instantiate<GameObject>(const std::string textureSheet, const vector2Df position);
-template Player* Game::instantiate<Player>(const std::string textureSheet, const vector2Df position);
-template Bullet* Game::instantiate<Bullet>(const std::string textureSheet, const vector2Df position);
-template Enemy* Game::instantiate<Enemy>(const std::string textureSheet, const vector2Df position);
+template GameObject* Game::instantiate<GameObject>(const std::string textureSheet, const vector2Df& position);
+template Player* Game::instantiate<Player>(const std::string textureSheet, const vector2Df& position);
+template Bullet* Game::instantiate<Bullet>(const std::string textureSheet, const vector2Df& position);
+template Enemy* Game::instantiate<Enemy>(const std::string textureSheet, const vector2Df& position);

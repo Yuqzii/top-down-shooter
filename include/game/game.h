@@ -6,6 +6,7 @@
 #include "game/vector2D.h"
 #include "game/gameObject.h"
 #include "player.h"
+#include "enemySpawner.h"
 
 class GameObject;
 class Player;
@@ -17,7 +18,7 @@ public:
 
 	// Function to instantiate GameObjects
 	template<class T>
-	T* instantiate(const std::string textureSheet, const vector2Df position);
+	T* instantiate(const std::string textureSheet, const vector2Df& position);
 	
 	// Game loop
 	void handleEvents();
@@ -47,4 +48,6 @@ private:
 	SDL_Renderer* renderer;
 
 	Uint64 prevTime;
+
+	EnemySpawner enemySpawner;
 };

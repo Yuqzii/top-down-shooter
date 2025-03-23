@@ -15,6 +15,8 @@ SET(SOURCE_FILES
 "src/player.cpp"
 "src/bullet.cpp"
 "src/enemy.cpp"
+"src/game/collision.cpp"
+"src/enemySpawner.cpp"
 )
 
 find_package(SDL2 REQUIRED)

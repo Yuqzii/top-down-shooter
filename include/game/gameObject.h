@@ -2,6 +2,7 @@
 
 #include <string>
 #include <SDL2/SDL.h>
+#include "game/collision.h"
 #include "game/vector2D.h"
 
 class Game;
@@ -20,9 +21,10 @@ public:
 	vector2Df position;
 	double rotation; // Angle of rotation
 	SDL_RendererFlip flipType;
+	SDL_Rect srcRect, destRect;
+	Collision::Circle circleCollider;
 
 	bool deleteObject; // When true object is deleted on next frame
 private:
 	SDL_Texture* texture;
-	SDL_Rect srcRect, destRect;
 };
