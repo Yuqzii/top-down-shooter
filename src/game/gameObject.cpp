@@ -9,7 +9,7 @@ GameObject::GameObject() {
 GameObject::~GameObject() {
 }
 
-void GameObject::initialize(const std::string textureSheet, const vector2Df startPosition,
+void GameObject::initialize(const std::string& textureSheet, const vector2Df& startPosition,
 							Game* game) {
 	// Load texture
 	texture = RenderManager::LoadTexture(textureSheet, game->getRenderer());
@@ -45,6 +45,9 @@ void GameObject::update(Game* game, const double& deltaTime) {
 
 void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, NULL, flipType);
+	
+	// Draw collider, comment line for prod
+	Collision::drawCircleCollider(renderer, circleCollider);
 }
 
 vector2Df GameObject::midPosition() const {

@@ -9,6 +9,8 @@ class EnemySpawner {
 public:
 	void update(Game* game, const double& deltaTime);
 
+	const std::vector<Enemy*> getEnemies() const { return enemies; }
+
 private:
 	std::vector<Enemy*> enemies;
 	constexpr const static float startTime = 3;

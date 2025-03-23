@@ -12,7 +12,8 @@ public:
 	GameObject();
 	virtual ~GameObject();
 
-	virtual void initialize(const std::string textureSheet, const vector2Df position, Game* game);
+	// Initialize must be overriden to change initialization of things such as collider settings
+	virtual void initialize(const std::string& textureSheet, const vector2Df& position, Game* game);
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 

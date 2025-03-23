@@ -4,6 +4,13 @@
 #include "player.h"
 #include "bullet.h"
 
+
+void Player::initialize(const std::string& textureSheet, const vector2Df& position, Game* game) {
+	GameObject::initialize(textureSheet, position, game); // Call base initialize
+	
+	circleCollider.radius = 30; // Change collider size
+}
+
 // Do player specific processing here
 void Player::update(Game* game, const double& deltaTime) {
 	GameObject::update(game, deltaTime); // Call base GameObject update

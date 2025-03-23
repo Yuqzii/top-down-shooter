@@ -29,8 +29,10 @@ public:
 	bool running() { return isRunning; };
 
 	// SDL stuff
-	SDL_Window* getWindow() { return window; };
-	SDL_Renderer* getRenderer() { return renderer; };
+	SDL_Window* getWindow() const { return window; };
+	SDL_Renderer* getRenderer() const { return renderer; };
+
+	const EnemySpawner getEnemySpawner() const { return enemySpawner; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};

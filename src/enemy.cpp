@@ -2,6 +2,13 @@
 #include "game/game.h"
 #include "game/collision.h"
 
+void Enemy::initialize(const std::string& textureSheet,
+					   const vector2Df& startPosition, Game* game) {
+	GameObject::initialize(textureSheet, startPosition, game); // Call base initialize
+	
+	circleCollider.radius = 35;
+}
+
 void Enemy::update(Game* game, const double& deltaTime) {
 	GameObject::update(game, deltaTime);
 

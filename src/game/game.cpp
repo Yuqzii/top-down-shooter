@@ -40,8 +40,6 @@ Game::Game(const char* title, int width, int height) {
 	// Instantiate player
 	player = instantiate<Player>("player.png", vector2Df(500, 500));
 
-	auto enemy = instantiate<Enemy>("player.png", vector2Df(0, 0));
-
 	std::cout << "Initialized Game" << std::endl;
 }
 
