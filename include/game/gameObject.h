@@ -20,7 +20,6 @@ public:
 	vector2Df getDirection() const;
 
 	vector2Df position;
-	vector2Df visualPosition;
 	vector2Df pivotPosition;
 	vector2Df midPosition;
 	double rotation; // Angle of rotation

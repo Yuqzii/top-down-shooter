@@ -12,7 +12,7 @@ Player::Player() {
 void Player::initialize(const std::string& textureSheet, const vector2Df& position, Game* game) {
 	GameObject::initialize(textureSheet, position, game); // Call base initialize
 	
-	circleCollider.radius = 30; // Change collider size
+	circleCollider.radius = 40; // Change collider size
 }
 
 // Do player specific processing here
@@ -61,10 +61,10 @@ inline void Player::pointToMouse(Game* game) {
 inline void Player::shoot(Game* game) const {
 	vector2Df direction(rotation);
 	// Instantiate bullet
-	constexpr float distMultiplier = 65; // How much further than player center should bullet spawn
+	constexpr float distMultiplier = 50; // How much further than player center should bullet spawn
 	Bullet* bullet = game->instantiate<Bullet>("bullet.png",
-					vector2Df(pivotPosition.x + direction.x * distMultiplier,
-					pivotPosition.y + direction.y * distMultiplier));
+					vector2Df(midPosition.x + direction.x * distMultiplier,
+					midPosition.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet->initializeDirection(direction, rotation);
 }

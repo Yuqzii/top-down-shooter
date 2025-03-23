@@ -30,6 +30,16 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC ${SDL2IMAGE_INCLUDE_DIRS}
 )
 
+option(DEBUG "Debug" OFF)
+
+if(DEBUG)
+	target_compile_options(${PROJECT_NAME} PUBLIC "-D DEBUG")
+endif()
+
+set(CUSTOM_COMPILE_FLAGS
+)
+target_compile_options(${PROJECT_NAME} PRIVATE ${CUSTOM_COMPILE_FLAGS})
+
 configure_file(
 	${CMAKE_SOURCE_DIR}/startScript.sh.in
 	${CMAKE_BINARY_DIR}/startScript.sh @ONLY

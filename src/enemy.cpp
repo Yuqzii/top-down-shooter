@@ -14,8 +14,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	GameObject::update(game, deltaTime);
 
 	// Get direction towards player
-	vector2Df playerDirection(game->player->position.x - position.x,
-							game->player->position.y - position.y);
+	vector2Df playerDirection(game->player->pivotPosition.x - pivotPosition.x,
+							game->player->pivotPosition.y - pivotPosition.y);
 	playerDirection.normalize();
 	rotation = playerDirection.toDegrees() + 90; // Rotate enemy towards player
 	

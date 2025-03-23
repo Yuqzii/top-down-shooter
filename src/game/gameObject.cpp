@@ -53,20 +53,18 @@ void GameObject::update(Game* game, const double& deltaTime) {
 	destRect.x = round(position.x);
 	destRect.y = round(position.y);
 
-	// Update midPosition
-	midPosition.x = position.x + (float)destRect.w / 2;
-	midPosition.y = position.y + (float)destRect.h / 2;
-
 	// Update pivotPosition
 	pivotPosition.x = pivot.x + destRect.x;
 	pivotPosition.y = pivot.y + destRect.y;
 
-	// Update visualPosition
-	visualPosition = midPosition.rotateAround(
+	// Update midPosition
+	midPosition.x = position.x + (float)destRect.w / 2;
+	midPosition.y = position.y + (float)destRect.h / 2;
+	midPosition = midPosition.rotateAround(
 		vector2Df(destRect.x + pivot.x, destRect.y + pivot.y), rotation);
 
 	// Update collider position
-	circleCollider.position = visualPosition;
+	circleCollider.position = pivotPosition;
 }
 
 void GameObject::render(SDL_Renderer* renderer) const {
@@ -74,13 +72,16 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
 	
 	// Draw collider, comment line for prod
+	#ifdef DEBUG
 	Collision::drawCircleCollider(renderer, circleCollider);
-	//SDL_RenderDrawPoint(renderer, visualPosition.x, visualPosition.y);
-	//SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
-	//SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-	//SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
-	//SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	//SDL_RenderDrawRect(renderer, &destRect);
+	SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	#endif
+	#ifdef DRAWRECT
+	SDL_RenderDrawRect(renderer, &destRect);
+	#endif
 }
 
 inline vector2Df GameObject::getDirection() const {
