@@ -3,7 +3,11 @@
 #include "game/game.h"
 #include "player.h"
 #include "bullet.h"
+#include "game/gameObject.h"
 
+Player::Player() {
+	pivotOffset.y = 20;
+}
 
 void Player::initialize(const std::string& textureSheet, const vector2Df& position, Game* game) {
 	GameObject::initialize(textureSheet, position, game); // Call base initialize
@@ -50,20 +54,17 @@ void Player::update(Game* game, const double& deltaTime) {
 
 // Points player towards the mouse
 inline void Player::pointToMouse(Game* game) {
-	vector2Df midPos = midPosition();
-	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
+	vector2Df direction(game->mousePos.x - pivotPosition.x, game->mousePos.y - pivotPosition.y);
 	rotation = direction.toDegrees() + 90;
 }
 
 inline void Player::shoot(Game* game) const {
-	float radians = (rotation - 90) * M_PI / 180; // Convert player rotation to radians
-	// Get direction as vector
-	vector2Df direction((float)std::cos(radians), (float)std::sin(radians));
+	vector2Df direction(rotation);
 	// Instantiate bullet
-	constexpr float distMultiplier = 40; // How much further than player center should bullet spawn
+	constexpr float distMultiplier = 65; // How much further than player center should bullet spawn
 	Bullet* bullet = game->instantiate<Bullet>("bullet.png",
-					vector2Df(position.x + direction.x * distMultiplier,
-					position.y + direction.y * distMultiplier));
+					vector2Df(pivotPosition.x + direction.x * distMultiplier,
+					pivotPosition.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet->initializeDirection(direction, rotation);
 }

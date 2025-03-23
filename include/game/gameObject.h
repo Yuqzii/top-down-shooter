@@ -17,12 +17,17 @@ public:
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
-	vector2Df midPosition() const;
+	vector2Df getDirection() const;
 
 	vector2Df position;
+	vector2Df visualPosition;
+	vector2Df pivotPosition;
+	vector2Df midPosition;
 	double rotation; // Angle of rotation
 	SDL_RendererFlip flipType;
 	SDL_Rect srcRect, destRect;
+	SDL_Point pivot;
+	vector2D pivotOffset;
 	Collision::Circle circleCollider;
 
 	bool deleteObject; // When true object is deleted on next frame

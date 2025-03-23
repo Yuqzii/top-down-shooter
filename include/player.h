@@ -6,6 +6,8 @@ class Game;
 
 class Player : public GameObject {
 public:
+	Player();
+
 	void initialize(const std::string& textureSheet,
 					const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
