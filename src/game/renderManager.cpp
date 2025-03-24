@@ -1,9 +1,8 @@
-#include "game/renderManager.h"
 #include <SDL2/SDL_surface.h>
-#include <cassert>
 #include <filesystem>
 #include <string>
 #include <iostream>
+#include "game/renderManager.h"
 
 #ifndef NDEBUG
 #	define ASSERT(condition, message) \
@@ -25,7 +24,7 @@ namespace RenderManager {
 
 	std::string assetsPath = "";
 
-	SDL_Texture* LoadTexture(const std::string filename, SDL_Renderer* renderer) {
+	SDL_Texture* LoadTexture(const std::string& filename, SDL_Renderer* renderer) {
 		// Load texture if it is not already loaded
 		if (!loadedTextures.count(filename)) {
 			const std::string path = RenderManager::assetsPath + filename;

@@ -3,8 +3,8 @@
 #include "game/game.h"
 #include "game/collision.h"
 
-void Bullet::initialize(const std::string& textureSheet, const vector2Df& position, Game* game) {
-	GameObject::initialize(textureSheet, position, game); // Call base initialize
+void Bullet::initialize(const vector2Df& position, Game* game) {
+	GameObject::initialize(position, game); // Call base initialize
 	
 	circleCollider.radius = 15; // Change collider size
 }

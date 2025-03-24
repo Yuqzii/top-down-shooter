@@ -2,9 +2,8 @@
 #include "game/game.h"
 #include "game/collision.h"
 
-void Enemy::initialize(const std::string& textureSheet,
-					   const vector2Df& startPosition, Game* game) {
-	GameObject::initialize(textureSheet, startPosition, game); // Call base initialize
+void Enemy::initialize(const vector2Df& startPosition, Game* game) {
+	GameObject::initialize(startPosition, game); // Call base initialize
 	
 	circleCollider.radius = 35;
 	health = startHealth;
@@ -14,8 +13,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	GameObject::update(game, deltaTime);
 
 	// Get direction towards player
-	vector2Df playerDirection(game->player->pivotPosition.x - pivotPosition.x,
-							game->player->pivotPosition.y - pivotPosition.y);
+	vector2Df playerDirection(game->player->getPivotPosition().x - pivotPosition.x,
+							game->player->getPivotPosition().y - pivotPosition.y);
 	playerDirection.normalize();
 	rotation = playerDirection.toDegrees() + 90; // Rotate enemy towards player
 	

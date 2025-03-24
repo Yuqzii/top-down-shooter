@@ -38,7 +38,7 @@ Game::Game(const char* title, int width, int height) {
 	enemySpawner = EnemySpawner();
 
 	// Instantiate player
-	player = instantiate<Player>("player.png", vector2Df(500, 500));
+	player = instantiate<Player>(vector2Df(500, 500));
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -122,21 +122,21 @@ void Game::clean() {
 
 // Function to instantiate GameObjects, returns raw pointer to instantiated object
 template<class T>
-T* Game::instantiate(const std::string textureSheet, const vector2Df& position) {
+T* Game::instantiate(const vector2Df& position) {
 	// Compile time check that we don't try to instantiate a non-GameObject
 	static_assert(std::is_base_of<GameObject, T>(),
 	"Object to instantiate must inherit from GameObject");
 
 	// Create the new GameObject as a unique_ptr to clarify that Game has ownership
 	std::unique_ptr<T> newObject = std::make_unique<T>();
-	newObject->initialize(textureSheet, position, this); // Initialize GameObject
+	newObject->initialize(position, this); // Initialize GameObject
 	gameObjects.push_back(std::move(newObject)); // Add GameObject to list
 	
 	// Returns the newest GameObject, e.g. the one created now
 	return static_cast<T*>(gameObjects.back().get());
 }
 // Create all valid templates
-template GameObject* Game::instantiate<GameObject>(const std::string textureSheet, const vector2Df& position);
-template Player* Game::instantiate<Player>(const std::string textureSheet, const vector2Df& position);
-template Bullet* Game::instantiate<Bullet>(const std::string textureSheet, const vector2Df& position);
-template Enemy* Game::instantiate<Enemy>(const std::string textureSheet, const vector2Df& position);
+template GameObject* Game::instantiate<GameObject>(const vector2Df& position);
+template Player* Game::instantiate<Player>(const vector2Df& position);
+template Bullet* Game::instantiate<Bullet>(const vector2Df& position);
+template Enemy* Game::instantiate<Enemy>(const vector2Df& position);

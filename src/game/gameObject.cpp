@@ -1,22 +1,20 @@
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_render.h>
 #include "game/gameObject.h"
 #include "game/renderManager.h"
 #include "game/game.h"
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_render.h>
 
 GameObject::GameObject() {
 	deleteObject = false;
 
 	pivotOffset.x = pivotOffset.y = 0;
+
+	isAnimated = false;
 }
 
-GameObject::~GameObject() {
-}
-
-void GameObject::initialize(const std::string& textureSheet, const vector2Df& startPosition,
-							Game* game) {
+void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	// Load texture
-	texture = RenderManager::LoadTexture(textureSheet, game->getRenderer());
+	texture = RenderManager::LoadTexture(getTextureSheet(), game->getRenderer());
 	
 	// Initialize source rectangle (part of textureSheet that is displayed)
 	// default to top left 32x32

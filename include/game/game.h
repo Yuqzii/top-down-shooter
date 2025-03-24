@@ -18,7 +18,7 @@ public:
 
 	// Function to instantiate GameObjects
 	template<class T>
-	T* instantiate(const std::string textureSheet, const vector2Df& position);
+	T* instantiate(const vector2Df& position);
 	
 	// Game loop
 	void handleEvents();
