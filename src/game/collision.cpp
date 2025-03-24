@@ -80,7 +80,7 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 		}
 	}
 
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
 	SDL_RenderDrawPoints(renderer, points, drawCount);
 }
 

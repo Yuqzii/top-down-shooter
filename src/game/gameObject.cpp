@@ -68,18 +68,14 @@ void GameObject::update(Game* game, const double& deltaTime) {
 }
 
 void GameObject::render(SDL_Renderer* renderer) const {
-	// Render without extra pivot calculation
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
 	
-	// Draw collider, comment line for prod
 	#ifdef DEBUG
 	Collision::drawCircleCollider(renderer, circleCollider);
 	SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	#endif
-	#ifdef DRAWRECT
+	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_RenderDrawRect(renderer, &destRect);
 	#endif
 }

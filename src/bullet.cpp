@@ -27,6 +27,7 @@ void Bullet::update(Game* game, const double& deltaTime) {
 			// Bullet collided with enemy
 			enemy->takeDamage(damage); // Damage enemy
 			deleteObject = true; // Delete bullet
+			break; // Stop checking for collision so that one bullet only damages one enemy
 		}
 	}
 }
