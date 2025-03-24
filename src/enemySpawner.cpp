@@ -19,6 +19,6 @@ void EnemySpawner::update(Game* game, const double& deltaTime) {
 }
 
 void EnemySpawner::spawnEnemy(Game* game) {
-	Enemy* enemy = game->instantiate<Enemy>("spider.png", vector2Df(200, 200));
+	Enemy* enemy = game->instantiate<Enemy>("spider-sheet.png", vector2Df(200, 200));
 	enemies.push_back(enemy);
 }

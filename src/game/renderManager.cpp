@@ -30,7 +30,7 @@ namespace RenderManager {
 		if (!loadedTextures.count(filename)) {
 			const std::string path = RenderManager::assetsPath + filename;
 			// Check that file exists
-			ASSERT(std::filesystem::exists(path), "Could not load texture");
+			ASSERT(std::filesystem::exists(path), "Could not load texture \"" + filename + "\"");
 			// Store loaded textures to avoid unnecessary load calls
 			loadedTextures[filename] = IMG_LoadTexture(renderer, (path).c_str());
 		}
