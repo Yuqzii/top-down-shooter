@@ -42,7 +42,7 @@ public:
 
 	const Player* player;
 
-	std::list<std::unique_ptr<GameObject>> gameObjects; 
+	std::vector<std::unique_ptr<GameObject>> gameObjects; 
 
 private:
 	bool isRunning;
