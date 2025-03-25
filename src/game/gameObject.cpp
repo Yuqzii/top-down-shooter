@@ -1,5 +1,6 @@
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
+#include <cassert>
 #include "game/gameObject.h"
 #include "game/renderManager.h"
 #include "game/game.h"
@@ -10,6 +11,7 @@ GameObject::GameObject() {
 	pivotOffset.x = pivotOffset.y = 0;
 
 	isAnimated = false;
+	animationCounter = animationSequence = 0;
 }
 
 void GameObject::initialize(const vector2Df& startPosition, Game* game) {
@@ -63,6 +65,9 @@ void GameObject::update(Game* game, const double& deltaTime) {
 
 	// Update collider position
 	circleCollider.position = pivotPosition;
+
+	if (isAnimated)
+		animationUpdate(deltaTime);
 }
 
 void GameObject::render(SDL_Renderer* renderer) const {
@@ -78,7 +83,20 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	#endif
 }
 
-inline vector2Df GameObject::getDirection() const {
-	float radians = (rotation - 90) * M_PI / 180;
-	return vector2Df((float)std::cos(radians), (float)std::sin(radians));
+void GameObject::animationUpdate(const double& deltaTime) {
+	// Notify if we try accessing non-existent animation
+	assert(animationSequence < getAnimationData().size() && "Animation index out of range");
+
+	const AnimationData& sequence = getAnimationData()[animationSequence];
+
+	// Update frame
+	animationCounter += sequence.speed * deltaTime;
+	// Check for looping
+	if (animationCounter >= sequence.length) {
+		animationCounter -= sequence.length; // -= length so that the animation plays at same speed
+	}
+	int frame = std::trunc(animationCounter);
+
+	srcRect.x = frame * 32;
+	srcRect.y = animationSequence * 32;
 }

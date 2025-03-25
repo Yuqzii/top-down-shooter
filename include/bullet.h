@@ -12,7 +12,7 @@ public:
 	void initializeDirection(const vector2Df direction, const float rotation);
 
 protected:
-	std::string getTextureSheet() const override { return "bullet.png"; };
+	SETOBJECTTEXTURE("bullet.png");
 
 private:
 	vector2Df direction;

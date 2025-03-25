@@ -2,8 +2,17 @@
 
 #include <string>
 #include <SDL2/SDL.h>
+#include <vector>
 #include "game/collision.h"
 #include "game/vector2D.h"
+#include "game/animationData.h"
+
+// Use this inside protected section of child class to set its texture
+#define SETOBJECTTEXTURE(FILE) \
+const std::string& getTextureSheet() const override { \
+	static const std::string file = FILE; \
+	return file; \
+}
 
 class Game;
 
@@ -20,7 +29,11 @@ public:
 	vector2Df getPosition() const { return position; };
 	vector2Df getPivotPosition() const { return pivotPosition; };
 	vector2Df getMidPosition() const { return midPosition; };
-	vector2Df getDirection() const; // Returns the rotation as a direction vector
+	// Returns the rotation as a direction vector
+	inline vector2Df getDirection() const {
+		float radians = (rotation - 90) * M_PI / 180;
+		return vector2Df((float)std::cos(radians), (float)std::sin(radians));
+	};
 
 	// Collision
 	Collision::Circle circleCollider;
@@ -35,18 +48,30 @@ protected:
 	double rotation; // Angle of rotation
 	
 	// Animation
-	bool isAnimated;
-	float animationCounter; // Keeps track of current animation frame
-	
+	bool isAnimated; // Set true to enable animation
+	int animationSequence; // Keeps track of current animation sequence, used as y position
+	// Use this function to define length and speed of different animations
+	virtual const std::vector<AnimationData>& getAnimationData() const {
+		static const std::vector<AnimationData> data;
+		return data;
+	}
+
 	// Pivot
 	SDL_Point pivot;
 	vector2D pivotOffset;
 
 	// Rendering
-	virtual std::string getTextureSheet() const { return "default_gameobject.png"; };
+	virtual const std::string& getTextureSheet() const { 
+		static const std::string file = "default_gameobject.png";
+		return file; 
+	};
 	SDL_RendererFlip flipType;
 	SDL_Rect srcRect, destRect;
 	
 private:
 	SDL_Texture* texture;
+	
+	// Animation
+	void animationUpdate(const double& deltaTime);
+	float animationCounter; // Keeps track of current animation frame, used as x position
 };

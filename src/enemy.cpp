@@ -2,6 +2,10 @@
 #include "game/game.h"
 #include "game/collision.h"
 
+Enemy::Enemy() {
+	isAnimated = true;
+}
+
 void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 	GameObject::initialize(startPosition, game); // Call base initialize
 	

@@ -6,13 +6,22 @@ class Game;
 
 class Enemy : public GameObject {
 public:
+	Enemy();
+
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
 
 	void takeDamage(const float& damage);
 
 protected:
-	std::string getTextureSheet() const override { return "spider-sheet.png"; };
+	SETOBJECTTEXTURE("spider-sheet.png");
+
+	const std::vector<AnimationData>& getAnimationData() const override {
+		static const std::vector<AnimationData> data = {
+			{ 4, 15 },
+		};
+		return data;
+	};
 
 private:
 	constexpr static const float moveSpeed = 150;

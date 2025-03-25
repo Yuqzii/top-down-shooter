@@ -12,7 +12,7 @@ public:
 	void update(Game* game, const double& deltaTime) override;
 
 protected:
-	std::string getTextureSheet() const override { return "player.png"; };
+	SETOBJECTTEXTURE("player.png");
 
 private:
 	inline void pointToMouse(Game* game);
