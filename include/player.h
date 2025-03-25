@@ -2,9 +2,17 @@
 
 #include "game/gameObject.h"
 
+class Game;
+
 class Player : public GameObject {
 public:
+	Player();
+
+	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
+
+protected:
+	SETOBJECTTEXTURE("player.png");
 
 private:
 	inline void pointToMouse(Game* game);

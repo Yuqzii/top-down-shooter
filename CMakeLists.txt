@@ -14,6 +14,9 @@ SET(SOURCE_FILES
 "src/game/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
+"src/enemy.cpp"
+"src/game/collision.cpp"
+"src/enemySpawner.cpp"
 )
 
 find_package(SDL2 REQUIRED)
@@ -26,6 +29,16 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC ${SDL2_INCLUDE_DIRS}
 	PUBLIC ${SDL2IMAGE_INCLUDE_DIRS}
 )
+
+option(DEBUG "Debug" OFF)
+
+if(DEBUG)
+	target_compile_options(${PROJECT_NAME} PUBLIC "-D DEBUG")
+endif()
+
+set(CUSTOM_COMPILE_FLAGS
+)
+target_compile_options(${PROJECT_NAME} PRIVATE ${CUSTOM_COMPILE_FLAGS})
 
 configure_file(
 	${CMAKE_SOURCE_DIR}/startScript.sh.in

@@ -2,29 +2,25 @@
 
 #include <cmath>
 
-struct vector2D {
-	int x;
-	int y;
-
-	vector2D(int x, int y) {
-		this->x = x;
-		this->y = y;
-	}
-	vector2D() {
-		x = y = 0;
-	}
-};
-
 struct vector2Df {
 	float x;
 	float y;
 
-	vector2Df(float x, float y) {
+	vector2Df(const float& x, const float& y) {
 		this->x = x;
 		this->y = y;
 	}
 	vector2Df() {
 		x = y = 0;
+	}
+	vector2Df(const float& degrees) { // Creates direction vector from rotation in degrees
+		float radians = (degrees - 90) * M_PI / 180;
+		x = std::cos(radians);
+		y = std::sin(radians);
+	}
+	vector2Df(const vector2Df& vec) {
+		x = vec.x;
+		y = vec.y;
 	}
 
 	void normalize() {
@@ -37,5 +33,56 @@ struct vector2Df {
 
 	int toDegrees() const {
 		return std::atan2(y, x) * 180 / M_PI;
+	}
+
+	vector2Df rotateAround(vector2Df point, float degrees) const {
+		float radians = (degrees) * M_PI / 180; // Convert angle to radians
+
+		// Get sine and cosine values
+		float s = std::sin(radians);
+		float c = std::cos(radians);
+
+		// Translate point back to origin
+		vector2Df rotated(*this);
+		rotated.x -= point.x;
+		rotated.y -= point.y;
+		
+		// Rotate point
+		float newX = rotated.x * c - rotated.y * s;
+		float newY = rotated.x * s + rotated.y * c;
+		
+		// Move point back
+		rotated.x = newX + point.x;
+		rotated.y = newY + point.y;
+
+		return rotated;
+	}
+};
+
+struct vector2D {
+	int x;
+	int y;
+
+	vector2D(int x, int y) {
+		this->x = x;
+		this->y = y;
+	}
+	vector2D() {
+		x = y = 0;
+	}
+
+	vector2D& operator=(const vector2Df& other) {
+		x = round(other.x);
+		y = round(other.y);
+
+		return *this;
+	}
+
+	vector2D& operator=(const vector2D& other) {
+		if (this != &other) {
+			x = other.x;
+			y = other.y;
+		}
+		return *this;
 	}
 };

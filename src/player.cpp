@@ -1,7 +1,19 @@
 #include <cmath>
 #include "SDL2/SDL_scancode.h"
-#include "bullet.h"
+#include "game/game.h"
 #include "player.h"
+#include "bullet.h"
+#include "game/gameObject.h"
+
+Player::Player() {
+	pivotOffset.y = 20;
+}
+
+void Player::initialize(const vector2Df& position, Game* game) {
+	GameObject::initialize(position, game); // Call base initialize
+	
+	circleCollider.radius = 40; // Change collider size
+}
 
 // Do player specific processing here
 void Player::update(Game* game, const double& deltaTime) {
@@ -42,20 +54,17 @@ void Player::update(Game* game, const double& deltaTime) {
 
 // Points player towards the mouse
 inline void Player::pointToMouse(Game* game) {
-	vector2Df midPos = midPosition();
-	vector2Df direction(game->mousePos.x - midPos.x, game->mousePos.y - midPos.y);
+	vector2Df direction(game->mousePos.x - pivotPosition.x, game->mousePos.y - pivotPosition.y);
 	rotation = direction.toDegrees() + 90;
 }
 
 inline void Player::shoot(Game* game) const {
-	float radians = (rotation - 90) * M_PI / 180; // Convert player rotation to radians
-	// Get direction as vector
-	vector2Df direction((float)std::cos(radians), (float)std::sin(radians));
+	vector2Df direction(rotation);
 	// Instantiate bullet
-	constexpr float distMultiplier = 40; // How much further than player center should bullet spawn
-	Bullet* bullet = game->instantiate<Bullet>("bullet.png",
-					vector2Df(position.x + direction.x * distMultiplier,
-					position.y + direction.y * distMultiplier));
+	constexpr float distMultiplier = 50; // How much further than player center should bullet spawn
+	Bullet* bullet = game->instantiate<Bullet>(
+					vector2Df(midPosition.x + direction.x * distMultiplier,
+					midPosition.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet->initializeDirection(direction, rotation);
 }

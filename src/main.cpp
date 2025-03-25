@@ -7,20 +7,26 @@
 int main(int argc, char ** argv) {
 	if (argc == 2) {
 		RenderManager::assetsPath = argv[1];
-	} else {
+	} 
+	else {
 		std::cerr << "Error: Invalid argument count\n";
 		return 1;
 	}
 
-	Game game("Cool Game", 480*3, 280*3);
-	Player* player = game.instantiate<Player>("player.png", vector2Df(500, 250));
+	Game game("Cool Game", 480*3, 280*3); // Create Game instance
+	
+#ifdef DEBUG
+	std::cout << "Debug build\n";
+#endif
 
+	// Game loop
 	while (game.running()) {
 		game.handleEvents();
 		game.update();
 		game.render();
 	}
 
+	// Game closed
 	game.clean();
 
 	return 0;

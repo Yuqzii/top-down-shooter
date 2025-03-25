@@ -6,8 +6,8 @@
 #include "SDL2/SDL_timer.h"
 #include "SDL2/SDL_keyboard.h"
 #include "game/game.h"
-#include "game/renderManager.h"
-#include "game/gameObject.h"
+#include "bullet.h"
+#include "enemy.h"
 
 Game::Game(const char* title, int width, int height) {
 	isRunning = true;
@@ -33,6 +33,12 @@ Game::Game(const char* title, int width, int height) {
 	}
 
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
+	
+	// Create EnemySpawner
+	enemySpawner = EnemySpawner();
+
+	// Instantiate player
+	player = instantiate<Player>(vector2Df(500, 500));
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -57,7 +63,9 @@ void Game::handleEvents() {
 				input[event.key.keysym.scancode] = false; // Set key to false
 				break;
 			case SDL_MOUSEMOTION:
-				mousePos = { event.motion.x, event.motion.y }; // Update mouse position
+				// Update mouse position
+				mousePos.x = event.motion.x;
+				mousePos.y = event.motion.y;
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				mouseInput[event.button.button] = true;
@@ -79,6 +87,9 @@ void Game::update() {
 		object->update(this, deltaTime);
 	}
 
+	// Update EnemySpawner list
+	enemySpawner.update(this, deltaTime);
+
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {
 		if (it->get()->deleteObject) {
@@ -90,7 +101,7 @@ void Game::update() {
 }
 
 void Game::render() const {
-	SDL_SetRenderDrawColor(renderer, 84, 47, 63, 255);
+	SDL_SetRenderDrawColor(renderer, 84, 47, 63, 255); // Set background color
 	SDL_RenderClear(renderer);
 	
 	// Render all gameObjects
@@ -109,3 +120,23 @@ void Game::clean() {
 	std::cout << "Game Cleaned\n";
 }
 
+// Function to instantiate GameObjects, returns raw pointer to instantiated object
+template<class T>
+T* Game::instantiate(const vector2Df& position) {
+	// Compile time check that we don't try to instantiate a non-GameObject
+	static_assert(std::is_base_of<GameObject, T>(),
+	"Object to instantiate must inherit from GameObject");
+
+	// Create the new GameObject as a unique_ptr to clarify that Game has ownership
+	std::unique_ptr<T> newObject = std::make_unique<T>();
+	newObject->initialize(position, this); // Initialize GameObject
+	gameObjects.push_back(std::move(newObject)); // Add GameObject to list
+	
+	// Returns the newest GameObject, e.g. the one created now
+	return static_cast<T*>(gameObjects.back().get());
+}
+// Create all valid templates
+template GameObject* Game::instantiate<GameObject>(const vector2Df& position);
+template Player* Game::instantiate<Player>(const vector2Df& position);
+template Bullet* Game::instantiate<Bullet>(const vector2Df& position);
+template Enemy* Game::instantiate<Enemy>(const vector2Df& position);

@@ -1,11 +1,16 @@
 #include "bullet.h"
+#include "enemy.h"
+#include "game/game.h"
+#include "game/collision.h"
 
-Bullet::Bullet() {
+void Bullet::initialize(const vector2Df& position, Game* game) {
+	GameObject::initialize(position, game); // Call base initialize
 	
+	circleCollider.radius = 15; // Change collider size
 }
 
 void Bullet::update(Game* game, const double& deltaTime) {
-	GameObject::update(game, deltaTime);
+	GameObject::update(game, deltaTime); // Call base update
 
 	position.x += speed * direction.x * deltaTime;
 	position.y += speed * direction.y * deltaTime;
@@ -14,6 +19,16 @@ void Bullet::update(Game* game, const double& deltaTime) {
 	if (timeLeft <= 0) {
 		// Delete bullet
 		deleteObject = true;
+	}
+
+	// Loop through enemies and check for collision
+	for (Enemy* enemy : game->getEnemySpawner().getEnemies()) {
+		if (Collision::checkCollision(circleCollider, enemy->circleCollider)) {
+			// Bullet collided with enemy
+			enemy->takeDamage(damage); // Damage enemy
+			deleteObject = true; // Delete bullet
+			break; // Stop checking for collision so that one bullet only damages one enemy
+		}
 	}
 }
 

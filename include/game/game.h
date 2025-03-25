@@ -3,10 +3,13 @@
 #include <list>
 #include <memory>
 #include "SDL2/SDL.h"
-#include "game/gameObject.h"
 #include "game/vector2D.h"
+#include "game/gameObject.h"
+#include "player.h"
+#include "enemySpawner.h"
 
 class GameObject;
+class Player;
 
 class Game {
 public:
@@ -14,20 +17,8 @@ public:
 	~Game();
 
 	// Function to instantiate GameObjects
-	// Returns a raw pointer to the instantiated object
 	template<class T>
-	T* instantiate(const std::string textureSheet, const vector2Df position) {
-		// Compile time check that we don't try to instantiate a non-GameObject
-		static_assert(std::is_base_of<GameObject, T>(),
-		"Object to instantiate must inherit from GameObject");
-
-		// Create the new GameObject as a unique_ptr to clarify that Game has ownership
-		std::unique_ptr<T> newObject = std::make_unique<T>();
-		newObject->initialize(textureSheet, position, this); // Initialize GameObject
-		gameObjects.push_back(std::move(newObject)); // Add GameObject to list
-
-		return static_cast<T*>(gameObjects.back().get()); // Returns the newest GameObject, e.g. the one created now
-	}
+	T* instantiate(const vector2Df& position);
 	
 	// Game loop
 	void handleEvents();
@@ -38,8 +29,10 @@ public:
 	bool running() { return isRunning; };
 
 	// SDL stuff
-	SDL_Window* getWindow() { return window; };
-	SDL_Renderer* getRenderer() { return renderer; };
+	SDL_Window* getWindow() const { return window; };
+	SDL_Renderer* getRenderer() const { return renderer; };
+
+	const EnemySpawner getEnemySpawner() const { return enemySpawner; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};
@@ -47,7 +40,9 @@ public:
 	double deltaTime;
 	vector2D mousePos;
 
-	std::list<std::unique_ptr<GameObject>> gameObjects; 
+	const Player* player;
+
+	std::vector<std::unique_ptr<GameObject>> gameObjects; 
 
 private:
 	bool isRunning;
@@ -55,4 +50,6 @@ private:
 	SDL_Renderer* renderer;
 
 	Uint64 prevTime;
+
+	EnemySpawner enemySpawner;
 };
