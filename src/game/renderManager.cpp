@@ -28,7 +28,7 @@ namespace RenderManager {
 		if (!loadedTextures.count(filename)) {
 			// Check ASSETS_PATH is defined
 			#ifndef ASSETS_PATH
-			std::cerr << "ERROR: ASSETS_PATH not defined. Terminating";
+			std::cerr << "ERROR: ASSETS_PATH not defined." << std::endl;
 			std::terminate();
 			#define ASSETS_PATH "" // Just here to hide lsp error (not actual error)
 			#endif

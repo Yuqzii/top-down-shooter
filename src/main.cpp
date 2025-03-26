@@ -7,7 +7,6 @@ int main(int argc, char ** argv) {
 #endif
 
 	Game game("Cool Game", 480*3, 280*3); // Create Game instance
-	
 
 	// Game loop
 	while (game.running()) {
