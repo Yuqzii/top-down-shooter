@@ -23,6 +23,8 @@ SET(SOURCE_FILES
 "src/enemySpawner.cpp"
 )
 
+#file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/
+
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
@@ -34,13 +36,10 @@ target_include_directories(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
 
+target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+
 option(DEBUG "Debug" OFF)
 
 if(DEBUG)
 	target_compile_options(${PROJECT_NAME} PUBLIC "-D DEBUG")
 endif()
-
-configure_file(
-	${CMAKE_SOURCE_DIR}/startScript.sh.in
-	${CMAKE_BINARY_DIR}/startScript.sh @ONLY
-)
