@@ -1,3 +1,4 @@
+#include <climits>
 #include <iostream>
 #include <memory>
 #include "SDL2/SDL_events.h"
@@ -33,6 +34,9 @@ Game::Game(const char* title, int width, int height) {
 	}
 
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
+	
+	// Reserve memory to ensure pointer stability
+	gameObjects.reserve(1 << 16);
 	
 	// Create EnemySpawner
 	enemySpawner = EnemySpawner();
@@ -79,7 +83,7 @@ void Game::handleEvents() {
 void Game::update() {
 	Uint64 nowTime = SDL_GetPerformanceCounter();
 	deltaTime = (double)(nowTime - prevTime) 
-		/ double(SDL_GetPerformanceFrequency());
+		/ (double)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
 	// Update all GameObjects
