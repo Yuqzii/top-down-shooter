@@ -11,7 +11,7 @@
 #include "enemy.h"
 #include "game/UI/background.h"
 
-UI::Background uiBg(vector2Df(100, 100), vector2Df(200, 50));
+UI::Background uiBg(vector2Df(100, 100), vector2Df(200, 50), SDL_Color{ 50, 50, 50, 50});
 
 Game::Game(const char* title, int width, int height) {
 	isRunning = true;
@@ -36,6 +36,9 @@ Game::Game(const char* title, int width, int height) {
 		return;
 	}
 
+	// Make alpha/transparency work
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
 	
 	// Reserve memory to ensure pointer stability
@@ -48,7 +51,8 @@ Game::Game(const char* title, int width, int height) {
 	player = instantiate<Player>(vector2Df(500, 500));
 
 	// UI testing
-	UI::Background* hello = new UI::Background(vector2Df(50, 25), vector2Df(40, 50), &uiBg);
+	UI::Background* hello = new UI::Background(vector2Df(50, 25), vector2Df(40, 50),
+			SDL_Color{ 100, 100, 100, 255}, &uiBg);
 
 	std::cout << "Initialized Game" << std::endl;
 }
