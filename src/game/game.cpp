@@ -9,6 +9,9 @@
 #include "game/game.h"
 #include "bullet.h"
 #include "enemy.h"
+#include "game/UI/background.h"
+
+UI::Background uiBg(vector2Df(100, 100), vector2Df(200, 50));
 
 Game::Game(const char* title, int width, int height) {
 	isRunning = true;
@@ -43,6 +46,9 @@ Game::Game(const char* title, int width, int height) {
 
 	// Instantiate player
 	player = instantiate<Player>(vector2Df(500, 500));
+
+	// UI testing
+	UI::Background* hello = new UI::Background(vector2Df(50, 25), vector2Df(40, 50), &uiBg);
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -102,6 +108,7 @@ void Game::update() {
 		else it++;
 	}
 
+	uiBg.update();
 }
 
 void Game::render() const {
@@ -113,7 +120,10 @@ void Game::render() const {
 		object->render(renderer);
 	}
 
+	uiBg.render(renderer);
+
 	SDL_RenderPresent(renderer); // Update screen
+	
 }
 
 void Game::clean() {

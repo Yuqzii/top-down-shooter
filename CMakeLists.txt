@@ -21,6 +21,8 @@ SET(SOURCE_FILES
 "src/enemy.cpp"
 "src/game/collision.cpp"
 "src/enemySpawner.cpp"
+"src/game/UI/widget.cpp"
+"src/game/UI/background.cpp"
 )
 
 #file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/
