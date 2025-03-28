@@ -16,7 +16,6 @@ Widget::Widget(Widget* parent) {
 void Widget::update() {
 	for (auto& child : childWidgets) {
 		child->update();
-	//	std::cout << child->size.x << std::endl;
 	}
 }
 
@@ -24,6 +23,10 @@ void Widget::render(SDL_Renderer* renderer) const {
 	for (auto& child : childWidgets) {
 		child->render(renderer);
 	}
+}
+
+std::function<void(SDL_Renderer*)> Widget::getRenderFunction() const {
+	return [this](SDL_Renderer* renderer){this->render(renderer);};
 }
 
 void Widget::calculatePosition() {

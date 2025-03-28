@@ -3,6 +3,7 @@
 #include <list>
 #include <memory>
 #include "SDL2/SDL.h"
+#include "game/UI/UIManager.h"
 #include "game/vector2D.h"
 #include "game/gameObject.h"
 #include "player.h"
@@ -33,6 +34,7 @@ public:
 	SDL_Renderer* getRenderer() const { return renderer; };
 
 	const EnemySpawner getEnemySpawner() const { return enemySpawner; }
+	UI::UIManager* getUIManager() { return &uiManager; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};
@@ -42,8 +44,6 @@ public:
 
 	const Player* player;
 
-	std::vector<std::unique_ptr<GameObject>> gameObjects; 
-
 private:
 	bool isRunning;
 	SDL_Window* window;
@@ -51,5 +51,8 @@ private:
 
 	Uint64 prevTime;
 
+	std::vector<std::unique_ptr<GameObject>> gameObjects; 
+
 	EnemySpawner enemySpawner;
+	UI::UIManager uiManager;
 };

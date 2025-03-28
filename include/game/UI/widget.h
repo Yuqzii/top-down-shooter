@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <list>
 #include <memory>
 #include <vector>
@@ -19,6 +20,7 @@ public:
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
 	virtual void render(SDL_Renderer* renderer) const;
+	virtual std::function<void(SDL_Renderer*)> getRenderFunction() const;
 
 	virtual void calculatePosition();
 	virtual void calculateSize();

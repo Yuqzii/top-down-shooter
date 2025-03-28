@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include "game/UI/background.h"
 #include "game/gameObject.h"
 
 class Game;
@@ -21,4 +23,8 @@ private:
 	bool moveLeft, moveRight, moveUp, moveDown;
 	vector2Df moveDir;
 	constexpr static const float moveSpeed = 300;
+
+	// Healthbar
+	UI::Background healthbar;
+	std::function<void(SDL_Renderer*)> healthbarRender;
 };
