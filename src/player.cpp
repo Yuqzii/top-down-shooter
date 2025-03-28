@@ -5,8 +5,10 @@
 #include "bullet.h"
 #include "game/gameObject.h"
 
-Player::Player() {
+Player::Player() : healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{ 255, 0, 0, 255 }) {
 	pivotOffset.y = 20;
+
+	healthbarSlider = new UI::Slider(SDL_Color{ 0, 255, 0, 255 }, &healthbarBG);
 }
 
 void Player::initialize(const vector2Df& position, Game* game) {
@@ -50,6 +52,18 @@ void Player::update(Game* game, const double& deltaTime) {
 	if (game->mouseInput[SDL_BUTTON_LEFT]) {
 		shoot(game);
 	}
+
+	healthbarBG.update();
+
+	int windowHeight;
+	SDL_GetWindowSizeInPixels(game->getWindow(), NULL, &windowHeight);
+	// Make space from bottom of screen to healthbar same as side of screen to healthbar
+	healthbarBG.localPosition.y = windowHeight - healthbarBG.localSize.y -
+		healthbarBG.localPosition.x;
+	healthbarBG.calculatePosition();
+	
+	// Tell UIManager to render healthbar
+	game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction());
 }
 
 // Points player towards the mouse

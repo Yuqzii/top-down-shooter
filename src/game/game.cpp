@@ -33,16 +33,18 @@ Game::Game(const char* title, int width, int height) {
 		return;
 	}
 
+	// Make alpha/transparency work
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
 	
-	// Reserve memory to ensure pointer stability
-	gameObjects.reserve(1 << 16);
+	gameObjects.reserve(1 << 16); // Reserve memory to ensure pointer stability
 	
-	// Create EnemySpawner
-	enemySpawner = EnemySpawner();
+	enemySpawner = EnemySpawner(); // Create EnemySpawner
 
-	// Instantiate player
-	player = instantiate<Player>(vector2Df(500, 500));
+	uiManager = UI::UIManager(); // Create UIManager
+
+	player = instantiate<Player>(vector2Df(500, 500)); // Instantiate player
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -86,6 +88,8 @@ void Game::update() {
 		/ (double)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
+	uiManager.update(); // Resets uiManager call count, does NOT update UI Widgets
+
 	// Update all GameObjects
 	for (auto& object : gameObjects) {
 		object->update(this, deltaTime);
@@ -101,7 +105,6 @@ void Game::update() {
 		}
 		else it++;
 	}
-
 }
 
 void Game::render() const {
@@ -112,6 +115,8 @@ void Game::render() const {
 	for (auto& object : gameObjects) {
 		object->render(renderer);
 	}
+
+	uiManager.render(renderer); // Render UI Widgets
 
 	SDL_RenderPresent(renderer); // Update screen
 }

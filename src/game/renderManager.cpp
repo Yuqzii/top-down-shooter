@@ -17,17 +17,23 @@
 	#define ASSERT(condition, message) do { } while (false)
 #endif
 
+
 namespace RenderManager {
 	namespace {
 		std::unordered_map<std::string, SDL_Texture*> loadedTextures;
 	}
 
-	std::string assetsPath = "";
-
 	SDL_Texture* LoadTexture(const std::string& filename, SDL_Renderer* renderer) {
 		// Load texture if it is not already loaded
 		if (!loadedTextures.count(filename)) {
-			const std::string path = RenderManager::assetsPath + filename;
+			// Check ASSETS_PATH is defined
+			#ifndef ASSETS_PATH
+			std::cerr << "ERROR: ASSETS_PATH not defined." << std::endl;
+			std::terminate();
+			#define ASSETS_PATH "" // Just here to hide lsp error (not actual error)
+			#endif
+
+			const std::string path = ASSETS_PATH + filename;
 			// Check that file exists
 			ASSERT(std::filesystem::exists(path), "Could not load texture \"" + filename + "\"");
 			// Store loaded textures to avoid unnecessary load calls

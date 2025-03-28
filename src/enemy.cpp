@@ -2,8 +2,10 @@
 #include "game/game.h"
 #include "game/collision.h"
 
-Enemy::Enemy() {
+Enemy::Enemy() : healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }) {
 	isAnimated = true;
+
+	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 }
 
 void Enemy::initialize(const vector2Df& startPosition, Game* game) {
@@ -30,6 +32,15 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	if (Collision::checkCollision(circleCollider, game->player->circleCollider)) {
 		// Damage player or something
 	}
+	
+	// Update healthbar
+	if (health < startHealth) {
+		healthbarBG.localPosition.x = pivotPosition.x - healthbarBG.localSize.x / 2;
+		healthbarBG.localPosition.y = pivotPosition.y + 60;
+		healthbarBG.calculatePosition();
+		healthbarBG.update();
+		game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction()); // Render healthbar
+	}
 }
 
 void Enemy::takeDamage(const float& damage) {
@@ -38,6 +49,9 @@ void Enemy::takeDamage(const float& damage) {
 	if (health <= 0) {
 		die();
 	}
+
+	// Update healthbar
+	healthbarSlider->setValue(health / startHealth * 100);
 }
 
 void Enemy::die() {
