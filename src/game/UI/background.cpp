@@ -16,10 +16,6 @@ Background::Background(const vector2Df& position, const vector2Df& size, const S
 	calculateSize();
 }
 
-void Background::update() {
-	Widget::update();
-}
-
 void Background::render(SDL_Renderer* renderer) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderFillRect(renderer, &rect);

@@ -27,7 +27,7 @@ public:
 
 	void addChild(Widget* child);
 	
-	// If widget has parent these values is based on percentage of parent size
+	// If widget has parent these values are based on percentage of parent size
 	vector2Df localPosition;
 	vector2Df localSize;
 	std::list<std::unique_ptr<Widget>> childWidgets;
@@ -38,9 +38,8 @@ protected:
 	vector2D position; // Rendering position, pixels
 	vector2Df size;
 
-	AnchorType anchorPosition;
-
 private:
+	AnchorType anchorPosition;
 };
 
 }

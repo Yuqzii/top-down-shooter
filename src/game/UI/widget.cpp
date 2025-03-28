@@ -23,8 +23,10 @@ void Widget::render(SDL_Renderer* renderer) const {
 	}
 }
 
+// Creates a lambda of the render() function and returns it
+// To be used when adding render call to UIManager
 std::function<void(SDL_Renderer*)> Widget::getRenderFunction() const {
-	return [this](SDL_Renderer* renderer){this->render(renderer);};
+	return [this](SDL_Renderer* renderer) { this->render(renderer); };
 }
 
 void Widget::calculatePosition(const bool& calculateChildren) {
@@ -38,24 +40,26 @@ void Widget::calculatePosition(const bool& calculateChildren) {
 
 		// Update position based on anchoring
 		vector2Df add;
-		if (anchorPosition.x == XANCHOR_CENTER) {
-			add.x = 50 - (size.x / parent->size.x) * 50;
-		}
-		else if (anchorPosition.x == XANCHOR_LEFT) {
-			add.x = 0;
-		}
-		else if (anchorPosition.x == XANCHOR_RIGHT) {
-			add.x = 100 - (size.x / parent->size.x) * 100;
+		switch (anchorPosition.x) {
+			case XANCHOR_CENTER:
+				add.x = 50 - (size.x / parent->size.x) * 50;
+				break;
+			case XANCHOR_RIGHT:
+				add.x = 100 - (size.x / parent->size.x) * 100;
+				break;
+			default:
+				break;
 		}
 
-		if (anchorPosition.y == YANCHOR_MIDDLE) {
-			add.y = 50 - (size.y / parent->size.y) * 50;
-		}
-		else if (anchorPosition.y == YANCHOR_TOP) {
-			add.y = 0;
-		}
-		else if (anchorPosition.y == YANCHOR_BOTTOM) {
-			add.y = 100 - (size.y / parent->size.y) * 100;
+		switch (anchorPosition.y) {
+			case YANCHOR_MIDDLE:
+				add.y = 50 - (size.y / parent->size.y) * 50;
+				break;
+			case YANCHOR_BOTTOM:
+				add.y = 100 - (size.y / parent->size.y) * 100;
+				break;
+			default:
+				break;
 		}
 
 		// Update position
@@ -84,7 +88,7 @@ void Widget::calculateSize() {
 }
 
 void Widget::addChild(Widget* child) {
-	childWidgets.push_back(std::move(std::unique_ptr<Widget>(child)));
+	childWidgets.push_back(std::unique_ptr<Widget>(child));
 }
 
 }
