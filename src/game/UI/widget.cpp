@@ -2,15 +2,13 @@
 
 namespace UI {
 
-Widget::Widget() {
-	parent = nullptr;
-}
-
-Widget::Widget(Widget* parent) {
+Widget::Widget(AnchorType anchorPosition, Widget* parent) {
 	this->parent = parent;
 
 	if (parent != nullptr)
 		parent->addChild(this);
+
+	this->anchorPosition = anchorPosition;
 }
 
 void Widget::update() {
@@ -34,6 +32,16 @@ void Widget::calculatePosition() {
 	if (parent == nullptr) {
 		position = localPosition;
 		return;
+	}
+
+	if (anchorPosition.x == CENTER) {
+		localPosition.x = 50 - (size.x / parent->size.x) / 2;
+	}
+	else if (anchorPosition.x == LEFT) {
+		localPosition.x = 0;
+	}
+	else if (anchorPosition.x == RIGHT) {
+		localPosition.x = 100 - (size.x / parent->size.x);
 	}
 
 	parent->calculatePosition(); // Make sure parents position is also correct

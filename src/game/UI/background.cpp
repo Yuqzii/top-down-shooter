@@ -4,7 +4,8 @@
 namespace UI {
 
 Background::Background(const vector2Df& position, const vector2Df& size, const SDL_Color& color,
-					   Widget* parent) : Widget(parent) {
+						AnchorType anchorPosition, Widget* parent)
+						: Widget(anchorPosition, parent) {
 	// Set variables
 	localPosition = position;
 	this->size = size;
@@ -14,10 +15,6 @@ Background::Background(const vector2Df& position, const vector2Df& size, const S
 	// Make sure initial positions are correct
 	calculatePosition();
 	calculateSize();
-}
-
-Background::Background(const vector2Df& position, const vector2Df& size, const SDL_Color& color) :
-		Background(position, size, color, nullptr) {
 }
 
 void Background::update() {

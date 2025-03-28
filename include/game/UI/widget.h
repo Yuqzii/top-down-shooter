@@ -9,13 +9,31 @@
 
 namespace UI {
 
+enum XAnchorType {
+	XANCHOR_NONE = 0,
+	LEFT,
+	CENTER,
+	RIGHT,
+};
+
+enum YAnchorType {
+	YANCHOR_NONE = 0,
+	TOP,
+	MIDDLE,
+	BOTTOM,
+};
+
+struct AnchorType {
+	XAnchorType x;
+	YAnchorType y;
+};
+
 // A widget without a parent should be constructed normally as an object,
 // but child widgets should be made as raw pointers using the "new" keyword with a pointer to the
 // parent widget as a constructor argument
 class Widget {
 public:
-	Widget();
-	Widget(Widget* parent);
+	Widget(AnchorType anchorPosition = AnchorType(), Widget* parent = nullptr);
 
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
@@ -28,7 +46,7 @@ public:
 	void addChild(Widget* child);
 	
 	// If widget has parent these values is based on percentage of parent size
-	vector2Df localPosition;
+	vector2Df localPosition; // Anchortype must be NONE for this to work
 	vector2Df localSize;
 	std::list<std::unique_ptr<Widget>> childWidgets;
 
@@ -37,6 +55,8 @@ protected:
 
 	vector2D position; // Rendering position, pixels
 	vector2Df size;
+
+	AnchorType anchorPosition;
 
 private:
 };
