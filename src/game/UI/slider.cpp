@@ -8,7 +8,7 @@ Slider::Slider(const SDL_Color& color, Widget* parent) :
 }
 
 void Slider::setValue(const float& newValue) {
-	sliderValue = newValue;
+	sliderValue = std::clamp(newValue, 0.0f, 100.0f); // Clamp sliderValue between 0 and 100
 	localSize.x = sliderValue;
 	calculateSize();
 }

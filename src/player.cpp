@@ -5,13 +5,10 @@
 #include "bullet.h"
 #include "game/gameObject.h"
 
-Player::Player() : healthbar(vector2Df(), vector2Df(150, 20), SDL_Color{ 0, 255, 0, 255 }) {
+Player::Player() : healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{ 255, 0, 0, 255 }) {
 	pivotOffset.y = 20;
 
-//	UI::Background* test = new UI::Background(vector2Df(), vector2Df(60, 75),
-//							SDL_Color{255, 0, 0, 255},
-//		 &healthbar, UI::AnchorType{UI::XANCHOR_CENTER, UI::YANCHOR_BOTTOM});
-//	test->localPosition = { 0, -50 };
+	healthbarSlider = new UI::Slider(SDL_Color{ 0, 255, 0, 255 }, &healthbarBG);
 }
 
 void Player::initialize(const vector2Df& position, Game* game) {
@@ -56,13 +53,17 @@ void Player::update(Game* game, const double& deltaTime) {
 		shoot(game);
 	}
 
-	// Update healthbar position
-	healthbar.localPosition.x = pivotPosition.x - healthbar.localSize.x / 2;
-	healthbar.localPosition.y = pivotPosition.y + 65;
-	healthbar.calculatePosition();
-	healthbar.update();
+	healthbarBG.update();
+
+	int windowHeight;
+	SDL_GetWindowSizeInPixels(game->getWindow(), NULL, &windowHeight);
+	// Make space from bottom of screen to healthbar same as side of screen to healthbar
+	healthbarBG.localPosition.y = windowHeight - healthbarBG.localSize.y -
+		healthbarBG.localPosition.x;
+	healthbarBG.calculatePosition();
+	
 	// Tell UIManager to render healthbar
-	game->getUIManager()->addRenderCall(healthbar.getRenderFunction());
+	game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction());
 }
 
 // Points player towards the mouse
