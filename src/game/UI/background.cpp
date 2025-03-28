@@ -4,11 +4,10 @@
 namespace UI {
 
 Background::Background(const vector2Df& position, const vector2Df& size, const SDL_Color& color,
-						AnchorType anchorPosition, Widget* parent)
-						: Widget(anchorPosition, parent) {
+						Widget* parent, AnchorType anchorPosition)
+						: Widget(parent, anchorPosition) {
 	// Set variables
 	localPosition = position;
-	this->size = size;
 	localSize = size;
 	this->color = color;
 

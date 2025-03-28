@@ -7,7 +7,7 @@ namespace UI {
 class Background : public Widget {
 public:
 	Background(const vector2Df& position, const vector2Df& size, const SDL_Color& color,
-			AnchorType anchorPosition = AnchorType(), Widget* parent = nullptr);
+			Widget* parent = nullptr, AnchorType anchorPosition = AnchorType());
 
 	void update() override;
 	void render(SDL_Renderer* renderer) const override;
@@ -15,8 +15,10 @@ public:
 	void calculatePosition(const bool& calculateChildren = true) override;
 	void calculateSize() override;
 
-private:
+protected:
 	SDL_Rect rect;
+
+private:
 	SDL_Color color;
 };
 

@@ -8,10 +8,10 @@
 Player::Player() : healthbar(vector2Df(), vector2Df(150, 20), SDL_Color{ 0, 255, 0, 255 }) {
 	pivotOffset.y = 20;
 
-	//UI::Background* test = new UI::Background(vector2Df(), vector2Df(60, 75),
-	//						SDL_Color{255, 0, 0, 255},
-	//	UI::AnchorType{UI::XANCHOR_CENTER, UI::YANCHOR_BOTTOM}, &healthbar);
-	//test->localPosition = { 0, -50 };
+//	UI::Background* test = new UI::Background(vector2Df(), vector2Df(60, 75),
+//							SDL_Color{255, 0, 0, 255},
+//		 &healthbar, UI::AnchorType{UI::XANCHOR_CENTER, UI::YANCHOR_BOTTOM});
+//	test->localPosition = { 0, -50 };
 }
 
 void Player::initialize(const vector2Df& position, Game* game) {

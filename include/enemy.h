@@ -1,5 +1,7 @@
 #pragma once
 
+#include "game/UI/background.h"
+#include "game/UI/slider.h"
 #include "game/gameObject.h"
 
 class Game;
@@ -29,4 +31,7 @@ private:
 	float health;
 
 	void die();
+
+	UI::Background healthbarBG;
+	UI::Slider* healthbarSlider;
 };

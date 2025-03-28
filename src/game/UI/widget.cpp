@@ -2,7 +2,7 @@
 
 namespace UI {
 
-Widget::Widget(AnchorType anchorPosition, Widget* parent) {
+Widget::Widget(Widget* parent, AnchorType anchorPosition) {
 	this->parent = parent;
 
 	if (parent != nullptr)
@@ -72,7 +72,10 @@ void Widget::calculatePosition(const bool& calculateChildren) {
 
 void Widget::calculateSize() {
 	// No need to calculate size if widget does not have a parent
-	if (parent == nullptr) return;
+	if (parent == nullptr) {
+		size = localSize;
+		return;
+	}
 
 	parent->calculateSize(); // Make sure parents size is also correct
 
