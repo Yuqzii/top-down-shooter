@@ -1,26 +1,28 @@
 #pragma once
 
+#include <functional>
 #include <list>
 #include <memory>
 #include <vector>
-#include "game/vector2D.h"
 #include "SDL2/SDL_render.h"
+#include "game/vector2D.h"
+#include "game/UI/anchorTypes.h"
 
 namespace UI {
-
 // A widget without a parent should be constructed normally as an object,
 // but child widgets should be made as raw pointers using the "new" keyword with a pointer to the
 // parent widget as a constructor argument
 class Widget {
 public:
-	Widget();
-	Widget(Widget* parent);
+	Widget(AnchorType anchorPosition = AnchorType(), Widget* parent = nullptr);
 
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
 	virtual void render(SDL_Renderer* renderer) const;
+	std::function<void(SDL_Renderer*)> getRenderFunction() const;
 
-	virtual void calculatePosition();
+	// calculateChildren means it will update children positions as well
+	virtual void calculatePosition(const bool& calculateChildren = true);
 	virtual void calculateSize();
 
 	void addChild(Widget* child);
@@ -35,6 +37,8 @@ protected:
 
 	vector2D position; // Rendering position, pixels
 	vector2Df size;
+
+	AnchorType anchorPosition;
 
 private:
 };

@@ -9,9 +9,6 @@
 #include "game/game.h"
 #include "bullet.h"
 #include "enemy.h"
-#include "game/UI/background.h"
-
-UI::Background uiBg(vector2Df(100, 100), vector2Df(200, 50), SDL_Color{ 50, 50, 50, 50});
 
 Game::Game(const char* title, int width, int height) {
 	isRunning = true;
@@ -41,18 +38,13 @@ Game::Game(const char* title, int width, int height) {
 
 	prevTime = SDL_GetPerformanceCounter(); // Initialize prevTime to ensure correct first deltaTime
 	
-	// Reserve memory to ensure pointer stability
-	gameObjects.reserve(1 << 16);
+	gameObjects.reserve(1 << 16); // Reserve memory to ensure pointer stability
 	
-	// Create EnemySpawner
-	enemySpawner = EnemySpawner();
+	enemySpawner = EnemySpawner(); // Create EnemySpawner
 
-	// Instantiate player
-	player = instantiate<Player>(vector2Df(500, 500));
+	uiManager = UI::UIManager(); // Create UIManager
 
-	// UI testing
-	UI::Background* hello = new UI::Background(vector2Df(50, 25), vector2Df(40, 50),
-			SDL_Color{ 100, 100, 100, 255}, &uiBg);
+	player = instantiate<Player>(vector2Df(500, 500)); // Instantiate player
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -96,6 +88,8 @@ void Game::update() {
 		/ (double)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
+	uiManager.update(); // Resets uiManager call count, does NOT update UI Widgets
+
 	// Update all GameObjects
 	for (auto& object : gameObjects) {
 		object->update(this, deltaTime);
@@ -111,8 +105,6 @@ void Game::update() {
 		}
 		else it++;
 	}
-
-	uiBg.update();
 }
 
 void Game::render() const {
@@ -124,10 +116,9 @@ void Game::render() const {
 		object->render(renderer);
 	}
 
-	uiBg.render(renderer);
+	uiManager.render(renderer); // Render UI Widgets
 
 	SDL_RenderPresent(renderer); // Update screen
-	
 }
 
 void Game::clean() {
