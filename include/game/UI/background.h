@@ -15,11 +15,9 @@ public:
 	void calculatePosition(const bool& calculateChildren = true) override;
 	void calculateSize() override;
 
-protected:
-	SDL_Rect rect;
-
 private:
 	SDL_Color color;
+	SDL_Rect rect;
 };
 
 }
