@@ -28,10 +28,6 @@ void Background::render(SDL_Renderer* renderer) const {
 	Widget::render(renderer);
 }
 
-std::function<void(SDL_Renderer*)> Background::getRenderFunction() const {
-	return [this](SDL_Renderer* renderer){this->render(renderer);};
-}
-
 void Background::calculatePosition(const bool& calculateChildren) {
 	Widget::calculatePosition(calculateChildren);
 

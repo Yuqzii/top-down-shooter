@@ -56,6 +56,7 @@ void Player::update(Game* game, const double& deltaTime) {
 		shoot(game);
 	}
 
+	// Update healthbar position
 	healthbar.localPosition.x = pivotPosition.x - healthbar.localSize.x / 2;
 	healthbar.localPosition.y = pivotPosition.y + 65;
 	healthbar.calculatePosition();

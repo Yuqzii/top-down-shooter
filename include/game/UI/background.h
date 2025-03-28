@@ -11,7 +11,6 @@ public:
 
 	void update() override;
 	void render(SDL_Renderer* renderer) const override;
-	std::function<void(SDL_Renderer*)> getRenderFunction() const override;
 
 	void calculatePosition(const bool& calculateChildren = true) override;
 	void calculateSize() override;

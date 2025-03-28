@@ -19,7 +19,7 @@ public:
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
 	virtual void render(SDL_Renderer* renderer) const;
-	virtual std::function<void(SDL_Renderer*)> getRenderFunction() const;
+	std::function<void(SDL_Renderer*)> getRenderFunction() const;
 
 	// calculateChildren means it will update children positions as well
 	virtual void calculatePosition(const bool& calculateChildren = true);

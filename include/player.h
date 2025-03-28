@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include "game/UI/background.h"
 #include "game/gameObject.h"
 
