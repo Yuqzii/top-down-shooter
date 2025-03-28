@@ -26,5 +26,4 @@ private:
 
 	// Healthbar
 	UI::Background healthbar;
-	std::function<void(SDL_Renderer*)> healthbarRender;
 };

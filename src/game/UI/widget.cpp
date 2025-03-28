@@ -1,5 +1,4 @@
 #include "game/UI/widget.h"
-#include <iostream>
 
 namespace UI {
 

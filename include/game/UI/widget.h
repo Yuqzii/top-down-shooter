@@ -4,30 +4,11 @@
 #include <list>
 #include <memory>
 #include <vector>
-#include "game/vector2D.h"
 #include "SDL2/SDL_render.h"
+#include "game/vector2D.h"
+#include "game/UI/anchorTypes.h"
 
 namespace UI {
-
-enum XAnchorType {
-	XANCHOR_NONE = 0,
-	XANCHOR_LEFT,
-	XANCHOR_CENTER,
-	XANCHOR_RIGHT,
-};
-
-enum YAnchorType {
-	YANCHOR_NONE = 0,
-	YANCHOR_TOP,
-	YANCHOR_MIDDLE,
-	YANCHOR_BOTTOM,
-};
-
-struct AnchorType {
-	XAnchorType x;
-	YAnchorType y;
-};
-
 // A widget without a parent should be constructed normally as an object,
 // but child widgets should be made as raw pointers using the "new" keyword with a pointer to the
 // parent widget as a constructor argument
@@ -47,7 +28,7 @@ public:
 	void addChild(Widget* child);
 	
 	// If widget has parent these values is based on percentage of parent size
-	vector2Df localPosition; // Anchortype must be NONE for this to work
+	vector2Df localPosition;
 	vector2Df localSize;
 	std::list<std::unique_ptr<Widget>> childWidgets;
 
