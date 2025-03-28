@@ -14,7 +14,7 @@ namespace UI {
 // parent widget as a constructor argument
 class Widget {
 public:
-	Widget(AnchorType anchorPosition = AnchorType(), Widget* parent = nullptr);
+	Widget(Widget* parent = nullptr, AnchorType anchorPosition = AnchorType());
 
 	// Should be called at the end of inheriting objects functions
 	virtual void update();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game/UI/background.h"
+#include "game/UI/slider.h"
 #include "game/gameObject.h"
 
 class Game;
@@ -24,5 +25,6 @@ private:
 	constexpr static const float moveSpeed = 300;
 
 	// Healthbar
-	UI::Background healthbar;
+	UI::Background healthbarBG;
+	UI::Slider* healthbarSlider;
 };
