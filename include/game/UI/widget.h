@@ -11,16 +11,16 @@ namespace UI {
 
 enum XAnchorType {
 	XANCHOR_NONE = 0,
-	LEFT,
-	CENTER,
-	RIGHT,
+	XANCHOR_LEFT,
+	XANCHOR_CENTER,
+	XANCHOR_RIGHT,
 };
 
 enum YAnchorType {
 	YANCHOR_NONE = 0,
-	TOP,
-	MIDDLE,
-	BOTTOM,
+	YANCHOR_TOP,
+	YANCHOR_MIDDLE,
+	YANCHOR_BOTTOM,
 };
 
 struct AnchorType {
@@ -40,7 +40,8 @@ public:
 	virtual void render(SDL_Renderer* renderer) const;
 	virtual std::function<void(SDL_Renderer*)> getRenderFunction() const;
 
-	virtual void calculatePosition();
+	// calculateChildren means it will update children positions as well
+	virtual void calculatePosition(const bool& calculateChildren = true);
 	virtual void calculateSize();
 
 	void addChild(Widget* child);

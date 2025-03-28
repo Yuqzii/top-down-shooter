@@ -1,4 +1,5 @@
 #include "game/UI/widget.h"
+#include <iostream>
 
 namespace UI {
 
@@ -27,27 +28,47 @@ std::function<void(SDL_Renderer*)> Widget::getRenderFunction() const {
 	return [this](SDL_Renderer* renderer){this->render(renderer);};
 }
 
-void Widget::calculatePosition() {
+void Widget::calculatePosition(const bool& calculateChildren) {
 	// No need to calculate position if widget does not have a parent
 	if (parent == nullptr) {
 		position = localPosition;
-		return;
+	}
+	else {
+		// Calculate parents position without updating its children to avoid infinite recursion
+		parent->calculatePosition(false); 
+
+		// Update position based on anchoring
+		vector2Df add;
+		if (anchorPosition.x == XANCHOR_CENTER) {
+			add.x = 50 - (size.x / parent->size.x) * 50;
+		}
+		else if (anchorPosition.x == XANCHOR_LEFT) {
+			add.x = 0;
+		}
+		else if (anchorPosition.x == XANCHOR_RIGHT) {
+			add.x = 100 - (size.x / parent->size.x) * 100;
+		}
+
+		if (anchorPosition.y == YANCHOR_MIDDLE) {
+			add.y = 50 - (size.y / parent->size.y) * 50;
+		}
+		else if (anchorPosition.y == YANCHOR_TOP) {
+			add.y = 0;
+		}
+		else if (anchorPosition.y == YANCHOR_BOTTOM) {
+			add.y = 100 - (size.y / parent->size.y) * 100;
+		}
+
+		// Update position
+		position.x = parent->position.x + parent->size.x * (localPosition.x + add.x) / 100;
+		position.y = parent->position.y + parent->size.y * (localPosition.y + add.y) / 100;
 	}
 
-	if (anchorPosition.x == CENTER) {
-		localPosition.x = 50 - (size.x / parent->size.x) / 2;
+	if (calculateChildren) {
+		for (auto& child : childWidgets) {
+			child->calculatePosition();
+		}
 	}
-	else if (anchorPosition.x == LEFT) {
-		localPosition.x = 0;
-	}
-	else if (anchorPosition.x == RIGHT) {
-		localPosition.x = 100 - (size.x / parent->size.x);
-	}
-
-	parent->calculatePosition(); // Make sure parents position is also correct
-	// Update position
-	position.x = parent->position.x + parent->size.x * localPosition.x / 100;
-	position.y = parent->position.y + parent->size.y * localPosition.y / 100;
 }
 
 void Widget::calculateSize() {

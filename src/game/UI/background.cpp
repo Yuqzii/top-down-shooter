@@ -32,8 +32,8 @@ std::function<void(SDL_Renderer*)> Background::getRenderFunction() const {
 	return [this](SDL_Renderer* renderer){this->render(renderer);};
 }
 
-void Background::calculatePosition() {
-	Widget::calculatePosition();
+void Background::calculatePosition(const bool& calculateChildren) {
+	Widget::calculatePosition(calculateChildren);
 
 	rect.x = position.x;
 	rect.y = position.y;
