@@ -25,6 +25,7 @@ SET(SOURCE_FILES
 "src/game/UI/background.cpp"
 "src/game/UI/UIManager.cpp"
 "src/game/UI/slider.cpp"
+"src/game/vector2D.cpp"
 )
 
 # file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/")
