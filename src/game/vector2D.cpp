@@ -18,12 +18,18 @@ vector2Df::vector2Df(const vector2Df& vec) {
 	y = vec.y;
 }
 
-void vector2Df::normalize() {
-	float length = std::sqrt(std::pow(x, 2.0) + std::pow(y, 2.0));
-	if (length > 0) {
-		x /= length;
-		y /= length;
+float vector2Df::getMagnitude() const {
+	return std::sqrt(x * x + y * y);
+}
+
+vector2Df vector2Df::normalized() const {
+	float magnitude = getMagnitude();
+	vector2Df res(*this);
+	if (magnitude > 0) {
+		res.x /= magnitude;
+		res.y /= magnitude;
 	}
+	return res;
 }
 
 int vector2Df::toDegrees() const {

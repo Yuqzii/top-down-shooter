@@ -50,8 +50,7 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 }
 
 void GameObject::update(Game* game, const double& deltaTime) {
-	position.x += velocity.x * deltaTime;
-	position.y += velocity.y * deltaTime;
+	position += velocity * deltaTime;
 
 	// Update render position
 	destRect.x = round(position.x);
@@ -82,6 +81,9 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+	SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+					pivotPosition.x + velocity.normalized().x * 50,
+					pivotPosition.y + velocity.normalized().y * 50);
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_RenderDrawRect(renderer, &destRect);
 	#endif

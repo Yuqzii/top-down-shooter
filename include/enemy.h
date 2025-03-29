@@ -26,7 +26,8 @@ protected:
 	};
 
 private:
-	constexpr static const float moveSpeed = 150;
+	constexpr static const float moveSpeed = 200;
+	constexpr static const float maxSteer = 1;
 	constexpr static const float startHealth = 100;
 	float health;
 

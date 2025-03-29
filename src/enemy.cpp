@@ -17,13 +17,24 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 
 void Enemy::update(Game* game, const double& deltaTime) {
 	// Get direction towards player
-	vector2Df playerDirection(game->player->getPivotPosition().x - pivotPosition.x,
-							game->player->getPivotPosition().y - pivotPosition.y);
-	playerDirection.normalize();
-	rotation = playerDirection.toDegrees() + 90; // Rotate enemy towards player
+	const vector2Df playerDirection = vector2Df(
+		game->player->getPivotPosition() - pivotPosition).normalized();
 	
-	// Update velocity
-	velocity = playerDirection * (double)moveSpeed;
+	const vector2Df desiredVelocity = playerDirection * moveSpeed; // Scale desiredVelocity to max
+	vector2Df steering = desiredVelocity - velocity; // Calculate steering
+	
+	// Limit steering magnitude to moveSpeed
+	if (steering.getMagnitude() > maxSteer) {
+		steering = steering.normalized() * maxSteer;
+	}
+
+	velocity += steering; // Add steering velocity
+	// Limit velocity to moveSpeed
+	if (velocity.getMagnitude() > moveSpeed) {
+		velocity = velocity.normalized() * moveSpeed;
+	}
+
+	rotation = velocity.toDegrees() + 90; // Rotate enemy in direction of movement
 
 	GameObject::update(game, deltaTime); // Update position
 

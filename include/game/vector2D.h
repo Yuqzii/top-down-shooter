@@ -11,7 +11,8 @@ struct vector2Df {
 	vector2Df(const float& degrees);
 	vector2Df(const vector2Df& vec);
 
-	void normalize();
+	float getMagnitude() const;
+	vector2Df normalized() const;
 
 	int toDegrees() const;
 
