@@ -8,6 +8,15 @@
 GameObject::GameObject() {
 	deleteObject = false;
 
+	// Initialize source rectangle (part of textureSheet that is displayed)
+	// default to top left 32x32
+	srcRect.h = srcRect.w = 32;
+	srcRect.x = srcRect.y = 0;
+	
+	// Initialize destination rectangle (part of screen GameObject is displayed on)
+	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3?
+	destRect.h = srcRect.h * 3;
+
 	pivotOffset.x = pivotOffset.y = 0;
 
 	isAnimated = false;
@@ -17,15 +26,6 @@ GameObject::GameObject() {
 void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	// Load texture
 	texture = RenderManager::LoadTexture(getTextureSheet(), game->getRenderer());
-	
-	// Initialize source rectangle (part of textureSheet that is displayed)
-	// default to top left 32x32
-	srcRect.h = srcRect.w = 32;
-	srcRect.x = srcRect.y = 0;
-	
-	// Initialize destination rectangle (part of screen GameObject is displayed on)
-	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3?
-	destRect.h = srcRect.h * 3;
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;
@@ -58,8 +58,8 @@ void GameObject::update(Game* game, const double& deltaTime) {
 	pivotPosition.y = pivot.y + destRect.y;
 
 	// Update midPosition
-	midPosition.x = position.x + (float)destRect.w / 2;
-	midPosition.y = position.y + (float)destRect.h / 2;
+	midPosition.x = position.x + destRect.w / 2.0f;
+	midPosition.y = position.y + destRect.h / 2.0f;
 	midPosition = midPosition.rotateAround(
 		vector2Df(destRect.x + pivot.x, destRect.y + pivot.y), rotation);
 
