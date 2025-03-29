@@ -6,9 +6,15 @@
 
 class Game;
 
+enum class EnemyStates {
+	PURSUIT = 0,
+	EVADE
+};
+
 class Enemy : public GameObject {
 public:
-	Enemy();
+	Enemy(const float& startHealth = 100, const float& moveSpeed = 200, const float& maxSteer = 0.5,
+	   const float& slowingRadius = 200);
 
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
@@ -18,6 +24,7 @@ public:
 protected:
 	SETOBJECTTEXTURE("spider-sheet.png");
 
+
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
 			{ 4, 20 }, // Crawl animation
@@ -26,10 +33,10 @@ protected:
 	};
 
 private:
-	constexpr static const float moveSpeed = 200;
-	constexpr static const float maxSteer = 0.5;
-	constexpr static const float startHealth = 100;
-	constexpr static const float slowingRadius = 200; // Larger for more gradual stop
+	const float moveSpeed = 200;
+	const float maxSteer = 0.5;
+	const float startHealth = 100;
+	const float slowingRadius = 200; // Larger for more gradual stop
 	float health;
 
 	void die();

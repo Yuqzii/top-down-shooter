@@ -2,7 +2,10 @@
 #include "game/game.h"
 #include "game/collision.h"
 
-Enemy::Enemy() : healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }) {
+Enemy::Enemy(const float& health, const float& speed, const float& steer,
+			 const float& slowing) :
+			startHealth{health}, moveSpeed{speed}, maxSteer{steer}, slowingRadius{slowing},
+			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }) {
 	isAnimated = true;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
