@@ -24,7 +24,7 @@ Game::Game(const char* title, int width, int height) {
 	window = nullptr;
 	renderer = nullptr;
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
-	
+	SDL_SetWindowTitle(window, title); // Set title
 
 	int flagsIMG = IMG_INIT_PNG;
 	if ((IMG_Init(flagsIMG) & flagsIMG) != flagsIMG) {
