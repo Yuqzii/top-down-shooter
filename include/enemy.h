@@ -20,14 +20,14 @@ protected:
 
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
-			{ 4, 15 },
+			{ 4, 20 }, // Crawl animation
 		};
 		return data;
 	};
 
 private:
 	constexpr static const float moveSpeed = 200;
-	constexpr static const float maxSteer = 1;
+	constexpr static const float maxSteer = 0.5;
 	constexpr static const float startHealth = 100;
 	float health;
 

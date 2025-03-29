@@ -13,6 +13,11 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 	
 	circleCollider.radius = 35;
 	health = startHealth;
+
+	// Initialize enemy at full speed towards player
+	const vector2Df playerDirection = vector2Df(
+		game->player->getPivotPosition() - pivotPosition).normalized();
+	velocity = playerDirection * moveSpeed;
 }
 
 void Enemy::update(Game* game, const double& deltaTime) {
@@ -35,6 +40,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	}
 
 	rotation = velocity.toDegrees() + 90; // Rotate enemy in direction of movement
+
+	animationSpeed = velocity.getMagnitude() / moveSpeed;
 
 	GameObject::update(game, deltaTime); // Update position
 

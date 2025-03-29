@@ -51,6 +51,7 @@ protected:
 	// Animation
 	bool isAnimated; // Set true to enable animation
 	int animationSequence; // Keeps track of current animation sequence, used as y position
+	float animationSpeed; // Scales all animations
 	// Use this function to define length and speed of different animations
 	virtual const std::vector<AnimationData>& getAnimationData() const {
 		static const std::vector<AnimationData> data;

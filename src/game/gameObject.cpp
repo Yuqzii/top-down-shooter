@@ -96,7 +96,7 @@ void GameObject::animationUpdate(const double& deltaTime) {
 	const AnimationData& sequence = getAnimationData()[animationSequence];
 
 	// Update frame
-	animationCounter += sequence.speed * deltaTime;
+	animationCounter += sequence.speed * animationSpeed * deltaTime;
 	// Check for looping
 	if (animationCounter >= sequence.length) {
 		animationCounter -= sequence.length; // -= length so that the animation plays at same speed
