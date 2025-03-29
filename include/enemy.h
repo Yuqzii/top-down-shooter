@@ -29,6 +29,7 @@ private:
 	constexpr static const float moveSpeed = 200;
 	constexpr static const float maxSteer = 0.5;
 	constexpr static const float startHealth = 100;
+	constexpr static const float slowingRadius = 200; // Larger for more gradual stop
 	float health;
 
 	void die();

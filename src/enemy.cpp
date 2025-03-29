@@ -23,9 +23,17 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 void Enemy::update(Game* game, const double& deltaTime) {
 	// Get direction towards player
 	const vector2Df playerDirection = vector2Df(
-		game->player->getPivotPosition() - pivotPosition).normalized();
+		game->player->getPivotPosition() - pivotPosition);
 	
-	const vector2Df desiredVelocity = playerDirection * moveSpeed; // Scale desiredVelocity to max
+	// Scale desiredVelocity to max
+	vector2Df desiredVelocity = playerDirection.normalized() * moveSpeed;
+	
+	const float playerDistance = playerDirection.getMagnitude();
+	// Slow down enemy if inside the slowing radius
+	if (playerDirection.getMagnitude() < slowingRadius) {
+		desiredVelocity *= playerDistance / slowingRadius;
+	}
+
 	vector2Df steering = desiredVelocity - velocity; // Calculate steering
 	
 	// Limit steering magnitude to moveSpeed
