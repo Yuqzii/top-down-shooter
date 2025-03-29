@@ -10,10 +10,7 @@ void Bullet::initialize(const vector2Df& position, Game* game) {
 }
 
 void Bullet::update(Game* game, const double& deltaTime) {
-	GameObject::update(game, deltaTime); // Call base update
-
-	position.x += speed * direction.x * deltaTime;
-	position.y += speed * direction.y * deltaTime;
+	GameObject::update(game, deltaTime); // Update position
 
 	timeLeft -= deltaTime;
 	if (timeLeft <= 0) {
@@ -33,6 +30,7 @@ void Bullet::update(Game* game, const double& deltaTime) {
 }
 
 void Bullet::initializeDirection(const vector2Df direction, const float rotation) {
-	this->direction = direction;
+	velocity.x = direction.x * speed;
+	velocity.y = direction.y * speed;
 	this->rotation = rotation;
 }

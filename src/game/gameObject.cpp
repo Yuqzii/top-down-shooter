@@ -46,9 +46,13 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 
 	// Initialize collider
 	circleCollider.radius = (float)destRect.w / 2;
+	circleCollider.position = pivotPosition;
 }
 
 void GameObject::update(Game* game, const double& deltaTime) {
+	position.x += velocity.x * deltaTime;
+	position.y += velocity.y * deltaTime;
+
 	// Update render position
 	destRect.x = round(position.x);
 	destRect.y = round(position.y);

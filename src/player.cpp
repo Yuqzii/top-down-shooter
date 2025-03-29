@@ -19,7 +19,6 @@ void Player::initialize(const vector2Df& position, Game* game) {
 
 // Do player specific processing here
 void Player::update(Game* game, const double& deltaTime) {
-	GameObject::update(game, deltaTime); // Call base GameObject update
 	
 	// Get input
 	moveLeft = game->input[SDL_SCANCODE_A];
@@ -43,10 +42,12 @@ void Player::update(Game* game, const double& deltaTime) {
 	}
 
 	moveDir.normalize(); // Normalize vector so that diagonal movement is not faster
-	// Apply movement
-	position.x += moveDir.x * moveSpeed * deltaTime;
-	position.y += moveDir.y * moveSpeed * deltaTime;
+	// Update velocity
+	velocity.x = moveDir.x * moveSpeed;
+	velocity.y = moveDir.y * moveSpeed;
 
+	GameObject::update(game, deltaTime); // Call base GameObject update (Updates position)
+	
 	pointToMouse(game);
 
 	if (game->mouseInput[SDL_BUTTON_LEFT]) {
@@ -64,6 +65,7 @@ void Player::update(Game* game, const double& deltaTime) {
 	
 	// Tell UIManager to render healthbar
 	game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction());
+
 }
 
 // Points player towards the mouse

@@ -22,6 +22,7 @@ public:
 
 	// Initialize must be overriden to change initialization of things such as collider settings
 	virtual void initialize(const vector2Df& position, Game* game);
+	// Should be called after finishing velocity calculations
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
@@ -42,7 +43,7 @@ public:
 
 protected:
 	// Position and rotation
-	vector2Df position;
+	vector2Df velocity;
 	vector2Df pivotPosition;
 	vector2Df midPosition;
 	double rotation; // Angle of rotation
@@ -70,6 +71,8 @@ protected:
 	
 private:
 	SDL_Texture* texture;
+
+	vector2Df position;
 	
 	// Animation
 	void animationUpdate(const double& deltaTime);

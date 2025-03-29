@@ -16,17 +16,17 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 }
 
 void Enemy::update(Game* game, const double& deltaTime) {
-	GameObject::update(game, deltaTime);
-
 	// Get direction towards player
 	vector2Df playerDirection(game->player->getPivotPosition().x - pivotPosition.x,
 							game->player->getPivotPosition().y - pivotPosition.y);
 	playerDirection.normalize();
 	rotation = playerDirection.toDegrees() + 90; // Rotate enemy towards player
 	
-	// Move enemy towards player
-	position.x += playerDirection.x * moveSpeed * deltaTime;
-	position.y += playerDirection.y * moveSpeed * deltaTime;
+	// Update velocity
+	velocity.x = playerDirection.x * moveSpeed;
+	velocity.y = playerDirection.y * moveSpeed;
+
+	GameObject::update(game, deltaTime); // Update position
 
 	// Checks if colliding with player
 	if (Collision::checkCollision(circleCollider, game->player->circleCollider)) {
