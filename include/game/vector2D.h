@@ -29,3 +29,161 @@ struct vector2D {
 
 	vector2D& operator=(const vector2D& other);
 };
+
+// Operator overloading
+// + and +=
+inline vector2Df& operator+=(vector2Df& lhs, const vector2Df& rhs) {
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	return lhs;
+}
+
+inline vector2Df& operator+=(vector2Df& lhs, const vector2D& rhs) {
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	return lhs;
+}
+
+inline vector2D& operator+=(vector2D& lhs, const vector2D& rhs) {
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	return lhs;
+}
+
+inline vector2D& operator+=(vector2D& lhs, const vector2Df& rhs) {
+	lhs.x += round(rhs.x);
+	lhs.y += round(rhs.y);
+	return lhs;
+}
+
+inline vector2Df operator+(vector2Df lhs, const vector2Df& rhs) {
+	lhs += rhs;
+	return lhs;
+}
+
+inline vector2Df operator+(vector2Df lhs, const vector2D& rhs) {
+	lhs += rhs;
+	return lhs;
+}
+
+inline vector2D operator+(vector2D lhs, const vector2D& rhs) {
+	lhs += rhs;
+	return lhs;
+}
+
+inline vector2D operator+(vector2D lhs, const vector2Df& rhs) {
+	lhs += rhs;
+	return lhs;
+}
+
+// - and -= overloading
+inline vector2Df& operator-=(vector2Df& lhs, const vector2Df& rhs) {
+	lhs.x -= rhs.x;
+	lhs.y -= rhs.y;
+	return lhs;
+}
+
+inline vector2Df& operator-=(vector2Df& lhs, const vector2D& rhs) {
+	lhs.x -= rhs.x;
+	lhs.y -= rhs.y;
+	return lhs;
+}
+
+inline vector2D& operator-=(vector2D& lhs, const vector2Df& rhs) {
+	lhs.x = round(lhs.x - rhs.x);
+	lhs.y = round(lhs.y - rhs.y);
+	return lhs;
+}
+
+inline vector2D& operator-=(vector2D& lhs, const vector2D& rhs) {
+	lhs.x -= rhs.x;
+	lhs.y -= rhs.y;
+	return lhs;
+}
+
+inline vector2Df operator-(vector2Df lhs, const vector2Df& rhs) {
+	lhs -= rhs;
+	return lhs;
+}
+
+inline vector2Df operator-(vector2Df lhs, const vector2D& rhs) {
+	lhs -= rhs;
+	return lhs;
+}
+
+inline vector2D operator-(vector2D lhs, const vector2Df& rhs) {
+	lhs -= rhs;
+	return lhs;
+}
+
+inline vector2D operator-(vector2D lhs, const vector2D& rhs) {
+	lhs -= rhs;
+	return lhs;
+}
+
+// * and *= overloading
+inline vector2Df& operator*=(vector2Df& lhs, const vector2Df& rhs) {
+	lhs.x *= rhs.x;
+	lhs.y *= rhs.y;
+	return lhs;
+}
+
+inline vector2Df& operator*=(vector2Df& lhs, const vector2D& rhs) {
+	lhs.x *= rhs.x;
+	lhs.y *= rhs.y;
+	return lhs;
+}
+
+inline vector2Df& operator*=(vector2Df& lhs, const double& rhs) {
+	lhs.x *= rhs;
+	lhs.y *= rhs;
+	return lhs;
+}
+
+inline vector2D& operator*=(vector2D& lhs, const int& rhs) {
+	lhs.x *= rhs;
+	lhs.y *= rhs;
+	return lhs;
+}
+
+inline vector2D& operator*=(vector2D& lhs, const vector2Df& rhs) {
+	lhs.x = round(lhs.x * rhs.x);
+	lhs.y = round(lhs.y * rhs.y);
+	return lhs;
+}
+
+inline vector2D& operator*=(vector2D& lhs, const vector2D& rhs) {
+	lhs.x *= rhs.x;
+	lhs.y *= rhs.y;
+	return lhs;
+}
+
+inline vector2Df operator*(vector2Df lhs, const vector2Df& rhs) {
+	lhs *= rhs;
+	return lhs;
+}
+
+inline vector2Df operator*(vector2Df lhs, const vector2D& rhs) {
+	lhs *= rhs;
+	return lhs;
+}
+
+inline vector2Df operator*(vector2Df lhs, const double& rhs) {
+	lhs *= rhs;
+	return lhs;
+}
+
+inline vector2D operator*(vector2D lhs, const vector2Df& rhs) {
+	lhs *= rhs;
+	return lhs;
+}
+
+inline vector2D operator*(vector2D lhs, const vector2D& rhs) {
+	lhs *= rhs;
+	return lhs;
+}
+
+inline vector2D operator*(vector2D lhs, const int& rhs) {
+	lhs *= rhs;
+	return lhs;
+}
