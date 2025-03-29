@@ -23,8 +23,7 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	rotation = playerDirection.toDegrees() + 90; // Rotate enemy towards player
 	
 	// Update velocity
-	velocity.x = playerDirection.x * moveSpeed;
-	velocity.y = playerDirection.y * moveSpeed;
+	velocity = playerDirection * (double)moveSpeed;
 
 	GameObject::update(game, deltaTime); // Update position
 

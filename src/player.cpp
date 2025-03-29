@@ -43,8 +43,7 @@ void Player::update(Game* game, const double& deltaTime) {
 
 	moveDir.normalize(); // Normalize vector so that diagonal movement is not faster
 	// Update velocity
-	velocity.x = moveDir.x * moveSpeed;
-	velocity.y = moveDir.y * moveSpeed;
+	velocity = moveDir * moveSpeed;
 
 	GameObject::update(game, deltaTime); // Call base GameObject update (Updates position)
 	
