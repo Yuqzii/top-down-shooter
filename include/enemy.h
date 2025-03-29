@@ -32,10 +32,10 @@ protected:
 	};
 
 	// Steering behaviors
-	vector2Df seek(const vector2Df& target);
-	vector2Df flee(const vector2Df& target);
-	vector2Df pursuit(const GameObject* target);
-	vector2Df evade(const GameObject* target);
+	vector2Df seek(const vector2Df& target) const;
+	vector2Df flee(const vector2Df& target) const;
+	vector2Df pursuit(const GameObject* target) const;
+	vector2Df evade(const GameObject* target) const;
 
 	EnemyStates state;
 

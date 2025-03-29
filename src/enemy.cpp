@@ -10,7 +10,7 @@ Enemy::Enemy(const float& health, const float& speed, const float& steer,
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 
-	state = EnemyStates::EVADE;
+	state = EnemyStates::PURSUIT;
 }
 
 void Enemy::initialize(const vector2Df& startPosition, Game* game) {
@@ -87,7 +87,7 @@ void Enemy::die() {
 }
 
 // Steering behaviors
-vector2Df Enemy::seek(const vector2Df& target) {
+vector2Df Enemy::seek(const vector2Df& target) const {
 	const vector2Df targetDirection(target - pivotPosition); // Find target direction
 
 	// Scale desiredVelocity to maximum speed
@@ -102,7 +102,7 @@ vector2Df Enemy::seek(const vector2Df& target) {
 	return desiredVelocity - velocity; // Return calculated force
 }
 
-vector2Df Enemy::flee(const vector2Df& target) {
+vector2Df Enemy::flee(const vector2Df& target) const {
 	const vector2Df targetDirection(pivotPosition - target); // Find target direction
 
 	// Scale desiredVelocity to maximum speed
@@ -111,7 +111,7 @@ vector2Df Enemy::flee(const vector2Df& target) {
 	return desiredVelocity - velocity; // Return calculated force
 }
 
-vector2Df Enemy::pursuit(const GameObject* target) {
+vector2Df Enemy::pursuit(const GameObject* target) const {
 	const vector2Df distance = target->getPivotPosition() - pivotPosition;
 	const float time = distance.getMagnitude() / moveSpeed;
 
@@ -120,7 +120,7 @@ vector2Df Enemy::pursuit(const GameObject* target) {
 	return seek(futurePosition); // Use seek to move towards this position
 }
 
-vector2Df Enemy::evade(const GameObject* target) {
+vector2Df Enemy::evade(const GameObject* target) const {
 	const vector2Df distance = target->getPivotPosition() - pivotPosition;
 	const float time = distance.getMagnitude() / moveSpeed;
 
