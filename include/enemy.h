@@ -8,7 +8,7 @@ class Game;
 
 enum class EnemyStates {
 	PURSUIT = 0,
-	EVADE
+	EVADE,
 };
 
 class Enemy : public GameObject {
@@ -24,7 +24,6 @@ public:
 protected:
 	SETOBJECTTEXTURE("spider-sheet.png");
 
-
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
 			{ 4, 20 }, // Crawl animation
@@ -32,11 +31,19 @@ protected:
 		return data;
 	};
 
+	// Steering behaviors
+	vector2Df seek(const vector2Df& target);
+	vector2Df flee(const vector2Df& target);
+	vector2Df pursuit(const GameObject* target);
+	vector2Df evade(const GameObject* target);
+
+	EnemyStates state;
+
 private:
-	const float moveSpeed = 200;
-	const float maxSteer = 0.5;
-	const float startHealth = 100;
-	const float slowingRadius = 200; // Larger for more gradual stop
+	const float moveSpeed;
+	const float maxSteer;
+	const float startHealth;
+	const float slowingRadius; // Larger for more gradual stop
 	float health;
 
 	void die();

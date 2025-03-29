@@ -30,6 +30,7 @@ public:
 	vector2Df getPosition() const { return position; };
 	vector2Df getPivotPosition() const { return pivotPosition; };
 	vector2Df getMidPosition() const { return midPosition; };
+	vector2Df getVelocity() const { return velocity; };
 	// Returns the rotation as a direction vector
 	inline vector2Df getDirection() const {
 		float radians = (rotation - 90) * M_PI / 180;

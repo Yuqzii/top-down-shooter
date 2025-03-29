@@ -9,6 +9,8 @@ Enemy::Enemy(const float& health, const float& speed, const float& steer,
 	isAnimated = true;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
+
+	state = EnemyStates::EVADE;
 }
 
 void Enemy::initialize(const vector2Df& startPosition, Game* game) {
@@ -24,34 +26,31 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 }
 
 void Enemy::update(Game* game, const double& deltaTime) {
-	// Get direction towards player
-	const vector2Df playerDirection = vector2Df(
-		game->player->getPivotPosition() - pivotPosition);
-	
-	// Scale desiredVelocity to max
-	vector2Df desiredVelocity = playerDirection.normalized() * moveSpeed;
-	
-	const float playerDistance = playerDirection.getMagnitude();
-	// Slow down enemy if inside the slowing radius
-	if (playerDirection.getMagnitude() < slowingRadius) {
-		desiredVelocity *= playerDistance / slowingRadius;
+	// Different movement depending on the current state
+	vector2Df steering;
+	switch (state) {
+		case EnemyStates::PURSUIT:
+			steering += pursuit(game->player);
+			break;
+		case EnemyStates::EVADE:
+			steering += flee(game->player->getPivotPosition());
+			break;
 	}
 
-	vector2Df steering = desiredVelocity - velocity; // Calculate steering
-	
-	// Limit steering magnitude to moveSpeed
+	// Clamp steering
 	if (steering.getMagnitude() > maxSteer) {
 		steering = steering.normalized() * maxSteer;
 	}
+	velocity += steering;
 
-	velocity += steering; // Add steering velocity
-	// Limit velocity to moveSpeed
+	// Clamp velocity
 	if (velocity.getMagnitude() > moveSpeed) {
 		velocity = velocity.normalized() * moveSpeed;
 	}
 
 	rotation = velocity.toDegrees() + 90; // Rotate enemy in direction of movement
-
+	
+	// Calculate animation speed based on movement speed
 	animationSpeed = velocity.getMagnitude() / moveSpeed;
 
 	GameObject::update(game, deltaTime); // Update position
@@ -85,4 +84,47 @@ void Enemy::takeDamage(const float& damage) {
 void Enemy::die() {
 	// Death effects here
 	deleteObject = true; // Delete object when dying
+}
+
+// Steering behaviors
+vector2Df Enemy::seek(const vector2Df& target) {
+	const vector2Df targetDirection(target - pivotPosition); // Find target direction
+
+	// Scale desiredVelocity to maximum speed
+	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
+	
+	const float distance = targetDirection.getMagnitude();
+	// Slow down if inside the slowing radius
+	if (distance < slowingRadius) {
+		desiredVelocity *= distance / slowingRadius;
+	}
+
+	return desiredVelocity - velocity; // Return calculated force
+}
+
+vector2Df Enemy::flee(const vector2Df& target) {
+	const vector2Df targetDirection(pivotPosition - target); // Find target direction
+
+	// Scale desiredVelocity to maximum speed
+	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
+
+	return desiredVelocity - velocity; // Return calculated force
+}
+
+vector2Df Enemy::pursuit(const GameObject* target) {
+	const vector2Df distance = target->getPivotPosition() - pivotPosition;
+	const float time = distance.getMagnitude() / moveSpeed;
+
+	// Calculate the targets position in the future
+	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity() * time;
+	return seek(futurePosition); // Use seek to move towards this position
+}
+
+vector2Df Enemy::evade(const GameObject* target) {
+	const vector2Df distance = target->getPivotPosition() - pivotPosition;
+	const float time = distance.getMagnitude() / moveSpeed;
+
+	// Calculate the targets position in the future
+	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity() * time;
+	return flee(futurePosition); // Use seek to move towards this position
 }
