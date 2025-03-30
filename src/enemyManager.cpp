@@ -1,8 +1,8 @@
-#include "enemySpawner.h"
+#include "enemyManager.h"
 #include "game/game.h"
 #include "enemy.h"
 
-void EnemySpawner::update(Game* game, const double& deltaTime) {
+void EnemyManager::update(Game* game, const double& deltaTime) {
 	// Remove pointer to enemies that will be deleted
 	for (std::vector<Enemy*>::iterator it = enemies.begin(); it != enemies.end();) {
 		if ((*it)->deleteObject) {
@@ -18,7 +18,7 @@ void EnemySpawner::update(Game* game, const double& deltaTime) {
 	}
 }
 
-void EnemySpawner::spawnEnemy(Game* game) {
+void EnemyManager::spawnEnemy(Game* game) {
 	Enemy* enemy = game->instantiate<Enemy>(vector2Df(200, 200));
 	enemies.push_back(enemy);
 }

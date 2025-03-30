@@ -5,7 +5,7 @@
 class Enemy;
 class Game;
 
-class EnemySpawner {
+class EnemyManager {
 public:
 	void update(Game* game, const double& deltaTime);
 
