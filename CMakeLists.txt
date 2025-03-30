@@ -30,24 +30,21 @@ SET(SOURCE_FILES
 
 # file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-# Eventually change this to not use global libraries
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} 
-	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-	PUBLIC ${SDL2_INCLUDE_DIRS}
-)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so"
+	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so"
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
 option(DEBUG "Debug" OFF)
 
 if(DEBUG)
-	target_compile_options(${PROJECT_NAME} PUBLIC "-D DEBUG")
+	target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG")
 endif()
 
 # Remove when changing to static link SDL
