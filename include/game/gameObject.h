@@ -19,6 +19,7 @@ class Game;
 class GameObject {
 public:
 	GameObject();
+	virtual ~GameObject() = default;
 
 	// Initialize must be overriden to change initialization of things such as collider settings
 	virtual void initialize(const vector2Df& position, Game* game);
