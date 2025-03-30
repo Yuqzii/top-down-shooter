@@ -1,8 +1,7 @@
+#include <SDL2/SDL_mouse.h>
 #include "enemyManager.h"
 #include "game/game.h"
 #include "enemy.h"
-
-#include <SDL2/SDL_mouse.h>
 
 void EnemyManager::update(Game* game, const double& deltaTime) {
 	// Remove pointer to enemies that will be deleted
@@ -19,14 +18,12 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 		currentTime = startTime;
 	}
 
+	std::unique_ptr<Tree2D> tree = std::unique_ptr<Tree2D>(buildTree());
 	if (game->mouseInput[SDL_BUTTON_RIGHT]) {
-		Tree2D* tree = buildTree();
-		//tree->print();
+		tree->print();
 
 		const vector2Df closestToPlayer = tree->findClosestPosition(game->player->getPivotPosition());
 		std::cout << closestToPlayer.x << "	" << closestToPlayer.y << "\n";
-
-		delete tree;
 	}
 }
 
