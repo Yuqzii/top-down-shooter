@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
+#include "game/2DTree.h"
+#include "enemy.h"
 
-class Enemy;
 class Game;
 
 class EnemyManager {
@@ -17,4 +18,6 @@ private:
 	float currentTime = startTime;
 
 	void spawnEnemy(Game* game);
+
+	Tree2D* buildTree();
 };
