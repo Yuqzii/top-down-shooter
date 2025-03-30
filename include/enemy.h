@@ -13,8 +13,9 @@ enum class EnemyStates {
 
 class Enemy : public GameObject {
 public:
-	Enemy(const float& startHealth = 100, const float& moveSpeed = 200,
-	   const float& maxSteer = 0.75f, const float& slowingRadius = 200);
+	Enemy(const float& startHealth = 100.0f, const float& moveSpeed = 300.0f,
+	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
+	   const float& slowingRadius = 100.0f);
 
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
@@ -42,6 +43,7 @@ protected:
 private:
 	const float moveSpeed;
 	const float maxSteer;
+	const float steerMult;
 	const float startHealth;
 	const float slowingRadius; // Larger for more gradual stop
 	float health;

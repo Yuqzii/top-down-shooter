@@ -2,9 +2,10 @@
 #include "game/game.h"
 #include "game/collision.h"
 
-Enemy::Enemy(const float& health, const float& speed, const float& steer,
+Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
-			startHealth{health}, moveSpeed{speed}, maxSteer{steer}, slowingRadius{slowing},
+			startHealth(health), moveSpeed(speed), maxSteer(steer), steerMult(sMult),
+			slowingRadius(slowing),
 			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }) {
 	isAnimated = true;
 
@@ -31,6 +32,7 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	switch (state) {
 		case EnemyStates::PURSUIT:
 			steering += pursuit(game->player, 0.75f);
+			steering += seek(game->player->getPivotPosition()) * 0.75f;
 			break;
 		case EnemyStates::EVADE:
 			steering += evade(game->player, 0.4f);
@@ -40,18 +42,20 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	try {
 		// Move away from closest enemy
 		const vector2Df closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
-		steering += flee(closest) * 0.2;
+		steering += flee(closest) * 0.7f;
 	}
 	catch (int e) {
 		// Can't find closest enemy. Usually because there is currently only one enemy.
 		// Does not require further action, hence why this catch is empty.
 	}
 
+	steering *= steerMult; // Make steering stronger
 	// Clamp steering
 	if (steering.getMagnitude() > maxSteer) {
 		steering = steering.normalized() * maxSteer;
 	}
-	velocity += steering;
+	std::cout << steering.getMagnitude() << std::endl;
+	velocity += steering * deltaTime;
 
 	// Clamp velocity
 	if (velocity.getMagnitude() > moveSpeed) {
