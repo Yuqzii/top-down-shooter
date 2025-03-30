@@ -13,8 +13,8 @@ enum class EnemyStates {
 
 class Enemy : public GameObject {
 public:
-	Enemy(const float& startHealth = 100, const float& moveSpeed = 200, const float& maxSteer = 0.5,
-	   const float& slowingRadius = 200);
+	Enemy(const float& startHealth = 100, const float& moveSpeed = 200,
+	   const float& maxSteer = 0.75f, const float& slowingRadius = 200);
 
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
@@ -34,8 +34,8 @@ protected:
 	// Steering behaviors
 	vector2Df seek(const vector2Df& target) const;
 	vector2Df flee(const vector2Df& target) const;
-	vector2Df pursuit(const GameObject* target) const;
-	vector2Df evade(const GameObject* target) const;
+	vector2Df pursuit(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
+	vector2Df evade(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
 
 	EnemyStates state;
 

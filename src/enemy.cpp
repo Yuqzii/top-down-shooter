@@ -30,10 +30,10 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	vector2Df steering;
 	switch (state) {
 		case EnemyStates::PURSUIT:
-			steering += pursuit(game->player);
+			steering += pursuit(game->player, 0.75f);
 			break;
 		case EnemyStates::EVADE:
-			steering += flee(game->player->getPivotPosition());
+			steering += evade(game->player, 0.4f);
 			break;
 	}
 
@@ -76,6 +76,9 @@ void Enemy::takeDamage(const float& damage) {
 	if (health <= 0) {
 		die();
 	}
+	else if (health <= 50) {
+		state = EnemyStates::EVADE;
+	}
 
 	// Update healthbar
 	healthbarSlider->setValue(health / startHealth * 100);
@@ -111,20 +114,22 @@ vector2Df Enemy::flee(const vector2Df& target) const {
 	return desiredVelocity - velocity; // Return calculated force
 }
 
-vector2Df Enemy::pursuit(const GameObject* target) const {
+vector2Df Enemy::pursuit(const GameObject* target, const float& predictionMultiplier) const {
 	const vector2Df distance = target->getPivotPosition() - pivotPosition;
 	const float time = distance.getMagnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
-	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity() * time;
+	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
+									* time * predictionMultiplier;
 	return seek(futurePosition); // Use seek to move towards this position
 }
 
-vector2Df Enemy::evade(const GameObject* target) const {
+vector2Df Enemy::evade(const GameObject* target, const float& predictionMultiplier) const {
 	const vector2Df distance = target->getPivotPosition() - pivotPosition;
 	const float time = distance.getMagnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
-	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity() * time;
+	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
+									* time * predictionMultiplier;
 	return flee(futurePosition); // Use seek to move towards this position
 }
