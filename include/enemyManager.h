@@ -11,6 +11,7 @@ public:
 	void update(Game* game, const double& deltaTime);
 
 	const std::vector<Enemy*> getEnemies() const { return enemies; }
+	const Enemy* findClosestEnemy(const vector2Df& target) const;
 
 private:
 	std::vector<Enemy*> enemies;
@@ -19,5 +20,6 @@ private:
 
 	void spawnEnemy(Game* game);
 
+	std::unique_ptr<Tree2D> enemyTree;
 	Tree2D* buildTree();
 };

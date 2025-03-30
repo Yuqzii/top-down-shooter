@@ -33,7 +33,7 @@ public:
 	SDL_Window* getWindow() const { return window; };
 	SDL_Renderer* getRenderer() const { return renderer; };
 
-	const EnemyManager getEnemyManager() const { return enemyManager; }
+	const EnemyManager* getEnemyManager() const { return &enemyManager; }
 	UI::UIManager* getUIManager() { return &uiManager; }
 
 	bool input[256]{};

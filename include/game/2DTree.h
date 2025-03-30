@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include "enemy.h"
 #include "game/vector2D.h"
 
 // Two dimensional KD-Tree structure
@@ -14,16 +15,36 @@ public:
 		delete root;
 	}
 	
-	void insert(const vector2Df& point) {
+	void insert(const Enemy* enemy) {
 		// Convert vector2Df to two dimensional array
-		const std::array<float, 2> arrPoint = { point.x, point.y };
+		const std::array<float, 2> arrPoint = 
+			{ enemy->getPivotPosition().x, enemy->getPivotPosition().y };
 		// Insert from root
-		root = insertRecursive(root, arrPoint, 0);
+		root = insertRecursive(root, enemy, arrPoint, 0);
 	}
 
 	void print() const {
 		printRecursive(root, 0);
 		std::cout << std::endl;
+	}
+
+	const Enemy* findClosestEnemy(const vector2Df& target) {
+		// Convert vector2Df to two dimensional array
+		const std::array<float, 2> targetArr = { target.x, target.y };
+		const Node* result = nearestNeighbor(root, targetArr, 0);
+
+		// Throw exception if result is null
+		if (result == nullptr)
+			throw 1;
+
+		// Result is the same as target (not good), throw exception.
+		// Usually happens when there is only one enemy.
+		if (result->enemy->getPivotPosition().x == target.x &&
+				result->enemy->getPivotPosition().y == target.y) {
+			throw 2;
+		}
+		
+		return result->enemy; // Return result as a vector
 	}
 
 	vector2Df findClosestPosition(const vector2Df& target) {
@@ -53,7 +74,10 @@ private:
 		Node* left;
 		Node* right;
 
-		Node(const std::array<float, 2>& pt) : point(pt), left(nullptr), right(nullptr) {}
+		const Enemy* enemy;
+
+		Node(const std::array<float, 2>& pt, const Enemy* e)
+			: point(pt), enemy(e), left(nullptr), right(nullptr) {}
 		~Node() {
 			delete left;
 			delete right;
@@ -63,10 +87,11 @@ private:
 	Node* root;
 
 	// Function to insert a point into the tree
-	Node* insertRecursive(Node* node, const std::array<float, 2>& point, const int& depth) {
+	Node* insertRecursive(Node* node, const Enemy* enemy,
+			const std::array<float, 2>& point, const int& depth) {
 		// Create new node if node is null, base case
 		if (node == nullptr) {
-			return new Node(point);
+			return new Node(point, enemy);
 		}
 		
 		const int dimension = depth % 2; // Calculate current dimension used
@@ -74,11 +99,11 @@ private:
 		// Compare point with current node
 		if (point[dimension] < node->point[dimension]) {
 			// Go left
-			node->left = insertRecursive(node->left, point, depth + 1);
+			node->left = insertRecursive(node->left, enemy, point, depth + 1);
 		}
 		else {
 			// Go right
-			node->right = insertRecursive(node->right, point, depth + 1);
+			node->right = insertRecursive(node->right, enemy, point, depth + 1);
 		}
 
 		return node;

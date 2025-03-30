@@ -37,6 +37,16 @@ void Enemy::update(Game* game, const double& deltaTime) {
 			break;
 	}
 
+	try {
+		// Move away from closest enemy
+		const Enemy* closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
+		steering += evade(closest) * 0.2;
+	}
+	catch (int e) {
+		// Can't find closest enemy. Usually because there is currently only one enemy.
+		// Does not require further action, hence why this catch is empty.
+	}
+
 	// Clamp steering
 	if (steering.getMagnitude() > maxSteer) {
 		steering = steering.normalized() * maxSteer;
