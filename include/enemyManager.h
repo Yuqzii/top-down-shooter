@@ -10,8 +10,10 @@ class EnemyManager {
 public:
 	void update(Game* game, const double& deltaTime);
 
+	// Returns a vector of all enemies
 	const std::vector<Enemy*> getEnemies() const { return enemies; }
-	const Enemy* findClosestEnemy(const vector2Df& target) const;
+	// Returns the position of the closest enemy
+	vector2Df findClosestEnemy(const vector2Df& target) const;
 
 private:
 	std::vector<Enemy*> enemies;
