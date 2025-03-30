@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 #include <iostream>
 #include <memory>
 #include "game/vector2D.h"
@@ -30,10 +31,19 @@ public:
 		const std::array<float, 2> targetArr = { target.x, target.y };
 		const Node* result = nearestNeighbor(root, targetArr, 0);
 
-		if (result == nullptr) return vector2Df();
+		// Throw exception if result is null
+		if (result == nullptr)
+			throw 1;
+
+		// Convert result to vector
+		const vector2Df vecResult = vector2Df(result->point[0], result->point[1]);
+
+		// Result is the same as target (not good), throw exception.
+		// Usually happens when there is only one enemy.
+		if (vecResult.x == target.x && vecResult.y == target.y)
+			throw 2;
 		
-		// Return result as a vector
-		return vector2Df(result->point[0], result->point[1]);
+		return vecResult; // Return result as a vector
 	}
 
 
@@ -78,10 +88,14 @@ private:
 		// Base case
 		if (node == nullptr) return nullptr;
 
+		// No possible paths from this node, return this node
+		if (node->left == nullptr && node->right == nullptr) return node;
+
 		const int dimension = depth % 2; // Calculate the current dimension of the tree
 
 		Node* nextBranch;
 		Node* otherBranch;
+
 		// Compare target with current node
 		if (target[dimension] < node->point[dimension]) {
 			// Go left
@@ -94,10 +108,12 @@ private:
 			otherBranch = node->left;
 		}
 
+		// Has to go other way if nextBranch doesn't exist
+		if (nextBranch == nullptr)
+			std::swap(nextBranch, otherBranch);
+
 		// Recursively go through tree
 		Node* result = nearestNeighbor(nextBranch, target, depth + 1);
-
-		if (result == nullptr) return node;
 
 		// AFTER RECURSION
 		// Get the closest of the result and the current node
@@ -125,9 +141,17 @@ private:
 		return delta[0] * delta[0] + delta[1] * delta[1];
 	}
 
+	// Returns the closest node that is not the target
 	Node* findClosestNode(const std::array<float, 2>& target, Node* a, Node* b) {
 		const float aDist = distanceSquared(target, a->point);
 		const float bDist = distanceSquared(target, b->point);
+
+		// Do not want to find the node that is the target,
+		// because this is used for enemies to find the ones closest to them.
+		if (aDist == 0)
+			return b;
+		else if (bDist == 0)
+			return a;
 
 		if (aDist < bDist)
 			return a;

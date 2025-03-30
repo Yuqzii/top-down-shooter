@@ -20,10 +20,23 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 
 	std::unique_ptr<Tree2D> tree = std::unique_ptr<Tree2D>(buildTree());
 	if (game->mouseInput[SDL_BUTTON_RIGHT]) {
-		tree->print();
+		//tree->print();
 
-		const vector2Df closestToPlayer = tree->findClosestPosition(game->player->getPivotPosition());
-		std::cout << closestToPlayer.x << "	" << closestToPlayer.y << "\n";
+		for (Enemy* enemy : enemies) {
+			vector2Df closest;
+			try {
+				closest = tree->findClosestPosition(enemy->getPivotPosition());
+			}
+			catch (int e) {
+				std::cerr << "Exception occurred. Could not find closest enemy. Error code: "
+					<< e << std::endl;
+				continue;
+			}
+			std::cout << "The closest to enemy at position: (" << enemy->getPivotPosition().x <<
+				", " << enemy->getPivotPosition().y << ") is (" << closest.x << ", " << closest.y
+				<< ")\n";
+		}
+		std::cout << std::endl;
 	}
 }
 
