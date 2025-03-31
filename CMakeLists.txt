@@ -61,9 +61,3 @@ option(DEBUG "Debug" OFF)
 if(DEBUG)
 	target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG")
 endif()
-
-# Remove when changing to static link SDL
-#option(MAC "Enable when building on Mac" OFF)
-#if (MAC)
-#	target_include_directories(${PROJECT_NAME} PUBLIC "/opt/homebrew/Cellar/sdl2_image/2.8.8/include")
-#endif()
