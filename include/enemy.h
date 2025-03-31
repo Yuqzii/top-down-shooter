@@ -43,7 +43,7 @@ protected:
 private:
 	const float moveSpeed;
 	const float maxSteer;
-	const float steerMult;
+	const float steerStrength;
 	const float startHealth;
 	const float slowingRadius; // Larger for more gradual stop
 	float health;

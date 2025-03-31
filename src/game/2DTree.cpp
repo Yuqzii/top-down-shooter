@@ -33,7 +33,7 @@ void Tree2D::print() const {
 	std::cout << std::endl;
 }
 
-vector2Df Tree2D::findClosestPoint(const vector2Df& target) {
+vector2Df Tree2D::findClosestPoint(const vector2Df& target) const {
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 	const Node* result = nearestNeighbor(root, targetArr, 0);
@@ -97,10 +97,8 @@ Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2>& po
 }
 
 // Returns the point closest to the target that is not the same as target
-Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& target, int depth) {
-	// Base case
-	if (node == nullptr) return nullptr;
-
+Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& target,
+									  const int& depth) const {
 	// No possible paths from this node, return this node
 	if (node->left == nullptr && node->right == nullptr) return node;
 
@@ -132,6 +130,11 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 	// Get the closest of the result and the current node
 	Node* closest = findClosestNode(target, result, node);
 
+	if (closest == nullptr) { // Both result and node are the same as target
+		// Try to find a valid node under result
+		return nearestNeighbor(result, target, depth + 1);
+	}
+
 	// Calculate distance from target to the closest node
 	float radiusSquared = distanceSquared(target, closest->point);
 	// Calculatedistance from target to the split made by this node
@@ -149,13 +152,15 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 	return closest;
 }
 
-Tree2D::Node* Tree2D::findClosestNode(const std::array<float, 2>& target, Node* a, Node* b) {
+Tree2D::Node* Tree2D::findClosestNode(const std::array<float, 2>& target, Node* a, Node* b) const {
 	const float aDist = distanceSquared(target, a->point);
 	const float bDist = distanceSquared(target, b->point);
 
 	// Do not want to find the node that is the target,
 	// because this is used for enemies to find the ones closest to them.
-	if (aDist == 0)
+	if (aDist == 0 && bDist == 0)
+		return nullptr;
+	else if (aDist == 0)
 		return b;
 	else if (bDist == 0)
 		return a;

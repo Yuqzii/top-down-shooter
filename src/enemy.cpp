@@ -4,14 +4,13 @@
 
 Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
-			startHealth(health), moveSpeed(speed), maxSteer(steer), steerMult(sMult),
+			startHealth(health), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
 			slowingRadius(slowing),
-			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }) {
+			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }),
+			state{} {
 	isAnimated = true;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
-
-	state = EnemyStates::PURSUIT;
 }
 
 void Enemy::initialize(const vector2Df& startPosition, Game* game) {
@@ -49,7 +48,7 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		// Does not require further action, hence why this catch is empty.
 	}
 
-	steering *= steerMult; // Make steering stronger
+	steering *= steerStrength; // Multiply steering by the steering strength
 	// Clamp steering
 	if (steering.getMagnitude() > maxSteer) {
 		steering = steering.normalized() * maxSteer;
@@ -89,6 +88,7 @@ void Enemy::takeDamage(const float& damage) {
 	if (health <= 0) {
 		die();
 	}
+	// Evade player when health drops below 50
 	else if (health <= 50) {
 		state = EnemyStates::EVADE;
 	}
