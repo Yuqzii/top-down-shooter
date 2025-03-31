@@ -11,8 +11,9 @@ struct vector2Df {
 	vector2Df(const float& degrees);
 	vector2Df(const vector2Df& vec);
 
-	float getMagnitude() const;
+	float magnitude() const;
 	vector2Df normalized() const;
+	vector2Df clamped(const float& maxMagnitude) const;
 
 	int toDegrees() const;
 

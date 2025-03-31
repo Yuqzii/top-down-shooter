@@ -18,16 +18,28 @@ vector2Df::vector2Df(const vector2Df& vec) {
 	y = vec.y;
 }
 
-float vector2Df::getMagnitude() const {
+float vector2Df::magnitude() const {
 	return std::sqrt(x * x + y * y);
 }
 
 vector2Df vector2Df::normalized() const {
-	float magnitude = getMagnitude();
+	float mag = magnitude();
 	vector2Df res(*this);
-	if (magnitude > 0) {
-		res.x /= magnitude;
-		res.y /= magnitude;
+	if (mag > 0) {
+		res.x /= mag;
+		res.y /= mag;
+	}
+	return res;
+}
+
+vector2Df vector2Df::clamped(const float& maxMagnitude) const {
+	float mag= magnitude();
+	vector2Df res(*this);
+	if (mag> maxMagnitude) {
+		res.x /= mag;
+		res.y /= mag;
+
+		res *= maxMagnitude;
 	}
 	return res;
 }

@@ -50,20 +50,16 @@ void Enemy::update(Game* game, const double& deltaTime) {
 
 	steering *= steerStrength; // Multiply steering by the steering strength
 	// Clamp steering
-	if (steering.getMagnitude() > maxSteer) {
-		steering = steering.normalized() * maxSteer;
-	}
+	steering = steering.clamped(maxSteer);
 	velocity += steering * deltaTime;
 
 	// Clamp velocity
-	if (velocity.getMagnitude() > moveSpeed) {
-		velocity = velocity.normalized() * moveSpeed;
-	}
+	velocity = velocity.clamped(moveSpeed);
 
 	rotation = velocity.toDegrees() + 90; // Rotate enemy in direction of movement
 	
 	// Calculate animation speed based on movement speed
-	animationSpeed = velocity.getMagnitude() / moveSpeed;
+	animationSpeed = velocity.magnitude() / moveSpeed;
 
 	GameObject::update(game, deltaTime); // Update position
 
@@ -109,7 +105,7 @@ vector2Df Enemy::seek(const vector2Df& target) const {
 	// Scale desiredVelocity to maximum speed
 	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
 	
-	const float distance = targetDirection.getMagnitude();
+	const float distance = targetDirection.magnitude();
 	// Slow down if inside the slowing radius
 	if (distance < slowingRadius) {
 		desiredVelocity *= distance / slowingRadius;
@@ -129,7 +125,7 @@ vector2Df Enemy::flee(const vector2Df& target) const {
 
 vector2Df Enemy::pursuit(const GameObject* target, const float& predictionMultiplier) const {
 	const vector2Df distance = target->getPivotPosition() - pivotPosition;
-	const float time = distance.getMagnitude() / moveSpeed;
+	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
 	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
@@ -139,7 +135,7 @@ vector2Df Enemy::pursuit(const GameObject* target, const float& predictionMultip
 
 vector2Df Enemy::evade(const GameObject* target, const float& predictionMultiplier) const {
 	const vector2Df distance = target->getPivotPosition() - pivotPosition;
-	const float time = distance.getMagnitude() / moveSpeed;
+	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
 	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
