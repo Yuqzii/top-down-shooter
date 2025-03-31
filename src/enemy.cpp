@@ -54,7 +54,6 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	if (steering.getMagnitude() > maxSteer) {
 		steering = steering.normalized() * maxSteer;
 	}
-	std::cout << steering.getMagnitude() << std::endl;
 	velocity += steering * deltaTime;
 
 	// Clamp velocity

@@ -19,7 +19,7 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 	}
 
 	// Update tree
-	enemyTree = std::unique_ptr<Tree2D>(buildTree());
+	updateTree();
 }
 
 vector2Df EnemyManager::findClosestEnemy(const vector2Df& target) const {
@@ -39,13 +39,15 @@ void EnemyManager::spawnEnemy(Game* game) {
 	enemies.push_back(enemy);
 }
 
-Tree2D* EnemyManager::buildTree() {
-	Tree2D* tree = new Tree2D();
+void EnemyManager::updateTree() {
+	// Get positions of all enemies in list
+	std::vector<vector2Df> enemyPositions;
+	enemyPositions.reserve(enemies.size());
 
-	// Add every enemy to the tree
 	for (Enemy* enemy : enemies) {
-		tree->insert(enemy->getPivotPosition());
+		enemyPositions.push_back(enemy->getPivotPosition());
 	}
 
-	return tree;
+	enemyTree = std::make_unique<Tree2D>(); // Create new tree
+	enemyTree->initializeWithList(enemyPositions); // Build tree with the list
 }

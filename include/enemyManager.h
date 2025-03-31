@@ -23,5 +23,5 @@ private:
 	void spawnEnemy(Game* game);
 
 	std::unique_ptr<Tree2D> enemyTree;
-	Tree2D* buildTree();
+	void updateTree();
 };

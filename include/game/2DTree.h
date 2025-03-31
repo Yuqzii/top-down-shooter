@@ -11,8 +11,13 @@ public:
 	// Constructor to initialize root to nullptr
 	Tree2D();
 	~Tree2D();
+
+	// Initializes the tree with the given list.
+	// Guarantees a balanced tree.
+	void initializeWithList(const std::vector<vector2Df>& points);
 	
-	// Inserts a point into the tree
+	// Inserts a point into the tree.
+	// NOTE: this can not guarantee a balanced tree.
 	void insert(const vector2Df& point);
 
 	// Prints the tree to the console
@@ -36,6 +41,7 @@ private:
 
 	Node* root;
 
+	void initializeTree(std::vector<std::array<float, 2>>& points);
 	Node* insertRecursive(Node* node, const std::array<float, 2>& point, const int& depth);
 
 	Node* nearestNeighbor(Node* node, const std::array<float, 2>& target, int depth);

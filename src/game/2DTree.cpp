@@ -6,10 +6,25 @@ Tree2D::~Tree2D() {
 	delete root;
 }
 
+void Tree2D::initializeWithList(const std::vector<vector2Df>& points) {
+	if (points.empty()) return; // Cannot build tree with no points
+
+	// Convert vector2Df to two dimensional array
+	std::vector<std::array<float, 2>> arrPoints;
+	arrPoints.reserve(points.size());
+
+	// Add points as array to list
+	for (const vector2Df& point : points) {
+		arrPoints.push_back({ point.x, point.y });
+	}
+
+	initializeTree(arrPoints);
+}
+
 void Tree2D::insert(const vector2Df& point) {
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> arrPoint = { point.x, point.y };
-	// Insert from root
+	// Insert from root and create root if it does not exist
 	root = insertRecursive(root, arrPoint, 0);
 }
 
@@ -45,6 +60,20 @@ Tree2D::Node::~Node() {
 	delete right;
 }
 
+void Tree2D::initializeTree(std::vector<std::array<float, 2>>& points) {
+	// Sort points along x-axis to find median x.
+	// This will be used to build the tree from.
+	std::sort(points.begin(), points.end());
+
+	std::array<float, 2>* median = &points[points.size() / 2]; // Find the median element
+	root = new Node(*median); // Set median as root
+	
+	// Insert remaining points into tree
+	for (int i = 0; i < points.size(); i++) {
+		if (i == points.size() / 2) continue; // Do not insert median again
+		insertRecursive(root, points[i], 0); // Insert point
+	}
+}
 
 Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2>& point, const int& depth) {
 	// Create new node if node is null, base case
@@ -92,7 +121,7 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 		otherBranch = node->left;
 	}
 
-	// Has to go other way if nextBranch doesn't exist
+	// Has to go other way if nextBranch does not exist
 	if (nextBranch == nullptr)
 		std::swap(nextBranch, otherBranch);
 
