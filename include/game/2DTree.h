@@ -1,8 +1,7 @@
 #pragma once
 
 #include <array>
-#include <iostream>
-#include "enemy.h"
+#include <vector>
 #include "game/vector2D.h"
 
 // Two dimensional KD-Tree structure
@@ -31,8 +30,6 @@ private:
 		const std::array<float, 2> point;
 		Node* left;
 		Node* right;
-
-		const Enemy* enemy;
 
 		Node(const std::array<float, 2>& pt);
 		~Node();
