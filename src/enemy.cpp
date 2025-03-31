@@ -74,7 +74,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		healthbarBG.localPosition.y = pivotPosition.y + 60;
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
-		game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction()); // Render healthbar
+		// Render healthbar
+		game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
 	}
 }
 

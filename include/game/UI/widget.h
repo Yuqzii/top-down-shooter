@@ -30,7 +30,6 @@ public:
 	// If widget has parent these values are based on percentage of parent size
 	vector2Df localPosition;
 	vector2Df localSize;
-	std::list<std::unique_ptr<Widget>> childWidgets;
 
 protected:
 	Widget* parent;
@@ -40,6 +39,7 @@ protected:
 
 private:
 	AnchorType anchorPosition;
+	std::list<std::unique_ptr<Widget>> childWidgets;
 };
 
 }
