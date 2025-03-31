@@ -15,6 +15,7 @@ namespace UI {
 class Widget {
 public:
 	Widget(Widget* parent = nullptr, AnchorType anchorPosition = AnchorType());
+	virtual ~Widget() = default;
 
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
