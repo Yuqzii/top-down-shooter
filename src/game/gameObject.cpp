@@ -50,8 +50,7 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 }
 
 void GameObject::update(Game* game, const double& deltaTime) {
-	position.x += velocity.x * deltaTime;
-	position.y += velocity.y * deltaTime;
+	position += velocity * deltaTime;
 
 	// Update render position
 	destRect.x = round(position.x);
@@ -82,6 +81,9 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+	SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+					pivotPosition.x + velocity.normalized().x * 50,
+					pivotPosition.y + velocity.normalized().y * 50);
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_RenderDrawRect(renderer, &destRect);
 	#endif
@@ -94,7 +96,7 @@ void GameObject::animationUpdate(const double& deltaTime) {
 	const AnimationData& sequence = getAnimationData()[animationSequence];
 
 	// Update frame
-	animationCounter += sequence.speed * deltaTime;
+	animationCounter += sequence.speed * animationSpeed * deltaTime;
 	// Check for looping
 	if (animationCounter >= sequence.length) {
 		animationCounter -= sequence.length; // -= length so that the animation plays at same speed

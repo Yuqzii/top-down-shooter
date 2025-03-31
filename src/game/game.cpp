@@ -40,7 +40,7 @@ Game::Game(const char* title, int width, int height) {
 	
 	gameObjects.reserve(1 << 16); // Reserve memory to ensure pointer stability
 	
-	enemySpawner = EnemySpawner(); // Create EnemySpawner
+	enemyManager = EnemyManager(); // Create EnemyManager
 
 	uiManager = UI::UIManager(); // Create UIManager
 
@@ -95,8 +95,8 @@ void Game::update() {
 		object->update(this, deltaTime);
 	}
 
-	// Update EnemySpawner list
-	enemySpawner.update(this, deltaTime);
+	// Update EnemyManager list
+	enemyManager.update(this, deltaTime);
 
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {

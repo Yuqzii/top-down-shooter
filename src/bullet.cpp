@@ -19,7 +19,7 @@ void Bullet::update(Game* game, const double& deltaTime) {
 	}
 
 	// Loop through enemies and check for collision
-	for (Enemy* enemy : game->getEnemySpawner().getEnemies()) {
+	for (Enemy* enemy : game->getEnemyManager()->getEnemies()) {
 		if (Collision::checkCollision(circleCollider, enemy->circleCollider)) {
 			// Bullet collided with enemy
 			enemy->takeDamage(damage); // Damage enemy
