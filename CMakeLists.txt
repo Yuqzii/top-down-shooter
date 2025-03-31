@@ -32,12 +32,26 @@ SET(SOURCE_FILES
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so"
-	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so"
+target_include_directories(${PROJECT_NAME} PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/"
+	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/"
 )
+
+if(UNIX AND NOT APPLE)
+	message("Linux platform detected.")
+	target_link_libraries(${PROJECT_NAME} PRIVATE
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so"
+		)
+endif()
+
+if(APPLE)
+	message("Apple platform detected.")
+	target_link_libraries(${PROJECT_NAME} PRIVATE
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.0.dylib"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.0.dylib"
+	)
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
@@ -48,7 +62,7 @@ if(DEBUG)
 endif()
 
 # Remove when changing to static link SDL
-option(MAC "Enable when building on Mac" OFF)
-if (MAC)
-	target_include_directories(${PROJECT_NAME} PUBLIC "/opt/homebrew/Cellar/sdl2_image/2.8.8/include")
-endif()
+#option(MAC "Enable when building on Mac" OFF)
+#if (MAC)
+#	target_include_directories(${PROJECT_NAME} PUBLIC "/opt/homebrew/Cellar/sdl2_image/2.8.8/include")
+#endif()
