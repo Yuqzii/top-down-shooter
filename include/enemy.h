@@ -6,9 +6,16 @@
 
 class Game;
 
+enum class EnemyStates {
+	PURSUIT = 0,
+	EVADE,
+};
+
 class Enemy : public GameObject {
 public:
-	Enemy();
+	Enemy(const float& startHealth = 100.0f, const float& moveSpeed = 300.0f,
+	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
+	   const float& slowingRadius = 100.0f);
 
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
@@ -20,14 +27,25 @@ protected:
 
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
-			{ 4, 15 },
+			{ 4, 20 }, // Crawl animation
 		};
 		return data;
 	};
 
+	// Steering behaviors
+	vector2Df seek(const vector2Df& target) const;
+	vector2Df flee(const vector2Df& target) const;
+	vector2Df pursuit(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
+	vector2Df evade(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
+
+	EnemyStates state;
+
 private:
-	constexpr static const float moveSpeed = 150;
-	constexpr static const float startHealth = 100;
+	const float moveSpeed;
+	const float maxSteer;
+	const float steerStrength;
+	const float startHealth;
+	const float slowingRadius; // Larger for more gradual stop
 	float health;
 
 	void die();

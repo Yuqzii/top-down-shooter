@@ -20,37 +20,44 @@ SET(SOURCE_FILES
 "src/bullet.cpp"
 "src/enemy.cpp"
 "src/game/collision.cpp"
-"src/enemySpawner.cpp"
+"src/enemyManager.cpp"
 "src/game/UI/widget.cpp"
 "src/game/UI/background.cpp"
 "src/game/UI/UIManager.cpp"
 "src/game/UI/slider.cpp"
+"src/game/vector2D.cpp"
+"src/game/2DTree.cpp"
 )
 
 # file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-# Eventually change this to not use global libraries
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_include_directories(${PROJECT_NAME} 
-	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-	PUBLIC ${SDL2_INCLUDE_DIRS}
+target_include_directories(${PROJECT_NAME} PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/"
+	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/"
 )
-target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+if(UNIX AND NOT APPLE)
+	message("Linux platform detected.")
+	target_link_libraries(${PROJECT_NAME} PRIVATE
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so"
+		)
+endif()
+
+if(APPLE)
+	message("Apple platform detected.")
+	target_link_libraries(${PROJECT_NAME} PRIVATE
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.0.dylib"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.0.dylib"
+	)
+endif()
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
 
 option(DEBUG "Debug" OFF)
 
 if(DEBUG)
-	target_compile_options(${PROJECT_NAME} PUBLIC "-D DEBUG")
-endif()
-
-# Remove when changing to static link SDL
-option(MAC "Enable when building on Mac" OFF)
-if (MAC)
-	target_include_directories(${PROJECT_NAME} PUBLIC "/opt/homebrew/Cellar/sdl2_image/2.8.8/include")
+	target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG")
 endif()

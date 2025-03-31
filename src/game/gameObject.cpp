@@ -8,6 +8,15 @@
 GameObject::GameObject() {
 	deleteObject = false;
 
+	// Initialize source rectangle (part of textureSheet that is displayed)
+	// default to top left 32x32
+	srcRect.h = srcRect.w = 32;
+	srcRect.x = srcRect.y = 0;
+	
+	// Initialize destination rectangle (part of screen GameObject is displayed on)
+	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3?
+	destRect.h = srcRect.h * 3;
+
 	pivotOffset.x = pivotOffset.y = 0;
 
 	isAnimated = false;
@@ -17,15 +26,6 @@ GameObject::GameObject() {
 void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	// Load texture
 	texture = RenderManager::LoadTexture(getTextureSheet(), game->getRenderer());
-	
-	// Initialize source rectangle (part of textureSheet that is displayed)
-	// default to top left 32x32
-	srcRect.h = srcRect.w = 32;
-	srcRect.x = srcRect.y = 0;
-	
-	// Initialize destination rectangle (part of screen GameObject is displayed on)
-	destRect.w = srcRect.w * 3; // Create global macro or sum for size instead of 3?
-	destRect.h = srcRect.h * 3;
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;
@@ -46,9 +46,12 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 
 	// Initialize collider
 	circleCollider.radius = (float)destRect.w / 2;
+	circleCollider.position = pivotPosition;
 }
 
 void GameObject::update(Game* game, const double& deltaTime) {
+	position += velocity * deltaTime;
+
 	// Update render position
 	destRect.x = round(position.x);
 	destRect.y = round(position.y);
@@ -58,8 +61,8 @@ void GameObject::update(Game* game, const double& deltaTime) {
 	pivotPosition.y = pivot.y + destRect.y;
 
 	// Update midPosition
-	midPosition.x = position.x + (float)destRect.w / 2;
-	midPosition.y = position.y + (float)destRect.h / 2;
+	midPosition.x = position.x + destRect.w / 2.0f;
+	midPosition.y = position.y + destRect.h / 2.0f;
 	midPosition = midPosition.rotateAround(
 		vector2Df(destRect.x + pivot.x, destRect.y + pivot.y), rotation);
 
@@ -78,6 +81,9 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+	SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+					pivotPosition.x + velocity.normalized().x * 50,
+					pivotPosition.y + velocity.normalized().y * 50);
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_RenderDrawRect(renderer, &destRect);
 	#endif
@@ -90,7 +96,7 @@ void GameObject::animationUpdate(const double& deltaTime) {
 	const AnimationData& sequence = getAnimationData()[animationSequence];
 
 	// Update frame
-	animationCounter += sequence.speed * deltaTime;
+	animationCounter += sequence.speed * animationSpeed * deltaTime;
 	// Check for looping
 	if (animationCounter >= sequence.length) {
 		animationCounter -= sequence.length; // -= length so that the animation plays at same speed

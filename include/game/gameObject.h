@@ -19,9 +19,11 @@ class Game;
 class GameObject {
 public:
 	GameObject();
+	virtual ~GameObject() = default;
 
 	// Initialize must be overriden to change initialization of things such as collider settings
 	virtual void initialize(const vector2Df& position, Game* game);
+	// Should be called after finishing velocity calculations
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
@@ -29,6 +31,7 @@ public:
 	vector2Df getPosition() const { return position; };
 	vector2Df getPivotPosition() const { return pivotPosition; };
 	vector2Df getMidPosition() const { return midPosition; };
+	vector2Df getVelocity() const { return velocity; };
 	// Returns the rotation as a direction vector
 	inline vector2Df getDirection() const {
 		float radians = (rotation - 90) * M_PI / 180;
@@ -42,7 +45,7 @@ public:
 
 protected:
 	// Position and rotation
-	vector2Df position;
+	vector2Df velocity;
 	vector2Df pivotPosition;
 	vector2Df midPosition;
 	double rotation; // Angle of rotation
@@ -50,6 +53,7 @@ protected:
 	// Animation
 	bool isAnimated; // Set true to enable animation
 	int animationSequence; // Keeps track of current animation sequence, used as y position
+	float animationSpeed; // Scales all animations
 	// Use this function to define length and speed of different animations
 	virtual const std::vector<AnimationData>& getAnimationData() const {
 		static const std::vector<AnimationData> data;
@@ -70,6 +74,8 @@ protected:
 	
 private:
 	SDL_Texture* texture;
+
+	vector2Df position;
 	
 	// Animation
 	void animationUpdate(const double& deltaTime);

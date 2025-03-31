@@ -7,7 +7,7 @@
 #include "game/vector2D.h"
 #include "game/gameObject.h"
 #include "player.h"
-#include "enemySpawner.h"
+#include "enemyManager.h"
 
 class GameObject;
 class Player;
@@ -33,7 +33,7 @@ public:
 	SDL_Window* getWindow() const { return window; };
 	SDL_Renderer* getRenderer() const { return renderer; };
 
-	const EnemySpawner getEnemySpawner() const { return enemySpawner; }
+	const EnemyManager* getEnemyManager() const { return &enemyManager; }
 	UI::UIManager* getUIManager() { return &uiManager; }
 
 	bool input[256]{};
@@ -53,6 +53,6 @@ private:
 
 	std::vector<std::unique_ptr<GameObject>> gameObjects; 
 
-	EnemySpawner enemySpawner;
+	EnemyManager enemyManager;
 	UI::UIManager uiManager;
 };

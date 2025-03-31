@@ -40,7 +40,7 @@ Game::Game(const char* title, int width, int height) {
 	
 	gameObjects.reserve(1 << 16); // Reserve memory to ensure pointer stability
 	
-	enemySpawner = EnemySpawner(); // Create EnemySpawner
+	enemyManager = EnemyManager(); // Create EnemyManager
 
 	uiManager = UI::UIManager(); // Create UIManager
 
@@ -88,15 +88,16 @@ void Game::update() {
 		/ (double)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
-	uiManager.update(); // Resets uiManager call count, does NOT update UI Widgets
+	uiManager.resetCallCnt();
+
 
 	// Update all GameObjects
 	for (auto& object : gameObjects) {
 		object->update(this, deltaTime);
 	}
 
-	// Update EnemySpawner list
-	enemySpawner.update(this, deltaTime);
+	uiManager.update(); // Update UIManager list
+	enemyManager.update(this, deltaTime); // Update EnemyManager list
 
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {

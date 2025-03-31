@@ -15,6 +15,7 @@ namespace UI {
 class Widget {
 public:
 	Widget(Widget* parent = nullptr, AnchorType anchorPosition = AnchorType());
+	virtual ~Widget() = default;
 
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
@@ -30,7 +31,6 @@ public:
 	// If widget has parent these values are based on percentage of parent size
 	vector2Df localPosition;
 	vector2Df localSize;
-	std::list<std::unique_ptr<Widget>> childWidgets;
 
 protected:
 	Widget* parent;
@@ -40,6 +40,7 @@ protected:
 
 private:
 	AnchorType anchorPosition;
+	std::list<std::unique_ptr<Widget>> childWidgets;
 };
 
 }
