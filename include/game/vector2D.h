@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <ostream>
 
 struct vector2Df {
 	float x;
@@ -18,6 +19,8 @@ struct vector2Df {
 	int toDegrees() const;
 
 	vector2Df rotateAround(vector2Df point, float degrees) const;
+
+	bool operator==(const vector2Df& rhs) const;
 };
 
 struct vector2D {
@@ -30,6 +33,8 @@ struct vector2D {
 	vector2D& operator=(const vector2Df& other);
 
 	vector2D& operator=(const vector2D& other);
+
+	bool operator==(const vector2D& rhs) const;
 };
 
 // Operator overloading
@@ -188,4 +193,15 @@ inline vector2D operator*(vector2D lhs, const vector2D& rhs) {
 inline vector2D operator*(vector2D lhs, const int& rhs) {
 	lhs *= rhs;
 	return lhs;
+}
+
+// << overloading
+inline std::ostream& operator<<(std::ostream& os, const vector2Df& vec) {
+	os << "(" << vec.x << ", " << vec.y << ")";
+	return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const vector2D& vec) {
+	os << "(" << vec.x << ", " << vec.y << ")";
+	return os;
 }
