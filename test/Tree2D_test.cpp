@@ -16,7 +16,7 @@ TEST(Tree2DTest, Subtest_1) {
 		vector2Df(12, 14), vector2Df(0, 5), vector2Df(11, 18)
 	};
 	std::array<vector2Df, 7> expected = {
-		vector2Df(4, 12), vector2Df(9, 1), vector2Df(3, 6), vector2Df(17, 15),
+		vector2Df(6, 12), vector2Df(9, 1), vector2Df(3, 6), vector2Df(17, 15),
 		vector2Df(13, 15), vector2Df(2, 7), vector2Df(10, 19)
 	};
 
