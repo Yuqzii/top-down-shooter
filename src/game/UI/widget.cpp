@@ -41,10 +41,10 @@ void Widget::calculatePosition(const bool& calculateChildren) {
 		// Update position based on anchoring
 		vector2Df add;
 		switch (anchorPosition.x) {
-			case XANCHOR_CENTER:
+			case XAnchorType::XANCHOR_CENTER:
 				add.x = 50 - (size.x / parent->size.x) * 50;
 				break;
-			case XANCHOR_RIGHT:
+			case XAnchorType::XANCHOR_RIGHT:
 				add.x = 100 - (size.x / parent->size.x) * 100;
 				break;
 			default:
@@ -52,10 +52,10 @@ void Widget::calculatePosition(const bool& calculateChildren) {
 		}
 
 		switch (anchorPosition.y) {
-			case YANCHOR_MIDDLE:
+			case YAnchorType::YANCHOR_MIDDLE:
 				add.y = 50 - (size.y / parent->size.y) * 50;
 				break;
-			case YANCHOR_BOTTOM:
+			case YAnchorType::YANCHOR_BOTTOM:
 				add.y = 100 - (size.y / parent->size.y) * 100;
 				break;
 			default:
