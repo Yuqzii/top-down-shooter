@@ -62,7 +62,7 @@ void Player::update(Game* game, const double& deltaTime) {
 	healthbarBG.calculatePosition();
 	
 	// Tell UIManager to render healthbar
-	game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
+	game->getRenderManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
 
 }
 
