@@ -81,21 +81,6 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
 }
 
-std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
-	// Return lambda with debug render stuff
-	return [this](SDL_Renderer* renderer) {
-		Collision::drawCircleCollider(renderer, circleCollider);
-		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
-		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
-						pivotPosition.x + velocity.normalized().x * 50,
-						pivotPosition.y + velocity.normalized().y * 50);
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		SDL_RenderDrawRect(renderer, &destRect);
-	};
-}
-
 void GameObject::animationUpdate(const double& deltaTime) {
 	// Notify if we try accessing non-existent animation
 	assert(animationSequence < getAnimationData().size() && "Animation index out of range");
@@ -112,4 +97,20 @@ void GameObject::animationUpdate(const double& deltaTime) {
 
 	srcRect.x = frame * 32;
 	srcRect.y = animationSequence * 32;
+}
+
+std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
+	// Return lambda with debug render stuff
+	return [this](SDL_Renderer* renderer) {
+		Collision::drawCircleCollider(renderer, circleCollider);
+		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+		SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+						pivotPosition.x + velocity.x * 0.1,
+						pivotPosition.y + velocity.y * 0.1
+		);
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawRect(renderer, &destRect);
+	};
 }
