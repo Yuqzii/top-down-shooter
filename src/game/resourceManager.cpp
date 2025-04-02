@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <string>
 #include <iostream>
-#include "game/renderManager.h"
+#include "game/resourceManager.h"
 
 #ifndef NDEBUG
 #	define ASSERT(condition, message) \
@@ -18,7 +18,7 @@
 #endif
 
 
-namespace RenderManager {
+namespace ResourceManager {
 	namespace {
 		std::unordered_map<std::string, SDL_Texture*> loadedTextures;
 	}

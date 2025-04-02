@@ -2,7 +2,7 @@
 #include <SDL2/SDL_render.h>
 #include <cassert>
 #include "game/gameObject.h"
-#include "game/renderManager.h"
+#include "game/resourceManager.h"
 #include "game/game.h"
 
 GameObject::GameObject() {
@@ -25,7 +25,7 @@ GameObject::GameObject() {
 
 void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	// Load texture
-	texture = RenderManager::LoadTexture(getTextureSheet(), game->getRenderer());
+	texture = ResourceManager::LoadTexture(getTextureSheet(), game->getRenderer());
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;

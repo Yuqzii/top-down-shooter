@@ -13,7 +13,7 @@ set(CMAKE_BUILD_TYPE DEBUG)
 
 SET(SOURCE_FILES
 "src/game/game.cpp"
-"src/game/renderManager.cpp"
+"src/game/resourceManager.cpp"
 "src/game/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
