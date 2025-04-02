@@ -43,8 +43,8 @@ target_include_directories(${PROJECT_NAME}_lib PRIVATE
 if(UNIX AND NOT APPLE)
 	message("Linux platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so"
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so.0"
+		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so.0"
 		)
 endif()
 
