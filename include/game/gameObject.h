@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
@@ -71,6 +72,8 @@ protected:
 	};
 	SDL_RendererFlip flipType;
 	SDL_Rect srcRect, destRect;
+
+	std::function<void(SDL_Renderer*)> debugRender() const;
 	
 private:
 	SDL_Texture* texture;
