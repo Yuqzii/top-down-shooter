@@ -1,46 +1,40 @@
-#include <SDL2/SDL_surface.h>
-#include <filesystem>
-#include <string>
-#include <iostream>
 #include "game/renderManager.h"
+#include "game/gameObject.h"
 
-#ifndef NDEBUG
-#	define ASSERT(condition, message) \
-	do { \
-		if (!(condition)) { \
-			std::cerr << "Assertion '" #condition "' failed in " << __FILE__ \
-					<< " line " << __LINE__ << ": " << message << std::endl; \
-			std::terminate(); \
-		} \
-	} while (false)
-#else
-	#define ASSERT(condition, message) do { } while (false)
-#endif
+RenderManager::RenderManager() {
+	renderCallCnt = 0;
+}
 
-
-namespace RenderManager {
-	namespace {
-		std::unordered_map<std::string, SDL_Texture*> loadedTextures;
+void RenderManager::addRenderCall(std::function<void(SDL_Renderer*)> func, const GameObject* parent) {
+	if (renderCalls.size() > renderCallCnt) {
+		// Can just reassign existing variable
+		renderCalls[renderCallCnt].first = func;
+		renderCalls[renderCallCnt].second = parent;
 	}
+	else {
+		renderCalls.push_back(std::make_pair(func, parent)); // Need to add more space
+	}
+	renderCallCnt++;
+}
 
-	SDL_Texture* LoadTexture(const std::string& filename, SDL_Renderer* renderer) {
-		// Load texture if it is not already loaded
-		if (!loadedTextures.count(filename)) {
-			// Check ASSETS_PATH is defined
-			#ifndef ASSETS_PATH
-			std::cerr << "ERROR: ASSETS_PATH not defined." << std::endl;
-			std::terminate();
-			#define ASSETS_PATH "" // Just here to hide lsp error (not actual error)
-			#endif
+void RenderManager::resetCallCnt() {
+	renderCallCnt = 0;
+}
 
-			const std::string path = ASSETS_PATH + filename;
-			// Check that file exists
-			ASSERT(std::filesystem::exists(path), "Could not load texture \"" + filename + "\"");
-			// Store loaded textures to avoid unnecessary load calls
-			loadedTextures[filename] = IMG_LoadTexture(renderer, (path).c_str());
+void RenderManager::update() {
+	// Iterate over parents of render calls and check for deletion
+	for (auto it = renderCalls.cbegin(); it != renderCalls.cend();) {
+		if (it->second->deleteObject) {
+			it = renderCalls.erase(it); // Remove render call
+			renderCallCnt--; // Update call count
 		}
-
-		return loadedTextures[filename];
+		else it++;
 	}
 }
 
+void RenderManager::render(SDL_Renderer* renderer) const {
+	// Iterate over all render calls and call the render function
+	for (int i = 0; i < renderCallCnt; i++) {
+		renderCalls[i].first(renderer);
+	}
+}

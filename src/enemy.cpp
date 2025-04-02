@@ -75,7 +75,7 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
 		// Render healthbar
-		game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
+		game->getRenderManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
 	}
 }
 

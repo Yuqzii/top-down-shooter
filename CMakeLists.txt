@@ -13,7 +13,7 @@ set(CMAKE_BUILD_TYPE DEBUG)
 
 SET(SOURCE_FILES
 "src/game/game.cpp"
-"src/game/renderManager.cpp"
+"src/game/resourceManager.cpp"
 "src/game/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
@@ -22,7 +22,7 @@ SET(SOURCE_FILES
 "src/enemyManager.cpp"
 "src/game/UI/widget.cpp"
 "src/game/UI/background.cpp"
-"src/game/UI/UIManager.cpp"
+"src/game/renderManager.cpp"
 "src/game/UI/slider.cpp"
 "src/game/vector2D.cpp"
 "src/game/2DTree.cpp"

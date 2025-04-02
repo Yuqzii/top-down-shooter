@@ -42,7 +42,7 @@ Game::Game(const char* title, int width, int height) {
 	
 	enemyManager = EnemyManager(); // Create EnemyManager
 
-	uiManager = UI::UIManager(); // Create UIManager
+	renderManager = RenderManager(); // Create RenderManager
 
 	player = instantiate<Player>(vector2Df(500, 500)); // Instantiate player
 
@@ -88,7 +88,7 @@ void Game::update() {
 		/ (double)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
-	uiManager.resetCallCnt();
+	renderManager.resetCallCnt();
 
 
 	// Update all GameObjects
@@ -96,7 +96,7 @@ void Game::update() {
 		object->update(this, deltaTime);
 	}
 
-	uiManager.update(); // Update UIManager list
+	renderManager.update(); // Update RenderManager list
 	enemyManager.update(this, deltaTime); // Update EnemyManager list
 
 	// Delete objects marked for deletion
@@ -117,7 +117,7 @@ void Game::render() const {
 		object->render(renderer);
 	}
 
-	uiManager.render(renderer); // Render UI Widgets
+	renderManager.render(renderer); // Render everything passed to RenderManager
 
 	SDL_RenderPresent(renderer); // Update screen
 }

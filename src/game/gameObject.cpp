@@ -2,7 +2,7 @@
 #include <SDL2/SDL_render.h>
 #include <cassert>
 #include "game/gameObject.h"
-#include "game/renderManager.h"
+#include "game/resourceManager.h"
 #include "game/game.h"
 
 GameObject::GameObject() {
@@ -25,7 +25,7 @@ GameObject::GameObject() {
 
 void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	// Load texture
-	texture = RenderManager::LoadTexture(getTextureSheet(), game->getRenderer());
+	texture = ResourceManager::LoadTexture(getTextureSheet(), game->getRenderer());
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;
@@ -71,22 +71,29 @@ void GameObject::update(Game* game, const double& deltaTime) {
 
 	if (isAnimated)
 		animationUpdate(deltaTime);
+
+#ifdef DEBUG
+	game->getRenderManager()->addRenderCall(debugRender(), this);
+#endif
 }
 
 void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
-	
-	#ifdef DEBUG
-	Collision::drawCircleCollider(renderer, circleCollider);
-	SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
-	SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
-					pivotPosition.x + velocity.normalized().x * 50,
-					pivotPosition.y + velocity.normalized().y * 50);
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderDrawRect(renderer, &destRect);
-	#endif
+}
+
+std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
+	// Return lambda with debug render stuff
+	return [this](SDL_Renderer* renderer) {
+		Collision::drawCircleCollider(renderer, circleCollider);
+		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+		SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
+		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+						pivotPosition.x + velocity.normalized().x * 50,
+						pivotPosition.y + velocity.normalized().y * 50);
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawRect(renderer, &destRect);
+	};
 }
 
 void GameObject::animationUpdate(const double& deltaTime) {
