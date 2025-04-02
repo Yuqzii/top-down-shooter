@@ -27,7 +27,7 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 
 void Enemy::update(Game* game, const double& deltaTime) {
 	// Different movement depending on the current state
-	vector2Df steering;
+	steering = vector2Df(); // Reset steering
 	switch (state) {
 		case EnemyStates::PURSUIT:
 			steering += pursuit(game->player, 0.75f);
@@ -142,4 +142,17 @@ vector2Df Enemy::evade(const GameObject* target, const float& predictionMultipli
 	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
 									* time * predictionMultiplier;
 	return flee(futurePosition); // Use seek to move towards this position
+}
+
+std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
+	return [this](SDL_Renderer* renderer) {
+		GameObject::debugRender()(renderer); // Call parent debugRender and pass in renderer
+
+		// Draw line displaying steering direction and strength
+		SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+					 pivotPosition.x + steering.x * 0.1,
+					 pivotPosition.y + steering.y * 0.1
+		);
+	};
 }

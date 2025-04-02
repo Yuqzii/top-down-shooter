@@ -73,7 +73,7 @@ protected:
 	SDL_RendererFlip flipType;
 	SDL_Rect srcRect, destRect;
 
-	std::function<void(SDL_Renderer*)> debugRender() const;
+	virtual std::function<void(SDL_Renderer*)> debugRender() const;
 	
 private:
 	SDL_Texture* texture;
