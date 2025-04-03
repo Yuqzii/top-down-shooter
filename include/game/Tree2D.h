@@ -1,6 +1,9 @@
 #pragma once
 
 #include <array>
+#include <list>
+#include <queue>
+#include <set>
 #include <vector>
 #include "game/vector2D.h"
 
@@ -25,6 +28,9 @@ public:
 	// Returns the closest point to target in the tree, that is not the same as target
 	vector2Df findClosestPoint(const vector2Df& target) const;
 
+	// Returns an std::vector of the k closest points that are not the same as target
+	std::vector<vector2Df> findKClosestPoints(const vector2Df& target, const int& k) const;
+
 private:
 	struct Node {
 		const std::array<float, 2> point;
@@ -41,6 +47,11 @@ private:
 	Node* insertRecursive(Node* node, const std::array<float, 2>& point, const int& depth);
 
 	Node* nearestNeighbor(Node* node, const std::array<float, 2>& target, const int& depth) const;
+
+	Node* nearestNeighbors(Node* node, const std::array<float, 2>& target, const int& depth,
+			std::list<std::pair<float, const Node*>>& heap, const int& k) const;
+	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
+				 const std::array<float, 2>& target, const int& k) const;
 
 	inline float distanceSquared(const std::array<float, 2>& a,
 								const std::array<float, 2>& b) const {

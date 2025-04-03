@@ -97,6 +97,7 @@ TEST(Tree2DTest, MultiplePointQuery) {
 	};
 
 	tree.initializeWithList(points);
+	tree.print();
 
 	std::array<vector2Df, 3> testPoints = {
 		vector2Df(2, 5), vector2Df(12, 12), vector2Df(25, 5)
@@ -113,11 +114,11 @@ TEST(Tree2DTest, MultiplePointQuery) {
 		std::vector<vector2Df> result = tree.findKClosestPoints(testPoints[i], expected[i].size());
 	
 		EXPECT_TRUE(result.size() == expected[i].size()) << "Expected size: " << expected[i].size()
-				<< " Found size: " << result.size() << ". Subtest number " << i;
+				<< " Found size: " << result.size() << ". Subtest " << i;
 
 		for (int j = 0; j < result.size(); j++) {
 			EXPECT_TRUE(result[j] == expected[i][j]) << "Expected: " << expected[i][j] <<
-					" Found: " << result[j] << ". Subtest number " << i;
+					" Found: " << result[j] << ". Subtest " << i;
 		}
 
 
