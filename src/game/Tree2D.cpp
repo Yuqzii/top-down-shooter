@@ -61,15 +61,22 @@ std::vector<vector2Df> Tree2D::findKClosestPoints(const vector2Df& target, const
 
 	// Get nearest neighbors into heap
 	std::list<std::pair<float, const Node*>> heap;
-	nearestNeighbors(root, targetArr, 0, heap, k);
+	kNearestNeighbors(root, targetArr, 0, heap, k);
+	for (auto val : heap) {
+		std::cout << val.second->point[0] << ", " << val.second->point[1] << std::endl;
+	}
+
+	if (heap.size() != k) {
+		throw 3;
+	}
 
 	// Convert result to vector of vector2Df
 	std::vector<vector2Df> result;
-	result.reserve(k);
-
 	for (auto val : heap) {
 		result.push_back(vector2Df(val.second->point[0], val.second->point[1]));
 	}
+	result.reserve(k);
+
 
 	return result;
 }
@@ -174,14 +181,17 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 	return closest;
 }
 
-Tree2D::Node* Tree2D::nearestNeighbors(Node* node,
+Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 		const std::array<float, 2>& target, const int& depth,
 		std::list<std::pair<float, const Node*>>& heap, const int& k) const {
+
+	std::cout << "visited " << node->point[0] << ", " << node->point[1] << std::endl;
+
+	// Check every visited node against heap
+	updateHeap(heap, node, target, k);
+
 	// No possible paths from this node
-	if (node->left == nullptr && node->right == nullptr) {
-		updateHeap(heap, node, target, k); // Check if node should be in heap
-		return node; // Return this node
-	}
+	if (node->left == nullptr && node->right == nullptr) return node; // Return this node
 
 	const int dimension = depth % 2; // Calculate the current dimension of the tree
 
@@ -205,7 +215,7 @@ Tree2D::Node* Tree2D::nearestNeighbors(Node* node,
 		std::swap(nextBranch, otherBranch);
 
 	// Recursively go through tree
-	Node* result = nearestNeighbors(nextBranch, target, depth + 1, heap, k);
+	Node* result = kNearestNeighbors(nextBranch, target, depth + 1, heap, k);
 
 	// AFTER RECURSION
 	// Get the closest of the result and the current node
@@ -213,7 +223,7 @@ Tree2D::Node* Tree2D::nearestNeighbors(Node* node,
 
 	if (closest == nullptr) { // Both result and node are the same as target
 		// Try to find a valid node under result
-		return nearestNeighbors(result, target, depth + 1, heap, k);
+		return kNearestNeighbors(result, target, depth + 1, heap, k);
 	}
 
 	// Calculate distance from target to the closest node
@@ -222,15 +232,14 @@ Tree2D::Node* Tree2D::nearestNeighbors(Node* node,
 	float dist = target[dimension] - node->point[dimension];
 
 	// If distance to split is smaller than to the closest node there is a possibility that
-	// there exists a closer node in that branch of the tree
-	if (dist * dist <= radiusSquared && otherBranch != nullptr) {
-		// Recursively get the of the other branch
-		result = nearestNeighbor(otherBranch, target, depth + 1);
+	// there exists a closer node in that branch of the tree.
+	// Must check other branch if heap is not the asked size.
+	if ((dist * dist <= radiusSquared || heap.size() < k) && otherBranch != nullptr) {
+		// Recursively get the result of the other branch
+		result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
 		// Check if that result is closer than the currently closest node
 		closest = findClosestNode(target, result, closest);
 	}
-
-	updateHeap(heap, closest, target, k); // Check if closest should be in heap
 
 	return closest;
 }
@@ -238,18 +247,22 @@ Tree2D::Node* Tree2D::nearestNeighbors(Node* node,
 void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
 		const std::array<float, 2>& target, const int& k) const {
 	
+	// Node is the same as target, invalid
+	if (target[0] == node->point[0] && target[1] == node->point[1])
+		return;
+
 	// Get distance to check against heap
 	float dist = distanceSquared(target, node->point);
 	// Check if we should add to heap.
 	// Either distance from node is less than current max,
 	// or the heap is not large enough.
-	if (dist < heap.back().first || heap.size() < k) {
+	if (heap.size() < k || dist < heap.back().first) {
 		// Find position to insert in max heap
 		const auto heapPos = std::lower_bound(heap.cbegin(), heap.cend(),
 				std::make_pair(dist, node));
 		heap.insert(heapPos, std::make_pair(dist, node));
 	}
-	// Check if heap is too large
+	// Ensure correct heap size
 	if (heap.size() > k) {
 		heap.pop_back();
 	}

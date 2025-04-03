@@ -48,7 +48,7 @@ private:
 
 	Node* nearestNeighbor(Node* node, const std::array<float, 2>& target, const int& depth) const;
 
-	Node* nearestNeighbors(Node* node, const std::array<float, 2>& target, const int& depth,
+	Node* kNearestNeighbors(Node* node, const std::array<float, 2>& target, const int& depth,
 			std::list<std::pair<float, const Node*>>& heap, const int& k) const;
 	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
 				 const std::array<float, 2>& target, const int& k) const;

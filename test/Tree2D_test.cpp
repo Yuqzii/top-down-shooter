@@ -124,3 +124,29 @@ TEST(Tree2DTest, MultiplePointQuery) {
 
 	}
 }
+
+TEST(Tree2DTest, MultiplePoint_DuplicatePoints) {
+	Tree2D tree;
+
+	std::vector<vector2Df> points = {
+		vector2Df(10, 10), vector2Df(10, 10), vector2Df(10, 10),
+		vector2Df(15, 15), vector2Df(15, 15)
+	};
+	//tree.initializeWithList(points);
+
+	tree.insert(vector2Df(10, 10));
+	tree.insert(vector2Df(10, 10));
+	tree.insert(vector2Df(15, 15));
+	tree.insert(vector2Df(15, 15));
+	tree.insert(vector2Df(10, 10));
+
+	tree.print();
+
+	EXPECT_NO_THROW(tree.findKClosestPoints(vector2Df(10, 10), 2));
+
+	EXPECT_THROW(tree.findKClosestPoints(vector2Df(10, 10), 3), int);
+
+	EXPECT_NO_THROW(tree.findKClosestPoints(vector2Df(15, 15), 3));
+
+	EXPECT_THROW(tree.findKClosestPoints(vector2Df(15, 15), 4), int);
+}
