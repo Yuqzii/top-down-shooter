@@ -25,7 +25,7 @@ SET(SOURCE_FILES
 "src/game/renderManager.cpp"
 "src/game/UI/slider.cpp"
 "src/game/vector2D.cpp"
-"src/game/2DTree.cpp"
+"src/game/Tree2D.cpp"
 )
 
 # Build the game as a static library

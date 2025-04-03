@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "game/2DTree.h"
+#include "game/Tree2D.h"
 
 TEST(Tree2DTest, General) {
 	Tree2D tree;

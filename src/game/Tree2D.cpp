@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include "game/2DTree.h"
+#include "game/Tree2D.h"
 
 Tree2D::Tree2D() : root(nullptr) {} 
 
