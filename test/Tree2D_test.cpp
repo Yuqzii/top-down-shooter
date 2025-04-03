@@ -87,3 +87,39 @@ TEST(Tree2DTest, DuplicatePoints) {
 	EXPECT_TRUE(result == vector2Df(10, 10)) <<
 		"Expected: " << vector2Df(10, 10) << " Found: " << result << std::endl;
 }
+
+TEST(Tree2DTest, MultiplePointQuery) {
+	Tree2D tree;
+
+	std::vector<vector2Df> points = {
+		vector2Df(3, 6), vector2Df(17, 15), vector2Df(13, 15), vector2Df(6, 12),
+		vector2Df(9, 2), vector2Df(2, 7), vector2Df(10, 19)
+	};
+
+	tree.initializeWithList(points);
+
+	std::array<vector2Df, 3> testPoints = {
+		vector2Df(2, 5), vector2Df(12, 12), vector2Df(25, 5)
+	};
+
+	std::array<std::vector<vector2Df>, 3> expected = {
+		std::vector { vector2Df(3, 6), vector2Df(2, 7), vector2Df(9, 2) },
+		std::vector { vector2Df(13, 15), vector2Df(17, 15), vector2Df(6, 12), vector2Df(10, 19) },
+		std::vector { vector2Df(17, 15), vector2Df(13, 15), vector2Df(9, 2), vector2Df(6, 12),
+				vector2Df(10, 19), vector2Df(3, 6) }
+	};
+
+	for (int i = 0; i < testPoints.size(); i++) {
+		std::vector<vector2Df> result = tree.findKClosestPoints(testPoints[i], expected[i].size());
+	
+		EXPECT_TRUE(result.size() == expected[i].size()) << "Expected size: " << expected[i].size()
+				<< " Found size: " << result.size() << ". Subtest number " << i;
+
+		for (int j = 0; j < result.size(); j++) {
+			EXPECT_TRUE(result[j] == expected[i][j]) << "Expected: " << expected[i][j] <<
+					" Found: " << result[j] << ". Subtest number " << i;
+		}
+
+
+	}
+}
