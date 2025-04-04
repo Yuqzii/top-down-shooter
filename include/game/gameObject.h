@@ -2,8 +2,8 @@
 
 #include <functional>
 #include <string>
-#include <SDL2/SDL.h>
 #include <vector>
+#include "SDL2/SDL.h"
 #include "game/collision.h"
 #include "game/vector2D.h"
 #include "game/animationData.h"

@@ -71,6 +71,19 @@ std::vector<const GameObject*> Tree2D::findKClosestObjects(
 	return result;
 }
 
+std::vector<const GameObject*> Tree2D::getObjectsInRange(
+		const vector2Df& target, const float& range) const {
+	std::vector<const GameObject*> result;
+
+	// Convert vector2Df to two dimensional array
+	const std::array<float, 2> targetArr = { target.x, target.y };
+
+	// Get objectsInRange into result vector
+	objectsInRange(root, targetArr, 0, range, result);
+
+	return result;
+}
+
 Tree2D::Node::Node(const GameObject* obj) : object(obj), left(nullptr), right(nullptr) {
 	point = { object->getPivotPosition().x, object->getPivotPosition().y };
 }
