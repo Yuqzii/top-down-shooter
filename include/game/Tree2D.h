@@ -2,8 +2,6 @@
 
 #include <array>
 #include <list>
-#include <queue>
-#include <set>
 #include <vector>
 #include "game/vector2D.h"
 

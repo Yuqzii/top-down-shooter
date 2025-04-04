@@ -314,5 +314,4 @@ void Tree2D::printRecursive(Node* node, int depth) const {
 
 	printRecursive(node->left, depth + 1);
 	printRecursive(node->right, depth + 1);
-	// Convert result to vector of vector2Df
 }
