@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "game/2DTree.h"
+#include "game/Tree2D.h"
 
 TEST(Tree2DTest, General) {
 	Tree2D tree;
@@ -74,16 +74,94 @@ TEST(Tree2DTest, DuplicatePoints) {
 
 	tree.insert(vector2Df(10, 10));
 	tree.insert(vector2Df(10, 10));
+	tree.insert(vector2Df(15, 15));
 	tree.insert(vector2Df(10, 10));
-
-	EXPECT_THROW(tree.findClosestPoint(vector2Df(10, 10)), int) <<
-		"Expected error 2 thrown." << std::endl;
 
 	vector2Df result = tree.findClosestPoint(vector2Df(5, 2));
 	EXPECT_TRUE(result == vector2Df(10, 10)) <<
-		"Expected: " << vector2Df(10, 10) << " Found: " << result << std::endl;
+			"Expected: " << vector2Df(10, 10) << " Found: " << result;
 
 	result = tree.findClosestPoint(vector2Df(1000000000, 1000000000));
 	EXPECT_TRUE(result == vector2Df(10, 10)) <<
-		"Expected: " << vector2Df(10, 10) << " Found: " << result << std::endl;
+			"Expected: " << vector2Df(10, 10) << " Found: " << result;
+
+	result = tree.findClosestPoint(vector2Df(10, 10));
+	EXPECT_TRUE(result == vector2Df(15, 15)) <<
+			"Expected: " << vector2Df(15, 15) << " Found: " << result;
+}
+
+TEST(Tree2DTest, DuplicateSinglePoints) {
+	Tree2D tree;
+
+	tree.insert(vector2Df(5, 3));
+	tree.insert(vector2Df(5, 3));
+	tree.insert(vector2Df(5, 3));
+	tree.insert(vector2Df(5, 3));
+
+	EXPECT_THROW(tree.findClosestPoint(vector2Df(5, 3)), int) << "Expected error 2 thrown.";
+
+	vector2Df result = tree.findClosestPoint(vector2Df(2, 12));
+	EXPECT_TRUE(result == vector2Df(5, 3)) <<
+			"Expected: " << vector2Df(5, 3) << " Found: " << result;
+}
+
+TEST(Tree2DTest, MultiplePointQuery) {
+	Tree2D tree;
+
+	std::vector<vector2Df> points = {
+		vector2Df(3, 6), vector2Df(17, 15), vector2Df(13, 15), vector2Df(6, 12),
+		vector2Df(9, 2), vector2Df(2, 7), vector2Df(10, 19)
+	};
+
+	tree.initializeWithList(points);
+	tree.print();
+
+	std::array<vector2Df, 3> testPoints = {
+		vector2Df(2, 5), vector2Df(12, 12), vector2Df(25, 5)
+	};
+
+	std::array<std::vector<vector2Df>, 3> expected = {
+		std::vector { vector2Df(3, 6), vector2Df(2, 7), vector2Df(9, 2) },
+		std::vector { vector2Df(13, 15), vector2Df(17, 15), vector2Df(6, 12), vector2Df(10, 19) },
+		std::vector { vector2Df(17, 15), vector2Df(13, 15), vector2Df(9, 2), vector2Df(6, 12),
+				vector2Df(10, 19), vector2Df(3, 6) }
+	};
+
+	for (int i = 0; i < testPoints.size(); i++) {
+		std::vector<vector2Df> result = tree.findKClosestPoints(testPoints[i], expected[i].size());
+	
+		EXPECT_TRUE(result.size() == expected[i].size()) << "Expected size: " << expected[i].size()
+				<< " Found size: " << result.size() << ". Subtest " << i;
+
+		for (int j = 0; j < result.size(); j++) {
+			EXPECT_TRUE(result[j] == expected[i][j]) << "Expected: " << expected[i][j] <<
+					" Found: " << result[j] << ". Subtest " << i;
+		}
+	}
+}
+
+TEST(Tree2DTest, MultiplePoint_DuplicatePoints) {
+	Tree2D tree;
+
+	std::vector<vector2Df> points = {
+		vector2Df(10, 10), vector2Df(10, 10), vector2Df(10, 10),
+		vector2Df(15, 15), vector2Df(15, 15)
+	};
+	//tree.initializeWithList(points);
+
+	tree.insert(vector2Df(10, 10));
+	tree.insert(vector2Df(10, 10));
+	tree.insert(vector2Df(15, 15));
+	tree.insert(vector2Df(15, 15));
+	tree.insert(vector2Df(10, 10));
+
+	tree.print();
+
+	EXPECT_NO_THROW(tree.findKClosestPoints(vector2Df(10, 10), 2));
+
+	EXPECT_THROW(tree.findKClosestPoints(vector2Df(10, 10), 3), int);
+
+	EXPECT_NO_THROW(tree.findKClosestPoints(vector2Df(15, 15), 3));
+
+	EXPECT_THROW(tree.findKClosestPoints(vector2Df(15, 15), 4), int);
 }

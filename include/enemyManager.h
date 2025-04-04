@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "game/2DTree.h"
+#include "game/Tree2D.h"
 #include "enemy.h"
 
 class Game;
