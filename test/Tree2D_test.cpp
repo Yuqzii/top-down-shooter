@@ -76,7 +76,8 @@ TEST(Tree2DTest, CheckingWithExistingPoints) {
 TEST(Tree2DTest, SinglePoint) {
 	Tree2D tree;
 
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
+	auto object = std::make_unique<MockGameObject>(vector2Df(10, 10));
+	tree.insert(object.get());
 
 	std::array<vector2Df, 2> testPoints = {
 		vector2Df(10, 10), vector2Df(10, 5)
@@ -93,10 +94,16 @@ TEST(Tree2DTest, SinglePoint) {
 TEST(Tree2DTest, DuplicatePoints) {
 	Tree2D tree;
 
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(15, 15)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
+	std::vector<std::unique_ptr<MockGameObject>> objects;
+	objects.reserve(4);
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(10, 10))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(10, 10))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(15, 15))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(10, 10))));
+
+	for (auto& obj : objects) {
+		tree.insert(obj.get());
+	}
 
 	vector2Df result = tree.findClosestPoint(vector2Df(5, 2))->getPivotPosition();
 	EXPECT_TRUE(result == vector2Df(10, 10)) <<
@@ -114,10 +121,16 @@ TEST(Tree2DTest, DuplicatePoints) {
 TEST(Tree2DTest, DuplicateSinglePoints) {
 	Tree2D tree;
 
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(5, 3)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(5, 3)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(5, 3)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(5, 3)).get());
+	std::vector<std::unique_ptr<MockGameObject>> objects;
+	objects.reserve(4);
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(5, 3))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(5, 3))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(5, 3))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(5, 3))));
+
+	for (auto& obj : objects) {
+		tree.insert(obj.get());
+	}
 
 	EXPECT_THROW(tree.findClosestPoint(vector2Df(5, 3)), int) << "Expected error 2 thrown.";
 
@@ -169,17 +182,17 @@ TEST(Tree2DTest, MultiplePointQuery) {
 TEST(Tree2DTest, MultiplePoint_DuplicatePoints) {
 	Tree2D tree;
 
-	std::vector<vector2Df> points = {
-		vector2Df(10, 10), vector2Df(10, 10), vector2Df(10, 10),
-		vector2Df(15, 15), vector2Df(15, 15)
-	};
-	//tree.initializeWithList(points);
+	std::vector<std::unique_ptr<MockGameObject>> objects;
+	objects.reserve(5);
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(10, 10))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(10, 10))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(15, 15))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(15, 15))));
+	objects.push_back(std::move(std::make_unique<MockGameObject>(vector2Df(10, 10))));
 
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(15, 15)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(15, 15)).get());
-	tree.insert(std::make_unique<MockGameObject>(vector2Df(10, 10)).get());
+	for (auto& obj : objects) {
+		tree.insert(obj.get());
+	}
 
 	tree.print();
 

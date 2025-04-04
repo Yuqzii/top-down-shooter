@@ -359,7 +359,12 @@ void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const No
 }
 
 Tree2D::Node* Tree2D::findClosestNode(const std::array<float, 2>& target, Node* a, Node* b) const {
-	if (a == nullptr || b == nullptr)
+	// Check for nullptr input
+	if (a == nullptr && b != nullptr)
+		return b;
+	else if (b == nullptr && a != nullptr)
+		return a;
+	else if (b == nullptr && a == nullptr)
 		return nullptr;
 
 	const float aDist = distanceSquared(target, a->point);
