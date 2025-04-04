@@ -22,16 +22,15 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 	updateTree();
 }
 
-vector2Df EnemyManager::findClosestEnemy(const vector2Df& target) const {
-	vector2Df result;
+const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 	try {
-		result = enemyTree->findClosestPoint(target);
+		// Try to return as const Enemy*
+		return static_cast<const Enemy*>(enemyTree->findClosestPoint(target));
 	}
 	catch (int e) {
 		throw e;
+		return nullptr;
 	}
-
-	return result;
 }
 
 void EnemyManager::spawnEnemy(Game* game) {
@@ -40,14 +39,7 @@ void EnemyManager::spawnEnemy(Game* game) {
 }
 
 void EnemyManager::updateTree() {
-	// Get positions of all enemies in list
-	std::vector<vector2Df> enemyPositions;
-	enemyPositions.reserve(enemies.size());
-
-	for (Enemy* enemy : enemies) {
-		enemyPositions.push_back(enemy->getPivotPosition());
-	}
-
 	enemyTree = std::make_unique<Tree2D>(); // Create new tree
-	enemyTree->initializeWithList(enemyPositions); // Build tree with the list
+	// Initialize tree with list of enemies
+	enemyTree->initializeWithList(std::vector<GameObject*>(enemies.begin(), enemies.end()));
 }

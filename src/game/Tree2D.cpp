@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include "game/Tree2D.h"
+#include "game/gameObject.h"
 
 Tree2D::Tree2D() : root(nullptr) {} 
 
@@ -8,26 +9,15 @@ Tree2D::~Tree2D() {
 	delete root;
 }
 
-void Tree2D::initializeWithList(const std::vector<vector2Df>& points) {
-	if (points.empty()) return; // Cannot build tree with no points
+void Tree2D::initializeWithList(const std::vector<GameObject*>& objects) {
+	if (objects.empty()) return; // Cannot build tree with no points
 
-	// Convert vector2Df to two dimensional array
-	std::vector<std::array<float, 2>> arrPoints;
-	arrPoints.reserve(points.size());
-
-	// Add points as array to list
-	for (const vector2Df& point : points) {
-		arrPoints.push_back({ point.x, point.y });
-	}
-
-	initializeTree(arrPoints);
+	initializeTree(objects);
 }
 
-void Tree2D::insert(const vector2Df& point) {
-	// Convert vector2Df to two dimensional array
-	const std::array<float, 2> arrPoint = { point.x, point.y };
+void Tree2D::insert(const GameObject* object) {
 	// Insert from root and create root if it does not exist
-	root = insertRecursive(root, arrPoint, 0);
+	root = insertRecursive(root, object, 0);
 }
 
 void Tree2D::print() const {
@@ -35,7 +25,7 @@ void Tree2D::print() const {
 	std::cout << std::endl;
 }
 
-vector2Df Tree2D::findClosestPoint(const vector2Df& target) const {
+const GameObject* Tree2D::findClosestPoint(const vector2Df& target) const {
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 	const Node* result = nearestNeighbor(root, targetArr, 0);
@@ -49,13 +39,14 @@ vector2Df Tree2D::findClosestPoint(const vector2Df& target) const {
 
 	// Result is the same as target (not good), throw exception.
 	// Usually happens when there is only one enemy.
-	if (vecResult.x == target.x && vecResult.y == target.y)
+	if (result->point[0] == target.x && result->point[1] == target.y)
 		throw 2;
 
-	return vecResult; // Return result as a vector
+	return result->object; // Return the GameObject associated with the result node
 }
 
-std::vector<vector2Df> Tree2D::findKClosestPoints(const vector2Df& target, const int& k) const {
+std::vector<const GameObject*> Tree2D::findKClosestObjects(
+		const vector2Df& target, const int& k) const {
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 
@@ -71,55 +62,67 @@ std::vector<vector2Df> Tree2D::findKClosestPoints(const vector2Df& target, const
 	}
 
 	// Convert result to vector of vector2Df
-	std::vector<vector2Df> result;
-	for (auto val : heap) {
-		result.push_back(vector2Df(val.second->point[0], val.second->point[1]));
-	}
+	std::vector<const GameObject*> result;
 	result.reserve(k);
-
+	for (auto val : heap) {
+		result.push_back(val.second->object);
+	}
 
 	return result;
 }
 
-Tree2D::Node::Node(const std::array<float, 2>& pt) : point(pt), left(nullptr), right(nullptr) {}
+Tree2D::Node::Node(const GameObject* obj) : object(obj), left(nullptr), right(nullptr) {
+	point = { object->getPivotPosition().x, object->getPivotPosition().y };
+}
 
 Tree2D::Node::~Node() {
 	delete left;
 	delete right;
 }
 
-void Tree2D::initializeTree(std::vector<std::array<float, 2>>& points) {
-	// Sort points along x-axis to find median x.
-	// This will be used to build the tree from.
-	std::sort(points.begin(), points.end());
+void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
+	// Get the positions of all the objects
+	std::vector<std::pair<std::array<float, 2>, GameObject*>> sorted;
+	sorted.reserve(objects.size());
+	for (GameObject* object : objects) {
+		const std::array<float, 2> point = {
+			object->getPivotPosition().x, object->getPivotPosition().y
+		};
+		sorted.push_back(std::make_pair(std::array<float, 2>{
+			object->getPivotPosition().x, object->getPivotPosition().y }, object));
+	}
 
-	std::array<float, 2>* median = &points[points.size() / 2]; // Find the median element
-	root = new Node(*median); // Set median as root
+	// Sort objects along x-axis to find median x.
+	// This will be used to build the tree from.
+	std::sort(sorted.begin(), sorted.end());
+
+	std::pair<std::array<float, 2>, GameObject*>* median = &sorted[sorted.size() / 2]; // Find the median element
+	root = new Node(median->second); // Set median as root
 	
 	// Insert remaining points into tree
-	for (int i = 0; i < points.size(); i++) {
-		if (i == points.size() / 2) continue; // Do not insert median again
-		insertRecursive(root, points[i], 0); // Insert point
+	for (int i = 0; i < sorted.size(); i++) {
+		if (i == sorted.size() / 2) continue; // Do not insert median again
+		insertRecursive(root, sorted[i].second, 0); // Insert point
 	}
 }
 
-Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2>& point,
-									  const int& depth) {
+Tree2D::Node* Tree2D::insertRecursive(Node* node, const GameObject* object, const int& depth) {
 	// Create new node if node is null, base case
 	if (node == nullptr) {
-		return new Node(point);
+		return new Node(object);
 	}
 
+	const std::array<float, 2> point { object->getPivotPosition().x, object->getPivotPosition().y };
 	const int dimension = depth % 2; // Calculate current dimension used
 
 	// Compare point with current node
 	if (point[dimension] < node->point[dimension]) {
 		// Go left
-		node->left = insertRecursive(node->left, point, depth + 1);
+		node->left = insertRecursive(node->left, object, depth + 1);
 	}
 	else {
 		// Go right
-		node->right = insertRecursive(node->right, point, depth + 1);
+		node->right = insertRecursive(node->right, object, depth + 1);
 	}
 
 	return node;
@@ -248,6 +251,69 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 		std::cout << "otherBranch: " << otherBranch->point[0] << ", " << otherBranch->point[1] << std::endl;
 		// Recursively get the result of the other branch
 		result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
+		// Check if that result is closer than the currently closest node
+		closest = findClosestNode(target, result, closest);
+	}
+
+	return closest;
+}
+
+Tree2D::Node* Tree2D::objectsInRange(Node* node, const std::array<float, 2>& target,
+		const int& depth, const float& range, std::vector<const GameObject*>& objectList) const {
+	// Check if current node is inside range
+	if (distanceSquared(node->point, target) <= range) {
+		objectList.push_back(node->object);
+	}
+
+	// No possible paths from this node, return this node
+	if (node->left == nullptr && node->right == nullptr) return node;
+
+	const int dimension = depth % 2; // Calculate the current dimension of the tree
+
+	Node* nextBranch;
+	Node* otherBranch;
+
+	// Compare target with current node
+	if (target[dimension] < node->point[dimension]) {
+		// Go left
+		nextBranch = node->left;
+		otherBranch = node->right;
+	}
+	else {
+		// Go right
+		nextBranch = node->right;
+		otherBranch = node->left;
+	}
+
+	// Has to go other way if nextBranch does not exist
+	if (nextBranch == nullptr)
+		std::swap(nextBranch, otherBranch);
+
+	// Recursively go through tree
+	Node* result = nearestNeighbor(nextBranch, target, depth + 1);
+
+	// AFTER RECURSION
+	// Get the closest of the result and the current node
+	Node* closest = findClosestNode(target, result, node);
+
+	if (closest == nullptr) { // Both result and node are the same as target
+		// Try to find a valid node under other branch
+		if (otherBranch != nullptr)
+			return nearestNeighbor(otherBranch, target, depth + 1);
+		else
+			return nullptr;
+	}
+
+	// Calculate distance from target to the closest node
+	float radiusSquared = distanceSquared(target, closest->point);
+	// Calculatedistance from target to the split made by this node
+	float dist = target[dimension] - node->point[dimension];
+
+	// If distance to split is smaller than to the closest node there is a possibility that
+	// there exists a closer node in that branch of the tree
+	if (dist * dist <= radiusSquared && otherBranch != nullptr) {
+		// Recursively get the of the other branch
+		result = nearestNeighbor(otherBranch, target, depth + 1);
 		// Check if that result is closer than the currently closest node
 		closest = findClosestNode(target, result, closest);
 	}
