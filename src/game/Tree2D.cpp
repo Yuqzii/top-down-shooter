@@ -62,9 +62,6 @@ std::vector<vector2Df> Tree2D::findKClosestPoints(const vector2Df& target, const
 	// Get nearest neighbors into heap
 	std::list<std::pair<float, const Node*>> heap;
 	kNearestNeighbors(root, targetArr, 0, heap, k);
-	for (auto val : heap) {
-		std::cout << val.second->point[0] << ", " << val.second->point[1] << std::endl;
-	}
 
 	if (heap.size() != k) {
 		throw 3;
@@ -187,10 +184,6 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 		const std::array<float, 2>& target, const int& depth,
 		std::list<std::pair<float, const Node*>>& heap, const int& k) const {
-
-	std::cout << "visited " << node->point[0] << ", " << node->point[1] << 
-			" at depth: " << depth << std::endl;
-
 	// Check every visited node against heap
 	updateHeap(heap, node, target, k);
 
@@ -218,8 +211,6 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 	if (nextBranch == nullptr)
 		std::swap(nextBranch, otherBranch);
 
-	std::cout << "nextBranch: " << nextBranch->point[0] << ", " << nextBranch->point[1] << std::endl;
-
 	// Recursively go through tree
 	Node* result = kNearestNeighbors(nextBranch, target, depth + 1, heap, k);
 
@@ -243,9 +234,7 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 	// If distance to split is smaller than to the closest node there is a possibility that
 	// there exists a closer node in that branch of the tree.
 	// Must check other branch if heap is not the asked size.
-	std::cout << "Heap: " << heap.size() << "	" << otherBranch << std::endl;
 	if ((dist * dist <= radiusSquared || heap.size() < k) && otherBranch != nullptr) {
-		std::cout << "otherBranch: " << otherBranch->point[0] << ", " << otherBranch->point[1] << std::endl;
 		// Recursively get the result of the other branch
 		result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
 		// Check if that result is closer than the currently closest node
