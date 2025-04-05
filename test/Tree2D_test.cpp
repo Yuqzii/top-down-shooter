@@ -247,6 +247,7 @@ TEST(Tree2DTest, ObjectsInRange) {
 		for (auto a : resultSet) std::cout << a << "  ";
 		std::cout << "\nExpected: ";
 		for (auto a : expected[i]) std::cout << a << "  ";
-		EXPECT_TRUE(resultSet == expected[i]);
+
+		EXPECT_TRUE(resultSet == expected[i]) << "Test " << i;
 	}
 }
