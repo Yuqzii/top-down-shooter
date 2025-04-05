@@ -251,3 +251,34 @@ TEST(Tree2DTest, ObjectsInRange) {
 		EXPECT_TRUE(resultSet == expected[i]) << "Test " << i;
 	}
 }
+
+TEST(Tree2DTest, ObjectsInRange_OtherBranch) {
+	Tree2D tree;
+
+	std::vector<vector2Df> points = {
+		vector2Df(9, 15), vector2Df(7, 10), vector2Df(16, 8), vector2Df(9, 9)
+	};
+
+	std::set<vector2Df> expected = { vector2Df(7, 10), vector2Df(9, 9) };
+
+	std::vector<std::unique_ptr<MockGameObject>> objects;
+	objects.reserve(points.size());
+	for (auto& p : points) {
+		objects.push_back(std::make_unique<MockGameObject>(p));
+	}
+
+	for (auto& obj : objects) {
+		tree.insert(obj.get());
+	}
+
+	tree.print();
+
+	std::vector<const GameObject*> result = tree.findObjectsInRange(vector2Df(10, 10), 4);
+	std::set<vector2Df> resultPos;
+	for (auto& res : result) {
+		resultPos.insert(res->getPivotPosition());
+	}
+
+	//EXPECT_TRUE(false);
+	EXPECT_TRUE(resultPos == expected);
+}

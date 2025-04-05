@@ -161,12 +161,11 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 		otherBranch = node->left;
 	}
 
-	// Has to go other way if nextBranch does not exist
-	if (nextBranch == nullptr)
-		std::swap(nextBranch, otherBranch);
-
-	// Recursively go through tree
-	Node* result = nearestNeighbor(nextBranch, target, depth + 1);
+	Node* result = nullptr;
+	if (nextBranch != nullptr) { // Check that nextBranch exists
+		// Recursively go through tree
+		result = nearestNeighbor(nextBranch, target, depth + 1);
+	}
 
 	// AFTER RECURSION
 	// Get the closest of the result and the current node
@@ -188,7 +187,7 @@ Tree2D::Node* Tree2D::nearestNeighbor(Node* node, const std::array<float, 2>& ta
 	// If distance to split is smaller than to the closest node there is a possibility that
 	// there exists a closer node in that branch of the tree
 	if (dist * dist <= radiusSquared && otherBranch != nullptr) {
-		// Recursively get the of the other branch
+		// Recursively get the of result the other branch
 		result = nearestNeighbor(otherBranch, target, depth + 1);
 		// Check if that result is closer than the currently closest node
 		closest = findClosestNode(target, result, closest);
@@ -223,12 +222,11 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 		otherBranch = node->left;
 	}
 
-	// Has to go other way if nextBranch does not exist
-	if (nextBranch == nullptr)
-		std::swap(nextBranch, otherBranch);
-
-	// Recursively go through tree
-	Node* result = kNearestNeighbors(nextBranch, target, depth + 1, heap, k);
+	Node* result = nullptr;
+	if (nextBranch != nullptr) { // Check that nextBranch exists
+		// Recursively go through tree
+		result = kNearestNeighbors(nextBranch, target, depth + 1, heap, k);
+	}
 
 	// AFTER RECURSION
 	// Get the closest of the result and the current node
@@ -242,25 +240,27 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 			return nullptr;
 	}
 
-	// Calculate distance from target to the closest node
-	float radiusSquared = distanceSquared(target, closest->point);
-	// Calculatedistance from target to the split made by this node
-	float dist = target[dimension] - node->point[dimension];
+	if (closest != nullptr) {
+		// Calculate distance from target to the closest node
+		float radiusSquared = distanceSquared(target, closest->point);
+		// Calculatedistance from target to the split made by this node
+		float dist = target[dimension] - node->point[dimension];
 
-	// If distance to split is smaller than to the closest node there is a possibility that
-	// there exists a closer node in that branch of the tree.
-	// Must check other branch if heap is not the asked size.
-	if ((dist * dist <= radiusSquared || heap.size() < k) && otherBranch != nullptr) {
-		// Recursively get the result of the other branch
-		result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
-		// Check if that result is closer than the currently closest node
-		closest = findClosestNode(target, result, closest);
+		// If distance to split is smaller than to the closest node there is a possibility that
+		// there exists a closer node in that branch of the tree.
+		// Must check other branch if heap is not the asked size.
+		if ((dist * dist <= radiusSquared || heap.size() < k) && otherBranch != nullptr) {
+			// Recursively get the result of the other branch
+			result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
+			// Check if that result is closer than the currently closest node
+			closest = findClosestNode(target, result, closest);
+		}
 	}
 
 	return closest;
 }
 
-Tree2D::Node* Tree2D::nodesInRange(Node* node, const std::array<float, 2>& target,
+void Tree2D::nodesInRange(Node* node, const std::array<float, 2>& target,
 		const int& depth, const float& range, std::vector<const GameObject*>& objectList) const {
 	// Check if current node is inside range
 	const float targetDist = distanceSquared(node->point, target);
@@ -269,7 +269,7 @@ Tree2D::Node* Tree2D::nodesInRange(Node* node, const std::array<float, 2>& targe
 	}
 
 	// No possible paths from this node, return this node
-	if (node->left == nullptr && node->right == nullptr) return node;
+	if (node->left == nullptr && node->right == nullptr) return;
 
 	const int dimension = depth % 2; // Calculate the current dimension of the tree
 
@@ -288,40 +288,21 @@ Tree2D::Node* Tree2D::nodesInRange(Node* node, const std::array<float, 2>& targe
 		otherBranch = node->left;
 	}
 
-	// Has to go other way if nextBranch does not exist
-	if (nextBranch == nullptr)
-		std::swap(nextBranch, otherBranch);
-
-	// Recursively go through tree
-	Node* result = nodesInRange(nextBranch, target, depth + 1, range, objectList);
-
-	// AFTER RECURSION
-	// Get the closest of the result and the current node
-	Node* closest = findClosestNode(target, result, node);
-
-	if (closest == nullptr) { // Both result and node are the same as target
-		// Try to find a valid node under other branch
-		if (otherBranch != nullptr)
-			return nodesInRange(otherBranch, target, depth + 1, range, objectList);
-		else
-			return nullptr;
+	if (nextBranch != nullptr) { // Check that nextBranch exists
+		// Recursively go through tree
+		nodesInRange(nextBranch, target, depth + 1, range, objectList);
 	}
 
-	// Calculate distance from target to the closest node
-	float radiusSquared = distanceSquared(target, closest->point);
-	// Calculatedistance from target to the split made by this node
+	// AFTER RECURSION
+	// Calculate distance from target to the split made by this node
 	float dist = target[dimension] - node->point[dimension];
 
 	// If distance to split is smaller than to the closest node there is a possibility that
 	// there exists a closer node in that branch of the tree
-	if (dist * dist <= radiusSquared && otherBranch != nullptr) {
+	if (dist * dist <= range && otherBranch != nullptr) {
 		// Recursively get the of the other branch
-		result = nodesInRange(otherBranch, target, depth + 1, range, objectList);
-		// Check if that result is closer than the currently closest node
-		closest = findClosestNode(target, result, closest);
+		nodesInRange(otherBranch, target, depth + 1, range, objectList);
 	}
-
-	return closest;
 }
 
 void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,

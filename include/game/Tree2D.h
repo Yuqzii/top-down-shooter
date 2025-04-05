@@ -58,7 +58,7 @@ private:
 	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
 			const std::array<float, 2>& target, const int& k) const;
 
-	Node* nodesInRange(Node* node, const std::array<float, 2>& target, const int& depth,
+	void nodesInRange(Node* node, const std::array<float, 2>& target, const int& depth,
 			const float& range, std::vector<const GameObject*>& objectList) const;
 
 	inline float distanceSquared(const std::array<float, 2>& a,
