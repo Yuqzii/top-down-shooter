@@ -25,31 +25,34 @@ public:
 	// Prints the tree to the console
 	void print() const;
 
-	// Returns the closest point to target in the tree, that is not the same as target
-	const GameObject* findClosestPoint(const vector2Df& target) const;
+	// Returns the closest object to target in the tree, that is not the same as target
+	const GameObject* findClosestObject(const vector2Df& target) const;
 
-	// Returns an std::vector of the k closest points that are not the same as target
-	std::vector<const GameObject*> findKClosestObjects(const vector2Df& target, const int& k) const;
+	// Returns an std::vector of the k closest objects that are not the same as target
+	std::vector<const GameObject*> findKClosestObjects(
+			const vector2Df& target, const int& k) const;
 
 	// Returns an std::vector of all GameObjects within the given range.
 	// Includes objects where the distance is zero, unlike the other queries.
-	std::vector<const GameObject*> findObjectsInRange(const vector2Df& target, const float& range) const;
+	std::vector<const GameObject*> findObjectsInRange(
+			const vector2Df& target, const float& range) const;
 
 private:
 	struct Node {
-		std::array<float, 2> point;
+		const std::array<float, 2> point;
 		Node* left;
 		Node* right;
 		const GameObject* object;
 
-		Node(const GameObject* obj);
+		Node(const std::array<float, 2> pt, const GameObject* obj);
 		~Node();
 	};
 
 	Node* root;
 
 	void initializeTree(const std::vector<GameObject*>& objects);
-	Node* insertRecursive(Node* node, const GameObject* object, const int& depth);
+	Node* insertRecursive(Node* node, const std::array<float, 2> point,
+			const GameObject* object, const int& depth);
 
 	Node* nearestNeighbor(Node* node, const std::array<float, 2>& target, const int& depth) const;
 

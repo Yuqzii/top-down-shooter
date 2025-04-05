@@ -40,7 +40,7 @@ TEST(Tree2DTest, General) {
 	};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const vector2Df result = tree.findClosestPoint(testPoints[i])->getPivotPosition();
+		const vector2Df result = tree.findClosestObject(testPoints[i])->getPivotPosition();
 		EXPECT_TRUE(result == expected[i]) << "Expected: " << expected[i] << " Found: " << result;
 	}
 
@@ -66,7 +66,7 @@ TEST(Tree2DTest, CheckingWithExistingPoints) {
 	};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const vector2Df result = tree.findClosestPoint(testPoints[i])->getPivotPosition();
+		const vector2Df result = tree.findClosestObject(testPoints[i])->getPivotPosition();
 		EXPECT_TRUE(result == expected[i]) << "Expected: " << expected[i] << " Found: " << result;
 	}
 
@@ -83,11 +83,11 @@ TEST(Tree2DTest, SinglePoint) {
 		vector2Df(10, 10), vector2Df(10, 5)
 	};
 	
-	EXPECT_THROW(tree.findClosestPoint(testPoints[0]), int) <<
+	EXPECT_THROW(tree.findClosestObject(testPoints[0]), int) <<
 		"Expected error 2 thrown";
 
 	vector2Df expected(10, 10);
-	const vector2Df result = tree.findClosestPoint(testPoints[1])->getPivotPosition();
+	const vector2Df result = tree.findClosestObject(testPoints[1])->getPivotPosition();
 	EXPECT_TRUE(result == expected) << "Expected: " << expected << " Found: " << result;
 }
 
@@ -105,15 +105,15 @@ TEST(Tree2DTest, DuplicatePoints) {
 		tree.insert(obj.get());
 	}
 
-	vector2Df result = tree.findClosestPoint(vector2Df(5, 2))->getPivotPosition();
+	vector2Df result = tree.findClosestObject(vector2Df(5, 2))->getPivotPosition();
 	EXPECT_TRUE(result == vector2Df(10, 10)) <<
 			"Expected: " << vector2Df(10, 10) << " Found: " << result;
 
-	result = tree.findClosestPoint(vector2Df(1000000000, 1000000000))->getPivotPosition();
+	result = tree.findClosestObject(vector2Df(1000000000, 1000000000))->getPivotPosition();
 	EXPECT_TRUE(result == vector2Df(10, 10)) <<
 			"Expected: " << vector2Df(10, 10) << " Found: " << result;
 
-	result = tree.findClosestPoint(vector2Df(10, 10))->getPivotPosition();
+	result = tree.findClosestObject(vector2Df(10, 10))->getPivotPosition();
 	EXPECT_TRUE(result == vector2Df(15, 15)) <<
 			"Expected: " << vector2Df(15, 15) << " Found: " << result;
 }
@@ -132,9 +132,9 @@ TEST(Tree2DTest, DuplicateSinglePoints) {
 		tree.insert(obj.get());
 	}
 
-	EXPECT_THROW(tree.findClosestPoint(vector2Df(5, 3)), int) << "Expected error 2 thrown.";
+	EXPECT_THROW(tree.findClosestObject(vector2Df(5, 3)), int) << "Expected error 2 thrown.";
 
-	vector2Df result = tree.findClosestPoint(vector2Df(2, 12))->getPivotPosition();
+	vector2Df result = tree.findClosestObject(vector2Df(2, 12))->getPivotPosition();
 	EXPECT_TRUE(result == vector2Df(5, 3)) <<
 			"Expected: " << vector2Df(5, 3) << " Found: " << result;
 }

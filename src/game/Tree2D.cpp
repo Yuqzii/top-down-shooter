@@ -16,8 +16,11 @@ void Tree2D::initializeWithList(const std::vector<GameObject*>& objects) {
 }
 
 void Tree2D::insert(const GameObject* object) {
+	const std::array<float, 2> arrPoint = {
+		object->getPivotPosition().x, object->getPivotPosition().y
+	};
 	// Insert from root and create root if it does not exist
-	root = insertRecursive(root, object, 0);
+	root = insertRecursive(root, arrPoint, object, 0);
 }
 
 void Tree2D::print() const {
@@ -25,7 +28,7 @@ void Tree2D::print() const {
 	std::cout << std::endl;
 }
 
-const GameObject* Tree2D::findClosestPoint(const vector2Df& target) const {
+const GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 	const Node* result = nearestNeighbor(root, targetArr, 0);
@@ -81,9 +84,8 @@ std::vector<const GameObject*> Tree2D::findObjectsInRange(
 	return result;
 }
 
-Tree2D::Node::Node(const GameObject* obj) : object(obj), left(nullptr), right(nullptr) {
-	point = { object->getPivotPosition().x, object->getPivotPosition().y };
-}
+Tree2D::Node::Node(const std::array<float ,2> pt, const GameObject* obj)
+		: point(pt), object(obj), left(nullptr), right(nullptr) {}
 
 Tree2D::Node::~Node() {
 	delete left;
@@ -99,7 +101,8 @@ void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
 			object->getPivotPosition().x, object->getPivotPosition().y
 		};
 		sorted.push_back(std::make_pair(std::array<float, 2>{
-			object->getPivotPosition().x, object->getPivotPosition().y }, object));
+			object->getPivotPosition().x, object->getPivotPosition().y }, object)
+		);
 	}
 
 	// Sort objects along x-axis to find median x.
@@ -107,32 +110,32 @@ void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
 	std::sort(sorted.begin(), sorted.end());
 
 	std::pair<std::array<float, 2>, GameObject*>* median = &sorted[sorted.size() / 2]; // Find the median element
-	root = new Node(median->second); // Set median as root
+	root = new Node(median->first, median->second); // Set median as root
 	
 	// Insert remaining points into tree
 	for (int i = 0; i < sorted.size(); i++) {
 		if (i == sorted.size() / 2) continue; // Do not insert median again
-		insertRecursive(root, sorted[i].second, 0); // Insert point
+		insertRecursive(root, sorted[i].first, sorted[i].second, 0); // Insert point
 	}
 }
 
-Tree2D::Node* Tree2D::insertRecursive(Node* node, const GameObject* object, const int& depth) {
+Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2> point,
+		const GameObject* object, const int& depth) {
 	// Create new node if node is null, base case
 	if (node == nullptr) {
-		return new Node(object);
+		return new Node(point, object);
 	}
 
-	const std::array<float, 2> point { object->getPivotPosition().x, object->getPivotPosition().y };
 	const int dimension = depth % 2; // Calculate current dimension used
 
 	// Compare point with current node
 	if (point[dimension] < node->point[dimension]) {
 		// Go left
-		node->left = insertRecursive(node->left, object, depth + 1);
+		node->left = insertRecursive(node->left, point, object, depth + 1);
 	}
 	else {
 		// Go right
-		node->right = insertRecursive(node->right, object, depth + 1);
+		node->right = insertRecursive(node->right, point, object, depth + 1);
 	}
 
 	return node;
@@ -240,21 +243,19 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 			return nullptr;
 	}
 
-	if (closest != nullptr) {
-		// Calculate distance from target to the closest node
-		float radiusSquared = distanceSquared(target, closest->point);
-		// Calculatedistance from target to the split made by this node
-		float dist = target[dimension] - node->point[dimension];
+	// Calculate distance from target to the closest node
+	float radiusSquared = distanceSquared(target, closest->point);
+	// Calculatedistance from target to the split made by this node
+	float dist = target[dimension] - node->point[dimension];
 
-		// If distance to split is smaller than to the closest node there is a possibility that
-		// there exists a closer node in that branch of the tree.
-		// Must check other branch if heap is not the asked size.
-		if ((dist * dist <= radiusSquared || heap.size() < k) && otherBranch != nullptr) {
-			// Recursively get the result of the other branch
-			result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
-			// Check if that result is closer than the currently closest node
-			closest = findClosestNode(target, result, closest);
-		}
+	// If distance to split is smaller than to the closest node there is a possibility that
+	// there exists a closer node in that branch of the tree.
+	// Must check other branch if heap is not the asked size.
+	if ((dist * dist <= radiusSquared || heap.size() < k) && otherBranch != nullptr) {
+		// Recursively get the result of the other branch
+		result = kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
+		// Check if that result is closer than the currently closest node
+		closest = findClosestNode(target, result, closest);
 	}
 
 	return closest;
@@ -268,7 +269,7 @@ void Tree2D::nodesInRange(Node* node, const std::array<float, 2>& target,
 		objectList.push_back(node->object);
 	}
 
-	// No possible paths from this node, return this node
+	// No possible paths from this node, exit recursion
 	if (node->left == nullptr && node->right == nullptr) return;
 
 	const int dimension = depth % 2; // Calculate the current dimension of the tree
@@ -297,10 +298,10 @@ void Tree2D::nodesInRange(Node* node, const std::array<float, 2>& target,
 	// Calculate distance from target to the split made by this node
 	float dist = target[dimension] - node->point[dimension];
 
-	// If distance to split is smaller than to the closest node there is a possibility that
-	// there exists a closer node in that branch of the tree
+	// If distance to split is smaller than the search range there is a possibility that
+	// there exists a valid node in that branch of the tree
 	if (dist * dist <= range && otherBranch != nullptr) {
-		// Recursively get the of the other branch
+		// Recursively check the other branch
 		nodesInRange(otherBranch, target, depth + 1, range, objectList);
 	}
 }

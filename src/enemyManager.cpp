@@ -25,7 +25,7 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 	try {
 		// Try to return as const Enemy*
-		return static_cast<const Enemy*>(enemyTree->findClosestPoint(target));
+		return static_cast<const Enemy*>(enemyTree->findClosestObject(target));
 	}
 	catch (int e) {
 		throw e;
