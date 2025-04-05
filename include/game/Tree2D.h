@@ -31,7 +31,8 @@ public:
 	// Returns an std::vector of the k closest points that are not the same as target
 	std::vector<const GameObject*> findKClosestObjects(const vector2Df& target, const int& k) const;
 
-	// Returns an std::vector of all GameObjects within the given range
+	// Returns an std::vector of all GameObjects within the given range.
+	// Includes objects where the distance is zero, unlike the other queries.
 	std::vector<const GameObject*> getObjectsInRange(const vector2Df& target, const float& range) const;
 
 private:

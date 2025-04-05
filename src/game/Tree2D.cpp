@@ -264,7 +264,7 @@ Tree2D::Node* Tree2D::objectsInRange(Node* node, const std::array<float, 2>& tar
 		const int& depth, const float& range, std::vector<const GameObject*>& objectList) const {
 	// Check if current node is inside range
 	const float targetDist = distanceSquared(node->point, target);
-	if (targetDist <= range && targetDist != 0) {
+	if (targetDist <= range) {
 		objectList.push_back(node->object);
 	}
 

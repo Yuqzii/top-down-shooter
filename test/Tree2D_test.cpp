@@ -228,7 +228,7 @@ TEST(Tree2DTest, ObjectsInRange) {
 	std::array<std::set<vector2Df>, 3> expected {
 		std::set { vector2Df(17, 15), vector2Df(13, 15), vector2Df(6, 12) },
 		std::set { vector2Df(13, 15), vector2Df(17, 15), vector2Df(9, 2) },
-		std::set { vector2Df(3, 6), vector2Df(6, 12), vector2Df(9, 2) }
+		std::set { vector2Df(3, 6), vector2Df(6, 12), vector2Df(9, 2), vector2Df(2, 7) }
 	};
 
 	for (int i = 0; i < testPoints.size(); i++) {
