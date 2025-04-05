@@ -204,3 +204,49 @@ TEST(Tree2DTest, MultiplePoint_DuplicatePoints) {
 
 	EXPECT_THROW(tree.findKClosestObjects(vector2Df(15, 15), 4), int);
 }
+
+TEST(Tree2DTest, ObjectsInRange) {
+	Tree2D tree;
+
+	std::vector<vector2Df> points = {
+		vector2Df(3, 6), vector2Df(17, 15), vector2Df(13, 15), vector2Df(6, 12),
+		vector2Df(9, 2), vector2Df(2, 7), vector2Df(10, 19)
+	};
+
+	auto testData = testInit(points);
+	tree.initializeWithList(testData);
+
+	tree.print();
+
+	std::array<vector2Df, 3> testPoints {
+		vector2Df(12, 12), vector2Df(25, 5), vector2Df(2, 7)
+	};
+	std::array<float, testPoints.size()> testRanges {
+		6, 17.5, 10
+	};
+
+	std::array<std::set<vector2Df>, 3> expected {
+		std::set { vector2Df(17, 15), vector2Df(13, 15), vector2Df(6, 12) },
+		std::set { vector2Df(13, 15), vector2Df(17, 15), vector2Df(9, 2) },
+		std::set { vector2Df(3, 6), vector2Df(6, 12), vector2Df(9, 2) }
+	};
+
+	for (int i = 0; i < testPoints.size(); i++) {
+		const std::vector<const GameObject*> result =
+				tree.getObjectsInRange(testPoints[i], testRanges[i]);
+
+		EXPECT_TRUE(result.size() == expected[i].size()) << "Incorrect result size. Expected: "
+				<< expected[i].size() << " Found: " << result.size();
+
+		std::set<vector2Df> resultSet;
+		for (auto obj : result) {
+			resultSet.insert(obj->getPivotPosition());
+		}
+		
+		std::cout << "Result: ";
+		for (auto a : resultSet) std::cout << a << "  ";
+		std::cout << "\nExpected: ";
+		for (auto a : expected[i]) std::cout << a << "  ";
+		EXPECT_TRUE(resultSet == expected[i]);
+	}
+}
