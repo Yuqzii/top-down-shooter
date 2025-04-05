@@ -7,10 +7,14 @@ add_executable(unit_tests
 	"Tree2D_test.cpp"
 )
 
-target_include_directories(unit_tests PRIVATE "${PROJECT_SOURCE_DIR}/include/")
+target_include_directories(unit_tests PRIVATE
+	"${CMAKE_SOURCE_DIR}/include/"
+	"${CMAKE_SOURCE_DIR}/libraries/"
+)
 # Link GTest and the game library
 target_link_libraries(unit_tests PRIVATE 
 	GTest::gtest_main
+	"${CMAKE_SOURCE_DIR}/libraries/libSDL2-2.0.so.0"
 	"${PROJECT_NAME}_lib"
 )
 

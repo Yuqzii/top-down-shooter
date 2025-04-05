@@ -21,6 +21,9 @@ struct vector2Df {
 	vector2Df rotateAround(vector2Df point, float degrees) const;
 
 	bool operator==(const vector2Df& rhs) const;
+
+	bool operator<(const vector2Df& rhs) const;
+	bool operator>(const vector2Df& rhs) const;
 };
 
 struct vector2D {
@@ -35,6 +38,9 @@ struct vector2D {
 	vector2D& operator=(const vector2D& other);
 
 	bool operator==(const vector2D& rhs) const;
+
+	bool operator<(const vector2D& rhs) const;
+	bool operator>(const vector2D& rhs) const;
 };
 
 // Operator overloading

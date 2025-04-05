@@ -72,6 +72,14 @@ bool vector2Df::operator==(const vector2Df& rhs) const {
 	return this->x == rhs.x && this->y == rhs.y;
 }
 
+bool vector2Df::operator<(const vector2Df& rhs) const {
+	return this->x < rhs.x;
+}
+
+bool vector2Df::operator>(const vector2Df& rhs) const {
+	return this->x > rhs.x;
+}
+
 // vector2D
 vector2D::vector2D(int x, int y) {
 	this->x = x;
@@ -97,4 +105,12 @@ vector2D& vector2D::operator=(const vector2D& other) {
 
 bool vector2D::operator==(const vector2D& rhs) const {
 	return this->x == rhs.x && this->y == rhs.y;
+}
+
+bool vector2D::operator<(const vector2D& rhs) const {
+	return this->x < rhs.x;
+}
+
+bool vector2D::operator>(const vector2D& rhs) const {
+	return this->x > rhs.x;
 }

@@ -40,8 +40,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 
 	try {
 		// Move away from closest enemy
-		const vector2Df closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
-		steering += flee(closest) * 0.7f;
+		const Enemy* closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
+		steering += flee(closest->getPivotPosition()) * 0.7f;
 	}
 	catch (int e) {
 		// Can't find closest enemy. Usually because there is currently only one enemy.

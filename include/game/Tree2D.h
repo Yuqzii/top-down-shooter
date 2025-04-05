@@ -5,6 +5,8 @@
 #include <vector>
 #include "game/vector2D.h"
 
+class GameObject;
+
 // Two dimensional KD-Tree structure
 class Tree2D {
 public:
@@ -14,42 +16,53 @@ public:
 
 	// Initializes the tree with the given list.
 	// Guarantees a balanced tree.
-	void initializeWithList(const std::vector<vector2Df>& points);
+	void initializeWithList(const std::vector<GameObject*>& objects);
 	
-	// Inserts a point into the tree.
+	// Inserts an object into the tree.
 	// NOTE: this can not guarantee a balanced tree.
-	void insert(const vector2Df& point);
+	void insert(const GameObject* object);
 
 	// Prints the tree to the console
 	void print() const;
 
-	// Returns the closest point to target in the tree, that is not the same as target
-	vector2Df findClosestPoint(const vector2Df& target) const;
+	// Returns the closest object to target in the tree, that is not the same as target
+	const GameObject* findClosestObject(const vector2Df& target) const;
 
-	// Returns an std::vector of the k closest points that are not the same as target
-	std::vector<vector2Df> findKClosestPoints(const vector2Df& target, const int& k) const;
+	// Returns an std::vector of the k closest objects that are not the same as target
+	std::vector<const GameObject*> findKClosestObjects(
+			const vector2Df& target, const int& k) const;
+
+	// Returns an std::vector of all GameObjects within the given range.
+	// Includes objects where the distance is zero, unlike the other queries.
+	std::vector<const GameObject*> findObjectsInRange(
+			const vector2Df& target, const float& range) const;
 
 private:
 	struct Node {
 		const std::array<float, 2> point;
 		Node* left;
 		Node* right;
+		const GameObject* object;
 
-		Node(const std::array<float, 2>& pt);
+		Node(const std::array<float, 2> pt, const GameObject* obj);
 		~Node();
 	};
 
 	Node* root;
 
-	void initializeTree(std::vector<std::array<float, 2>>& points);
-	Node* insertRecursive(Node* node, const std::array<float, 2>& point, const int& depth);
+	void initializeTree(const std::vector<GameObject*>& objects);
+	Node* insertRecursive(Node* node, const std::array<float, 2> point,
+			const GameObject* object, const int& depth);
 
 	Node* nearestNeighbor(Node* node, const std::array<float, 2>& target, const int& depth) const;
 
 	Node* kNearestNeighbors(Node* node, const std::array<float, 2>& target, const int& depth,
 			std::list<std::pair<float, const Node*>>& heap, const int& k) const;
 	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
-				 const std::array<float, 2>& target, const int& k) const;
+			const std::array<float, 2>& target, const int& k) const;
+
+	void nodesInRange(Node* node, const std::array<float, 2>& target, const int& depth,
+			const float& range, std::vector<const GameObject*>& objectList) const;
 
 	inline float distanceSquared(const std::array<float, 2>& a,
 								const std::array<float, 2>& b) const {
