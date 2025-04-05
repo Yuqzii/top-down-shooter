@@ -55,9 +55,9 @@ if(APPLE)
 	)
 endif()
 
-option(DEBUG "Debug" OFF)
-if(DEBUG)
-	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D DEBUG")
+option(DEBUG_GIZMO "Enable this to render debug gizmos" OFF)
+if(DEBUG_GIZMO)
+	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D DEBUG_GIZMO")
 endif()
 
 # Define assets path
@@ -85,8 +85,8 @@ else() # Not running tests, build game executable
 	# Create game executable
 	add_executable(${PROJECT_NAME} "src/main.cpp")
 
-	if(DEBUG)
-		target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG")
+	if(DEBUG_GIZMO)
+		target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG_GIZMO")
 	endif()
 
 	# Link game library to executable
