@@ -76,7 +76,7 @@ std::vector<const GameObject*> Tree2D::getObjectsInRange(
 	const std::array<float, 2> targetArr = { target.x, target.y };
 
 	// Get objectsInRange into result vector
-	objectsInRange(root, targetArr, 0, range, result);
+	objectsInRange(root, targetArr, 0, range * range, result);
 
 	return result;
 }
@@ -263,7 +263,8 @@ Tree2D::Node* Tree2D::kNearestNeighbors(Node* node,
 Tree2D::Node* Tree2D::objectsInRange(Node* node, const std::array<float, 2>& target,
 		const int& depth, const float& range, std::vector<const GameObject*>& objectList) const {
 	// Check if current node is inside range
-	if (distanceSquared(node->point, target) <= range) {
+	const float targetDist = distanceSquared(node->point, target);
+	if (targetDist <= range && targetDist != 0) {
 		objectList.push_back(node->object);
 	}
 
@@ -292,7 +293,7 @@ Tree2D::Node* Tree2D::objectsInRange(Node* node, const std::array<float, 2>& tar
 		std::swap(nextBranch, otherBranch);
 
 	// Recursively go through tree
-	Node* result = nearestNeighbor(nextBranch, target, depth + 1);
+	Node* result = objectsInRange(nextBranch, target, depth + 1, range, objectList);
 
 	// AFTER RECURSION
 	// Get the closest of the result and the current node
@@ -301,7 +302,7 @@ Tree2D::Node* Tree2D::objectsInRange(Node* node, const std::array<float, 2>& tar
 	if (closest == nullptr) { // Both result and node are the same as target
 		// Try to find a valid node under other branch
 		if (otherBranch != nullptr)
-			return nearestNeighbor(otherBranch, target, depth + 1);
+			return objectsInRange(otherBranch, target, depth + 1, range, objectList);
 		else
 			return nullptr;
 	}
@@ -315,7 +316,7 @@ Tree2D::Node* Tree2D::objectsInRange(Node* node, const std::array<float, 2>& tar
 	// there exists a closer node in that branch of the tree
 	if (dist * dist <= radiusSquared && otherBranch != nullptr) {
 		// Recursively get the of the other branch
-		result = nearestNeighbor(otherBranch, target, depth + 1);
+		result = objectsInRange(otherBranch, target, depth + 1, range, objectList);
 		// Check if that result is closer than the currently closest node
 		closest = findClosestNode(target, result, closest);
 	}
