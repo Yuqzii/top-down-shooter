@@ -2,8 +2,8 @@
 #include "game/game.h"
 
 int main(int argc, char ** argv) {
-#ifdef DEBUG
-	std::cout << "Debug build\n";
+#ifdef DEBUG_GIZMO
+	std::cout << "Debug gizmos enabled" << std::endl;
 #endif
 
 	Game game("Cool Game", 480*3, 280*3); // Create Game instance

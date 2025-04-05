@@ -72,7 +72,7 @@ void GameObject::update(Game* game, const double& deltaTime) {
 	if (isAnimated)
 		animationUpdate(deltaTime);
 
-#ifdef DEBUG
+#ifdef DEBUG_GIZMO
 	game->getRenderManager()->addRenderCall(debugRender(), this);
 #endif
 }
