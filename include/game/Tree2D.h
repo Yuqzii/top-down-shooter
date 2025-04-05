@@ -33,7 +33,7 @@ public:
 
 	// Returns an std::vector of all GameObjects within the given range.
 	// Includes objects where the distance is zero, unlike the other queries.
-	std::vector<const GameObject*> getObjectsInRange(const vector2Df& target, const float& range) const;
+	std::vector<const GameObject*> findObjectsInRange(const vector2Df& target, const float& range) const;
 
 private:
 	struct Node {
@@ -58,7 +58,7 @@ private:
 	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
 			const std::array<float, 2>& target, const int& k) const;
 
-	Node* objectsInRange(Node* node, const std::array<float, 2>& target, const int& depth,
+	Node* nodesInRange(Node* node, const std::array<float, 2>& target, const int& depth,
 			const float& range, std::vector<const GameObject*>& objectList) const;
 
 	inline float distanceSquared(const std::array<float, 2>& a,

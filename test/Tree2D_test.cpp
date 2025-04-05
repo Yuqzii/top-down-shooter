@@ -233,7 +233,7 @@ TEST(Tree2DTest, ObjectsInRange) {
 
 	for (int i = 0; i < testPoints.size(); i++) {
 		const std::vector<const GameObject*> result =
-				tree.getObjectsInRange(testPoints[i], testRanges[i]);
+				tree.findObjectsInRange(testPoints[i], testRanges[i]);
 
 		EXPECT_TRUE(result.size() == expected[i].size()) << "Incorrect result size. Expected: "
 				<< expected[i].size() << " Found: " << result.size();
