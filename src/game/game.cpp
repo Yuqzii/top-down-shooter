@@ -117,7 +117,6 @@ void Game::update() {
 		}
 		else it++;
 	}
-
 }
 
 void Game::render() const {

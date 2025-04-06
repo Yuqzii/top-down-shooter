@@ -13,6 +13,23 @@ int distanceSquared(const vector2D& a, const vector2D& b) {
 int roundUpToMultipleOfEight(int x) {
 	return (x + (8 - 1)) & -8;
 }
+
+vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
+	vector2Df tangent = line.end - line.start;
+
+	if ((point - line.start).crossProduct(tangent) <= 0) {
+		return line.start; // point is at or before start of line
+	}
+
+	if ((point - line.end).crossProduct(tangent) >= 0) {
+		return line.end; // point is at after end of line
+	}
+
+	tangent = tangent.normalized();
+	const vector2Df relativePos = point - line.start;
+	return line.start + tangent * (tangent.crossProduct(relativePos));
+}
+
 }
 
 // Returns true if rect a overlaps with rect b
@@ -39,12 +56,18 @@ bool checkCollision(const Circle& a, const Circle& b) {
 	return false;
 }
 
+bool checkCollision(const vector2Df& point, const Circle& c) {
+	return distanceSquared(point, c.position) <= c.radius * c.radius;
+}
+
 bool checkCollision(const Circle& c, const Line& l) {
-	const int a = l.start.x - l.end.x;
-	const int b = l.start.y - l.end.y;
-	const float x = std::sqrt(a * a + b * b);
-	return ((c.position.x - l.start.x) * (l.end.y - l.start.y)
-			- (c.position.y - l.start.y) * (l.end.x - l.start.x)) / x <= c.radius;
+	// Are any of the endpoints inside the circle?
+	if (checkCollision(l.start, c) || checkCollision(l.end, c)) return true;
+
+	const vector2Df delta = c.position - closestPointOnLine(c.position, l);
+
+	// Is distance from closest point to circle larger than its radius?
+	return delta.crossProduct(delta) <= c.radius * c.radius;
 }
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {

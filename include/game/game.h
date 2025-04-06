@@ -35,7 +35,7 @@ public:
 
 	const EnemyManager* getEnemyManager() const { return &enemyManager; }
 	RenderManager* getRenderManager() { return &renderManager; }
-	const Tree2D& getObjectTree() { return objectTree; }
+	const Tree2D& getObjectTree() const { return objectTree; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};

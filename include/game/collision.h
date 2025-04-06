@@ -15,15 +15,16 @@ struct Circle {
 };
 
 struct Line {
-	vector2D start;
-	vector2D end;
+	const vector2Df start;
+	const vector2Df end;
 
 	Line() : start(), end() {}
-	Line(const vector2D& s, const vector2D& e) : start(s), end(e) {}
+	Line(const vector2Df& s, const vector2Df& e) : start(s), end(e) {}
 };
 
 bool checkCollision(const SDL_Rect& a, const SDL_Rect& b);
 bool checkCollision(const Circle& a, const Circle& b);
+bool checkCollision(const vector2Df& point, const Circle& circle);
 bool checkCollision(const Circle& circle, const Line& line);
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);

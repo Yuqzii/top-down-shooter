@@ -6,7 +6,7 @@
 #include "game/resourceManager.h"
 #include "game/game.h"
 
-GameObject::GameObject() : boundingCircle(500.0f) {
+GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	deleteObject = false;
 
 	// Initialize source rectangle (part of textureSheet that is displayed)
@@ -86,9 +86,10 @@ void GameObject::checkCollisions(Game* game) {
 			game->getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
 
 	for (GameObject* object : closeObjects) {
-		// No need to check collision if we know we have already collided
+		// No need to check collision if object is not collideable,
+		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (collisionList.count(object) || object == this)
+		if (!object->useCollision || collisionList.count(object) || object == this)
 			continue;
 
 		if (Collision::checkCollision(circleCollider, object->circleCollider)) {
@@ -138,7 +139,9 @@ void GameObject::animationUpdate(const double& deltaTime) {
 std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 	// Return lambda with debug render stuff
 	return [this](SDL_Renderer* renderer) {
-		Collision::drawCircleCollider(renderer, circleCollider);
+		// Collider
+		if (useCollision)
+			Collision::drawCircleCollider(renderer, circleCollider);
 		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);

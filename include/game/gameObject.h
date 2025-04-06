@@ -29,8 +29,9 @@ public:
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
-	void checkCollisions(Game* game);
+	virtual void checkCollisions(Game* game);
 	void collisionUpdate();
+	bool getUseCollision() const { return useCollision; }
 
 	// Position and rotation
 	vector2Df getPosition() const { return position; };
@@ -61,8 +62,10 @@ protected:
 	// If an int exception is thrown inside this function
 	// the entire collisionUpdate is aborted.
 	virtual void onCollision(const GameObject* other) {}
+	bool useCollision;
 	const float boundingCircle;
-	
+	std::unordered_set<const GameObject*> collisionList;
+
 	// Animation
 	bool isAnimated; // Set true to enable animation
 	int animationSequence; // Keeps track of current animation sequence, used as y position
@@ -91,8 +94,6 @@ private:
 	SDL_Texture* texture;
 
 	vector2Df position;
-
-	std::unordered_set<const GameObject*> collisionList;
 	
 	// Animation
 	void animationUpdate(const double& deltaTime);

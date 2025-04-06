@@ -17,6 +17,10 @@ vector2Df::vector2Df(const vector2Df& vec) {
 	x = vec.x;
 	y = vec.y;
 }
+vector2Df::vector2Df(const vector2D& vec) {
+	x = vec.x;
+	y = vec.y;
+}
 
 float vector2Df::magnitude() const {
 	return std::sqrt(x * x + y * y);
@@ -46,6 +50,10 @@ vector2Df vector2Df::clamped(const float& maxMagnitude) const {
 
 int vector2Df::toDegrees() const {
 	return std::atan2(y, x) * 180 / M_PI;
+}
+
+float vector2Df::crossProduct(const vector2Df& other) const {
+	return x * other.x + y * other.y;
 }
 
 vector2Df vector2Df::rotateAround(vector2Df point, float degrees) const {
@@ -85,6 +93,12 @@ vector2D::vector2D(int x, int y) {
 	this->x = x;
 	this->y = y;
 }
+
+vector2D::vector2D(const vector2Df& vec) {
+	x = round(vec.x);
+	y = round(vec.y);
+}
+
 vector2D::vector2D() {
 	x = y = 0;
 }

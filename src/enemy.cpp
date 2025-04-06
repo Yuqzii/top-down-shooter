@@ -8,8 +8,12 @@ Enemy::Enemy(const float& health, const float& speed, const float& steer, const 
 			startHealth(health), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
 			slowingRadius(slowing),
 			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }),
-			state{} {
+			state() {
+
 	isAnimated = true;
+
+	useCollision = true;
+	circleCollider.radius = 220;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 }
