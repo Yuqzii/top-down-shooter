@@ -13,7 +13,7 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 
 	currentTime -= deltaTime; // Update timer
 	// Spawn enemy if timer reaches 0
-	if (enemies.size() == 0) {
+	if (currentTime <= 0) {
 		spawnEnemy(game);
 		currentTime = startTime;
 	}

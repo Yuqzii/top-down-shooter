@@ -8,7 +8,6 @@ void Bullet::initialize(const vector2Df& position, Game* game) {
 	GameObject::initialize(position, game); // Call base initialize
 	
 	previousPosition = pivotPosition;
-	//circleCollider.radius = 15; // Change collider size
 }
 
 void Bullet::update(Game* game, const double& deltaTime) {
@@ -33,10 +32,11 @@ void Bullet::checkCollisions(Game* game) {
 		if (!object->getUseCollision() || collisionList.count(object) || object == this)
 			continue;
 
+		// Check if bullet travelled through any of the objects
 		if (Collision::checkCollision(object->circleCollider, movementLine)) {
 			addCollision(object);
 			object->addCollision(this);
-			break;
+			break; // Bullet is deleted upon collision anyways, no point in checking more
 		}
 	}
 }
