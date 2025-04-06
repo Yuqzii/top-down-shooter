@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include "SDL2/SDL.h"
 #include "game/collision.h"
@@ -28,6 +29,8 @@ public:
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
+	virtual void collisionUpdate(Game* game);
+
 	// Position and rotation
 	vector2Df getPosition() const { return position; };
 	vector2Df getPivotPosition() const { return pivotPosition; };
@@ -41,6 +44,7 @@ public:
 
 	// Collision
 	Collision::Circle circleCollider;
+	void addCollision(GameObject* other);
 
 	bool deleteObject; // When true object is deleted on next frame
 
@@ -50,6 +54,10 @@ protected:
 	vector2Df pivotPosition;
 	vector2Df midPosition;
 	double rotation; // Angle of rotation
+	
+	// Collision
+	virtual void onCollision(GameObject* other);
+	const float boundingCircle;
 	
 	// Animation
 	bool isAnimated; // Set true to enable animation
@@ -79,6 +87,8 @@ private:
 	SDL_Texture* texture;
 
 	vector2Df position;
+
+	std::unordered_set<GameObject*> collisionList;
 	
 	// Animation
 	void animationUpdate(const double& deltaTime);

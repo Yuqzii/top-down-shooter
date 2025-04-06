@@ -52,6 +52,8 @@ private:
 	Uint64 prevTime;
 
 	std::vector<std::unique_ptr<GameObject>> gameObjects; 
+	Tree2D objectTree;
+	void updateObjectTree();
 
 	EnemyManager enemyManager;
 	RenderManager renderManager;
