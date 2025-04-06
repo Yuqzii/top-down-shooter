@@ -1,4 +1,3 @@
-#include <vector>
 #include "game/collision.h"
 #include "SDL2/SDL_render.h"
 
@@ -42,7 +41,6 @@ bool checkCollision(const Circle& a, const Circle& b) {
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 	const int arrSize = roundUpToMultipleOfEight(collider.radius * 8 * 35 / 49);
-	//std::vector<SDL_Point> points(arrSize);
 	SDL_Point points[arrSize];
 	int drawCount = 0;
 
