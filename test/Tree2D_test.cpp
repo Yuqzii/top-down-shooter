@@ -19,7 +19,7 @@ void testCleanup(std::vector<GameObject*>& objects) {
 	}
 }
 
-TEST(Tree2DTest, General) {
+TEST(Tree2D, General) {
 	Tree2D tree;
 
 	std::vector<vector2Df> points = {
@@ -47,7 +47,7 @@ TEST(Tree2DTest, General) {
 	testCleanup(testData);
 }
 
-TEST(Tree2DTest, CheckingWithExistingPoints) {
+TEST(Tree2D, CheckingWithExistingPoints) {
 	Tree2D tree;
 
 	std::vector<vector2Df> points = {
@@ -73,7 +73,7 @@ TEST(Tree2DTest, CheckingWithExistingPoints) {
 	testCleanup(testData);
 }
 
-TEST(Tree2DTest, SinglePoint) {
+TEST(Tree2D, SinglePoint) {
 	Tree2D tree;
 
 	auto object = std::make_unique<MockGameObject>(vector2Df(10, 10));
@@ -91,7 +91,7 @@ TEST(Tree2DTest, SinglePoint) {
 	EXPECT_TRUE(result == expected) << "Expected: " << expected << " Found: " << result;
 }
 
-TEST(Tree2DTest, DuplicatePoints) {
+TEST(Tree2D, DuplicatePoints) {
 	Tree2D tree;
 
 	std::vector<std::unique_ptr<MockGameObject>> objects;
@@ -118,7 +118,7 @@ TEST(Tree2DTest, DuplicatePoints) {
 			"Expected: " << vector2Df(15, 15) << " Found: " << result;
 }
 
-TEST(Tree2DTest, DuplicateSinglePoints) {
+TEST(Tree2D, DuplicateSinglePoints) {
 	Tree2D tree;
 
 	std::vector<std::unique_ptr<MockGameObject>> objects;
@@ -139,7 +139,7 @@ TEST(Tree2DTest, DuplicateSinglePoints) {
 			"Expected: " << vector2Df(5, 3) << " Found: " << result;
 }
 
-TEST(Tree2DTest, MultiplePointQuery) {
+TEST(Tree2D, MultiplePointQuery) {
 	Tree2D tree;
 
 	std::vector<vector2Df> points = {
@@ -164,7 +164,7 @@ TEST(Tree2DTest, MultiplePointQuery) {
 	};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		std::vector<const GameObject*> result =
+		const std::vector<GameObject*> result =
 				tree.findKClosestObjects(testPoints[i], expected[i].size());
 	
 		EXPECT_TRUE(result.size() == expected[i].size()) << "Expected size: " << expected[i].size()
@@ -179,7 +179,7 @@ TEST(Tree2DTest, MultiplePointQuery) {
 	testCleanup(testData);
 }
 
-TEST(Tree2DTest, MultiplePoint_DuplicatePoints) {
+TEST(Tree2D, MultiplePoint_DuplicatePoints) {
 	Tree2D tree;
 
 	std::vector<std::unique_ptr<MockGameObject>> objects;
@@ -205,7 +205,7 @@ TEST(Tree2DTest, MultiplePoint_DuplicatePoints) {
 	EXPECT_THROW(tree.findKClosestObjects(vector2Df(15, 15), 4), int);
 }
 
-TEST(Tree2DTest, ObjectsInRange) {
+TEST(Tree2D, ObjectsInRange) {
 	Tree2D tree;
 
 	std::vector<vector2Df> points = {
@@ -232,7 +232,7 @@ TEST(Tree2DTest, ObjectsInRange) {
 	};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const std::vector<const GameObject*> result =
+		const std::vector<GameObject*> result =
 				tree.findObjectsInRange(testPoints[i], testRanges[i]);
 
 		EXPECT_TRUE(result.size() == expected[i].size()) << "Incorrect result size. Expected: "
@@ -252,7 +252,7 @@ TEST(Tree2DTest, ObjectsInRange) {
 	}
 }
 
-TEST(Tree2DTest, ObjectsInRange_OtherBranch) {
+TEST(Tree2D, ObjectsInRange_OtherBranch) {
 	Tree2D tree;
 
 	std::vector<vector2Df> points = {
@@ -273,7 +273,7 @@ TEST(Tree2DTest, ObjectsInRange_OtherBranch) {
 
 	tree.print();
 
-	std::vector<const GameObject*> result = tree.findObjectsInRange(vector2Df(10, 10), 4);
+	const std::vector<GameObject*> result = tree.findObjectsInRange(vector2Df(10, 10), 4);
 	std::set<vector2Df> resultPos;
 	for (auto& res : result) {
 		resultPos.insert(res->getPivotPosition());
