@@ -39,6 +39,14 @@ bool checkCollision(const Circle& a, const Circle& b) {
 	return false;
 }
 
+bool checkCollision(const Circle& c, const Line& l) {
+	const int a = l.start.x - l.end.x;
+	const int b = l.start.y - l.end.y;
+	const float x = std::sqrt(a * a + b * b);
+	return ((c.position.x - l.start.x) * (l.end.y - l.start.y)
+			- (c.position.y - l.start.y) * (l.end.x - l.start.x)) / x <= c.radius;
+}
+
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 	const int arrSize = roundUpToMultipleOfEight(collider.radius * 8 * 35 / 49);
 	SDL_Point points[arrSize];
