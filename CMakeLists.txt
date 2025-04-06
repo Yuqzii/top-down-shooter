@@ -34,15 +34,15 @@ add_library(${PROJECT_NAME}_lib STATIC ${SOURCE_FILES})
 # Include directories for game library
 target_include_directories(${PROJECT_NAME}_lib PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/"
-	"${CMAKE_CURRENT_SOURCE_DIR}/libraries/"
+	"${CMAKE_CURRENT_SOURCE_DIR}/lib/include/"
 )
 
 # Link Linux libraries
 if(UNIX AND NOT APPLE)
 	message("Linux platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.so.0"
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.so.0"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2-2.0.so.0"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2_image-2.0.so.0"
 		)
 endif()
 
@@ -50,8 +50,8 @@ endif()
 if(APPLE)
 	message("Apple platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2-2.0.0.dylib"
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/libSDL2_image-2.0.0.dylib"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2-2.0.0.dylib"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2_image-2.0.0.dylib"
 	)
 endif()
 
@@ -69,17 +69,6 @@ target_compile_definitions(${PROJECT_NAME}_lib PRIVATE
 option(TESTING "Set this to on to build for tests" OFF)
 if(TESTING)
 	enable_testing()
-
-	# Fetch GoogleTest framework
-	include(FetchContent)
-	FetchContent_Declare(
-		googletest
-		GIT_REPOSITORY https://github.com/google/googletest.git
-		GIT_TAG v1.16.0
-	)
-	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-	FetchContent_MakeAvailable(googletest)
-
 	add_subdirectory(test)
 else() # Not running tests, build game executable
 	# Create game executable
@@ -93,7 +82,7 @@ else() # Not running tests, build game executable
 	target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_NAME}_lib")
 	target_include_directories(${PROJECT_NAME} PRIVATE
 		"${CMAKE_CURRENT_SOURCE_DIR}/include/"
-		"${CMAKE_CURRENT_SOURCE_DIR}/libraries/"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/include/"
 	)
 
 endif()
