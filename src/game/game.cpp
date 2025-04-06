@@ -117,6 +117,10 @@ void Game::update() {
 		}
 		else it++;
 	}
+
+#ifdef DEBUG_GIZMO
+	std::cout << "\rFPS: " << 1 / deltaTime;
+#endif
 }
 
 void Game::render() const {
@@ -137,6 +141,10 @@ void Game::clean() {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
+
+#ifdef DEBUG_GIZMO
+	std::cout << "\n";
+#endif
 
 	std::cout << "Game Cleaned\n";
 }
