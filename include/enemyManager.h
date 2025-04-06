@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "game/2DTree.h"
+#include "game/Tree2D.h"
 #include "enemy.h"
 
 class Game;
@@ -13,7 +13,7 @@ public:
 	// Returns a vector of all enemies
 	const std::vector<Enemy*> getEnemies() const { return enemies; }
 	// Returns the position of the closest enemy
-	vector2Df findClosestEnemy(const vector2Df& target) const;
+	const Enemy* findClosestEnemy(const vector2Df& target) const;
 
 private:
 	std::vector<Enemy*> enemies;

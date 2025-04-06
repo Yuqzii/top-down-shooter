@@ -1,6 +1,7 @@
 #include <climits>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include "SDL2/SDL_events.h"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -42,7 +43,7 @@ Game::Game(const char* title, int width, int height) {
 	
 	enemyManager = EnemyManager(); // Create EnemyManager
 
-	uiManager = UI::UIManager(); // Create UIManager
+	renderManager = RenderManager(); // Create RenderManager
 
 	player = instantiate<Player>(vector2Df(500, 500)); // Instantiate player
 
@@ -88,16 +89,26 @@ void Game::update() {
 		/ (double)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
-	uiManager.resetCallCnt();
-
+	renderManager.resetCallCnt();
+	updateObjectTree(); // Update the object tree
 
 	// Update all GameObjects
 	for (auto& object : gameObjects) {
 		object->update(this, deltaTime);
 	}
 
-	uiManager.update(); // Update UIManager list
-	enemyManager.update(this, deltaTime); // Update EnemyManager list
+	// Check for collisions after all GameObjects are updated
+	for (auto& object : gameObjects) {
+		object->checkCollisions(this);
+	}
+
+	// Update GameObjects according to registered collisions
+	for (auto& object : gameObjects) {
+		object->collisionUpdate();
+	}
+
+	renderManager.update(); // Remove objects marked for deletion from RenderManager
+	enemyManager.update(this, deltaTime); // Remove objects marked for deletion from EnemyManager
 
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {
@@ -106,6 +117,10 @@ void Game::update() {
 		}
 		else it++;
 	}
+
+#ifdef DEBUG_GIZMO
+	std::cout << "\rFPS: " << 1 / deltaTime;
+#endif
 }
 
 void Game::render() const {
@@ -117,7 +132,7 @@ void Game::render() const {
 		object->render(renderer);
 	}
 
-	uiManager.render(renderer); // Render UI Widgets
+	renderManager.render(renderer); // Render everything passed to RenderManager
 
 	SDL_RenderPresent(renderer); // Update screen
 }
@@ -127,7 +142,24 @@ void Game::clean() {
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 
+#ifdef DEBUG_GIZMO
+	std::cout << "\n";
+#endif
+
 	std::cout << "Game Cleaned\n";
+}
+
+void Game::updateObjectTree() {
+	objectTree = Tree2D(); // Create new tree
+
+	// Create vector of raw pointers from unique_ptr vector
+	auto objectsRange = gameObjects
+			| std::views::transform(
+			[](const std::unique_ptr<GameObject>& ptr) -> GameObject* { return ptr.get(); });
+	const std::vector<GameObject*> rawObjects(objectsRange.begin(), objectsRange.end());
+
+	// Create the tree from the GameObject vector
+	objectTree.initializeWithList(rawObjects);
 }
 
 // Function to instantiate GameObjects, returns raw pointer to instantiated object

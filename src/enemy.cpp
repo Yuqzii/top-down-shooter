@@ -1,14 +1,19 @@
 #include "enemy.h"
 #include "game/game.h"
 #include "game/collision.h"
+#include "bullet.h"
 
 Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
 			startHealth(health), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
 			slowingRadius(slowing),
 			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }),
-			state{} {
+			state() {
+
 	isAnimated = true;
+
+	useCollision = true;
+	circleCollider.radius = 220;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 }
@@ -27,7 +32,7 @@ void Enemy::initialize(const vector2Df& startPosition, Game* game) {
 
 void Enemy::update(Game* game, const double& deltaTime) {
 	// Different movement depending on the current state
-	vector2Df steering;
+	steering = vector2Df(); // Reset steering
 	switch (state) {
 		case EnemyStates::PURSUIT:
 			steering += pursuit(game->player, 0.75f);
@@ -40,8 +45,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 
 	try {
 		// Move away from closest enemy
-		const vector2Df closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
-		steering += flee(closest) * 0.7f;
+		const Enemy* closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
+		steering += flee(closest->getPivotPosition()) * 0.7f;
 	}
 	catch (int e) {
 		// Can't find closest enemy. Usually because there is currently only one enemy.
@@ -75,8 +80,15 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
 		// Render healthbar
-		game->getUIManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
+		game->getRenderManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
 	}
+}
+
+void Enemy::onCollision(const GameObject* other) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
+	if (bullet == nullptr) return; // Return if colliding with something that is not a bullet
+	
+	takeDamage(bullet->getDamage());
 }
 
 void Enemy::takeDamage(const float& damage) {
@@ -142,4 +154,17 @@ vector2Df Enemy::evade(const GameObject* target, const float& predictionMultipli
 	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
 									* time * predictionMultiplier;
 	return flee(futurePosition); // Use seek to move towards this position
+}
+
+std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
+	return [this](SDL_Renderer* renderer) {
+		GameObject::debugRender()(renderer); // Call parent debugRender and pass in renderer
+
+		// Draw line displaying steering direction and strength
+		SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
+					 pivotPosition.x + steering.x * 0.1,
+					 pivotPosition.y + steering.y * 0.1
+		);
+	};
 }

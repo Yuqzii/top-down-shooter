@@ -20,6 +20,8 @@ public:
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
 
+	void onCollision(const GameObject* other) override;
+
 	void takeDamage(const float& damage);
 
 protected:
@@ -33,12 +35,15 @@ protected:
 	};
 
 	// Steering behaviors
+	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;
 	vector2Df flee(const vector2Df& target) const;
 	vector2Df pursuit(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
 	vector2Df evade(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
 
 	EnemyStates state;
+
+	std::function<void(SDL_Renderer*)> debugRender() const override;
 
 private:
 	const float moveSpeed;
