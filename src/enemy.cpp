@@ -1,14 +1,19 @@
 #include "enemy.h"
 #include "game/game.h"
 #include "game/collision.h"
+#include "bullet.h"
 
 Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
 			startHealth(health), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
 			slowingRadius(slowing),
 			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }),
-			state{} {
+			state() {
+
 	isAnimated = true;
+
+	useCollision = true;
+	circleCollider.radius = 220;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 }
@@ -77,6 +82,13 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		// Render healthbar
 		game->getRenderManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
 	}
+}
+
+void Enemy::onCollision(const GameObject* other) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
+	if (bullet == nullptr) return; // Return if colliding with something that is not a bullet
+	
+	takeDamage(bullet->getDamage());
 }
 
 void Enemy::takeDamage(const float& damage) {

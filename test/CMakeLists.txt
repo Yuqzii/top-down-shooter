@@ -14,6 +14,7 @@ include(GoogleTest)
 # Create test executable from object library
 add_executable(unit_tests
 	"Tree2D_test.cpp"
+	"collision_test.cpp"
 )
 
 target_include_directories(unit_tests PRIVATE

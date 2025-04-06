@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include "SDL2/SDL.h"
 #include "game/collision.h"
@@ -28,6 +29,10 @@ public:
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
+	virtual void checkCollisions(Game* game);
+	void collisionUpdate();
+	bool getUseCollision() const { return useCollision; }
+
 	// Position and rotation
 	vector2Df getPosition() const { return position; };
 	vector2Df getPivotPosition() const { return pivotPosition; };
@@ -41,6 +46,7 @@ public:
 
 	// Collision
 	Collision::Circle circleCollider;
+	void addCollision(const GameObject* other);
 
 	bool deleteObject; // When true object is deleted on next frame
 
@@ -51,6 +57,15 @@ protected:
 	vector2Df midPosition;
 	double rotation; // Angle of rotation
 	
+	// Collision
+	
+	// If an int exception is thrown inside this function
+	// the entire collisionUpdate is aborted.
+	virtual void onCollision(const GameObject* other) {}
+	bool useCollision;
+	const float boundingCircle;
+	std::unordered_set<const GameObject*> collisionList;
+
 	// Animation
 	bool isAnimated; // Set true to enable animation
 	int animationSequence; // Keeps track of current animation sequence, used as y position

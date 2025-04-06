@@ -1,6 +1,7 @@
 #include <climits>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include "SDL2/SDL_events.h"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -89,15 +90,25 @@ void Game::update() {
 	prevTime = nowTime;
 
 	renderManager.resetCallCnt();
-
+	updateObjectTree(); // Update the object tree
 
 	// Update all GameObjects
 	for (auto& object : gameObjects) {
 		object->update(this, deltaTime);
 	}
 
-	renderManager.update(); // Update RenderManager list
-	enemyManager.update(this, deltaTime); // Update EnemyManager list
+	// Check for collisions after all GameObjects are updated
+	for (auto& object : gameObjects) {
+		object->checkCollisions(this);
+	}
+
+	// Update GameObjects according to registered collisions
+	for (auto& object : gameObjects) {
+		object->collisionUpdate();
+	}
+
+	renderManager.update(); // Remove objects marked for deletion from RenderManager
+	enemyManager.update(this, deltaTime); // Remove objects marked for deletion from EnemyManager
 
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {
@@ -128,6 +139,19 @@ void Game::clean() {
 	SDL_Quit();
 
 	std::cout << "Game Cleaned\n";
+}
+
+void Game::updateObjectTree() {
+	objectTree = Tree2D(); // Create new tree
+
+	// Create vector of raw pointers from unique_ptr vector
+	auto objectsRange = gameObjects
+			| std::views::transform(
+			[](const std::unique_ptr<GameObject>& ptr) -> GameObject* { return ptr.get(); });
+	const std::vector<GameObject*> rawObjects(objectsRange.begin(), objectsRange.end());
+
+	// Create the tree from the GameObject vector
+	objectTree.initializeWithList(rawObjects);
 }
 
 // Function to instantiate GameObjects, returns raw pointer to instantiated object

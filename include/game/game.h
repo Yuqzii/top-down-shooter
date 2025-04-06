@@ -30,11 +30,12 @@ public:
 	bool running() { return isRunning; };
 
 	// SDL stuff
-	SDL_Window* getWindow() const { return window; };
-	SDL_Renderer* getRenderer() const { return renderer; };
+	SDL_Window* getWindow() const { return window; }
+	SDL_Renderer* getRenderer() const { return renderer; }
 
 	const EnemyManager* getEnemyManager() const { return &enemyManager; }
 	RenderManager* getRenderManager() { return &renderManager; }
+	const Tree2D& getObjectTree() const { return objectTree; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};
@@ -52,6 +53,8 @@ private:
 	Uint64 prevTime;
 
 	std::vector<std::unique_ptr<GameObject>> gameObjects; 
+	Tree2D objectTree;
+	void updateObjectTree();
 
 	EnemyManager enemyManager;
 	RenderManager renderManager;

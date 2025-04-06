@@ -1,11 +1,12 @@
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <cassert>
+#include <iostream>
 #include "game/gameObject.h"
 #include "game/resourceManager.h"
 #include "game/game.h"
 
-GameObject::GameObject() {
+GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	deleteObject = false;
 
 	// Initialize source rectangle (part of textureSheet that is displayed)
@@ -50,6 +51,8 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 }
 
 void GameObject::update(Game* game, const double& deltaTime) {
+	collisionList.clear(); // Make sure collisionList only contains collisions from this frame
+
 	position += velocity * deltaTime;
 
 	// Update render position
@@ -77,6 +80,40 @@ void GameObject::update(Game* game, const double& deltaTime) {
 #endif
 }
 
+void GameObject::checkCollisions(Game* game) {
+	// Get all GameObjects withing our bounding circle
+	std::vector<GameObject*> closeObjects =
+			game->getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+
+	for (GameObject* object : closeObjects) {
+		// No need to check collision if object is not collideable,
+		// or we know we have already collided,
+		// or if it is "colliding" with itself.
+		if (!object->useCollision || collisionList.count(object) || object == this)
+			continue;
+
+		if (Collision::checkCollision(circleCollider, object->circleCollider)) {
+			addCollision(object);
+			object->addCollision(this);
+		}
+	}
+}
+
+void GameObject::collisionUpdate() {
+	for (const GameObject* object : collisionList) {
+		try {
+			onCollision(object);
+		}
+		catch (int e) { // Stop collision detection when throwing exception
+			break;
+		}
+	}
+}
+
+void GameObject::addCollision(const GameObject* other) {
+	collisionList.insert(other);
+}
+
 void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
 }
@@ -102,7 +139,9 @@ void GameObject::animationUpdate(const double& deltaTime) {
 std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 	// Return lambda with debug render stuff
 	return [this](SDL_Renderer* renderer) {
-		Collision::drawCircleCollider(renderer, circleCollider);
+		// Collider
+		if (useCollision)
+			Collision::drawCircleCollider(renderer, circleCollider);
 		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);

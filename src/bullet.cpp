@@ -1,15 +1,17 @@
 #include "bullet.h"
 #include "enemy.h"
+#include "game/gameObject.h"
 #include "game/game.h"
 #include "game/collision.h"
 
 void Bullet::initialize(const vector2Df& position, Game* game) {
 	GameObject::initialize(position, game); // Call base initialize
 	
-	circleCollider.radius = 15; // Change collider size
+	previousPosition = pivotPosition;
 }
 
 void Bullet::update(Game* game, const double& deltaTime) {
+	previousPosition = pivotPosition;
 	GameObject::update(game, deltaTime); // Update position
 
 	timeLeft -= deltaTime;
@@ -17,16 +19,32 @@ void Bullet::update(Game* game, const double& deltaTime) {
 		// Delete bullet
 		deleteObject = true;
 	}
+}
 
-	// Loop through enemies and check for collision
-	for (Enemy* enemy : game->getEnemyManager()->getEnemies()) {
-		if (Collision::checkCollision(circleCollider, enemy->circleCollider)) {
-			// Bullet collided with enemy
-			enemy->takeDamage(damage); // Damage enemy
-			deleteObject = true; // Delete bullet
-			break; // Stop checking for collision so that one bullet only damages one enemy
+void Bullet::checkCollisions(Game* game) {
+	// Get all GameObjects withing bounding circle
+	std::vector<GameObject*> closeObjects =
+			game->getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+
+	const Collision::Line movementLine(previousPosition, pivotPosition);
+
+	for (GameObject* object : closeObjects) {
+		if (!object->getUseCollision() || collisionList.count(object) || object == this)
+			continue;
+
+		// Check if bullet travelled through any of the objects
+		if (Collision::checkCollision(object->circleCollider, movementLine)) {
+			addCollision(object);
+			object->addCollision(this);
+			break; // Bullet is deleted upon collision anyways, no point in checking more
 		}
 	}
+}
+
+void Bullet::onCollision(const GameObject* other) {
+	// Delete object when colliding with something and stop further collision updates
+	deleteObject = true;
+	throw 1;
 }
 
 void Bullet::initializeDirection(const vector2Df direction, const float rotation) {

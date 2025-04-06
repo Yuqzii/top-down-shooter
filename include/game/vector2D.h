@@ -3,6 +3,8 @@
 #include <cmath>
 #include <ostream>
 
+struct vector2D;
+
 struct vector2Df {
 	float x;
 	float y;
@@ -11,10 +13,13 @@ struct vector2Df {
 	vector2Df();
 	vector2Df(const float& degrees);
 	vector2Df(const vector2Df& vec);
+	vector2Df(const vector2D& vec);
 
 	float magnitude() const;
 	vector2Df normalized() const;
 	vector2Df clamped(const float& maxMagnitude) const;
+
+	float crossProduct(const vector2Df& other) const;
 
 	int toDegrees() const;
 
@@ -31,6 +36,7 @@ struct vector2D {
 	int y;
 
 	vector2D(int x, int y);
+	vector2D(const vector2Df& vec);
 	vector2D();
 
 	vector2D& operator=(const vector2Df& other);
