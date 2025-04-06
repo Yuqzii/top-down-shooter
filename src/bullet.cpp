@@ -17,16 +17,12 @@ void Bullet::update(Game* game, const double& deltaTime) {
 		// Delete bullet
 		deleteObject = true;
 	}
+}
 
-	// Loop through enemies and check for collision
-	for (Enemy* enemy : game->getEnemyManager()->getEnemies()) {
-		if (Collision::checkCollision(circleCollider, enemy->circleCollider)) {
-			// Bullet collided with enemy
-			enemy->takeDamage(damage); // Damage enemy
-			deleteObject = true; // Delete bullet
-			break; // Stop checking for collision so that one bullet only damages one enemy
-		}
-	}
+void Bullet::onCollision(const GameObject* other) {
+	// Delete object when colliding with something and stop further collision updates
+	deleteObject = true;
+	throw 1;
 }
 
 void Bullet::initializeDirection(const vector2Df direction, const float rotation) {

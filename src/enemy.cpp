@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "game/game.h"
 #include "game/collision.h"
+#include "bullet.h"
 
 Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
@@ -77,6 +78,13 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		// Render healthbar
 		game->getRenderManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
 	}
+}
+
+void Enemy::onCollision(const GameObject* other) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
+	if (bullet == nullptr) return; // Return if colliding with something that is not a bullet
+	
+	takeDamage(bullet->getDamage());
 }
 
 void Enemy::takeDamage(const float& damage) {

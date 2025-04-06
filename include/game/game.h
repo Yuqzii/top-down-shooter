@@ -30,11 +30,12 @@ public:
 	bool running() { return isRunning; };
 
 	// SDL stuff
-	SDL_Window* getWindow() const { return window; };
-	SDL_Renderer* getRenderer() const { return renderer; };
+	SDL_Window* getWindow() const { return window; }
+	SDL_Renderer* getRenderer() const { return renderer; }
 
 	const EnemyManager* getEnemyManager() const { return &enemyManager; }
 	RenderManager* getRenderManager() { return &renderManager; }
+	const Tree2D& getObjectTree() { return objectTree; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};

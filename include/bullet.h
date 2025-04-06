@@ -6,10 +6,13 @@ class Game;
 
 class Bullet : public GameObject {
 public:
-	void update(Game* game, const double& deltaTime) override;
 	void initialize(const vector2Df& startPosition, Game* game) override;
+	void update(Game* game, const double& deltaTime) override;
+	void onCollision(const GameObject* other) override;
 
 	void initializeDirection(const vector2Df direction, const float rotation);
+
+	float getDamage() const { return damage; }
 
 protected:
 	SETOBJECTTEXTURE("bullet.png");

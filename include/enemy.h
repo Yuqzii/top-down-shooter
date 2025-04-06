@@ -20,6 +20,8 @@ public:
 	void initialize(const vector2Df& position, Game* game) override;
 	void update(Game* game, const double& deltaTime) override;
 
+	void onCollision(const GameObject* other) override;
+
 	void takeDamage(const float& damage);
 
 protected:

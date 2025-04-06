@@ -29,7 +29,8 @@ public:
 	virtual void update(Game* game, const double& deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
-	virtual void collisionUpdate(Game* game);
+	void checkCollisions(Game* game);
+	void collisionUpdate();
 
 	// Position and rotation
 	vector2Df getPosition() const { return position; };
@@ -44,7 +45,7 @@ public:
 
 	// Collision
 	Collision::Circle circleCollider;
-	void addCollision(GameObject* other);
+	void addCollision(const GameObject* other);
 
 	bool deleteObject; // When true object is deleted on next frame
 
@@ -56,7 +57,10 @@ protected:
 	double rotation; // Angle of rotation
 	
 	// Collision
-	virtual void onCollision(GameObject* other);
+	
+	// If an int exception is thrown inside this function
+	// the entire collisionUpdate is aborted.
+	virtual void onCollision(const GameObject* other) {}
 	const float boundingCircle;
 	
 	// Animation
@@ -88,7 +92,7 @@ private:
 
 	vector2Df position;
 
-	std::unordered_set<GameObject*> collisionList;
+	std::unordered_set<const GameObject*> collisionList;
 	
 	// Animation
 	void animationUpdate(const double& deltaTime);
