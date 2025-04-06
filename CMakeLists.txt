@@ -69,17 +69,6 @@ target_compile_definitions(${PROJECT_NAME}_lib PRIVATE
 option(TESTING "Set this to on to build for tests" OFF)
 if(TESTING)
 	enable_testing()
-
-	# Fetch GoogleTest framework
-	include(FetchContent)
-	FetchContent_Declare(
-		googletest
-		GIT_REPOSITORY https://github.com/google/googletest.git
-		GIT_TAG v1.16.0
-	)
-	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-	FetchContent_MakeAvailable(googletest)
-
 	add_subdirectory(test)
 else() # Not running tests, build game executable
 	# Create game executable
