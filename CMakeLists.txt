@@ -12,20 +12,20 @@ set(CMAKE_CXX_EXTENSIONS Off)
 set(CMAKE_BUILD_TYPE DEBUG)
 
 SET(SOURCE_FILES
-"src/game/game.cpp"
-"src/game/resourceManager.cpp"
-"src/game/gameObject.cpp"
+"src/engine/game.cpp"
+"src/engine/resourceManager.cpp"
+"src/engine/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
 "src/enemy.cpp"
-"src/game/collision.cpp"
+"src/engine/collision.cpp"
 "src/enemyManager.cpp"
-"src/game/UI/widget.cpp"
-"src/game/UI/background.cpp"
-"src/game/renderManager.cpp"
-"src/game/UI/slider.cpp"
-"src/game/vector2D.cpp"
-"src/game/Tree2D.cpp"
+"src/engine/UI/widget.cpp"
+"src/engine/UI/background.cpp"
+"src/engine/renderManager.cpp"
+"src/engine/UI/slider.cpp"
+"src/engine/vector2D.cpp"
+"src/engine/Tree2D.cpp"
 )
 
 # Build the game as a static library
