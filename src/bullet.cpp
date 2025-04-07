@@ -1,8 +1,8 @@
 #include "bullet.h"
 #include "enemy.h"
-#include "game/gameObject.h"
-#include "game/game.h"
-#include "game/collision.h"
+#include "engine/gameObject.h"
+#include "engine/game.h"
+#include "engine/collision.h"
 
 void Bullet::initialize(const vector2Df& position, Game* game) {
 	GameObject::initialize(position, game); // Call base initialize

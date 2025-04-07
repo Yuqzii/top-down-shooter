@@ -1,8 +1,8 @@
 #pragma once
 
-#include "game/UI/background.h"
-#include "game/UI/slider.h"
-#include "game/gameObject.h"
+#include "engine/UI/background.h"
+#include "engine/UI/slider.h"
+#include "engine/gameObject.h"
 
 class Game;
 

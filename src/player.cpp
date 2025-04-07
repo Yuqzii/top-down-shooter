@@ -1,9 +1,9 @@
 #include <cmath>
 #include "SDL2/SDL_scancode.h"
-#include "game/game.h"
+#include "engine/game.h"
 #include "player.h"
 #include "bullet.h"
-#include "game/gameObject.h"
+#include "engine/gameObject.h"
 
 Player::Player() : healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{ 255, 0, 0, 255 }) {
 	pivotOffset.y = 20;

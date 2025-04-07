@@ -1,5 +1,5 @@
 #include <iostream>
-#include "game/game.h"
+#include "engine/game.h"
 
 int main(int argc, char ** argv) {
 #ifdef DEBUG_GIZMO

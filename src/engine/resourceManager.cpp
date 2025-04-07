@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <string>
 #include <iostream>
-#include "game/resourceManager.h"
+#include "engine/resourceManager.h"
 
 #ifndef NDEBUG
 #	define ASSERT(condition, message) \

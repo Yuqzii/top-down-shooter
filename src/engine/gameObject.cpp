@@ -2,9 +2,9 @@
 #include <SDL2/SDL_render.h>
 #include <cassert>
 #include <iostream>
-#include "game/gameObject.h"
-#include "game/resourceManager.h"
-#include "game/game.h"
+#include "engine/gameObject.h"
+#include "engine/resourceManager.h"
+#include "engine/game.h"
 
 GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	deleteObject = false;

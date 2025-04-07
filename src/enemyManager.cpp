@@ -1,6 +1,6 @@
 #include <SDL2/SDL_mouse.h>
 #include "enemyManager.h"
-#include "game/game.h"
+#include "engine/game.h"
 #include "enemy.h"
 
 void EnemyManager::update(Game* game, const double& deltaTime) {

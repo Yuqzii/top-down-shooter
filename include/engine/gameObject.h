@@ -5,9 +5,9 @@
 #include <unordered_set>
 #include <vector>
 #include "SDL2/SDL.h"
-#include "game/collision.h"
-#include "game/vector2D.h"
-#include "game/animationData.h"
+#include "engine/collision.h"
+#include "engine/vector2D.h"
+#include "engine/animationData.h"
 
 // Use this inside protected section of child class to set its texture
 #define SETOBJECTTEXTURE(FILE) \

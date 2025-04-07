@@ -3,9 +3,9 @@
 #include <list>
 #include <memory>
 #include "SDL2/SDL.h"
-#include "game/renderManager.h"
-#include "game/vector2D.h"
-#include "game/gameObject.h"
+#include "engine/renderManager.h"
+#include "engine/vector2D.h"
+#include "engine/gameObject.h"
 #include "player.h"
 #include "enemyManager.h"
 

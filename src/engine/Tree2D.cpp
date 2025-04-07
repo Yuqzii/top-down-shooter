@@ -1,8 +1,8 @@
 #include <iostream>
 #include <algorithm>
 #include <ranges>
-#include "game/Tree2D.h"
-#include "game/gameObject.h"
+#include "engine/Tree2D.h"
+#include "engine/gameObject.h"
 
 Tree2D::Tree2D() : root(nullptr) {} 
 

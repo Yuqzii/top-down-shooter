@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game/gameObject.h"
+#include "engine/gameObject.h"
 
 class Game;
 

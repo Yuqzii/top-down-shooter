@@ -1,5 +1,5 @@
-#include "game/renderManager.h"
-#include "game/gameObject.h"
+#include "engine/renderManager.h"
+#include "engine/gameObject.h"
 
 RenderManager::RenderManager() {
 	renderCallCnt = 0;

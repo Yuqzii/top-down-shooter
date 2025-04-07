@@ -7,7 +7,7 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_timer.h"
 #include "SDL2/SDL_keyboard.h"
-#include "game/game.h"
+#include "engine/game.h"
 #include "bullet.h"
 #include "enemy.h"
 

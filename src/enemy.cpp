@@ -1,6 +1,6 @@
 #include "enemy.h"
-#include "game/game.h"
-#include "game/collision.h"
+#include "engine/game.h"
+#include "engine/collision.h"
 #include "bullet.h"
 
 Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
