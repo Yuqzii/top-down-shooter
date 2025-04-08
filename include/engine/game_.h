@@ -11,12 +11,15 @@
 
 class GameObject;
 class Player;
-class Scene;
 
 class Game {
 public:
 	Game(const char* title, int width, int height);
 	~Game();
+
+	// Function to instantiate GameObjects
+	template<class T>
+	T* instantiate(const vector2Df& position);
 	
 	// Game loop
 	void handleEvents();
@@ -32,6 +35,7 @@ public:
 
 	const EnemyManager* getEnemyManager() const { return &enemyManager; }
 	RenderManager* getRenderManager() { return &renderManager; }
+	const Tree2D& getObjectTree() const { return objectTree; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};
@@ -48,8 +52,9 @@ private:
 
 	Uint64 prevTime;
 
-	std::vector<std::unique_ptr<Scene>> scenes;
-	unsigned int currentScene;
+	std::vector<std::unique_ptr<GameObject>> gameObjects; 
+	Tree2D objectTree;
+	void updateObjectTree();
 
 	EnemyManager enemyManager;
 	RenderManager renderManager;
