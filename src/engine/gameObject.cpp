@@ -83,9 +83,14 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 }
 
 void GameObject::checkCollisions(const Scene& scene) {
-	// Get all GameObjects withing our bounding circle
-	std::vector<GameObject*> closeObjects =
-			scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+	std::vector<GameObject*> closeObjects;
+	try {
+		// Get all GameObjects withing our bounding circle
+		closeObjects = scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+	}
+	catch (int e) {
+		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
+	}
 
 	for (GameObject* object : closeObjects) {
 		// No need to check collision if object is not collideable,

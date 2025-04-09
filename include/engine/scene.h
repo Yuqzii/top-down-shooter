@@ -35,19 +35,7 @@ public:
 	 * @return	Pointer to the instantiated GameObject.
 	 */
 	template<class T>
-	T* instantiate(const vector2Df& position) {
-		// Compile time check that we don't try to instantiate a non-GameObject
-		static_assert(std::is_base_of<GameObject, T>(),
-		"Object to instantiate must inherit from GameObject");
-
-		// Create the new GameObject as a unique_ptr to clarify that Scene has ownership
-		std::unique_ptr<T> newObject = std::make_unique<T>();
-		newObject->initialize(position, *this); // Initialize GameObject
-		gameObjects.push_back(std::move(newObject)); // Add GameObject to list
-
-		// Returns the newest GameObject, e.g. the one created now
-		return static_cast<T*>(gameObjects.back().get());
-	}
+	T* instantiate(const vector2Df& position);
 
 	/*
 	 * @return	Tree2D of current GameObjects, reference

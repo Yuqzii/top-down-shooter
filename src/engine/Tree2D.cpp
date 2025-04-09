@@ -30,6 +30,9 @@ void Tree2D::print() const {
 }
 
 GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
+	if (root == nullptr)
+		throw 1;
+
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 	const Node* result = nearestNeighbor(root, targetArr, 0);
@@ -51,6 +54,9 @@ GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
 
 std::vector<GameObject*> Tree2D::findKClosestObjects(
 		const vector2Df& target, const int k) const {
+	if (root == nullptr)
+		throw 1;
+
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 
@@ -74,6 +80,9 @@ std::vector<GameObject*> Tree2D::findKClosestObjects(
 
 std::vector<GameObject*> Tree2D::findObjectsInRange(
 		const vector2Df& target, const float range) const {
+	if (root == nullptr)
+		throw 1;
+
 	// Convert vector2Df to two dimensional array
 	const std::array<float, 2> targetArr = { target.x, target.y };
 

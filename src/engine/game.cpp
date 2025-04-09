@@ -85,10 +85,20 @@ void Game::update() {
 	const float deltaTime = (float)(nowTime - prevTime) / (float)SDL_GetPerformanceFrequency();
 	prevTime = nowTime;
 
+	renderManager.resetCallCnt();
+
 	// Call update on current scene
 	scenes[currentScene]->update(deltaTime);
+
+	// Remove deleted widgets from renderManager
+	renderManager.update();
+
 	// Delete objects marked for deletion
 	scenes[currentScene]->updateDelete();
+
+#ifdef DEBUG_GIZMO
+	std::cout << "\rFPS: " << 1 / deltaTime;
+#endif
 }
 
 void Game::render() const {
