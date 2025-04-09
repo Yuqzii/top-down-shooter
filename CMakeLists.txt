@@ -13,6 +13,7 @@ set(CMAKE_BUILD_TYPE DEBUG)
 
 SET(SOURCE_FILES
 "src/engine/game.cpp"
+"src/engine/scene.cpp"
 "src/engine/resourceManager.cpp"
 "src/engine/gameObject.cpp"
 "src/player.cpp"

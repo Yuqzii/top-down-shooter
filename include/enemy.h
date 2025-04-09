@@ -17,8 +17,8 @@ public:
 	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
 	   const float& slowingRadius = 100.0f);
 
-	void initialize(const vector2Df& position, Game* game) override;
-	void update(Game* game, const double& deltaTime) override;
+	void initialize(const vector2Df& position, const Scene& scene) override;
+	void update(Scene& scene, const float deltaTime) override;
 
 	void onCollision(const GameObject* other) override;
 

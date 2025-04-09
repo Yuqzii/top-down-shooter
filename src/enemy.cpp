@@ -1,6 +1,8 @@
-#include "enemy.h"
-#include "engine/game.h"
+#include "engine/scene.h"
 #include "engine/collision.h"
+#include "engine/game.h"
+#include "enemy.h"
+#include "player.h"
 #include "bullet.h"
 
 Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
@@ -18,34 +20,34 @@ Enemy::Enemy(const float& health, const float& speed, const float& steer, const 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 }
 
-void Enemy::initialize(const vector2Df& startPosition, Game* game) {
-	GameObject::initialize(startPosition, game); // Call base initialize
+void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
+	GameObject::initialize(startPosition, scene); // Call base initialize
 	
 	circleCollider.radius = 35;
 	health = startHealth;
 
 	// Initialize enemy at full speed towards player
 	const vector2Df playerDirection = vector2Df(
-		game->player->getPivotPosition() - pivotPosition).normalized();
+		scene.player->getPivotPosition() - pivotPosition).normalized();
 	velocity = playerDirection * moveSpeed;
 }
 
-void Enemy::update(Game* game, const double& deltaTime) {
+void Enemy::update(Scene& scene, const float deltaTime) {
 	// Different movement depending on the current state
 	steering = vector2Df(); // Reset steering
 	switch (state) {
 		case EnemyStates::PURSUIT:
-			steering += pursuit(game->player, 0.75f);
-			steering += seek(game->player->getPivotPosition()) * 0.75f;
+			steering += pursuit(scene.player, 0.75f);
+			steering += seek(scene.player->getPivotPosition()) * 0.75f;
 			break;
 		case EnemyStates::EVADE:
-			steering += evade(game->player, 0.4f);
+			steering += evade(scene.player, 0.4f);
 			break;
 	}
 
 	try {
 		// Move away from closest enemy
-		const Enemy* closest = game->getEnemyManager()->findClosestEnemy(pivotPosition);
+		const Enemy* closest = scene.getEnemyManager().findClosestEnemy(pivotPosition);
 		steering += flee(closest->getPivotPosition()) * 0.7f;
 	}
 	catch (int e) {
@@ -66,10 +68,10 @@ void Enemy::update(Game* game, const double& deltaTime) {
 	// Calculate animation speed based on movement speed
 	animationSpeed = velocity.magnitude() / moveSpeed;
 
-	GameObject::update(game, deltaTime); // Update position
+	GameObject::update(scene, deltaTime); // Update position
 
 	// Checks if colliding with player
-	if (Collision::checkCollision(circleCollider, game->player->circleCollider)) {
+	if (Collision::checkCollision(circleCollider, scene.player->circleCollider)) {
 		// Damage player or something
 	}
 	
@@ -80,7 +82,8 @@ void Enemy::update(Game* game, const double& deltaTime) {
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
 		// Render healthbar
-		game->getRenderManager()->addRenderCall(healthbarBG.getRenderFunction(), this);
+		scene.getGameInstance().getRenderManager().addRenderCall(
+				healthbarBG.getRenderFunction(), this);
 	}
 }
 

@@ -1,9 +1,9 @@
-#include <SDL2/SDL_mouse.h>
+#include "engine/scene.h"
 #include "enemyManager.h"
 #include "engine/game.h"
 #include "enemy.h"
 
-void EnemyManager::update(Game* game, const double& deltaTime) {
+void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
 	for (std::vector<Enemy*>::iterator it = enemies.begin(); it != enemies.end();) {
 		if ((*it)->deleteObject) {
@@ -14,7 +14,7 @@ void EnemyManager::update(Game* game, const double& deltaTime) {
 	currentTime -= deltaTime; // Update timer
 	// Spawn enemy if timer reaches 0
 	if (currentTime <= 0) {
-		spawnEnemy(game);
+		spawnEnemy(scene);
 		currentTime = startTime;
 	}
 
@@ -33,8 +33,8 @@ const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 	}
 }
 
-void EnemyManager::spawnEnemy(Game* game) {
-	Enemy* enemy = game->instantiate<Enemy>(vector2Df(200, 200));
+void EnemyManager::spawnEnemy(Scene& scene) {
+	Enemy* enemy = scene.instantiate<Enemy>(vector2Df(200, 200));
 	enemies.push_back(enemy);
 }
 

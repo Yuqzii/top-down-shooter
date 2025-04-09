@@ -5,6 +5,7 @@
 #include "engine/gameObject.h"
 #include "engine/resourceManager.h"
 #include "engine/game.h"
+#include "engine/scene.h"
 
 GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	deleteObject = false;
@@ -24,9 +25,10 @@ GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	animationCounter = animationSequence = 0;
 }
 
-void GameObject::initialize(const vector2Df& startPosition, Game* game) {
+void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
-	texture = ResourceManager::LoadTexture(getTextureSheet(), game->getRenderer());
+	texture = ResourceManager::LoadTexture(getTextureSheet(),
+			scene.getGameInstance().getRenderer());
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;
@@ -50,7 +52,7 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	circleCollider.position = pivotPosition;
 }
 
-void GameObject::update(Game* game, const double& deltaTime) {
+void GameObject::update(Scene& scene, const float deltaTime) {
 	collisionList.clear(); // Make sure collisionList only contains collisions from this frame
 
 	position += velocity * deltaTime;
@@ -76,14 +78,14 @@ void GameObject::update(Game* game, const double& deltaTime) {
 		animationUpdate(deltaTime);
 
 #ifdef DEBUG_GIZMO
-	game->getRenderManager()->addRenderCall(debugRender(), this);
+	scene.getGameInstance().getRenderManager().addRenderCall(debugRender(), this);
 #endif
 }
 
-void GameObject::checkCollisions(Game* game) {
+void GameObject::checkCollisions(const Scene& scene) {
 	// Get all GameObjects withing our bounding circle
 	std::vector<GameObject*> closeObjects =
-			game->getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+			scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
 
 	for (GameObject* object : closeObjects) {
 		// No need to check collision if object is not collideable,

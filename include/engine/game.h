@@ -6,16 +6,12 @@
 #include "engine/renderManager.h"
 #include "engine/vector2D.h"
 #include "engine/gameObject.h"
-#include "player.h"
-#include "enemyManager.h"
 
-class GameObject;
-class Player;
 class Scene;
 
 class Game {
 public:
-	Game(const char* title, int width, int height);
+	Game(const char* title, const int width, const int height);
 	~Game();
 	
 	// Game loop
@@ -24,22 +20,20 @@ public:
 	void render() const;
 	void clean();
 
-	bool running() { return isRunning; };
+	bool running() const { return isRunning; };
+
+	void changeScene(const int sceneIndex);
 
 	// SDL stuff
 	SDL_Window* getWindow() const { return window; }
 	SDL_Renderer* getRenderer() const { return renderer; }
 
-	const EnemyManager* getEnemyManager() const { return &enemyManager; }
-	RenderManager* getRenderManager() { return &renderManager; }
+	RenderManager& getRenderManager() { return renderManager; }
 
 	bool input[256]{};
 	bool mouseInput[32]{};
 
-	double deltaTime;
 	vector2D mousePos;
-
-	const Player* player;
 
 private:
 	bool isRunning;
@@ -51,6 +45,5 @@ private:
 	std::vector<std::unique_ptr<Scene>> scenes;
 	unsigned int currentScene;
 
-	EnemyManager enemyManager;
 	RenderManager renderManager;
 };
