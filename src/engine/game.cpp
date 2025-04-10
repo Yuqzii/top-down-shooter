@@ -84,10 +84,10 @@ void Game::update() {
 	// Call update on current scene
 	scenes[currentScene]->update(deltaTime);
 
-	// Remove deleted widgets from renderManager
+	// Stop anything with deleted parent from rendering
 	renderManager.update();
 
-	// Delete objects marked for deletion
+	// Delete GameObjects marked for deletion
 	scenes[currentScene]->updateDelete();
 
 #ifdef DEBUG_GIZMO

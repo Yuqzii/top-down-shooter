@@ -3,7 +3,7 @@
 void CombatScene::initialize() {
 	Scene::initialize();
 
-	player = instantiate<Player>(vector2Df(500, 750));
+	player = instantiate<Player>(vector2Df(700, 450));
 	enemyManager = EnemyManager();
 }
 
