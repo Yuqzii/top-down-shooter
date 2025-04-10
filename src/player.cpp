@@ -22,10 +22,10 @@ void Player::initialize(const vector2Df& position, const Scene& scene) {
 void Player::update(Scene& scene, const float deltaTime) {
 	
 	// Get input
-	moveLeft = scene.getGameInstance().input[SDL_SCANCODE_A];
-	moveRight = scene.getGameInstance().input[SDL_SCANCODE_D];
-	moveUp = scene.getGameInstance().input[SDL_SCANCODE_W];
-	moveDown = scene.getGameInstance().input[SDL_SCANCODE_S];
+	moveLeft = scene.getGame().input[SDL_SCANCODE_A];
+	moveRight = scene.getGame().input[SDL_SCANCODE_D];
+	moveUp = scene.getGame().input[SDL_SCANCODE_W];
+	moveDown = scene.getGame().input[SDL_SCANCODE_S];
 
 	// Update movement direction according to input
 	moveDir = { 0, 0}; // Reset movement direction
@@ -49,28 +49,28 @@ void Player::update(Scene& scene, const float deltaTime) {
 	
 	pointToMouse(scene);
 
-	if (scene.getGameInstance().mouseInput[SDL_BUTTON_LEFT]) {
+	if (scene.getGame().mouseInput[SDL_BUTTON_LEFT]) {
 		shoot(scene);
 	}
 
 	healthbarBG.update();
 
 	int windowHeight;
-	SDL_GetWindowSizeInPixels(scene.getGameInstance().getWindow(), NULL, &windowHeight);
+	SDL_GetWindowSizeInPixels(scene.getGame().getWindow(), NULL, &windowHeight);
 	// Make space from bottom of screen to healthbar same as side of screen to healthbar
 	healthbarBG.localPosition.y = windowHeight - healthbarBG.localSize.y -
 		healthbarBG.localPosition.x;
 	healthbarBG.calculatePosition();
 	
 	// Tell UIManager to render healthbar
-	scene.getGameInstance().getRenderManager().addRenderCall(healthbarBG.getRenderFunction(), this);
+	scene.getGame().getRenderManager().addRenderCall(healthbarBG.getRenderFunction(), this);
 
 }
 
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
-	vector2Df direction(scene.getGameInstance().mousePos.x - pivotPosition.x,
-			scene.getGameInstance().mousePos.y - pivotPosition.y);
+	vector2Df direction(scene.getGame().mousePos.x - pivotPosition.x,
+			scene.getGame().mousePos.y - pivotPosition.y);
 	rotation = direction.toDegrees() + 90;
 }
 

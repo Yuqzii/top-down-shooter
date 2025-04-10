@@ -28,7 +28,7 @@ GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
 	texture = ResourceManager::LoadTexture(getTextureSheet(),
-			scene.getGameInstance().getRenderer());
+			scene.getGame().getRenderer());
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;
@@ -78,7 +78,7 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 		animationUpdate(deltaTime);
 
 #ifdef DEBUG_GIZMO
-	scene.getGameInstance().getRenderManager().addRenderCall(debugRender(), this);
+	scene.getGame().getRenderManager().addRenderCall(debugRender(), this);
 #endif
 }
 

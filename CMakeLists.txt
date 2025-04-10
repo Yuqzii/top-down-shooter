@@ -27,6 +27,7 @@ SET(SOURCE_FILES
 "src/engine/UI/slider.cpp"
 "src/engine/vector2D.cpp"
 "src/engine/Tree2D.cpp"
+"src/scenes/combat_scene.cpp"
 )
 
 # Build the game as a static library

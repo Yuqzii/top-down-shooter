@@ -2,6 +2,7 @@
 #include "SDL2/SDL_image.h"
 #include "engine/game.h"
 #include "engine/scene.h"
+#include "scenes/combat_scene.h"
 
 Game::Game(const char* title, const int width, const int height) {
 	isRunning = true;
@@ -32,18 +33,11 @@ Game::Game(const char* title, const int width, const int height) {
 	// Initialize prevTime to ensure correct first deltaTime
 	prevTime = SDL_GetPerformanceCounter();
 
-	// Create starting scene
-	scenes.push_back(std::make_unique<Scene>(*this));
-	currentScene = 0;
-	scenes[currentScene]->initialize();
-	
-//	gameObjects.reserve(1 << 16); // Reserve memory to ensure pointer stability
-//	
-//	enemyManager = EnemyManager(); // Create EnemyManager
-
 	renderManager = RenderManager(); // Create RenderManager
-
-	//player = instantiate<Player>(vector2Df(500, 500)); // Instantiate player
+	
+	// Add scenes
+	addScene<CombatScene>();
+	changeScene(0);
 
 	std::cout << "Initialized Game" << std::endl;
 }
@@ -125,4 +119,15 @@ void Game::clean() {
 
 void Game::changeScene(const int sceneIndex) {
 	currentScene = sceneIndex;
+	scenes[currentScene]->initialize();
 }
+
+template<class T>
+void Game::addScene() {
+	// Compile time check that added scenes are in fact scenes
+	static_assert(std::is_base_of<Scene, T>(), "Scene must derive from type Scene.");
+
+	scenes.push_back(std::make_unique<T>(*this));
+}
+// Create all valid templates
+template void Game::addScene<CombatScene>();

@@ -6,7 +6,7 @@
 #include "player.h"
 #include "enemy.h"
 
-Scene::Scene(Game& gamePtr) : game(gamePtr) {}
+Scene::Scene(Game& game_) : game(game_) {}
 
 void Scene::initialize(std::vector<std::unique_ptr<GameObject>>& persistentObjects) {
 	// Transfer ownership of persistent GameObjects to this scene
@@ -16,9 +16,6 @@ void Scene::initialize(std::vector<std::unique_ptr<GameObject>>& persistentObjec
 void Scene::initialize() {
 	// Reserve space for GameObjects to ensure stability
 	gameObjects.reserve(1 << 16);
-
-	player = instantiate<Player>(vector2Df(500, 500));
-	enemyManager = EnemyManager();
 }
 
 void Scene::reset() {
@@ -42,8 +39,6 @@ void Scene::update(const float deltaTime) {
 	for (auto& object : gameObjects) {
 		object->collisionUpdate();
 	}
-
-	enemyManager.update(*this, deltaTime);
 }
 
 void Scene::updateDelete() {
@@ -56,7 +51,7 @@ void Scene::updateDelete() {
 	}
 }
 
-void Scene::render(SDL_Renderer* renderer) {
+void Scene::render(SDL_Renderer* renderer) const {
 	for (auto& object : gameObjects) {
 		object->render(renderer);
 	}

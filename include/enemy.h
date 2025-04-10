@@ -5,6 +5,7 @@
 #include "engine/gameObject.h"
 
 class Game;
+class CombatScene;
 
 enum class EnemyStates {
 	PURSUIT = 0,
@@ -46,6 +47,8 @@ protected:
 	std::function<void(SDL_Renderer*)> debugRender() const override;
 
 private:
+	const CombatScene* combatScene;
+
 	const float moveSpeed;
 	const float maxSteer;
 	const float steerStrength;

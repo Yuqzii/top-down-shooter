@@ -23,6 +23,9 @@ public:
 	bool running() const { return isRunning; };
 
 	void changeScene(const int sceneIndex);
+	
+	template<class T>
+	void addScene();
 
 	// SDL stuff
 	SDL_Window* getWindow() const { return window; }
