@@ -1,5 +1,7 @@
 #include <cmath>
+#include <iostream>
 #include "SDL2/SDL_scancode.h"
+#include "enemies/enemy.h"
 #include "engine/gameObject.h"
 #include "engine/scene.h"
 #include "engine/game.h"
@@ -8,6 +10,7 @@
 
 Player::Player() : healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{ 255, 0, 0, 255 }) {
 	pivotOffset.y = 20;
+	useCollision = true;
 
 	healthbarSlider = new UI::Slider(SDL_Color{ 0, 255, 0, 255 }, &healthbarBG);
 }
@@ -83,4 +86,19 @@ inline void Player::shoot(Scene& scene) const {
 					midPosition.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet.initializeDirection(direction, rotation);
+}
+
+void Player::onCollision(const GameObject& other) {
+	const EnemyCollisionPoint* enemyCollisionPoint =
+			dynamic_cast<const EnemyCollisionPoint*>(&other);
+
+	if (enemyCollisionPoint == nullptr) // Return if collision is not with enemy attack
+		return;
+
+	takeDamage(enemyCollisionPoint->parent->damage);
+}
+
+void Player::takeDamage(const float damage) {
+	health -= damage;
+	healthbarSlider->setValue(health);
 }

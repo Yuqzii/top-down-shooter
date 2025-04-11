@@ -15,14 +15,16 @@ enum class EnemyStates {
 
 class Enemy : public GameObject {
 public:
-	Enemy(const float& startHealth = 100.0f, const float& moveSpeed = 300.0f,
-	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
-	   const float& slowingRadius = 100.0f);
+	Enemy(const float startHealth = 100.0f, const float damage = 10.0f,
+		const float moveSpeed = 300.0f, const float maxSteer = 650.0f, const float steerMult = 2.0f,
+		const float slowingRadius = 100.0f);
 
 	virtual void initialize(const vector2Df& position, const Scene& scene) override;
 	virtual void update(Scene& scene, const float deltaTime) override;
 
-	virtual void onCollision(const GameObject* other) override;
+	virtual void onCollision(const GameObject& other) override;
+
+	const float damage;
 
 protected:
 	// Steering behaviors
@@ -52,4 +54,15 @@ private:
 
 	UI::Background healthbarBG;
 	UI::Slider* healthbarSlider;
+};
+
+class EnemyCollisionPoint : public GameObject {
+public:
+	EnemyCollisionPoint();
+
+	void initializeParent(const Enemy* parent);
+	const Enemy* parent;
+
+protected:
+	SETOBJECTTEXTURE("empty.png");
 };

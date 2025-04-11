@@ -10,7 +10,7 @@ public:
 	void update(Scene& scene, const float deltaTime) override;
 
 	void checkCollisions(const Scene& scene) override;
-	void onCollision(const GameObject* other) override;
+	void onCollision(const GameObject& other) override;
 
 	void initializeDirection(const vector2Df direction, const float rotation);
 

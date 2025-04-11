@@ -6,6 +6,14 @@
 class SDL_Renderer;
 
 namespace Collision {
+
+enum class Types {
+	CIRCLE = 0,
+	// POINT is only used checking collision that is not part of standard collider,
+	// not in a "full" GameObject.
+	POINT,
+};
+
 struct Circle {
 	vector2D position;
 	float radius;

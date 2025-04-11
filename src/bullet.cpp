@@ -40,7 +40,7 @@ void Bullet::checkCollisions(const Scene& scene) {
 	}
 }
 
-void Bullet::onCollision(const GameObject* other) {
+void Bullet::onCollision(const GameObject& other) {
 	// Delete object when colliding with something and stop further collision updates
 	deleteObject = true;
 	throw 1;

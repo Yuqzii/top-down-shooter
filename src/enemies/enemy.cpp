@@ -6,10 +6,10 @@
 #include "bullet.h"
 #include "scenes/combat_scene.h"
 
-Enemy::Enemy(const float& health_, const float& speed, const float& steer, const float& sMult,
-			 const float& slowing) :
-			startHealth(health_), health(health_), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
-			slowingRadius(slowing), isMoving(true),
+Enemy::Enemy(const float health_, const float damage_, const float speed, const float steer,
+			const float sMult, const float slowing)
+			: startHealth(health_), damage(damage_), health(health_), moveSpeed(speed),
+			maxSteer(steer), steerStrength(sMult), slowingRadius(slowing), isMoving(true),
 			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }), state() {
 
 	useCollision = true;
@@ -63,8 +63,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	}
 }
 
-void Enemy::onCollision(const GameObject* other) {
-	const Bullet* bullet = dynamic_cast<const Bullet*>(other);
+void Enemy::onCollision(const GameObject& other) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(&other);
 	if (bullet == nullptr) return; // Return if colliding with something that is not a bullet
 	
 	takeDamage(bullet->getDamage());
@@ -146,4 +146,15 @@ std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 					 pivotPosition.y + steering.y * 0.1
 		);
 	};
+}
+
+
+EnemyCollisionPoint::EnemyCollisionPoint() {
+	useCollision = true;
+	collisionType = Collision::Types::POINT;
+}
+
+void EnemyCollisionPoint::initializeParent(const Enemy* parent) {
+	this->parent = parent;
+	deleteObject = true;
 }

@@ -4,9 +4,9 @@
 
 class SpiderEnemy : public Enemy {
 public:
-	SpiderEnemy(const float& startHealth = 100.0f, const float& moveSpeed = 300.0f,
-	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
-	   const float& slowingRadius = 600.0f);
+	SpiderEnemy(const float startHealth = 100.0f, const float damage = 10.0f,
+			const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
+			const float steerMult = 2.0f, const float slowingRadius = 600.0f);
 
 	void update(Scene& scene, const float deltaTime) override;
 
@@ -29,6 +29,6 @@ protected:
 	};
 
 private:
-	void attack();
-	const std::function<void()> attackEvent = [this](){ attack(); };
+	void attack(Scene& scene);
+	const std::function<void(Scene&)> attackEvent = [this](Scene& scene){ attack(scene); };
 };

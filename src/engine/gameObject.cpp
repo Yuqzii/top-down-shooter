@@ -75,7 +75,7 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 	circleCollider.position = pivotPosition;
 
 	if (isAnimated)
-		animationUpdate(deltaTime);
+		animationUpdate(scene, deltaTime);
 
 #ifdef DEBUG_GIZMO
 	scene.getGame().getRenderManager().addRenderCall(debugRender(), this);
@@ -83,6 +83,10 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 }
 
 void GameObject::checkCollisions(const Scene& scene) {
+	// Point collisions are not checking collision with others
+	if (collisionType == Collision::Types::POINT)
+		return;
+
 	std::vector<GameObject*> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
@@ -99,19 +103,32 @@ void GameObject::checkCollisions(const Scene& scene) {
 		if (!object->useCollision || collisionList.count(object) || object == this)
 			continue;
 
-		if (Collision::checkCollision(circleCollider, object->circleCollider)) {
-			addCollision(object);
-			object->addCollision(this);
+		switch (object->collisionType) {
+			case Collision::Types::CIRCLE:
+				if (Collision::checkCollision(circleCollider, object->circleCollider)) {
+					addCollision(object);
+					object->addCollision(this);
+				}
+				break;
+			case Collision::Types::POINT:
+				if (Collision::checkCollision(object->getPivotPosition(), circleCollider)) {
+					addCollision(object);
+				}
+				break;
 		}
 	}
 }
 
 void GameObject::collisionUpdate() {
 	for (const GameObject* object : collisionList) {
+		if (object == nullptr) // Ensure that object exists
+			continue;
+
 		try {
-			onCollision(object);
+			onCollision(*object);
 		}
-		catch (int e) { // Stop collision detection when throwing exception
+		catch (int e) {
+			// Stop collision detection when throwing exception
 			break;
 		}
 	}
@@ -125,7 +142,7 @@ void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
 }
 
-void GameObject::animationUpdate(const double& deltaTime) {
+void GameObject::animationUpdate(Scene& scene, const double& deltaTime) {
 	// Notify if we try accessing non-existent animation
 	assert(animationSequence < getAnimationData().size() && "Animation index out of range");
 
@@ -144,7 +161,7 @@ void GameObject::animationUpdate(const double& deltaTime) {
 		for (const AnimationEvent& event : getAnimationEvents()) {
 			// Call event if animation sequence and current frame matches event
 			if (event.sequenceId == animationSequence && event.frame == frame)
-				event.event();
+				event.event(scene);
 		}
 
 		srcRect.x = frame * 32;

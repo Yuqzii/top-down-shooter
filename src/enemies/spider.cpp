@@ -1,11 +1,12 @@
 #include <iostream>
 #include "enemies/spider.h"
+#include "engine/game.h"
 #include "scenes/combat_scene.h"
 #include "player.h"
 
-SpiderEnemy::SpiderEnemy(const float& startHealth, const float& moveSpeed,
-		const float& maxSteer, const float& steerMult, const float& slowingRadius)
-		: Enemy(startHealth, moveSpeed, maxSteer, steerMult, slowingRadius) {
+SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const float moveSpeed,
+		const float maxSteer, const float steerMult, const float slowingRadius)
+		: Enemy(startHealth, damage, moveSpeed, maxSteer, steerMult, slowingRadius) {
 
 	isAnimated = true;
 	circleCollider.radius = 50;
@@ -52,7 +53,10 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 	Enemy::update(scene, deltaTime);
 }
 
-void SpiderEnemy::attack() {
-	std::cout << "ATTACKKKKK!!!!!\n";
+void SpiderEnemy::attack(Scene& scene) {
+	EnemyCollisionPoint& attackPoint = scene.instantiate<EnemyCollisionPoint>(
+			vector2Df(getPivotPosition() + vector2Df(rotation) * 55.0f));
+	attackPoint.initializeParent(this);
+
 	state = EnemyStates::PURSUIT;
 }
