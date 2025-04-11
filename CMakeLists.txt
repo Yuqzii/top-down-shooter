@@ -28,6 +28,7 @@ SET(SOURCE_FILES
 "src/engine/vector2D.cpp"
 "src/engine/Tree2D.cpp"
 "src/scenes/combat_scene.cpp"
+"src/enemies/spider.cpp"
 )
 
 # Build the game as a static library

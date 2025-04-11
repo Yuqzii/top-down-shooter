@@ -6,17 +6,14 @@
 #include "bullet.h"
 #include "scenes/combat_scene.h"
 
-Enemy::Enemy(const float& health, const float& speed, const float& steer, const float& sMult,
+Enemy::Enemy(const float& health_, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
-			startHealth(health), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
+			startHealth(health_), health(health_), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
 			slowingRadius(slowing),
-			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }),
-			state() {
-
-	isAnimated = true;
+			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }), state() {
 
 	useCollision = true;
-	circleCollider.radius = 220;
+	circleCollider.radius = 40;
 
 	healthbarSlider = new UI::Slider(SDL_Color { 0, 255, 0, 255 }, &healthbarBG);
 }
@@ -27,9 +24,6 @@ void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Store Scene as CombatScene to avoid unnecessary casts at update
 	combatScene = dynamic_cast<const CombatScene*>(&scene);
 
-	circleCollider.radius = 35;
-	health = startHealth;
-
 	// Initialize enemy at full speed towards player
 	const vector2Df playerDirection = vector2Df(
 		combatScene->player.getPivotPosition() - pivotPosition).normalized();
@@ -37,28 +31,6 @@ void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
 }
 
 void Enemy::update(Scene& scene, const float deltaTime) {
-	// Different movement depending on the current state
-	steering = vector2Df(); // Reset steering
-	switch (state) {
-		case EnemyStates::PURSUIT:
-			steering += pursuit(combatScene->player, 0.75f);
-			steering += seek(combatScene->player.getPivotPosition()) * 0.75f;
-			break;
-		case EnemyStates::EVADE:
-			steering += evade(combatScene->player, 0.4f);
-			break;
-	}
-
-	try {
-		// Move away from closest enemy
-		const Enemy* closest = combatScene->getEnemyManager().findClosestEnemy(pivotPosition);
-		steering += flee(closest->getPivotPosition()) * 0.7f;
-	}
-	catch (int e) {
-		// Can't find closest enemy. Usually because there is currently only one enemy.
-		// Does not require further action, hence why this catch is empty.
-	}
-
 	steering *= steerStrength; // Multiply steering by the steering strength
 	// Clamp steering
 	steering = steering.clamped(maxSteer);
@@ -93,7 +65,7 @@ void Enemy::onCollision(const GameObject* other) {
 	takeDamage(bullet->getDamage());
 }
 
-void Enemy::takeDamage(const float& damage) {
+void Enemy::takeDamage(const float damage) {
 	health -= damage;
 	
 	if (health <= 0) {

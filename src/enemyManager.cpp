@@ -1,7 +1,7 @@
 #include "engine/scene.h"
 #include "enemyManager.h"
 #include "engine/game.h"
-#include "enemies/enemy.h"
+#include "enemies/spider.h"
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
@@ -34,7 +34,7 @@ const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 }
 
 void EnemyManager::spawnEnemy(Scene& scene) {
-	Enemy& enemy = scene.instantiate<Enemy>(vector2Df(200, 200));
+	SpiderEnemy& enemy = scene.instantiate<SpiderEnemy>(vector2Df(200, 200));
 	enemies.push_back(&enemy);
 }
 
