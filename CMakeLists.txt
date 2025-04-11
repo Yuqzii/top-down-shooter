@@ -18,7 +18,7 @@ SET(SOURCE_FILES
 "src/engine/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
-"src/enemy.cpp"
+"src/enemies/enemy.cpp"
 "src/engine/collision.cpp"
 "src/enemyManager.cpp"
 "src/engine/UI/widget.cpp"
@@ -28,6 +28,7 @@ SET(SOURCE_FILES
 "src/engine/vector2D.cpp"
 "src/engine/Tree2D.cpp"
 "src/scenes/combat_scene.cpp"
+"src/enemies/spider.cpp"
 )
 
 # Build the game as a static library

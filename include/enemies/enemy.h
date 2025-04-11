@@ -18,23 +18,12 @@ public:
 	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
 	   const float& slowingRadius = 100.0f);
 
-	void initialize(const vector2Df& position, const Scene& scene) override;
-	void update(Scene& scene, const float deltaTime) override;
+	virtual void initialize(const vector2Df& position, const Scene& scene) override;
+	virtual void update(Scene& scene, const float deltaTime) override;
 
-	void onCollision(const GameObject* other) override;
-
-	void takeDamage(const float& damage);
+	virtual void onCollision(const GameObject* other) override;
 
 protected:
-	SETOBJECTTEXTURE("spider-sheet.png");
-
-	const std::vector<AnimationData>& getAnimationData() const override {
-		static const std::vector<AnimationData> data = {
-			{ 4, 20 }, // Crawl animation
-		};
-		return data;
-	};
-
 	// Steering behaviors
 	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;
@@ -44,11 +33,11 @@ protected:
 
 	EnemyStates state;
 
+	const CombatScene* combatScene;
+
 	std::function<void(SDL_Renderer*)> debugRender() const override;
 
 private:
-	const CombatScene* combatScene;
-
 	const float moveSpeed;
 	const float maxSteer;
 	const float steerStrength;
@@ -56,6 +45,7 @@ private:
 	const float slowingRadius; // Larger for more gradual stop
 	float health;
 
+	void takeDamage(const float damage);
 	void die();
 
 	UI::Background healthbarBG;

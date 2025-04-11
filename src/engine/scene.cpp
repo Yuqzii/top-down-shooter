@@ -1,10 +1,11 @@
 #include <ranges>
 #include "engine/scene.h"
+#include "enemies/spider.h"
 #include "engine/game.h"
 #include "engine/gameObject.h"
 #include "bullet.h"
 #include "player.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 
 Scene::Scene(Game& game_) : game(game_) {}
 
@@ -75,7 +76,7 @@ T& Scene::instantiate(const vector2Df& position) {
 template GameObject& Scene::instantiate<GameObject>(const vector2Df& position);
 template Player& Scene::instantiate<Player>(const vector2Df& position);
 template Bullet& Scene::instantiate<Bullet>(const vector2Df& position);
-template Enemy& Scene::instantiate<Enemy>(const vector2Df& position);
+template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const vector2Df& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D(); // Create new tree
