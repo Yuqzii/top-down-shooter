@@ -38,7 +38,6 @@ protected:
 	std::function<void(SDL_Renderer*)> debugRender() const override;
 
 private:
-
 	const float moveSpeed;
 	const float maxSteer;
 	const float steerStrength;
