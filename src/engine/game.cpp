@@ -36,6 +36,7 @@ Game::Game(const char* title, const int width, const int height) {
 	renderManager = RenderManager(); // Create RenderManager
 	
 	// Add scenes
+	scenes.reserve(sceneCount);
 	addScene<CombatScene>();
 	changeScene(0);
 
@@ -45,7 +46,7 @@ Game::Game(const char* title, const int width, const int height) {
 Game::~Game() {}
 
 void Game::handleEvents() {
-	memset(mouseInput, 0, sizeof(mouseInput)); // Reset mouseInput
+	mouseInput.fill(false); // Reset mouseInput
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {

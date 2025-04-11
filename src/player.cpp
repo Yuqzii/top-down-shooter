@@ -22,13 +22,13 @@ void Player::initialize(const vector2Df& position, const Scene& scene) {
 void Player::update(Scene& scene, const float deltaTime) {
 	
 	// Get input
-	moveLeft = scene.getGame().input[SDL_SCANCODE_A];
-	moveRight = scene.getGame().input[SDL_SCANCODE_D];
-	moveUp = scene.getGame().input[SDL_SCANCODE_W];
-	moveDown = scene.getGame().input[SDL_SCANCODE_S];
+	moveLeft = scene.getGame().getInput()[SDL_SCANCODE_A];
+	moveRight = scene.getGame().getInput()[SDL_SCANCODE_D];
+	moveUp = scene.getGame().getInput()[SDL_SCANCODE_W];
+	moveDown = scene.getGame().getInput()[SDL_SCANCODE_S];
 
 	// Update movement direction according to input
-	moveDir = { 0, 0}; // Reset movement direction
+	moveDir = { 0, 0 }; // Reset movement direction
 	if (moveLeft) {
 		moveDir.x = -1;
 	}
@@ -49,7 +49,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 	
 	pointToMouse(scene);
 
-	if (scene.getGame().mouseInput[SDL_BUTTON_LEFT]) {
+	if (scene.getGame().getMouseInput()[SDL_BUTTON_LEFT]) {
 		shoot(scene);
 	}
 
@@ -69,8 +69,8 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
-	vector2Df direction(scene.getGame().mousePos.x - pivotPosition.x,
-			scene.getGame().mousePos.y - pivotPosition.y);
+	vector2Df direction(scene.getGame().getMousePos().x - pivotPosition.x,
+			scene.getGame().getMousePos().y - pivotPosition.y);
 	rotation = direction.toDegrees() + 90;
 }
 
