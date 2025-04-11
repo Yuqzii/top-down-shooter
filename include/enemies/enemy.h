@@ -10,6 +10,7 @@ class CombatScene;
 enum class EnemyStates {
 	PURSUIT = 0,
 	EVADE,
+	ATTACK,
 };
 
 class Enemy : public GameObject {
@@ -32,6 +33,7 @@ protected:
 	vector2Df evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 
 	EnemyStates state;
+	bool isMoving;
 
 	const CombatScene* combatScene;
 

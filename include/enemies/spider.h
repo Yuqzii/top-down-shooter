@@ -6,7 +6,7 @@ class SpiderEnemy : public Enemy {
 public:
 	SpiderEnemy(const float& startHealth = 100.0f, const float& moveSpeed = 300.0f,
 	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
-	   const float& slowingRadius = 100.0f);
+	   const float& slowingRadius = 600.0f);
 
 	void update(Scene& scene, const float deltaTime) override;
 
@@ -15,8 +15,20 @@ protected:
 
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
-			{ 4, 20 }, // Crawl animation
+			{ 4, 20 }, // Crawl
+			{ 5, 15 }, // Attack
 		};
 		return data;
 	};
+
+	const std::vector<AnimationEvent>& getAnimationEvents() const override {
+		static const std::vector<AnimationEvent> events = {
+			{ 1, 4, attackEvent },
+		};
+		return events;
+	};
+
+private:
+	void attack();
+	const std::function<void()> attackEvent = [this](){ attack(); };
 };

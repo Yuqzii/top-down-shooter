@@ -137,10 +137,29 @@ void GameObject::animationUpdate(const double& deltaTime) {
 	if (animationCounter >= sequence.length) {
 		animationCounter -= sequence.length; // -= length so that the animation plays at same speed
 	}
-	int frame = std::trunc(animationCounter);
+	const int frame = std::trunc(animationCounter);
 
-	srcRect.x = frame * 32;
-	srcRect.y = animationSequence * 32;
+	// Check animation events when changing to new frame
+	if (frame != prevFrame) {
+		for (const AnimationEvent& event : getAnimationEvents()) {
+			// Call event if animation sequence and current frame matches event
+			if (event.sequenceId == animationSequence && event.frame == frame)
+				event.event();
+		}
+
+		srcRect.x = frame * 32;
+		srcRect.y = animationSequence * 32;
+	}
+	
+	prevFrame = frame;
+}
+
+void GameObject::changeAnimation(const int sequenceId) {
+	// Do nothing if this is already the current animation
+	if (animationSequence == sequenceId) return;
+
+	animationSequence = sequenceId;
+	animationCounter = 0;
 }
 
 std::function<void(SDL_Renderer*)> GameObject::debugRender() const {

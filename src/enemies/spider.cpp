@@ -1,3 +1,4 @@
+#include <iostream>
 #include "enemies/spider.h"
 #include "scenes/combat_scene.h"
 #include "player.h"
@@ -17,9 +18,18 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 		case EnemyStates::PURSUIT:
 			steering += pursuit(combatScene->player, 0.75f);
 			steering += seek(combatScene->player.getPivotPosition()) * 0.75f;
+			changeAnimation(0);
+			isMoving = true;
 			break;
 		case EnemyStates::EVADE:
 			steering += evade(combatScene->player, 0.4f);
+			changeAnimation(0);
+			isMoving = true;
+			break;
+		case EnemyStates::ATTACK:
+			changeAnimation(1);
+			animationSpeed = 1;
+			isMoving = false;
 			break;
 	}
 
@@ -33,6 +43,16 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 		// Does not require further action, hence why this catch is empty.
 	}
 
+	const vector2Df dist = pivotPosition - combatScene->player.getPivotPosition();
+	if (dist.crossProduct(dist) < 7000) {
+		state = EnemyStates::ATTACK;
+	}
+
 	// Calculate velocity and update position
 	Enemy::update(scene, deltaTime);
+}
+
+void SpiderEnemy::attack() {
+	std::cout << "ATTACKKKKK!!!!!\n";
+	state = EnemyStates::PURSUIT;
 }

@@ -9,7 +9,7 @@
 Enemy::Enemy(const float& health_, const float& speed, const float& steer, const float& sMult,
 			 const float& slowing) :
 			startHealth(health_), health(health_), moveSpeed(speed), maxSteer(steer), steerStrength(sMult),
-			slowingRadius(slowing),
+			slowingRadius(slowing), isMoving(true),
 			healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{ 255, 0, 0, 255 }), state() {
 
 	useCollision = true;
@@ -31,18 +31,23 @@ void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
 }
 
 void Enemy::update(Scene& scene, const float deltaTime) {
-	steering *= steerStrength; // Multiply steering by the steering strength
-	// Clamp steering
-	steering = steering.clamped(maxSteer);
-	velocity += steering * deltaTime;
+	if (isMoving) {
+		steering *= steerStrength; // Multiply steering by the steering strength
+		// Clamp steering
+		steering = steering.clamped(maxSteer);
+		velocity += steering * deltaTime;
 
-	// Clamp velocity
-	velocity = velocity.clamped(moveSpeed);
+		// Clamp velocity
+		velocity = velocity.clamped(moveSpeed);
 
-	rotation = velocity.toDegrees() + 90; // Rotate enemy in direction of movement
-	
-	// Calculate animation speed based on movement speed
-	animationSpeed = velocity.magnitude() / moveSpeed;
+		rotation = velocity.toDegrees() + 90; // Rotate enemy in direction of movement
+
+		// Calculate animation speed based on movement speed
+		animationSpeed = velocity.magnitude() / moveSpeed;
+	}
+	else
+		velocity = vector2Df();
+
 
 	GameObject::update(scene, deltaTime); // Update position
 

@@ -68,12 +68,17 @@ protected:
 
 	// Animation
 	bool isAnimated; // Set true to enable animation
-	int animationSequence; // Keeps track of current animation sequence, used as y position
 	float animationSpeed; // Scales all animations
+	virtual void changeAnimation(const int sequenceId);
 	// Use this function to define length and speed of different animations
 	virtual const std::vector<AnimationData>& getAnimationData() const {
 		static const std::vector<AnimationData> data;
 		return data;
+	}
+	// Use this function to define animation events
+	virtual const std::vector<AnimationEvent>& getAnimationEvents() const {
+		static const std::vector<AnimationEvent> events;
+		return events;
 	}
 
 	// Pivot
@@ -98,4 +103,6 @@ private:
 	// Animation
 	void animationUpdate(const double& deltaTime);
 	float animationCounter; // Keeps track of current animation frame, used as x position
+	int animationSequence; // Keeps track of current animation sequence, used as y position
+	int prevFrame;
 };
