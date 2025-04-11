@@ -34,8 +34,8 @@ const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 }
 
 void EnemyManager::spawnEnemy(Scene& scene) {
-	Enemy* enemy = scene.instantiate<Enemy>(vector2Df(200, 200));
-	enemies.push_back(enemy);
+	Enemy& enemy = scene.instantiate<Enemy>(vector2Df(200, 200));
+	enemies.push_back(&enemy);
 }
 
 void EnemyManager::updateTree() {

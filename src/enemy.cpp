@@ -32,7 +32,7 @@ void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
 
 	// Initialize enemy at full speed towards player
 	const vector2Df playerDirection = vector2Df(
-		combatScene->player->getPivotPosition() - pivotPosition).normalized();
+		combatScene->player.getPivotPosition() - pivotPosition).normalized();
 	velocity = playerDirection * moveSpeed;
 }
 
@@ -42,7 +42,7 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	switch (state) {
 		case EnemyStates::PURSUIT:
 			steering += pursuit(combatScene->player, 0.75f);
-			steering += seek(combatScene->player->getPivotPosition()) * 0.75f;
+			steering += seek(combatScene->player.getPivotPosition()) * 0.75f;
 			break;
 		case EnemyStates::EVADE:
 			steering += evade(combatScene->player, 0.4f);
@@ -75,7 +75,7 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	GameObject::update(scene, deltaTime); // Update position
 
 	// Checks if colliding with player
-	if (Collision::checkCollision(circleCollider, combatScene->player->circleCollider)) {
+	if (Collision::checkCollision(circleCollider, combatScene->player.circleCollider)) {
 		// Damage player or something
 	}
 	
@@ -143,22 +143,22 @@ vector2Df Enemy::flee(const vector2Df& target) const {
 	return desiredVelocity - velocity; // Return calculated force
 }
 
-vector2Df Enemy::pursuit(const GameObject* target, const float& predictionMultiplier) const {
-	const vector2Df distance = target->getPivotPosition() - pivotPosition;
+vector2Df Enemy::pursuit(const GameObject& target, const float& predictionMultiplier) const {
+	const vector2Df distance = target.getPivotPosition() - pivotPosition;
 	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
-	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
+	const vector2Df futurePosition = target.getPivotPosition() + target.getVelocity()
 									* time * predictionMultiplier;
 	return seek(futurePosition); // Use seek to move towards this position
 }
 
-vector2Df Enemy::evade(const GameObject* target, const float& predictionMultiplier) const {
-	const vector2Df distance = target->getPivotPosition() - pivotPosition;
+vector2Df Enemy::evade(const GameObject& target, const float& predictionMultiplier) const {
+	const vector2Df distance = target.getPivotPosition() - pivotPosition;
 	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
-	const vector2Df futurePosition = target->getPivotPosition() + target->getVelocity()
+	const vector2Df futurePosition = target.getPivotPosition() + target.getVelocity()
 									* time * predictionMultiplier;
 	return flee(futurePosition); // Use seek to move towards this position
 }

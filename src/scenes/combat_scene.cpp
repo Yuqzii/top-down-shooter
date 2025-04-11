@@ -3,14 +3,12 @@
 void CombatScene::initialize() {
 	Scene::initialize();
 
-	player = instantiate<Player>(vector2Df(700, 450));
 	enemyManager = EnemyManager();
 }
 
 void CombatScene::initialize(GameObjectVector& persistentObjects) {
 	Scene::initialize(persistentObjects);
 
-	player = instantiate<Player>(vector2Df(500, 750));
 	enemyManager = EnemyManager();
 }
 

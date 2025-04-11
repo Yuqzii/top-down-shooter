@@ -58,7 +58,7 @@ void Scene::render(SDL_Renderer* renderer) const {
 }
 
 template<class T>
-T* Scene::instantiate(const vector2Df& position) {
+T& Scene::instantiate(const vector2Df& position) {
 	// Compile time check that we don't try to instantiate a non-GameObject
 	static_assert(std::is_base_of<GameObject, T>(),
 	"Object to instantiate must inherit from GameObject");
@@ -69,13 +69,13 @@ T* Scene::instantiate(const vector2Df& position) {
 	gameObjects.push_back(std::move(newObject)); // Add GameObject to list
 
 	// Returns the newest GameObject, e.g. the one created now
-	return static_cast<T*>(gameObjects.back().get());
+	return static_cast<T&>(*gameObjects.back().get());
 }
 // Create all valid templates
-template GameObject* Scene::instantiate<GameObject>(const vector2Df& position);
-template Player* Scene::instantiate<Player>(const vector2Df& position);
-template Bullet* Scene::instantiate<Bullet>(const vector2Df& position);
-template Enemy* Scene::instantiate<Enemy>(const vector2Df& position);
+template GameObject& Scene::instantiate<GameObject>(const vector2Df& position);
+template Player& Scene::instantiate<Player>(const vector2Df& position);
+template Bullet& Scene::instantiate<Bullet>(const vector2Df& position);
+template Enemy& Scene::instantiate<Enemy>(const vector2Df& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D(); // Create new tree

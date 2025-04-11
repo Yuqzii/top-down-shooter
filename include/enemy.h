@@ -39,8 +39,8 @@ protected:
 	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;
 	vector2Df flee(const vector2Df& target) const;
-	vector2Df pursuit(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
-	vector2Df evade(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
+	vector2Df pursuit(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
+	vector2Df evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 
 	EnemyStates state;
 
