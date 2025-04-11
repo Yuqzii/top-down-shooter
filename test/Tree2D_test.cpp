@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "game/Tree2D.h"
-#include "game/gameObject.h"
+#include "engine/Tree2D.h"
+#include "engine/gameObject.h"
 #include "mockGameObject.h"
 
 std::vector<GameObject*> testInit(const std::vector<vector2Df>& points) {

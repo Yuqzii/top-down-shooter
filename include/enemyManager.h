@@ -1,14 +1,14 @@
 #pragma once
 
 #include <vector>
-#include "game/Tree2D.h"
+#include "engine/Tree2D.h"
 #include "enemy.h"
 
 class Game;
 
 class EnemyManager {
 public:
-	void update(Game* game, const double& deltaTime);
+	void update(Scene& scene, const float deltaTime);
 
 	// Returns a vector of all enemies
 	const std::vector<Enemy*> getEnemies() const { return enemies; }
@@ -20,7 +20,7 @@ private:
 	constexpr const static float startTime = 1;
 	float currentTime = startTime;
 
-	void spawnEnemy(Game* game);
+	void spawnEnemy(Scene& scene);
 
 	std::unique_ptr<Tree2D> enemyTree;
 	void updateTree();

@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 #include "SDL2/SDL_render.h"
-#include "game/vector2D.h"
-#include "game/UI/anchorTypes.h"
+#include "engine/vector2D.h"
+#include "engine/UI/anchorTypes.h"
 
 namespace UI {
 // A widget without a parent should be constructed normally as an object,

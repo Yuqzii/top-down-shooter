@@ -1,18 +1,17 @@
 #include "bullet.h"
-#include "enemy.h"
-#include "game/gameObject.h"
-#include "game/game.h"
-#include "game/collision.h"
+#include "engine/gameObject.h"
+#include "engine/scene.h"
+#include "engine/collision.h"
 
-void Bullet::initialize(const vector2Df& position, Game* game) {
-	GameObject::initialize(position, game); // Call base initialize
+void Bullet::initialize(const vector2Df& position, const Scene& scene) {
+	GameObject::initialize(position, scene); // Call base initialize
 	
 	previousPosition = pivotPosition;
 }
 
-void Bullet::update(Game* game, const double& deltaTime) {
+void Bullet::update(Scene& scene, const float deltaTime) {
 	previousPosition = pivotPosition;
-	GameObject::update(game, deltaTime); // Update position
+	GameObject::update(scene, deltaTime); // Update position
 
 	timeLeft -= deltaTime;
 	if (timeLeft <= 0) {
@@ -21,10 +20,10 @@ void Bullet::update(Game* game, const double& deltaTime) {
 	}
 }
 
-void Bullet::checkCollisions(Game* game) {
+void Bullet::checkCollisions(const Scene& scene) {
 	// Get all GameObjects withing bounding circle
-	std::vector<GameObject*> closeObjects =
-			game->getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+	const std::vector<GameObject*> closeObjects =
+			scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
 
 	const Collision::Line movementLine(previousPosition, pivotPosition);
 

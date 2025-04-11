@@ -5,9 +5,9 @@
 #include <unordered_set>
 #include <vector>
 #include "SDL2/SDL.h"
-#include "game/collision.h"
-#include "game/vector2D.h"
-#include "game/animationData.h"
+#include "engine/collision.h"
+#include "engine/vector2D.h"
+#include "engine/animationData.h"
 
 // Use this inside protected section of child class to set its texture
 #define SETOBJECTTEXTURE(FILE) \
@@ -16,7 +16,7 @@ const std::string& getTextureSheet() const override { \
 	return file; \
 }
 
-class Game;
+class Scene;
 
 class GameObject {
 public:
@@ -24,12 +24,12 @@ public:
 	virtual ~GameObject() = default;
 
 	// Initialize must be overriden to change initialization of things such as collider settings
-	virtual void initialize(const vector2Df& position, Game* game);
+	virtual void initialize(const vector2Df& position, const Scene& scene);
 	// Should be called after finishing velocity calculations
-	virtual void update(Game* game, const double& deltaTime);
+	virtual void update(Scene& scene, const float deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
-	virtual void checkCollisions(Game* game);
+	virtual void checkCollisions(const Scene& scene);
 	void collisionUpdate();
 	bool getUseCollision() const { return useCollision; }
 

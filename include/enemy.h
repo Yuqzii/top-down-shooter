@@ -1,10 +1,11 @@
 #pragma once
 
-#include "game/UI/background.h"
-#include "game/UI/slider.h"
-#include "game/gameObject.h"
+#include "engine/UI/background.h"
+#include "engine/UI/slider.h"
+#include "engine/gameObject.h"
 
 class Game;
+class CombatScene;
 
 enum class EnemyStates {
 	PURSUIT = 0,
@@ -17,8 +18,8 @@ public:
 	   const float& maxSteer = 650.0f, const float& steerMult = 2.0f,
 	   const float& slowingRadius = 100.0f);
 
-	void initialize(const vector2Df& position, Game* game) override;
-	void update(Game* game, const double& deltaTime) override;
+	void initialize(const vector2Df& position, const Scene& scene) override;
+	void update(Scene& scene, const float deltaTime) override;
 
 	void onCollision(const GameObject* other) override;
 
@@ -38,14 +39,16 @@ protected:
 	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;
 	vector2Df flee(const vector2Df& target) const;
-	vector2Df pursuit(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
-	vector2Df evade(const GameObject* target, const float& predictionMultiplier = 1.0f) const;
+	vector2Df pursuit(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
+	vector2Df evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 
 	EnemyStates state;
 
 	std::function<void(SDL_Renderer*)> debugRender() const override;
 
 private:
+	const CombatScene* combatScene;
+
 	const float moveSpeed;
 	const float maxSteer;
 	const float steerStrength;

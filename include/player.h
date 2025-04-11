@@ -1,8 +1,8 @@
 #pragma once
 
-#include "game/UI/background.h"
-#include "game/UI/slider.h"
-#include "game/gameObject.h"
+#include "engine/UI/background.h"
+#include "engine/UI/slider.h"
+#include "engine/gameObject.h"
 
 class Game;
 
@@ -10,15 +10,15 @@ class Player : public GameObject {
 public:
 	Player();
 
-	void initialize(const vector2Df& position, Game* game) override;
-	void update(Game* game, const double& deltaTime) override;
+	void initialize(const vector2Df& position, const Scene& scene) override;
+	void update(Scene& scene, const float deltaTime) override;
 
 protected:
 	SETOBJECTTEXTURE("player.png");
 
 private:
-	inline void pointToMouse(Game* game);
-	inline void shoot(Game* game) const;
+	inline void pointToMouse(const Scene& scene);
+	inline void shoot(Scene& scene) const;
 
 	bool moveLeft, moveRight, moveUp, moveDown;
 	vector2Df moveDir;

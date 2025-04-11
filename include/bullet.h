@@ -1,15 +1,15 @@
 #pragma once
 
-#include "game/gameObject.h"
+#include "engine/gameObject.h"
 
 class Game;
 
 class Bullet : public GameObject {
 public:
-	void initialize(const vector2Df& startPosition, Game* game) override;
-	void update(Game* game, const double& deltaTime) override;
+	void initialize(const vector2Df& startPosition, const Scene& scene) override;
+	void update(Scene& scene, const float deltaTime) override;
 
-	void checkCollisions(Game* game) override;
+	void checkCollisions(const Scene& scene) override;
 	void onCollision(const GameObject* other) override;
 
 	void initializeDirection(const vector2Df direction, const float rotation);

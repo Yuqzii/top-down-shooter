@@ -1,5 +1,5 @@
-#include "game/UI/UIManager.h"
-#include "game/gameObject.h"
+#include "engine/UI/UIManager.h"
+#include "engine/gameObject.h"
 
 namespace UI {
 

@@ -2,9 +2,10 @@
 #include <SDL2/SDL_render.h>
 #include <cassert>
 #include <iostream>
-#include "game/gameObject.h"
-#include "game/resourceManager.h"
-#include "game/game.h"
+#include "engine/gameObject.h"
+#include "engine/resourceManager.h"
+#include "engine/game.h"
+#include "engine/scene.h"
 
 GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	deleteObject = false;
@@ -24,9 +25,10 @@ GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
 	animationCounter = animationSequence = 0;
 }
 
-void GameObject::initialize(const vector2Df& startPosition, Game* game) {
+void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
-	texture = ResourceManager::LoadTexture(getTextureSheet(), game->getRenderer());
+	texture = ResourceManager::LoadTexture(getTextureSheet(),
+			scene.getGame().getRenderer());
 
 	// Initialize pivot
 	pivot.x = destRect.w / 2 + pivotOffset.x;
@@ -50,7 +52,7 @@ void GameObject::initialize(const vector2Df& startPosition, Game* game) {
 	circleCollider.position = pivotPosition;
 }
 
-void GameObject::update(Game* game, const double& deltaTime) {
+void GameObject::update(Scene& scene, const float deltaTime) {
 	collisionList.clear(); // Make sure collisionList only contains collisions from this frame
 
 	position += velocity * deltaTime;
@@ -76,14 +78,19 @@ void GameObject::update(Game* game, const double& deltaTime) {
 		animationUpdate(deltaTime);
 
 #ifdef DEBUG_GIZMO
-	game->getRenderManager()->addRenderCall(debugRender(), this);
+	scene.getGame().getRenderManager().addRenderCall(debugRender(), this);
 #endif
 }
 
-void GameObject::checkCollisions(Game* game) {
-	// Get all GameObjects withing our bounding circle
-	std::vector<GameObject*> closeObjects =
-			game->getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+void GameObject::checkCollisions(const Scene& scene) {
+	std::vector<GameObject*> closeObjects;
+	try {
+		// Get all GameObjects withing our bounding circle
+		closeObjects = scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+	}
+	catch (int e) {
+		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
+	}
 
 	for (GameObject* object : closeObjects) {
 		// No need to check collision if object is not collideable,
