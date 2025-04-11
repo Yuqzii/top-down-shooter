@@ -1,7 +1,7 @@
 #include "engine/scene.h"
 #include "enemyManager.h"
 #include "engine/game.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted

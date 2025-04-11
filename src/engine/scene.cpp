@@ -4,7 +4,7 @@
 #include "engine/gameObject.h"
 #include "bullet.h"
 #include "player.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 
 Scene::Scene(Game& game_) : game(game_) {}
 

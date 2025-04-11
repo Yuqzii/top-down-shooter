@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "engine/Tree2D.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 
 class Game;
 

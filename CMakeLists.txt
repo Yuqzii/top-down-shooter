@@ -18,7 +18,7 @@ SET(SOURCE_FILES
 "src/engine/gameObject.cpp"
 "src/player.cpp"
 "src/bullet.cpp"
-"src/enemy.cpp"
+"src/enemies/enemy.cpp"
 "src/engine/collision.cpp"
 "src/enemyManager.cpp"
 "src/engine/UI/widget.cpp"

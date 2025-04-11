@@ -1,7 +1,7 @@
 #include "engine/scene.h"
 #include "engine/collision.h"
 #include "engine/game.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 #include "player.h"
 #include "bullet.h"
 #include "scenes/combat_scene.h"
