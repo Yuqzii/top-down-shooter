@@ -4,7 +4,8 @@
 #include "engine/scene.h"
 #include "scenes/combat_scene.h"
 
-Game::Game(const char* title, const int width, const int height) {
+Game::Game(const char* title, const int width, const int height)
+		: window(nullptr), renderer(nullptr) {
 	isRunning = true;
 
 	// Check that SDL initializes
@@ -15,8 +16,6 @@ Game::Game(const char* title, const int width, const int height) {
 	}
 
 	// Create window and renderer
-	window = nullptr;
-	renderer = nullptr;
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 	SDL_SetWindowTitle(window, title); // Set title
 
