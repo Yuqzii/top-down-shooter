@@ -74,11 +74,6 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 
 	GameObject::update(scene, deltaTime); // Update position
 
-	// Checks if colliding with player
-	if (Collision::checkCollision(circleCollider, combatScene->player.circleCollider)) {
-		// Damage player or something
-	}
-	
 	// Update healthbar
 	if (health < startHealth) {
 		healthbarBG.localPosition.x = pivotPosition.x - healthbarBG.localSize.x / 2;
