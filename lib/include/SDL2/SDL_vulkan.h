@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -29,6 +29,7 @@
 #define SDL_vulkan_h_
 
 #include "SDL_video.h"
+
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -40,11 +41,13 @@ extern "C" {
 #define NO_SDL_VULKAN_TYPEDEFS
 #endif
 #ifndef NO_SDL_VULKAN_TYPEDEFS
-#define VK_DEFINE_HANDLE(object) typedef struct object##_T* object;
+#define VK_DEFINE_HANDLE(object) typedef struct object##_T *object;
 
-#if defined(__LP64__) || defined(_WIN64) || defined(__x86_64__) || defined(_M_X64) || \
-	defined(__ia64) || defined(_M_IA64) || defined(__aarch64__) || defined(__powerpc64__)
-#define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef struct object##_T* object;
+#if defined(__LP64__) || defined(_WIN64) || defined(__x86_64__) ||             \
+    defined(_M_X64) || defined(__ia64) || defined(_M_IA64) ||                  \
+    defined(__aarch64__) || defined(__powerpc64__)
+#define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object)                              \
+  typedef struct object##_T *object;
 #else
 #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef uint64_t object;
 #endif
@@ -110,7 +113,7 @@ typedef VkSurfaceKHR SDL_vulkanSurface; /* for compatibility with Tizen */
  * \sa SDL_Vulkan_GetVkGetInstanceProcAddr
  * \sa SDL_Vulkan_UnloadLibrary
  */
-extern DECLSPEC int SDLCALL SDL_Vulkan_LoadLibrary(const char* path);
+extern DECLSPEC int SDLCALL SDL_Vulkan_LoadLibrary(const char *path);
 
 /**
  * Get the address of the `vkGetInstanceProcAddr` function.
@@ -122,7 +125,7 @@ extern DECLSPEC int SDLCALL SDL_Vulkan_LoadLibrary(const char* path);
  *
  * \since This function is available since SDL 2.0.6.
  */
-extern DECLSPEC void* SDLCALL SDL_Vulkan_GetVkGetInstanceProcAddr(void);
+extern DECLSPEC void *SDLCALL SDL_Vulkan_GetVkGetInstanceProcAddr(void);
 
 /**
  * Unload the Vulkan library previously loaded by SDL_Vulkan_LoadLibrary()
@@ -161,9 +164,8 @@ extern DECLSPEC void SDLCALL SDL_Vulkan_UnloadLibrary(void);
  *
  * \sa SDL_Vulkan_CreateSurface
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_GetInstanceExtensions(SDL_Window* window,
-																  unsigned int* pCount,
-																  const char** pNames);
+extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_GetInstanceExtensions(
+    SDL_Window *window, unsigned int *pCount, const char **pNames);
 
 /**
  * Create a Vulkan rendering surface for a window.
@@ -183,8 +185,8 @@ extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_GetInstanceExtensions(SDL_Window* wi
  * \sa SDL_Vulkan_GetInstanceExtensions
  * \sa SDL_Vulkan_GetDrawableSize
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_CreateSurface(SDL_Window* window, VkInstance instance,
-														  VkSurfaceKHR* surface);
+extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_CreateSurface(
+    SDL_Window *window, VkInstance instance, VkSurfaceKHR *surface);
 
 /**
  * Get the size of the window's underlying drawable dimensions in pixels.
@@ -204,7 +206,8 @@ extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_CreateSurface(SDL_Window* window, Vk
  * \sa SDL_CreateWindow
  * \sa SDL_Vulkan_CreateSurface
  */
-extern DECLSPEC void SDLCALL SDL_Vulkan_GetDrawableSize(SDL_Window* window, int* w, int* h);
+extern DECLSPEC void SDLCALL SDL_Vulkan_GetDrawableSize(SDL_Window *window,
+                                                        int *w, int *h);
 
 /* @} */ /* Vulkan support functions */
 

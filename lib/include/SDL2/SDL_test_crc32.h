@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -64,7 +64,7 @@ extern "C" {
  * Data structure for CRC32 (checksum) computation
  */
 typedef struct {
-	CrcUint32 crc32_table[256]; /* CRC table */
+  CrcUint32 crc32_table[256]; /* CRC table */
 } SDLTest_Crc32Context;
 
 /* ---------- Function Prototypes ------------- */
@@ -80,7 +80,7 @@ typedef struct {
  * \returns 0 for OK, -1 on error
  *
  */
-int SDLTest_Crc32Init(SDLTest_Crc32Context* crcContext);
+int SDLTest_Crc32Init(SDLTest_Crc32Context *crcContext);
 
 /*
  * \brief calculate a crc32 from a data block
@@ -93,14 +93,14 @@ int SDLTest_Crc32Init(SDLTest_Crc32Context* crcContext);
  * \returns 0 for OK, -1 on error
  *
  */
-int SDLTest_Crc32Calc(SDLTest_Crc32Context* crcContext, CrcUint8* inBuf, CrcUint32 inLen,
-					  CrcUint32* crc32);
+int SDLTest_Crc32Calc(SDLTest_Crc32Context *crcContext, CrcUint8 *inBuf,
+                      CrcUint32 inLen, CrcUint32 *crc32);
 
 /* Same routine broken down into three steps */
-int SDLTest_Crc32CalcStart(SDLTest_Crc32Context* crcContext, CrcUint32* crc32);
-int SDLTest_Crc32CalcEnd(SDLTest_Crc32Context* crcContext, CrcUint32* crc32);
-int SDLTest_Crc32CalcBuffer(SDLTest_Crc32Context* crcContext, CrcUint8* inBuf, CrcUint32 inLen,
-							CrcUint32* crc32);
+int SDLTest_Crc32CalcStart(SDLTest_Crc32Context *crcContext, CrcUint32 *crc32);
+int SDLTest_Crc32CalcEnd(SDLTest_Crc32Context *crcContext, CrcUint32 *crc32);
+int SDLTest_Crc32CalcBuffer(SDLTest_Crc32Context *crcContext, CrcUint8 *inBuf,
+                            CrcUint32 inLen, CrcUint32 *crc32);
 
 /*
  * \brief clean up CRC context
@@ -111,7 +111,7 @@ int SDLTest_Crc32CalcBuffer(SDLTest_Crc32Context* crcContext, CrcUint8* inBuf, C
  *
  */
 
-int SDLTest_Crc32Done(SDLTest_Crc32Context* crcContext);
+int SDLTest_Crc32Done(SDLTest_Crc32Context *crcContext);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

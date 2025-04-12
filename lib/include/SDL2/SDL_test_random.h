@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -57,11 +57,11 @@ extern "C" {
  * Context structure for the random number generator state.
  */
 typedef struct {
-	unsigned int a;
-	unsigned int x;
-	unsigned int c;
-	unsigned int ah;
-	unsigned int al;
+  unsigned int a;
+  unsigned int x;
+  unsigned int c;
+  unsigned int ah;
+  unsigned int al;
 } SDLTest_RandomContext;
 
 /* --- Function prototypes */
@@ -77,7 +77,8 @@ typedef struct {
  *  \param ci         integer that defines the random sequence
  *
  */
-void SDLTest_RandomInit(SDLTest_RandomContext* rndContext, unsigned int xi, unsigned int ci);
+void SDLTest_RandomInit(SDLTest_RandomContext *rndContext, unsigned int xi,
+                        unsigned int ci);
 
 /*
  *  \brief Initialize random number generator based on current system time.
@@ -85,7 +86,7 @@ void SDLTest_RandomInit(SDLTest_RandomContext* rndContext, unsigned int xi, unsi
  *  \param rndContext     pointer to context structure
  *
  */
-void SDLTest_RandomInitTime(SDLTest_RandomContext* rndContext);
+void SDLTest_RandomInitTime(SDLTest_RandomContext *rndContext);
 
 /*
  *  \brief Initialize random number generator based on current system time.
@@ -98,7 +99,7 @@ void SDLTest_RandomInitTime(SDLTest_RandomContext* rndContext);
  *  \returns a random number (32bit unsigned integer)
  *
  */
-unsigned int SDLTest_Random(SDLTest_RandomContext* rndContext);
+unsigned int SDLTest_Random(SDLTest_RandomContext *rndContext);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

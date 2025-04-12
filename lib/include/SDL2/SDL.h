@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -62,6 +62,7 @@
 #include "SDL_timer.h"
 #include "SDL_version.h"
 #include "SDL_video.h"
+
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -81,17 +82,21 @@ extern "C" {
 /* @{ */
 #define SDL_INIT_TIMER 0x00000001u
 #define SDL_INIT_AUDIO 0x00000010u
-#define SDL_INIT_VIDEO 0x00000020u	  /**< SDL_INIT_VIDEO implies SDL_INIT_EVENTS */
-#define SDL_INIT_JOYSTICK 0x00000200u /**< SDL_INIT_JOYSTICK implies SDL_INIT_EVENTS */
+#define SDL_INIT_VIDEO                                                         \
+  0x00000020u /**< SDL_INIT_VIDEO implies SDL_INIT_EVENTS */
+#define SDL_INIT_JOYSTICK                                                      \
+  0x00000200u /**< SDL_INIT_JOYSTICK implies SDL_INIT_EVENTS */
 #define SDL_INIT_HAPTIC 0x00001000u
-#define SDL_INIT_GAMECONTROLLER \
-	0x00002000u /**< SDL_INIT_GAMECONTROLLER implies SDL_INIT_JOYSTICK */
+#define SDL_INIT_GAMECONTROLLER                                                \
+  0x00002000u /**< SDL_INIT_GAMECONTROLLER implies SDL_INIT_JOYSTICK */
 #define SDL_INIT_EVENTS 0x00004000u
 #define SDL_INIT_SENSOR 0x00008000u
-#define SDL_INIT_NOPARACHUTE 0x00100000u /**< compatibility; this flag is ignored. */
-#define SDL_INIT_EVERYTHING                                                                   \
-	(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | \
-	 SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER | SDL_INIT_SENSOR)
+#define SDL_INIT_NOPARACHUTE                                                   \
+  0x00100000u /**< compatibility; this flag is ignored. */
+#define SDL_INIT_EVERYTHING                                                    \
+  (SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS |        \
+   SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER |             \
+   SDL_INIT_SENSOR)
 /* @} */
 
 /**

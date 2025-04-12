@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -61,43 +61,43 @@ extern "C" {
 #define TEST_RESULT_SETUP_FAILURE 4
 
 /* !< Function pointer to a test case setup function (run before every test) */
-typedef void (*SDLTest_TestCaseSetUpFp)(void* arg);
+typedef void (*SDLTest_TestCaseSetUpFp)(void *arg);
 
 /* !< Function pointer to a test case function */
-typedef int (*SDLTest_TestCaseFp)(void* arg);
+typedef int (*SDLTest_TestCaseFp)(void *arg);
 
 /* !< Function pointer to a test case teardown function (run after every test)
  */
-typedef void (*SDLTest_TestCaseTearDownFp)(void* arg);
+typedef void (*SDLTest_TestCaseTearDownFp)(void *arg);
 
 /*
  * Holds information about a single test case.
  */
 typedef struct SDLTest_TestCaseReference {
-	/* !< Func2Stress */
-	SDLTest_TestCaseFp testCase;
-	/* !< Short name (or function name) "Func2Stress" */
-	const char* name;
-	/* !< Long name or full description "This test pushes func2() to the limit."
-	 */
-	const char* description;
-	/* !< Set to TEST_ENABLED or TEST_DISABLED (test won't be run) */
-	int enabled;
+  /* !< Func2Stress */
+  SDLTest_TestCaseFp testCase;
+  /* !< Short name (or function name) "Func2Stress" */
+  const char *name;
+  /* !< Long name or full description "This test pushes func2() to the limit."
+   */
+  const char *description;
+  /* !< Set to TEST_ENABLED or TEST_DISABLED (test won't be run) */
+  int enabled;
 } SDLTest_TestCaseReference;
 
 /*
  * Holds information about a test suite (multiple test cases).
  */
 typedef struct SDLTest_TestSuiteReference {
-	/* !< "PlatformSuite" */
-	const char* name;
-	/* !< The function that is run before each test. NULL skips. */
-	SDLTest_TestCaseSetUpFp testSetUp;
-	/* !< The test cases that are run as part of the suite. Last item should be
-	 * NULL. */
-	const SDLTest_TestCaseReference** testCases;
-	/* !< The function that is run after each test. NULL skips. */
-	SDLTest_TestCaseTearDownFp testTearDown;
+  /* !< "PlatformSuite" */
+  const char *name;
+  /* !< The function that is run before each test. NULL skips. */
+  SDLTest_TestCaseSetUpFp testSetUp;
+  /* !< The test cases that are run as part of the suite. Last item should be
+   * NULL. */
+  const SDLTest_TestCaseReference **testCases;
+  /* !< The function that is run after each test. NULL skips. */
+  SDLTest_TestCaseTearDownFp testTearDown;
 } SDLTest_TestSuiteReference;
 
 /*
@@ -110,7 +110,7 @@ typedef struct SDLTest_TestSuiteReference {
  *
  * \returns the generated seed string
  */
-char* SDLTest_GenerateRunSeed(const int length);
+char *SDLTest_GenerateRunSeed(const int length);
 
 /*
  * \brief Execute a test suite using the given run seed and execution key.
@@ -125,8 +125,9 @@ char* SDLTest_GenerateRunSeed(const int length);
  *
  * \returns the test run result: 0 when all tests passed, 1 if any tests failed.
  */
-int SDLTest_RunSuites(SDLTest_TestSuiteReference* testSuites[], const char* userRunSeed,
-					  Uint64 userExecKey, const char* filter, int testIterations);
+int SDLTest_RunSuites(SDLTest_TestSuiteReference *testSuites[],
+                      const char *userRunSeed, Uint64 userExecKey,
+                      const char *filter, int testIterations);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

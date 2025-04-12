@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -104,9 +104,9 @@
 #elif defined(__PS2__)
 #define SDL_MAIN_AVAILABLE
 
-#define SDL_PS2_SKIP_IOP_RESET() \
-	void reset_IOP();            \
-	void reset_IOP() {}
+#define SDL_PS2_SKIP_IOP_RESET()                                               \
+  void reset_IOP();                                                            \
+  void reset_IOP() {}
 
 #elif defined(__3DS__)
 /*
@@ -151,8 +151,8 @@ extern "C" {
 /**
  * The prototype for the application's main() function
  */
-typedef int (*SDL_main_func)(int argc, char* argv[]);
-extern SDLMAIN_DECLSPEC int SDL_main(int argc, char* argv[]);
+typedef int (*SDL_main_func)(int argc, char *argv[]);
+extern SDLMAIN_DECLSPEC int SDL_main(int argc, char *argv[]);
 
 /**
  * Circumvent failure of SDL_Init() when not using SDL_main() as an entry
@@ -194,7 +194,8 @@ extern DECLSPEC void SDLCALL SDL_SetMainReady(void);
  *
  * \since This function is available since SDL 2.0.2.
  */
-extern DECLSPEC int SDLCALL SDL_RegisterApp(const char* name, Uint32 style, void* hInst);
+extern DECLSPEC int SDLCALL SDL_RegisterApp(const char *name, Uint32 style,
+                                            void *hInst);
 
 /**
  * Deregister the win32 window class from an SDL_RegisterApp call.
@@ -227,7 +228,8 @@ extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
  *
  * \since This function is available since SDL 2.0.3.
  */
-extern DECLSPEC int SDLCALL SDL_WinRTRunApp(SDL_main_func mainFunction, void* reserved);
+extern DECLSPEC int SDLCALL SDL_WinRTRunApp(SDL_main_func mainFunction,
+                                            void *reserved);
 
 #endif /* __WINRT__ */
 
@@ -243,7 +245,8 @@ extern DECLSPEC int SDLCALL SDL_WinRTRunApp(SDL_main_func mainFunction, void* re
  *
  * \since This function is available since SDL 2.0.10.
  */
-extern DECLSPEC int SDLCALL SDL_UIKitRunApp(int argc, char* argv[], SDL_main_func mainFunction);
+extern DECLSPEC int SDLCALL SDL_UIKitRunApp(int argc, char *argv[],
+                                            SDL_main_func mainFunction);
 
 #endif /* __IPHONEOS__ */
 
@@ -259,7 +262,8 @@ extern DECLSPEC int SDLCALL SDL_UIKitRunApp(int argc, char* argv[], SDL_main_fun
  *
  * \since This function is available since SDL 2.24.0.
  */
-extern DECLSPEC int SDLCALL SDL_GDKRunApp(SDL_main_func mainFunction, void* reserved);
+extern DECLSPEC int SDLCALL SDL_GDKRunApp(SDL_main_func mainFunction,
+                                          void *reserved);
 
 /**
  * Callback from the application to let the suspend continue.

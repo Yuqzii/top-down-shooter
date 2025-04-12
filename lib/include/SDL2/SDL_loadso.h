@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -45,6 +45,7 @@
 
 #include "SDL_error.h"
 #include "SDL_stdinc.h"
+
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -63,7 +64,7 @@ extern "C" {
  * \sa SDL_LoadFunction
  * \sa SDL_UnloadObject
  */
-extern DECLSPEC void* SDLCALL SDL_LoadObject(const char* sofile);
+extern DECLSPEC void *SDLCALL SDL_LoadObject(const char *sofile);
 
 /**
  * Look up the address of the named function in a shared object.
@@ -90,7 +91,7 @@ extern DECLSPEC void* SDLCALL SDL_LoadObject(const char* sofile);
  * \sa SDL_LoadObject
  * \sa SDL_UnloadObject
  */
-extern DECLSPEC void* SDLCALL SDL_LoadFunction(void* handle, const char* name);
+extern DECLSPEC void *SDLCALL SDL_LoadFunction(void *handle, const char *name);
 
 /**
  * Unload a shared object from memory.
@@ -102,7 +103,7 @@ extern DECLSPEC void* SDLCALL SDL_LoadFunction(void* handle, const char* name);
  * \sa SDL_LoadFunction
  * \sa SDL_LoadObject
  */
-extern DECLSPEC void SDLCALL SDL_UnloadObject(void* handle);
+extern DECLSPEC void SDLCALL SDL_UnloadObject(void *handle);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

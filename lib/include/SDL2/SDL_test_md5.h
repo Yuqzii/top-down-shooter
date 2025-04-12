@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-	 claim that you wrote the original software. If you use this software
-	 in a product, an acknowledgment in the product documentation would be
-	 appreciated but is not required.
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-	 misrepresented as being the original software.
+     misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -69,10 +69,10 @@ typedef unsigned long int MD5UINT4;
 
 /* Data structure for MD5 (Message-Digest) computation */
 typedef struct {
-	MD5UINT4 i[2];			  /* number of _bits_ handled mod 2^64 */
-	MD5UINT4 buf[4];		  /* scratch buffer */
-	unsigned char in[64];	  /* input buffer */
-	unsigned char digest[16]; /* actual digest after Md5Final call */
+  MD5UINT4 i[2];            /* number of _bits_ handled mod 2^64 */
+  MD5UINT4 buf[4];          /* scratch buffer */
+  unsigned char in[64];     /* input buffer */
+  unsigned char digest[16]; /* actual digest after Md5Final call */
 } SDLTest_Md5Context;
 
 /* ---------- Function Prototypes ------------- */
@@ -86,7 +86,7 @@ typedef struct {
  *       mdContext. Call before each new use of the context -
  *       all fields are set to zero.
  */
-void SDLTest_Md5Init(SDLTest_Md5Context* mdContext);
+void SDLTest_Md5Init(SDLTest_Md5Context *mdContext);
 
 /*
  * \brief update digest from variable length data
@@ -100,7 +100,8 @@ void SDLTest_Md5Init(SDLTest_Md5Context* mdContext);
  *       in the message whose digest is being computed.
  */
 
-void SDLTest_Md5Update(SDLTest_Md5Context* mdContext, unsigned char* inBuf, unsigned int inLen);
+void SDLTest_Md5Update(SDLTest_Md5Context *mdContext, unsigned char *inBuf,
+                       unsigned int inLen);
 
 /*
  * \brief complete digest computation
@@ -112,7 +113,7 @@ void SDLTest_Md5Update(SDLTest_Md5Context* mdContext, unsigned char* inBuf, unsi
  *       Always call before using the digest[] variable.
  */
 
-void SDLTest_Md5Final(SDLTest_Md5Context* mdContext);
+void SDLTest_Md5Final(SDLTest_Md5Context *mdContext);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
