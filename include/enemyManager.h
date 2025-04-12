@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "engine/Tree2D.h"
+
 #include "enemies/enemy.h"
+#include "engine/Tree2D.h"
 
 class Game;
 

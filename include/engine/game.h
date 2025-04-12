@@ -2,10 +2,11 @@
 
 #include <memory>
 #include <vector>
+
 #include "SDL2/SDL.h"
+#include "engine/gameObject.h"
 #include "engine/renderManager.h"
 #include "engine/vector2D.h"
-#include "engine/gameObject.h"
 
 class Scene;
 
@@ -13,7 +14,7 @@ class Game {
 public:
 	Game(const char* title, const int width, const int height);
 	~Game();
-	
+
 	// Game loop
 	void handleEvents();
 	void update();
@@ -23,8 +24,8 @@ public:
 	bool running() const { return isRunning; };
 
 	void changeScene(const int sceneIndex);
-	
-	template<class T>
+
+	template <class T>
 	void addScene();
 
 	// SDL stuff

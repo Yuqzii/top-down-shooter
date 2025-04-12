@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/scene.h"
 #include "enemyManager.h"
+#include "engine/scene.h"
 
 class Player;
 
@@ -19,5 +19,4 @@ public:
 
 private:
 	EnemyManager enemyManager;
-
 };

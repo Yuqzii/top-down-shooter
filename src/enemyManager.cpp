@@ -1,17 +1,19 @@
-#include "engine/scene.h"
 #include "enemyManager.h"
-#include "engine/game.h"
+
 #include "enemies/spider.h"
+#include "engine/game.h"
+#include "engine/scene.h"
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
 	for (std::vector<Enemy*>::iterator it = enemies.begin(); it != enemies.end();) {
 		if ((*it)->deleteObject) {
 			it = enemies.erase(it);
-		} else it++;
+		} else
+			it++;
 	}
 
-	currentTime -= deltaTime; // Update timer
+	currentTime -= deltaTime;  // Update timer
 	// Spawn enemy if timer reaches 0
 	if (currentTime <= 0) {
 		spawnEnemy(scene);
@@ -26,8 +28,7 @@ const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 	try {
 		// Try to return as const Enemy*
 		return static_cast<const Enemy*>(enemyTree->findClosestObject(target));
-	}
-	catch (int e) {
+	} catch (int e) {
 		throw e;
 		return nullptr;
 	}
@@ -39,7 +40,7 @@ void EnemyManager::spawnEnemy(Scene& scene) {
 }
 
 void EnemyManager::updateTree() {
-	enemyTree = std::make_unique<Tree2D>(); // Create new tree
+	enemyTree = std::make_unique<Tree2D>();	 // Create new tree
 	// Initialize tree with list of enemies
 	enemyTree->initializeWithList(std::vector<GameObject*>(enemies.begin(), enemies.end()));
 }

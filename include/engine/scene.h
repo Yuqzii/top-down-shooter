@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
+
 #include "SDL2/SDL.h"
-#include "engine/vector2D.h"
 #include "engine/Tree2D.h"
+#include "engine/vector2D.h"
 
 class Game;
 
@@ -21,8 +22,8 @@ public:
 	virtual void initialize();
 
 	/*
-	* @param	deltaTime	Time between current and last frame in seconds.
-	*/
+	 * @param	deltaTime	Time between current and last frame in seconds.
+	 */
 	virtual void update(const float deltaTime);
 	virtual void render(SDL_Renderer* renderer) const;
 
@@ -34,7 +35,7 @@ public:
 	 * @param	position	The position the GameObject is instantiated at.
 	 * @return	Pointer to the instantiated GameObject.
 	 */
-	template<class T>
+	template <class T>
 	T& instantiate(const vector2Df& position);
 
 	/*
@@ -49,7 +50,7 @@ public:
 private:
 	Game& game;
 
-	GameObjectVector gameObjects; 
+	GameObjectVector gameObjects;
 	Tree2D objectTree;
 	void updateObjectTree();
 };

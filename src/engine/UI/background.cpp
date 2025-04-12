@@ -1,11 +1,12 @@
 #include "engine/UI/background.h"
+
 #include <SDL2/SDL_render.h>
 
 namespace UI {
 
 Background::Background(const vector2Df& position, const vector2Df& size, const SDL_Color& color,
-						Widget* parent, AnchorType anchorPosition)
-						: Widget(parent, anchorPosition) {
+					   Widget* parent, AnchorType anchorPosition)
+	: Widget(parent, anchorPosition) {
 	// Set variables
 	localPosition = position;
 	localSize = size;
@@ -37,4 +38,4 @@ void Background::calculateSize() {
 	rect.h = size.y;
 }
 
-}
+}  // namespace UI
