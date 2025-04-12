@@ -38,6 +38,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 			steering += flee(combatScene->player.getPivotPosition()) * 1.75f;
 			avoidOtherEnemies(0.3f);
 
+			// Change to pursuit after repositionTime has passed
 			repositionTimer -= deltaTime;
 			if (repositionTimer <= 0) {
 				setState(PURSUIT);

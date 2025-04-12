@@ -104,13 +104,17 @@ void GameObject::checkCollisions(const Scene& scene) {
 			continue;
 
 		switch (object->collisionType) {
-			case Collision::Types::CIRCLE:
+			using namespace Collision;
+			using enum Types;
+
+			case CIRCLE:
 				if (Collision::checkCollision(circleCollider, object->circleCollider)) {
 					addCollision(object);
 					object->addCollision(this);
 				}
 				break;
-			case Collision::Types::POINT:
+
+			case POINT:
 				if (Collision::checkCollision(object->getPivotPosition(), circleCollider)) {
 					addCollision(object);
 				}

@@ -10,7 +10,8 @@ struct AnimationData {
 };
 
 struct AnimationEvent {
-	const int sequenceId;
-	const float time;
-	const std::function<void(Scene&)> event;
+	const int sequenceId; // Sequence this event applies to
+	// The frame/time in the animation the event fires. F.ex. 5.5f for between frame 5 and 6.
+	const float time; 
+	const std::function<void(Scene&)> event; // Function to call
 };
