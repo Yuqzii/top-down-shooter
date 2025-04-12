@@ -65,7 +65,6 @@ class EnemyAttackPoint : public GameObject {
 public:
 	EnemyAttackPoint();
 
-
 	void initializeParent(const Enemy* parent);
 	const Enemy* parent;
 
