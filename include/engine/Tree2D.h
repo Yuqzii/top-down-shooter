@@ -10,7 +10,7 @@ class GameObject;
 
 // Two dimensional KD-Tree structure
 class Tree2D {
-   public:
+public:
 	// Constructor to initialize root to nullptr
 	Tree2D();
 	~Tree2D();
@@ -38,7 +38,7 @@ class Tree2D {
 	// Includes objects where the distance is zero, unlike the other queries.
 	std::vector<GameObject*> findObjectsInRange(const vector2Df& target, const float range) const;
 
-   private:
+private:
 	struct Node {
 		const std::array<float, 2> point;
 		Node* left;

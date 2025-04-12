@@ -5,7 +5,7 @@
 class Game;
 
 class Bullet : public GameObject {
-   public:
+public:
 	void initialize(const vector2Df& startPosition, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
@@ -16,10 +16,10 @@ class Bullet : public GameObject {
 
 	float getDamage() const { return damage; }
 
-   protected:
+protected:
 	SETOBJECTTEXTURE("bullet.png");
 
-   private:
+private:
 	vector2Df direction;
 	vector2Df previousPosition;
 	constexpr static const float speed = 1000;

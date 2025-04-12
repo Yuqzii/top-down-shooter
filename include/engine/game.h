@@ -11,7 +11,7 @@
 class Scene;
 
 class Game {
-   public:
+public:
 	Game(const char* title, const int width, const int height);
 	~Game();
 
@@ -38,7 +38,7 @@ class Game {
 	const std::array<bool, 32>& getMouseInput() const { return mouseInput; }
 	const vector2Df& getMousePos() const { return mousePos; }
 
-   private:
+private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;

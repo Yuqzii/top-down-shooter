@@ -7,18 +7,18 @@
 class Game;
 
 class Player : public GameObject {
-   public:
+public:
 	Player();
 
 	void initialize(const vector2Df& position, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
-   protected:
+protected:
 	SETOBJECTTEXTURE("player.png");
 
 	void onCollision(const GameObject& other) override;
 
-   private:
+private:
 	inline void pointToMouse(const Scene& scene);
 	inline void shoot(Scene& scene) const;
 

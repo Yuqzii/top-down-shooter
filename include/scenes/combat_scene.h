@@ -6,7 +6,7 @@
 class Player;
 
 class CombatScene : public Scene {
-   public:
+public:
 	CombatScene(Game& game_) : Scene(game_), player(instantiate<Player>(vector2Df(700, 400))) {}
 
 	void initialize(GameObjectVector& persistentObjects) override;
@@ -17,6 +17,6 @@ class CombatScene : public Scene {
 	const Player& player;
 	const EnemyManager& getEnemyManager() const { return enemyManager; }
 
-   private:
+private:
 	EnemyManager enemyManager;
 };

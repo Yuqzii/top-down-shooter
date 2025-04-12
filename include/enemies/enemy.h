@@ -15,7 +15,7 @@ enum class EnemyStates {
 };
 
 class Enemy : public GameObject {
-   public:
+public:
 	Enemy(const float startHealth = 100.0f, const float damage = 10.0f,
 		  const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
 		  const float steerMult = 2.0f, const float slowingRadius = 100.0f);
@@ -27,7 +27,7 @@ class Enemy : public GameObject {
 
 	const float damage;
 
-   protected:
+protected:
 	// Steering behaviors
 	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;
@@ -44,7 +44,7 @@ class Enemy : public GameObject {
 
 	std::function<void(SDL_Renderer*)> debugRender() const override;
 
-   private:
+private:
 	const float moveSpeed;
 	const float maxSteer;
 	const float steerStrength;
@@ -62,12 +62,12 @@ class Enemy : public GameObject {
 };
 
 class EnemyAttackPoint : public GameObject {
-   public:
+public:
 	EnemyAttackPoint();
 
 	void initializeParent(const Enemy* parent);
 	const Enemy* parent;
 
-   protected:
+protected:
 	SETOBJECTTEXTURE("empty.png");
 };

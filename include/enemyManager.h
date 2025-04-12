@@ -8,7 +8,7 @@
 class Game;
 
 class EnemyManager {
-   public:
+public:
 	void update(Scene& scene, const float deltaTime);
 
 	// Returns a vector of all enemies
@@ -16,7 +16,7 @@ class EnemyManager {
 	// Returns the position of the closest enemy
 	const Enemy* findClosestEnemy(const vector2Df& target) const;
 
-   private:
+private:
 	std::vector<Enemy*> enemies;
 	constexpr const static float startTime = 3;
 	float currentTime = 0;

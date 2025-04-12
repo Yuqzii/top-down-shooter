@@ -20,7 +20,7 @@
 class Scene;
 
 class GameObject {
-   public:
+public:
 	GameObject();
 	virtual ~GameObject() = default;
 
@@ -53,7 +53,7 @@ class GameObject {
 
 	bool deleteObject;	// When true object is deleted on next frame
 
-   protected:
+protected:
 	// Position and rotation
 	vector2Df velocity;
 	vector2Df pivotPosition;
@@ -99,7 +99,7 @@ class GameObject {
 
 	virtual std::function<void(SDL_Renderer*)> debugRender() const;
 
-   private:
+private:
 	SDL_Texture* texture;
 
 	vector2Df position;

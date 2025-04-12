@@ -14,7 +14,7 @@ namespace UI {
 // but child widgets should be made as raw pointers using the "new" keyword with
 // a pointer to the parent widget as a constructor argument
 class Widget {
-   public:
+public:
 	Widget(Widget* parent = nullptr, AnchorType anchorPosition = AnchorType());
 	virtual ~Widget() = default;
 
@@ -33,13 +33,13 @@ class Widget {
 	vector2Df localPosition;
 	vector2Df localSize;
 
-   protected:
+protected:
 	Widget* parent;
 
 	vector2D position;	// Rendering position, pixels
 	vector2Df size;
 
-   private:
+private:
 	AnchorType anchorPosition;
 	std::list<std::unique_ptr<Widget>> childWidgets;
 };

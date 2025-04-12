@@ -8,7 +8,7 @@
 class GameObject;
 
 class RenderManager {
-   public:
+public:
 	RenderManager();
 
 	// Adds a rendering call to the list that will be rendered.
@@ -21,7 +21,7 @@ class RenderManager {
 	void update();
 	void render(SDL_Renderer* renderer) const;
 
-   private:
+private:
 	// Render function, parent
 	std::vector<std::pair<std::function<void(SDL_Renderer*)>, const GameObject*>> renderCalls;
 	int renderCallCnt;	// Keep track of amount of calls to avoid clearing vector

@@ -11,7 +11,7 @@ class Game;
 typedef std::vector<std::unique_ptr<GameObject>> GameObjectVector;
 
 class Scene {
-   public:
+public:
 	Scene(Game& game);
 	virtual ~Scene() = default;
 
@@ -48,7 +48,7 @@ class Scene {
 
 	void reset();
 
-   private:
+private:
 	Game& game;
 
 	GameObjectVector gameObjects;
