@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -28,9 +28,8 @@
 #ifndef SDL_sensor_h_
 #define SDL_sensor_h_
 
-#include "SDL_stdinc.h"
 #include "SDL_error.h"
-
+#include "SDL_stdinc.h"
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -111,16 +110,16 @@ typedef Sint32 SDL_SensorID;
  *
  * \sa SDL_GetDisplayOrientation
  */
-typedef enum SDL_SensorType
-{
-    SDL_SENSOR_INVALID = -1,    /**< Returned for an invalid sensor */
-    SDL_SENSOR_UNKNOWN,         /**< Unknown sensor type */
-    SDL_SENSOR_ACCEL,           /**< Accelerometer */
-    SDL_SENSOR_GYRO,            /**< Gyroscope */
-    SDL_SENSOR_ACCEL_L,         /**< Accelerometer for left Joy-Con controller and Wii nunchuk */
-    SDL_SENSOR_GYRO_L,          /**< Gyroscope for left Joy-Con controller */
-    SDL_SENSOR_ACCEL_R,         /**< Accelerometer for right Joy-Con controller */
-    SDL_SENSOR_GYRO_R           /**< Gyroscope for right Joy-Con controller */
+typedef enum SDL_SensorType {
+	SDL_SENSOR_INVALID = -1, /**< Returned for an invalid sensor */
+	SDL_SENSOR_UNKNOWN,		 /**< Unknown sensor type */
+	SDL_SENSOR_ACCEL,		 /**< Accelerometer */
+	SDL_SENSOR_GYRO,		 /**< Gyroscope */
+	SDL_SENSOR_ACCEL_L,		 /**< Accelerometer for left Joy-Con controller and Wii
+								nunchuk */
+	SDL_SENSOR_GYRO_L,		 /**< Gyroscope for left Joy-Con controller */
+	SDL_SENSOR_ACCEL_R,		 /**< Accelerometer for right Joy-Con controller */
+	SDL_SENSOR_GYRO_R		 /**< Gyroscope for right Joy-Con controller */
 } SDL_SensorType;
 
 /**
@@ -131,7 +130,7 @@ typedef enum SDL_SensorType
  * rest will have an value of SDL_STANDARD_GRAVITY away from the center of the
  * earth, which is a positive Y value.
  */
-#define SDL_STANDARD_GRAVITY    9.80665f
+#define SDL_STANDARD_GRAVITY 9.80665f
 
 /* Function prototypes */
 
@@ -167,7 +166,7 @@ extern DECLSPEC int SDLCALL SDL_NumSensors(void);
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC const char *SDLCALL SDL_SensorGetDeviceName(int device_index);
+extern DECLSPEC const char* SDLCALL SDL_SensorGetDeviceName(int device_index);
 
 /**
  * Get the type of a sensor.
@@ -209,7 +208,7 @@ extern DECLSPEC SDL_SensorID SDLCALL SDL_SensorGetDeviceInstanceID(int device_in
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC SDL_Sensor *SDLCALL SDL_SensorOpen(int device_index);
+extern DECLSPEC SDL_Sensor* SDLCALL SDL_SensorOpen(int device_index);
 
 /**
  * Return the SDL_Sensor associated with an instance id.
@@ -219,7 +218,7 @@ extern DECLSPEC SDL_Sensor *SDLCALL SDL_SensorOpen(int device_index);
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC SDL_Sensor *SDLCALL SDL_SensorFromInstanceID(SDL_SensorID instance_id);
+extern DECLSPEC SDL_Sensor* SDLCALL SDL_SensorFromInstanceID(SDL_SensorID instance_id);
 
 /**
  * Get the implementation dependent name of a sensor
@@ -229,7 +228,7 @@ extern DECLSPEC SDL_Sensor *SDLCALL SDL_SensorFromInstanceID(SDL_SensorID instan
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC const char *SDLCALL SDL_SensorGetName(SDL_Sensor *sensor);
+extern DECLSPEC const char* SDLCALL SDL_SensorGetName(SDL_Sensor* sensor);
 
 /**
  * Get the type of a sensor.
@@ -240,7 +239,7 @@ extern DECLSPEC const char *SDLCALL SDL_SensorGetName(SDL_Sensor *sensor);
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC SDL_SensorType SDLCALL SDL_SensorGetType(SDL_Sensor *sensor);
+extern DECLSPEC SDL_SensorType SDLCALL SDL_SensorGetType(SDL_Sensor* sensor);
 
 /**
  * Get the platform dependent type of a sensor.
@@ -250,7 +249,7 @@ extern DECLSPEC SDL_SensorType SDLCALL SDL_SensorGetType(SDL_Sensor *sensor);
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC int SDLCALL SDL_SensorGetNonPortableType(SDL_Sensor *sensor);
+extern DECLSPEC int SDLCALL SDL_SensorGetNonPortableType(SDL_Sensor* sensor);
 
 /**
  * Get the instance ID of a sensor.
@@ -260,7 +259,7 @@ extern DECLSPEC int SDLCALL SDL_SensorGetNonPortableType(SDL_Sensor *sensor);
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC SDL_SensorID SDLCALL SDL_SensorGetInstanceID(SDL_Sensor *sensor);
+extern DECLSPEC SDL_SensorID SDLCALL SDL_SensorGetInstanceID(SDL_Sensor* sensor);
 
 /**
  * Get the current state of an opened sensor.
@@ -274,7 +273,7 @@ extern DECLSPEC SDL_SensorID SDLCALL SDL_SensorGetInstanceID(SDL_Sensor *sensor)
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC int SDLCALL SDL_SensorGetData(SDL_Sensor *sensor, float *data, int num_values);
+extern DECLSPEC int SDLCALL SDL_SensorGetData(SDL_Sensor* sensor, float* data, int num_values);
 
 /**
  * Get the current state of an opened sensor with the timestamp of the last
@@ -291,7 +290,8 @@ extern DECLSPEC int SDLCALL SDL_SensorGetData(SDL_Sensor *sensor, float *data, i
  *
  * \since This function is available since SDL 2.26.0.
  */
-extern DECLSPEC int SDLCALL SDL_SensorGetDataWithTimestamp(SDL_Sensor *sensor, Uint64 *timestamp, float *data, int num_values);
+extern DECLSPEC int SDLCALL SDL_SensorGetDataWithTimestamp(SDL_Sensor* sensor, Uint64* timestamp,
+														   float* data, int num_values);
 
 /**
  * Close a sensor previously opened with SDL_SensorOpen().
@@ -300,7 +300,7 @@ extern DECLSPEC int SDLCALL SDL_SensorGetDataWithTimestamp(SDL_Sensor *sensor, U
  *
  * \since This function is available since SDL 2.0.9.
  */
-extern DECLSPEC void SDLCALL SDL_SensorClose(SDL_Sensor *sensor);
+extern DECLSPEC void SDLCALL SDL_SensorClose(SDL_Sensor* sensor);
 
 /**
  * Update the current state of the open sensors.
@@ -314,7 +314,6 @@ extern DECLSPEC void SDLCALL SDL_SensorClose(SDL_Sensor *sensor);
  * \since This function is available since SDL 2.0.9.
  */
 extern DECLSPEC void SDLCALL SDL_SensorUpdate(void);
-
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

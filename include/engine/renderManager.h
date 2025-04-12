@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <vector>
+
 #include "SDL2/SDL_render.h"
 
 class GameObject;
@@ -23,5 +24,6 @@ public:
 private:
 	// Render function, parent
 	std::vector<std::pair<std::function<void(SDL_Renderer*)>, const GameObject*>> renderCalls;
-	int renderCallCnt; // Keep track of amount of calls to avoid clearing vector every frame
+	int renderCallCnt;	// Keep track of amount of calls to avoid clearing vector
+						// every frame
 };

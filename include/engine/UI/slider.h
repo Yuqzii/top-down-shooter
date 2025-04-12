@@ -14,4 +14,4 @@ private:
 	float sliderValue;
 };
 
-}
+}  // namespace UI

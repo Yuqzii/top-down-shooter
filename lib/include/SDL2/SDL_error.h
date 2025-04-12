@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -29,7 +29,6 @@
 #define SDL_error_h_
 
 #include "SDL_stdinc.h"
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -37,7 +36,6 @@ extern "C" {
 #endif
 
 /* Public functions */
-
 
 /**
  * Set the SDL error message for the current thread.
@@ -63,7 +61,8 @@ extern "C" {
  * \sa SDL_ClearError
  * \sa SDL_GetError
  */
-extern DECLSPEC int SDLCALL SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...) SDL_PRINTF_VARARG_FUNC(1);
+extern DECLSPEC int SDLCALL SDL_SetError(SDL_PRINTF_FORMAT_STRING const char* fmt, ...)
+	SDL_PRINTF_VARARG_FUNC(1);
 
 /**
  * Retrieve a message about the last error that occurred on the current
@@ -100,7 +99,7 @@ extern DECLSPEC int SDLCALL SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fm
  * \sa SDL_ClearError
  * \sa SDL_SetError
  */
-extern DECLSPEC const char *SDLCALL SDL_GetError(void);
+extern DECLSPEC const char* SDLCALL SDL_GetError(void);
 
 /**
  * Get the last error message that was set for the current thread.
@@ -117,7 +116,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetError(void);
  *
  * \sa SDL_GetError
  */
-extern DECLSPEC char * SDLCALL SDL_GetErrorMsg(char *errstr, int maxlen);
+extern DECLSPEC char* SDLCALL SDL_GetErrorMsg(char* errstr, int maxlen);
 
 /**
  * Clear any previous error message for this thread.
@@ -136,21 +135,20 @@ extern DECLSPEC void SDLCALL SDL_ClearError(void);
  *  Private error reporting function - used internally.
  */
 /* @{ */
-#define SDL_OutOfMemory()   SDL_Error(SDL_ENOMEM)
-#define SDL_Unsupported()   SDL_Error(SDL_UNSUPPORTED)
-#define SDL_InvalidParamError(param)    SDL_SetError("Parameter '%s' is invalid", (param))
-typedef enum
-{
-    SDL_ENOMEM,
-    SDL_EFREAD,
-    SDL_EFWRITE,
-    SDL_EFSEEK,
-    SDL_UNSUPPORTED,
-    SDL_LASTERROR
+#define SDL_OutOfMemory() SDL_Error(SDL_ENOMEM)
+#define SDL_Unsupported() SDL_Error(SDL_UNSUPPORTED)
+#define SDL_InvalidParamError(param) SDL_SetError("Parameter '%s' is invalid", (param))
+typedef enum {
+	SDL_ENOMEM,
+	SDL_EFREAD,
+	SDL_EFWRITE,
+	SDL_EFSEEK,
+	SDL_UNSUPPORTED,
+	SDL_LASTERROR
 } SDL_errorcode;
 /* SDL_Error() unconditionally returns -1. */
 extern DECLSPEC int SDLCALL SDL_Error(SDL_errorcode code);
-/* @} *//* Internal error functions */
+/* @} */ /* Internal error functions */
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

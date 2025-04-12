@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -43,18 +43,20 @@ extern "C" {
 #endif
 
 /*
- * \brief Prints given message with a timestamp in the TEST category and INFO priority.
+ * \brief Prints given message with a timestamp in the TEST category and INFO
+ * priority.
  *
  * \param fmt Message to be logged
  */
-void SDLTest_Log(SDL_PRINTF_FORMAT_STRING const char *fmt, ...) SDL_PRINTF_VARARG_FUNC(1);
+void SDLTest_Log(SDL_PRINTF_FORMAT_STRING const char* fmt, ...) SDL_PRINTF_VARARG_FUNC(1);
 
 /*
- * \brief Prints given message with a timestamp in the TEST category and the ERROR priority.
+ * \brief Prints given message with a timestamp in the TEST category and the
+ * ERROR priority.
  *
  * \param fmt Message to be logged
  */
-void SDLTest_LogError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...) SDL_PRINTF_VARARG_FUNC(1);
+void SDLTest_LogError(SDL_PRINTF_FORMAT_STRING const char* fmt, ...) SDL_PRINTF_VARARG_FUNC(1);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
