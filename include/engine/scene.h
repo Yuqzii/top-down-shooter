@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
+
 #include "SDL2/SDL.h"
-#include "engine/vector2D.h"
 #include "engine/Tree2D.h"
+#include "engine/vector2D.h"
 
 class Game;
 
@@ -15,26 +16,27 @@ public:
 	virtual ~Scene() = default;
 
 	/*
-	 * @param	persistentObjects	The gameObjects this scene will be initialized with.
+	 * @param	persistentObjects	The gameObjects this scene will be
+	 * initialized with.
 	 */
 	virtual void initialize(GameObjectVector& persistentObjects);
 	virtual void initialize();
 
 	/*
-	* @param	deltaTime	Time between current and last frame in seconds.
-	*/
+	 * @param	deltaTime	Time between current and last frame in seconds.
+	 */
 	virtual void update(const float deltaTime);
 	virtual void render(SDL_Renderer* renderer) const;
 
-	// Removes GameObjects marked for deletion. Should be run after updating managers, etc.
-	// MUST BE CALLED AT THE END OF EVERY UPDATE.
+	// Removes GameObjects marked for deletion. Should be run after updating
+	// managers, etc. MUST BE CALLED AT THE END OF EVERY UPDATE.
 	void updateDelete();
 
 	/*
 	 * @param	position	The position the GameObject is instantiated at.
 	 * @return	Pointer to the instantiated GameObject.
 	 */
-	template<class T>
+	template <class T>
 	T& instantiate(const vector2Df& position);
 
 	/*
@@ -49,7 +51,7 @@ public:
 private:
 	Game& game;
 
-	GameObjectVector gameObjects; 
+	GameObjectVector gameObjects;
 	Tree2D objectTree;
 	void updateObjectTree();
 };

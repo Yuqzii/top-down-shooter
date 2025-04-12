@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -41,15 +41,14 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1500) && (defined(_M_IX86) || defined(_M_X64))
 #ifdef __clang__
 /* As of Clang 11, '_m_prefetchw' is conflicting with the winnt.h's version,
-   so we define the needed '_m_prefetch' here as a pseudo-header, until the issue is fixed. */
+   so we define the needed '_m_prefetch' here as a pseudo-header, until the
+   issue is fixed. */
 
 #ifndef __PRFCHWINTRIN_H
 #define __PRFCHWINTRIN_H
 
-static __inline__ void __attribute__((__always_inline__, __nodebug__))
-_m_prefetch(void *__P)
-{
-  __builtin_prefetch (__P, 0, 3 /* _MM_HINT_T0 */);
+static __inline__ void __attribute__((__always_inline__, __nodebug__)) _m_prefetch(void* __P) {
+	__builtin_prefetch(__P, 0, 3 /* _MM_HINT_T0 */);
 }
 
 #endif /* __PRFCHWINTRIN_H */
@@ -77,30 +76,34 @@ _m_prefetch(void *__P)
 #elif defined(__MINGW64_VERSION_MAJOR)
 #include <intrin.h>
 #if !defined(SDL_DISABLE_ARM_NEON_H) && defined(__ARM_NEON)
-#  include <arm_neon.h>
+#include <arm_neon.h>
 #endif
 #else
-/* altivec.h redefining bool causes a number of problems, see bugs 3993 and 4392, so you need to explicitly define SDL_ENABLE_ALTIVEC_H to have it included. */
-#if defined(HAVE_ALTIVEC_H) && defined(__ALTIVEC__) && !defined(__APPLE_ALTIVEC__) && defined(SDL_ENABLE_ALTIVEC_H)
+/* altivec.h redefining bool causes a number of problems, see bugs 3993 and
+ * 4392, so you need to explicitly define SDL_ENABLE_ALTIVEC_H to have it
+ * included. */
+#if defined(HAVE_ALTIVEC_H) && defined(__ALTIVEC__) && !defined(__APPLE_ALTIVEC__) && \
+	defined(SDL_ENABLE_ALTIVEC_H)
 #include <altivec.h>
 #endif
 #if !defined(SDL_DISABLE_ARM_NEON_H)
-#  if defined(__ARM_NEON)
-#    include <arm_neon.h>
-#  elif defined(__WINDOWS__) || defined(__WINRT__) || defined(__GDK__)
-/* Visual Studio doesn't define __ARM_ARCH, but _M_ARM (if set, always 7), and _M_ARM64 (if set, always 1). */
-#    if defined(_M_ARM)
-#      include <armintr.h>
-#      include <arm_neon.h>
-#      define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
-#    endif
-#    if defined (_M_ARM64)
-#      include <arm64intr.h>
-#      include <arm64_neon.h>
-#      define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
-#      define __ARM_ARCH 8
-#    endif
-#  endif
+#if defined(__ARM_NEON)
+#include <arm_neon.h>
+#elif defined(__WINDOWS__) || defined(__WINRT__) || defined(__GDK__)
+/* Visual Studio doesn't define __ARM_ARCH, but _M_ARM (if set, always 7), and
+ * _M_ARM64 (if set, always 1). */
+#if defined(_M_ARM)
+#include <arm_neon.h>
+#include <armintr.h>
+#define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
+#endif
+#if defined(_M_ARM64)
+#include <arm64_neon.h>
+#include <arm64intr.h>
+#define __ARM_NEON 1 /* Set __ARM_NEON so that it can be used elsewhere, at compile time */
+#define __ARM_ARCH 8
+#endif
+#endif
 #endif
 #endif /* compiler version */
 
@@ -143,7 +146,7 @@ extern "C" {
  * The 64-bit PowerPC processors have a 128 byte cache line.
  * We'll use the larger value to be generally safe.
  */
-#define SDL_CACHELINE_SIZE  128
+#define SDL_CACHELINE_SIZE 128
 
 /**
  * Get the number of CPU cores available.
@@ -541,7 +544,7 @@ extern DECLSPEC size_t SDLCALL SDL_SIMDGetAlignment(void);
  * \sa SDL_SIMDRealloc
  * \sa SDL_SIMDFree
  */
-extern DECLSPEC void * SDLCALL SDL_SIMDAlloc(const size_t len);
+extern DECLSPEC void* SDLCALL SDL_SIMDAlloc(const size_t len);
 
 /**
  * Reallocate memory obtained from SDL_SIMDAlloc
@@ -565,7 +568,7 @@ extern DECLSPEC void * SDLCALL SDL_SIMDAlloc(const size_t len);
  * \sa SDL_SIMDAlloc
  * \sa SDL_SIMDFree
  */
-extern DECLSPEC void * SDLCALL SDL_SIMDRealloc(void *mem, const size_t len);
+extern DECLSPEC void* SDLCALL SDL_SIMDRealloc(void* mem, const size_t len);
 
 /**
  * Deallocate memory obtained from SDL_SIMDAlloc
@@ -589,7 +592,7 @@ extern DECLSPEC void * SDLCALL SDL_SIMDRealloc(void *mem, const size_t len);
  * \sa SDL_SIMDAlloc
  * \sa SDL_SIMDRealloc
  */
-extern DECLSPEC void SDLCALL SDL_SIMDFree(void *ptr);
+extern DECLSPEC void SDLCALL SDL_SIMDFree(void* ptr);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

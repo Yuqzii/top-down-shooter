@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <vector>
+
 #include "SDL2/SDL_render.h"
 
 class GameObject;

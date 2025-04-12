@@ -19,4 +19,4 @@ private:
 	SDL_Rect rect;
 };
 
-}
+}  // namespace UI

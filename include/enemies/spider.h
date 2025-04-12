@@ -4,39 +4,19 @@
 
 class SpiderEnemy : public Enemy {
 public:
-<<<<<<< HEAD
-<<<<<<< HEAD
 	SpiderEnemy(const float startHealth = 100.0f, const float damage = 10.0f,
 				const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
 				const float steerMult = 2.0f, const float slowingRadius = 300.0f);
-=======
-  SpiderEnemy(const float startHealth = 100.0f, const float damage = 10.0f,
-              const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
-              const float steerMult = 2.0f, const float slowingRadius = 300.0f);
->>>>>>> parent of 3336e98 (chore: fix linting issues)
-=======
-	SpiderEnemy(const float startHealth = 100.0f, const float damage = 10.0f,
-			const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
-			const float steerMult = 2.0f, const float slowingRadius = 300.0f);
->>>>>>> parent of 208a3b6 (chore: fix linting issues)
 
 	void update(Scene& scene, const float deltaTime) override;
 
 protected:
-<<<<<<< HEAD
-<<<<<<< HEAD
 	SETOBJECTTEXTURE("spider-sheet.png");
-=======
-  SETOBJECTTEXTURE("spider-sheet.png");
->>>>>>> parent of 3336e98 (chore: fix linting issues)
-=======
-	SETOBJECTTEXTURE("spider-sheet.png");
->>>>>>> parent of 208a3b6 (chore: fix linting issues)
 
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
-			{ 4, 20 }, // Crawl
-			{ 6, 15 }, // Attack
+			{4, 20},  // Crawl
+			{6, 15},  // Attack
 		};
 		return data;
 	};
@@ -46,15 +26,7 @@ protected:
 	}
 
 private:
-<<<<<<< HEAD
-<<<<<<< HEAD
 	std::vector<AnimationEvent> animationEvents;
-=======
-  std::vector<AnimationEvent> animationEvents;
->>>>>>> parent of 3336e98 (chore: fix linting issues)
-=======
-	std::vector<AnimationEvent> animationEvents;
->>>>>>> parent of 208a3b6 (chore: fix linting issues)
 
 	void setState(const EnemyStates newState) override;
 

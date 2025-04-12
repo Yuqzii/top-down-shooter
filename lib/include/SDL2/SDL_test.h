@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -43,7 +43,6 @@
 #include "SDL_test_md5.h"
 #include "SDL_test_memory.h"
 #include "SDL_test_random.h"
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -56,7 +55,7 @@ extern "C" {
  * Note: Maximum size of SDLTest log message is less than SDL's limit
  * to ensure we can fit additional information such as the timestamp.
  */
-#define SDLTEST_MAX_LOGMESSAGE_LENGTH   3584
+#define SDLTEST_MAX_LOGMESSAGE_LENGTH 3584
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

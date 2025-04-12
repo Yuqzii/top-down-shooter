@@ -4,14 +4,15 @@
 #include <list>
 #include <memory>
 #include <vector>
+
 #include "SDL2/SDL_render.h"
-#include "engine/vector2D.h"
 #include "engine/UI/anchorTypes.h"
+#include "engine/vector2D.h"
 
 namespace UI {
 // A widget without a parent should be constructed normally as an object,
-// but child widgets should be made as raw pointers using the "new" keyword with a pointer to the
-// parent widget as a constructor argument
+// but child widgets should be made as raw pointers using the "new" keyword with
+// a pointer to the parent widget as a constructor argument
 class Widget {
 public:
 	Widget(Widget* parent = nullptr, AnchorType anchorPosition = AnchorType());
@@ -27,7 +28,7 @@ public:
 	virtual void calculateSize();
 
 	void addChild(Widget* child);
-	
+
 	// If widget has parent these values are based on percentage of parent size
 	vector2Df localPosition;
 	vector2Df localSize;
@@ -35,7 +36,7 @@ public:
 protected:
 	Widget* parent;
 
-	vector2D position; // Rendering position, pixels
+	vector2D position;	// Rendering position, pixels
 	vector2Df size;
 
 private:
@@ -43,4 +44,4 @@ private:
 	std::list<std::unique_ptr<Widget>> childWidgets;
 };
 
-}
+}  // namespace UI

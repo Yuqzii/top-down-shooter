@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <vector>
+
 #include "SDL2/SDL_render.h"
 
 class GameObject;
@@ -30,4 +31,4 @@ private:
 	int renderCallCnt;	// Keep track of amount of calls to avoid clearing vector every frame
 };
 
-}
+}  // namespace UI

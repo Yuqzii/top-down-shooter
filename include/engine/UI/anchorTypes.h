@@ -21,4 +21,4 @@ struct AnchorType {
 	YAnchorType y;
 };
 
-}
+}  // namespace UI

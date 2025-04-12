@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL_rect.h>
+
 #include "engine/vector2D.h"
 
 class SDL_Renderer;
@@ -9,8 +10,8 @@ namespace Collision {
 
 enum class Types {
 	CIRCLE = 0,
-	// POINT is only used checking collision that is not part of standard collider,
-	// not in a "full" GameObject.
+	// POINT is only used checking collision that is not part of standard
+	// collider, not in a "full" GameObject.
 	POINT,
 };
 
@@ -36,4 +37,4 @@ bool checkCollision(const vector2Df& point, const Circle& circle);
 bool checkCollision(const Circle& circle, const Line& line);
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);
-}
+}  // namespace Collision

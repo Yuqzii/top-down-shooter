@@ -1,4 +1,5 @@
 #include "engine/collision.h"
+
 #include "SDL2/SDL_render.h"
 
 namespace Collision {
@@ -10,19 +11,17 @@ int distanceSquared(const vector2D& a, const vector2D& b) {
 	return deltaX * deltaX + deltaY * deltaY;
 }
 
-int roundUpToMultipleOfEight(int x) {
-	return (x + (8 - 1)) & -8;
-}
+int roundUpToMultipleOfEight(int x) { return (x + (8 - 1)) & -8; }
 
 vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
 	vector2Df tangent = line.end - line.start;
 
 	if ((point - line.start).crossProduct(tangent) <= 0) {
-		return line.start; // point is at or before start of line
+		return line.start;	// point is at or before start of line
 	}
 
 	if ((point - line.end).crossProduct(tangent) >= 0) {
-		return line.end; // point is at after end of line
+		return line.end;  // point is at after end of line
 	}
 
 	tangent = tangent.normalized();
@@ -30,22 +29,22 @@ vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
 	return line.start + tangent * (tangent.crossProduct(relativePos));
 }
 
-}
+}  // namespace
 
 // Returns true if rect a overlaps with rect b
 bool checkCollision(const SDL_Rect& a, const SDL_Rect& b) {
 	if (a.y + a.h <= b.y || a.y >= b.y + b.h || a.x + a.w <= b.x || a.x >= b.x + b.w) {
 		return false;
-	}
-	else {
+	} else {
 		return true;
 	}
 }
 
 bool checkCollision(const Circle& a, const Circle& b) {
 	// We can use distance squared instead of just distance to optimize,
-	// because getting the normal distance requires square root (an expensive operation),
-	// but if x > y then x^2 > y^2, so we can square both values and compare instead
+	// because getting the normal distance requires square root (an expensive
+	// operation), but if x > y then x^2 > y^2, so we can square both values and
+	// compare instead
 	int totalRadiusSquared = (a.radius + b.radius);
 	totalRadiusSquared *= totalRadiusSquared;
 
@@ -85,23 +84,23 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 
 	while (x >= y) {
 		// Each of the following renders and octant of the circle
-		points[drawCount+0] = { collider.position.x + x, collider.position.y - y };
-        points[drawCount+1] = { collider.position.x + x, collider.position.y + y };
-        points[drawCount+2] = { collider.position.x - x, collider.position.y - y };
-        points[drawCount+3] = { collider.position.x - x, collider.position.y + y };
-        points[drawCount+4] = { collider.position.x + y, collider.position.y - x };
-        points[drawCount+5] = { collider.position.x + y, collider.position.y + x };
-        points[drawCount+6] = { collider.position.x - y, collider.position.y - x };
-        points[drawCount+7] = { collider.position.x - y, collider.position.y + x };
+		points[drawCount + 0] = {collider.position.x + x, collider.position.y - y};
+		points[drawCount + 1] = {collider.position.x + x, collider.position.y + y};
+		points[drawCount + 2] = {collider.position.x - x, collider.position.y - y};
+		points[drawCount + 3] = {collider.position.x - x, collider.position.y + y};
+		points[drawCount + 4] = {collider.position.x + y, collider.position.y - x};
+		points[drawCount + 5] = {collider.position.x + y, collider.position.y + x};
+		points[drawCount + 6] = {collider.position.x - y, collider.position.y - x};
+		points[drawCount + 7] = {collider.position.x - y, collider.position.y + x};
 
-        drawCount += 8;
+		drawCount += 8;
 
 		if (error <= 0) {
 			y++;
 			error += ty;
 			ty += 2;
 		}
-		
+
 		if (error > 0) {
 			x--;
 			tx += 2;
@@ -113,4 +112,4 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 	SDL_RenderDrawPoints(renderer, points, drawCount);
 }
 
-}
+}  // namespace Collision
