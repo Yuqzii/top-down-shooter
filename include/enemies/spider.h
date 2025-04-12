@@ -6,7 +6,7 @@ class SpiderEnemy : public Enemy {
 public:
 	SpiderEnemy(const float startHealth = 100.0f, const float damage = 10.0f,
 			const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
-			const float steerMult = 2.0f, const float slowingRadius = 375.0f);
+			const float steerMult = 2.0f, const float slowingRadius = 300.0f);
 
 	void update(Scene& scene, const float deltaTime) override;
 
@@ -35,6 +35,6 @@ private:
 	// Called at the appropriate time during the attack animation
 	void attack(Scene& scene);
 	void attackRangeCheck();
-	constexpr static const float repositionTime = 2.5f;
+	constexpr static const float repositionTime = 1.0f;
 	float repositionTimer = repositionTime;
 };

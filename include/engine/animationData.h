@@ -11,6 +11,6 @@ struct AnimationData {
 
 struct AnimationEvent {
 	const int sequenceId;
-	const int frame;
+	const float time;
 	const std::function<void(Scene&)> event;
 };

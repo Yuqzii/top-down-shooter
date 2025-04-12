@@ -147,23 +147,29 @@ void GameObject::animationUpdate(Scene& scene, const double& deltaTime) {
 	assert(animationSequence < getAnimationData().size() && "Animation index out of range");
 
 	const AnimationData& sequence = getAnimationData()[animationSequence];
+	const float prevAnimationCounter = animationCounter;
 
 	// Update frame
 	animationCounter += sequence.speed * animationSpeed * deltaTime;
+
+	// Check animation events
+	for (const AnimationEvent& event : getAnimationEvents()) {
+		// Call event if animation sequence matches event,
+		// and the previous frame was before the event and the current is after.
+		if (event.sequenceId == animationSequence
+				&& event.time <= animationCounter && event.time >= prevAnimationCounter) {
+			event.event(scene);
+		}
+	}
+
 	// Check for looping
 	if (animationCounter >= sequence.length) {
 		animationCounter -= sequence.length; // -= length so that the animation plays at same speed
 	}
 	const int frame = std::trunc(animationCounter);
 
-	// Check animation events when changing to new frame
-	if (frame != prevFrame) {
-		for (const AnimationEvent& event : getAnimationEvents()) {
-			// Call event if animation sequence and current frame matches event
-			if (event.sequenceId == animationSequence && event.frame == frame)
-				event.event(scene);
-		}
 
+	if (frame != prevFrame) {
 		srcRect.x = frame * 32;
 		srcRect.y = animationSequence * 32;
 	}

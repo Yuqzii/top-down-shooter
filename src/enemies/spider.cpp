@@ -10,7 +10,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 	isAnimated = true;
 	circleCollider.radius = 50;
 
-	animationEvents.emplace_back(1, 4, [this](Scene& scene) { attack(scene); });
+	animationEvents.emplace_back(1, 5, [this](Scene& scene) { attack(scene); });
 }
 
 void SpiderEnemy::update(Scene& scene, const float deltaTime) {
@@ -35,7 +35,9 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 			break;
 
 		case REPOSITION:
-			steering += flee(combatScene->player.getPivotPosition()) * 2.0f;
+			steering += flee(combatScene->player.getPivotPosition()) * 1.75f;
+			avoidOtherEnemies(0.3f);
+
 			repositionTimer -= deltaTime;
 			if (repositionTimer <= 0) {
 				setState(PURSUIT);
