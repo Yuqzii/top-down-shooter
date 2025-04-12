@@ -7,29 +7,29 @@
 class Game;
 
 class Player : public GameObject {
-public:
-  Player();
+   public:
+	Player();
 
-  void initialize(const vector2Df &position, const Scene &scene) override;
-  void update(Scene &scene, const float deltaTime) override;
+	void initialize(const vector2Df& position, const Scene& scene) override;
+	void update(Scene& scene, const float deltaTime) override;
 
-protected:
-  SETOBJECTTEXTURE("player.png");
+   protected:
+	SETOBJECTTEXTURE("player.png");
 
-  void onCollision(const GameObject &other) override;
+	void onCollision(const GameObject& other) override;
 
-private:
-  inline void pointToMouse(const Scene &scene);
-  inline void shoot(Scene &scene) const;
+   private:
+	inline void pointToMouse(const Scene& scene);
+	inline void shoot(Scene& scene) const;
 
-  bool moveLeft, moveRight, moveUp, moveDown;
-  vector2Df moveDir;
-  constexpr static const float moveSpeed = 300;
+	bool moveLeft, moveRight, moveUp, moveDown;
+	vector2Df moveDir;
+	constexpr static const float moveSpeed = 300;
 
-  // Healthbar
-  UI::Background healthbarBG;
-  UI::Slider *healthbarSlider;
+	// Healthbar
+	UI::Background healthbarBG;
+	UI::Slider* healthbarSlider;
 
-  float health = 100.0f;
-  void takeDamage(const float damage);
+	float health = 100.0f;
+	void takeDamage(const float damage);
 };

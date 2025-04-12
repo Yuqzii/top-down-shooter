@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -30,10 +30,8 @@
 
 #include "SDL_error.h"
 #include "SDL_stdinc.h"
-#include "SDL_video.h"
-
 #include "SDL_touch.h"
-
+#include "SDL_video.h"
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -71,7 +69,7 @@ extern DECLSPEC int SDLCALL SDL_RecordGesture(SDL_TouchID touchId);
  * \sa SDL_LoadDollarTemplates
  * \sa SDL_SaveDollarTemplate
  */
-extern DECLSPEC int SDLCALL SDL_SaveAllDollarTemplates(SDL_RWops *dst);
+extern DECLSPEC int SDLCALL SDL_SaveAllDollarTemplates(SDL_RWops* dst);
 
 /**
  * Save a currently loaded Dollar Gesture template.
@@ -86,8 +84,7 @@ extern DECLSPEC int SDLCALL SDL_SaveAllDollarTemplates(SDL_RWops *dst);
  * \sa SDL_LoadDollarTemplates
  * \sa SDL_SaveAllDollarTemplates
  */
-extern DECLSPEC int SDLCALL SDL_SaveDollarTemplate(SDL_GestureID gestureId,
-                                                   SDL_RWops *dst);
+extern DECLSPEC int SDLCALL SDL_SaveDollarTemplate(SDL_GestureID gestureId, SDL_RWops* dst);
 
 /**
  * Load Dollar Gesture templates from a file.
@@ -102,8 +99,7 @@ extern DECLSPEC int SDLCALL SDL_SaveDollarTemplate(SDL_GestureID gestureId,
  * \sa SDL_SaveAllDollarTemplates
  * \sa SDL_SaveDollarTemplate
  */
-extern DECLSPEC int SDLCALL SDL_LoadDollarTemplates(SDL_TouchID touchId,
-                                                    SDL_RWops *src);
+extern DECLSPEC int SDLCALL SDL_LoadDollarTemplates(SDL_TouchID touchId, SDL_RWops* src);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

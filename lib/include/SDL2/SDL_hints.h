@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -40,7 +40,6 @@
 #define SDL_hints_h_
 
 #include "SDL_stdinc.h"
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -102,8 +101,8 @@ extern "C" {
  * By default this hint is not set and the APK expansion files are not
  * searched.
  */
-#define SDL_HINT_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION                       \
-  "SDL_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION"
+#define SDL_HINT_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION \
+	"SDL_ANDROID_APK_EXPANSION_MAIN_FILE_VERSION"
 
 /**
  * Android APK expansion patch file version.
@@ -119,8 +118,8 @@ extern "C" {
  * By default this hint is not set and the APK expansion files are not
  * searched.
  */
-#define SDL_HINT_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION                      \
-  "SDL_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION"
+#define SDL_HINT_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION \
+	"SDL_ANDROID_APK_EXPANSION_PATCH_FILE_VERSION"
 
 /**
  * A variable to control whether the event loop will block itself when the app
@@ -146,8 +145,7 @@ extern "C" {
  *
  * The value should be set before SDL is initialized.
  */
-#define SDL_HINT_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO                             \
-  "SDL_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO"
+#define SDL_HINT_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO "SDL_ANDROID_BLOCK_ON_PAUSE_PAUSEAUDIO"
 
 /**
  * A variable to control whether we trap the Android back button to handle it
@@ -207,8 +205,7 @@ extern "C" {
  * - "0": Controller input does not generate UI events (the default).
  * - "1": Controller input generates UI events.
  */
-#define SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS                                 \
-  "SDL_APPLE_TV_CONTROLLER_UI_EVENTS"
+#define SDL_HINT_APPLE_TV_CONTROLLER_UI_EVENTS "SDL_APPLE_TV_CONTROLLER_UI_EVENTS"
 
 /**
  * A variable controlling whether the Apple TV remote's joystick axes will
@@ -219,8 +216,7 @@ extern "C" {
  * - "0": Remote orientation does not affect joystick axes (the default).
  * - "1": Joystick axes are based on the orientation of the remote.
  */
-#define SDL_HINT_APPLE_TV_REMOTE_ALLOW_ROTATION                                \
-  "SDL_APPLE_TV_REMOTE_ALLOW_ROTATION"
+#define SDL_HINT_APPLE_TV_REMOTE_ALLOW_ROTATION "SDL_APPLE_TV_REMOTE_ALLOW_ROTATION"
 
 /**
  * A variable controlling the audio category on iOS and Mac OS X
@@ -543,8 +539,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES                                 \
-  "SDL_GAMECONTROLLER_IGNORE_DEVICES"
+#define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES "SDL_GAMECONTROLLER_IGNORE_DEVICES"
 
 /**
  * If set, all devices will be skipped when scanning for game controllers
@@ -558,8 +553,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT                          \
-  "SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT"
+#define SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT "SDL_GAMECONTROLLER_IGNORE_DEVICES_EXCEPT"
 
 /**
  * If set, game controller face buttons report their values according to their
@@ -589,8 +583,7 @@ extern "C" {
  *
  * The default value is "1". This hint may be set at any time.
  */
-#define SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS                              \
-  "SDL_GAMECONTROLLER_USE_BUTTON_LABELS"
+#define SDL_HINT_GAMECONTROLLER_USE_BUTTON_LABELS "SDL_GAMECONTROLLER_USE_BUTTON_LABELS"
 
 /**
  * A variable controlling whether grabbing input grabs the keyboard
@@ -698,8 +691,7 @@ extern "C" {
  *
  * The default value is "0". This hint may be set at any time.
  */
-#define SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS                              \
-  "SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"
+#define SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS "SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"
 
 /**
  * A variable containing a list of arcade stick style controllers.
@@ -729,8 +721,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_ARCADESTICK_DEVICES_EXCLUDED                         \
-  "SDL_JOYSTICK_ARCADESTICK_DEVICES_EXCLUDED"
+#define SDL_HINT_JOYSTICK_ARCADESTICK_DEVICES_EXCLUDED "SDL_JOYSTICK_ARCADESTICK_DEVICES_EXCLUDED"
 
 /**
  * A variable containing a list of devices that should not be considerd
@@ -761,8 +752,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_BLACKLIST_DEVICES_EXCLUDED                           \
-  "SDL_JOYSTICK_BLACKLIST_DEVICES_EXCLUDED"
+#define SDL_HINT_JOYSTICK_BLACKLIST_DEVICES_EXCLUDED "SDL_JOYSTICK_BLACKLIST_DEVICES_EXCLUDED"
 
 /**
  * A variable containing a list of flightstick style controllers.
@@ -792,8 +782,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_FLIGHTSTICK_DEVICES_EXCLUDED                         \
-  "SDL_JOYSTICK_FLIGHTSTICK_DEVICES_EXCLUDED"
+#define SDL_HINT_JOYSTICK_FLIGHTSTICK_DEVICES_EXCLUDED "SDL_JOYSTICK_FLIGHTSTICK_DEVICES_EXCLUDED"
 
 /**
  * A variable containing a list of devices known to have a GameCube form
@@ -824,8 +813,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_GAMECUBE_DEVICES_EXCLUDED                            \
-  "SDL_JOYSTICK_GAMECUBE_DEVICES_EXCLUDED"
+#define SDL_HINT_JOYSTICK_GAMECUBE_DEVICES_EXCLUDED "SDL_JOYSTICK_GAMECUBE_DEVICES_EXCLUDED"
 
 /**
  * A variable controlling whether the HIDAPI joystick drivers should be used.
@@ -869,8 +857,7 @@ extern "C" {
  * - "0": Normal rumble behavior is behavior is used (default)
  * - "1": Proper GameCube controller rumble behavior is used
  */
-#define SDL_HINT_JOYSTICK_GAMECUBE_RUMBLE_BRAKE                                \
-  "SDL_JOYSTICK_GAMECUBE_RUMBLE_BRAKE"
+#define SDL_HINT_JOYSTICK_GAMECUBE_RUMBLE_BRAKE "SDL_JOYSTICK_GAMECUBE_RUMBLE_BRAKE"
 
 /**
  * A variable controlling whether the HIDAPI driver for Nintendo Switch
@@ -896,8 +883,7 @@ extern "C" {
  * - "1": Left and right Joy-Con controllers will be combined into a single
  *   controller (the default)
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS                              \
-  "SDL_JOYSTICK_HIDAPI_COMBINE_JOY_CONS"
+#define SDL_HINT_JOYSTICK_HIDAPI_COMBINE_JOY_CONS "SDL_JOYSTICK_HIDAPI_COMBINE_JOY_CONS"
 
 /**
  * A variable controlling whether Nintendo Switch Joy-Con controllers will be
@@ -911,8 +897,7 @@ extern "C" {
  *
  * This hint must be set before calling SDL_Init(SDL_INIT_GAMECONTROLLER)
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS                             \
-  "SDL_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS"
+#define SDL_HINT_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS "SDL_JOYSTICK_HIDAPI_VERTICAL_JOY_CONS"
 
 /**
  * A variable controlling whether the HIDAPI driver for Amazon Luna
@@ -938,8 +923,7 @@ extern "C" {
  *
  * The default is the value of SDL_HINT_JOYSTICK_HIDAPI
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC                              \
-  "SDL_JOYSTICK_HIDAPI_NINTENDO_CLASSIC"
+#define SDL_HINT_JOYSTICK_HIDAPI_NINTENDO_CLASSIC "SDL_JOYSTICK_HIDAPI_NINTENDO_CLASSIC"
 
 /**
  * A variable controlling whether the HIDAPI driver for NVIDIA SHIELD
@@ -1029,8 +1013,7 @@ extern "C" {
  * - "0": player LEDs are not enabled
  * - "1": player LEDs are enabled (the default)
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED                                \
-  "SDL_JOYSTICK_HIDAPI_PS5_PLAYER_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_PS5_PLAYER_LED "SDL_JOYSTICK_HIDAPI_PS5_PLAYER_LED"
 
 /**
  * A variable controlling whether extended input reports should be used for
@@ -1120,8 +1103,7 @@ extern "C" {
  * set to a floating point value between 0.0 and 1.0 which controls the
  * brightness of the Home button LED.
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED                               \
-  "SDL_JOYSTICK_HIDAPI_SWITCH_HOME_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED "SDL_JOYSTICK_HIDAPI_SWITCH_HOME_LED"
 
 /**
  * A variable controlling whether the Home button LED should be turned on when
@@ -1136,8 +1118,7 @@ extern "C" {
  * set to a floating point value between 0.0 and 1.0 which controls the
  * brightness of the Home button LED.
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_JOYCON_HOME_LED                               \
-  "SDL_JOYSTICK_HIDAPI_JOYCON_HOME_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_JOYCON_HOME_LED "SDL_JOYSTICK_HIDAPI_JOYCON_HOME_LED"
 
 /**
  * A variable controlling whether the player LEDs should be lit to indicate
@@ -1148,8 +1129,7 @@ extern "C" {
  * - "0": player LEDs are not enabled
  * - "1": player LEDs are enabled (the default)
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED                             \
-  "SDL_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED "SDL_JOYSTICK_HIDAPI_SWITCH_PLAYER_LED"
 
 /**
  * A variable controlling whether the HIDAPI driver for Nintendo Wii and Wii U
@@ -1174,8 +1154,7 @@ extern "C" {
  * - "0": player LEDs are not enabled
  * - "1": player LEDs are enabled (the default)
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED                                \
-  "SDL_JOYSTICK_HIDAPI_WII_PLAYER_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_WII_PLAYER_LED "SDL_JOYSTICK_HIDAPI_WII_PLAYER_LED"
 
 /**
  * A variable controlling whether the HIDAPI driver for XBox controllers
@@ -1213,8 +1192,7 @@ extern "C" {
  * - "0": player LEDs are not enabled
  * - "1": player LEDs are enabled (the default)
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED                           \
-  "SDL_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED "SDL_JOYSTICK_HIDAPI_XBOX_360_PLAYER_LED"
 
 /**
  * A variable controlling whether the HIDAPI driver for XBox 360 wireless
@@ -1227,8 +1205,7 @@ extern "C" {
  *
  * The default is the value of SDL_HINT_JOYSTICK_HIDAPI_XBOX_360
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS                             \
-  "SDL_JOYSTICK_HIDAPI_XBOX_360_WIRELESS"
+#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_360_WIRELESS "SDL_JOYSTICK_HIDAPI_XBOX_360_WIRELESS"
 
 /**
  * A variable controlling whether the HIDAPI driver for XBox One controllers
@@ -1256,8 +1233,7 @@ extern "C" {
  * set to a floating point value between 0.0 and 1.0 which controls the
  * brightness of the Home button LED. The default brightness is 0.4.
  */
-#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED                             \
-  "SDL_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED"
+#define SDL_HINT_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED "SDL_JOYSTICK_HIDAPI_XBOX_ONE_HOME_LED"
 
 /**
  * A variable controlling whether IOKit should be used for controller
@@ -1306,8 +1282,7 @@ extern "C" {
  * The default is "1". This hint applies to any joysticks opened after setting
  * the hint.
  */
-#define SDL_HINT_JOYSTICK_RAWINPUT_CORRELATE_XINPUT                            \
-  "SDL_JOYSTICK_RAWINPUT_CORRELATE_XINPUT"
+#define SDL_HINT_JOYSTICK_RAWINPUT_CORRELATE_XINPUT "SDL_JOYSTICK_RAWINPUT_CORRELATE_XINPUT"
 
 /**
  * A variable controlling whether the ROG Chakram mice should show up as
@@ -1359,8 +1334,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_THROTTLE_DEVICES_EXCLUDED                            \
-  "SDL_JOYSTICK_THROTTLE_DEVICES_EXCLUDED"
+#define SDL_HINT_JOYSTICK_THROTTLE_DEVICES_EXCLUDED "SDL_JOYSTICK_THROTTLE_DEVICES_EXCLUDED"
 
 /**
  * A variable controlling whether Windows.Gaming.Input should be used for
@@ -1401,8 +1375,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_WHEEL_DEVICES_EXCLUDED                               \
-  "SDL_JOYSTICK_WHEEL_DEVICES_EXCLUDED"
+#define SDL_HINT_JOYSTICK_WHEEL_DEVICES_EXCLUDED "SDL_JOYSTICK_WHEEL_DEVICES_EXCLUDED"
 
 /**
  * A variable containing a list of devices known to have all axes centered at
@@ -1416,8 +1389,7 @@ extern "C" {
  * The variable can also take the form of @file, in which case the named file
  * will be loaded and interpreted as the value of the variable.
  */
-#define SDL_HINT_JOYSTICK_ZERO_CENTERED_DEVICES                                \
-  "SDL_JOYSTICK_ZERO_CENTERED_DEVICES"
+#define SDL_HINT_JOYSTICK_ZERO_CENTERED_DEVICES "SDL_JOYSTICK_ZERO_CENTERED_DEVICES"
 
 /**
  * Determines whether SDL enforces that DRM master is required in order to
@@ -1557,8 +1529,7 @@ extern "C" {
  * If present, holding ctrl while left clicking will generate a right click
  * event when on Mac.
  */
-#define SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK                            \
-  "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK"
+#define SDL_HINT_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK "SDL_MAC_CTRL_CLICK_EMULATE_RIGHT_CLICK"
 
 /**
  * A variable controlling whether dispatching OpenGL context updates should
@@ -1702,8 +1673,7 @@ extern "C" {
  * implemented using warping, so the hardware cursor will visibly warp between
  * frames if this is enabled on those systems.
  */
-#define SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE                                 \
-  "SDL_MOUSE_RELATIVE_CURSOR_VISIBLE"
+#define SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE "SDL_MOUSE_RELATIVE_CURSOR_VISIBLE"
 
 /**
  * A variable controlling whether mouse events should generate synthetic touch
@@ -1848,8 +1818,7 @@ extern "C" {
  * Since SDL 2.0.22 this variable accepts a comma-separated list of values
  * above.
  */
-#define SDL_HINT_QTWAYLAND_CONTENT_ORIENTATION                                 \
-  "SDL_QTWAYLAND_CONTENT_ORIENTATION"
+#define SDL_HINT_QTWAYLAND_CONTENT_ORIENTATION "SDL_QTWAYLAND_CONTENT_ORIENTATION"
 
 /**
  * Flags to set on QtWayland windows to integrate with the native window
@@ -2024,8 +1993,7 @@ extern "C" {
  *
  * By default the prefered OS device is used.
  */
-#define SDL_HINT_RENDER_METAL_PREFER_LOW_POWER_DEVICE                          \
-  "SDL_RENDER_METAL_PREFER_LOW_POWER_DEVICE"
+#define SDL_HINT_RENDER_METAL_PREFER_LOW_POWER_DEVICE "SDL_RENDER_METAL_PREFER_LOW_POWER_DEVICE"
 
 /**
  * A variable containing a list of ROG gamepad capable mice.
@@ -2111,8 +2079,7 @@ extern "C" {
  *
  * On targets where this is not supported, this hint does nothing.
  */
-#define SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME                             \
-  "SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME"
+#define SDL_HINT_SCREENSAVER_INHIBIT_ACTIVITY_NAME "SDL_SCREENSAVER_INHIBIT_ACTIVITY_NAME"
 
 /**
  * Specifies whether SDL_THREAD_PRIORITY_TIME_CRITICAL should be treated as
@@ -2139,8 +2106,7 @@ extern "C" {
  * - "1": Force SDL_THREAD_PRIORITY_TIME_CRITICAL to a realtime scheduling
  *   policy
  */
-#define SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL                           \
-  "SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL"
+#define SDL_HINT_THREAD_FORCE_REALTIME_TIME_CRITICAL "SDL_THREAD_FORCE_REALTIME_TIME_CRITICAL"
 
 /**
  * A string specifying additional information to use with
@@ -2352,8 +2318,7 @@ extern "C" {
  * libdecor is used over xdg-shell when xdg-decoration protocol is
  * unavailable.
  */
-#define SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR                                 \
-  "SDL_VIDEO_WAYLAND_PREFER_LIBDECOR"
+#define SDL_HINT_VIDEO_WAYLAND_PREFER_LIBDECOR "SDL_VIDEO_WAYLAND_PREFER_LIBDECOR"
 
 /**
  * A variable controlling whether video mode emulation is enabled under
@@ -2391,8 +2356,7 @@ extern "C" {
  * If not set, this is automatically enabled unless an application uses
  * relative mouse mode directly.
  */
-#define SDL_HINT_VIDEO_WAYLAND_EMULATE_MOUSE_WARP                              \
-  "SDL_VIDEO_WAYLAND_EMULATE_MOUSE_WARP"
+#define SDL_HINT_VIDEO_WAYLAND_EMULATE_MOUSE_WARP "SDL_VIDEO_WAYLAND_EMULATE_MOUSE_WARP"
 
 /**
  * A variable that is the address of another SDL_Window* (as a hex string
@@ -2413,8 +2377,7 @@ extern "C" {
  * "%p") of the SDL_Window* that new windows created with
  * SDL_CreateWindowFrom() should share a pixel format with.
  */
-#define SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT                               \
-  "SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT"
+#define SDL_HINT_VIDEO_WINDOW_SHARE_PIXEL_FORMAT "SDL_VIDEO_WINDOW_SHARE_PIXEL_FORMAT"
 
 /**
  * When calling SDL_CreateWindowFrom(), make the window compatible with
@@ -2483,8 +2446,7 @@ extern "C" {
  *
  * By default SDL will use _NET_WM_BYPASS_COMPOSITOR
  */
-#define SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR                            \
-  "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"
+#define SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR "SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"
 
 /**
  * A variable controlling whether the X11 _NET_WM_PING protocol should be
@@ -2622,8 +2584,7 @@ extern "C" {
  *   (default) This is necessary with .NET languages or debuggers that aren't
  *   Visual Studio.
  */
-#define SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING                                 \
-  "SDL_WINDOWS_DISABLE_THREAD_NAMING"
+#define SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING "SDL_WINDOWS_DISABLE_THREAD_NAMING"
 
 /**
  * Controls whether menus can be opened with their keyboard shortcut
@@ -2648,8 +2609,7 @@ extern "C" {
  * - "0": Alt+mnemonic does nothing, no beeping. (default)
  * - "1": Alt+mnemonic opens menus, invalid mnemonics produce a beep.
  */
-#define SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS                                 \
-  "SDL_WINDOWS_ENABLE_MENU_MNEMONICS"
+#define SDL_HINT_WINDOWS_ENABLE_MENU_MNEMONICS "SDL_WINDOWS_ENABLE_MENU_MNEMONICS"
 
 /**
  * A variable controlling whether the windows message loop is processed by SDL
@@ -2677,8 +2637,7 @@ extern "C" {
  *   Sections. (default)
  * - "1": Force the use of Critical Sections in all cases.
  */
-#define SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS                         \
-  "SDL_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS"
+#define SDL_HINT_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS "SDL_WINDOWS_FORCE_MUTEX_CRITICAL_SECTIONS"
 
 /**
  * Force SDL to use Kernel Semaphores on Windows.
@@ -2695,8 +2654,7 @@ extern "C" {
  *   to Kernel Objects. (default)
  * - "1": Force the use of Kernel Objects in all cases.
  */
-#define SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL                                \
-  "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL"
+#define SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL"
 
 /**
  * A variable to specify custom icon resource id from RC file on Windows
@@ -2708,8 +2666,7 @@ extern "C" {
  * A variable to specify custom icon resource id from RC file on Windows
  * platform
  */
-#define SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL                                \
-  "SDL_WINDOWS_INTRESOURCE_ICON_SMALL"
+#define SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL "SDL_WINDOWS_INTRESOURCE_ICON_SMALL"
 
 /**
  * Tell SDL not to generate window-close events for Alt+F4 on Windows.
@@ -2816,8 +2773,8 @@ extern "C" {
  * By default SDL will allow interaction with the window frame when the cursor
  * is hidden
  */
-#define SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN                       \
-  "SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN"
+#define SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN \
+	"SDL_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN"
 
 /**
  * A variable controlling whether the window is activated when the
@@ -2832,8 +2789,7 @@ extern "C" {
  * By default SDL will activate the window when the SDL_ShowWindow function is
  * called
  */
-#define SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN                               \
-  "SDL_WINDOW_NO_ACTIVATION_WHEN_SHOWN"
+#define SDL_HINT_WINDOW_NO_ACTIVATION_WHEN_SHOWN "SDL_WINDOW_NO_ACTIVATION_WHEN_SHOWN"
 
 /** Allows back-button-press events on Windows Phone to be marked as handled
  *
@@ -2981,8 +2937,7 @@ extern "C" {
  *
  * The default value is "0". This hint must be set before SDL_Init()
  */
-#define SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING                               \
-  "SDL_XINPUT_USE_OLD_JOYSTICK_MAPPING"
+#define SDL_HINT_XINPUT_USE_OLD_JOYSTICK_MAPPING "SDL_XINPUT_USE_OLD_JOYSTICK_MAPPING"
 
 /**
  * A variable that causes SDL to not ignore audio "monitors"
@@ -3163,16 +3118,15 @@ extern "C" {
  *
  * This hint is available since SDL 2.32.0.
  */
-#define SDL_HINT_APPLE_RWFROMFILE_USE_RESOURCES                                \
-  "SDL_APPLE_RWFROMFILE_USE_RESOURCES"
+#define SDL_HINT_APPLE_RWFROMFILE_USE_RESOURCES "SDL_APPLE_RWFROMFILE_USE_RESOURCES"
 
 /**
  * An enumeration of hint priorities
  */
 typedef enum SDL_HintPriority {
-  SDL_HINT_DEFAULT,
-  SDL_HINT_NORMAL,
-  SDL_HINT_OVERRIDE
+	SDL_HINT_DEFAULT,
+	SDL_HINT_NORMAL,
+	SDL_HINT_OVERRIDE
 } SDL_HintPriority;
 
 /**
@@ -3192,8 +3146,8 @@ typedef enum SDL_HintPriority {
  * \sa SDL_GetHint
  * \sa SDL_SetHint
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_SetHintWithPriority(
-    const char *name, const char *value, SDL_HintPriority priority);
+extern DECLSPEC SDL_bool SDLCALL SDL_SetHintWithPriority(const char* name, const char* value,
+														 SDL_HintPriority priority);
 
 /**
  * Set a hint with normal priority.
@@ -3211,8 +3165,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_SetHintWithPriority(
  * \sa SDL_GetHint
  * \sa SDL_SetHintWithPriority
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_SetHint(const char *name,
-                                             const char *value);
+extern DECLSPEC SDL_bool SDLCALL SDL_SetHint(const char* name, const char* value);
 
 /**
  * Reset a hint to the default value.
@@ -3229,7 +3182,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_SetHint(const char *name,
  * \sa SDL_GetHint
  * \sa SDL_SetHint
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_ResetHint(const char *name);
+extern DECLSPEC SDL_bool SDLCALL SDL_ResetHint(const char* name);
 
 /**
  * Reset all hints to the default values.
@@ -3257,7 +3210,7 @@ extern DECLSPEC void SDLCALL SDL_ResetHints(void);
  * \sa SDL_SetHint
  * \sa SDL_SetHintWithPriority
  */
-extern DECLSPEC const char *SDLCALL SDL_GetHint(const char *name);
+extern DECLSPEC const char* SDLCALL SDL_GetHint(const char* name);
 
 /**
  * Get the boolean value of a hint variable.
@@ -3272,8 +3225,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetHint(const char *name);
  * \sa SDL_GetHint
  * \sa SDL_SetHint
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_GetHintBoolean(const char *name,
-                                                    SDL_bool default_value);
+extern DECLSPEC SDL_bool SDLCALL SDL_GetHintBoolean(const char* name, SDL_bool default_value);
 
 /**
  * Type definition of the hint callback function.
@@ -3283,9 +3235,8 @@ extern DECLSPEC SDL_bool SDLCALL SDL_GetHintBoolean(const char *name,
  * \param oldValue the previous hint value.
  * \param newValue the new value hint is to be set to.
  */
-typedef void(SDLCALL *SDL_HintCallback)(void *userdata, const char *name,
-                                        const char *oldValue,
-                                        const char *newValue);
+typedef void(SDLCALL* SDL_HintCallback)(void* userdata, const char* name, const char* oldValue,
+										const char* newValue);
 
 /**
  * Add a function to watch a particular hint.
@@ -3299,9 +3250,8 @@ typedef void(SDLCALL *SDL_HintCallback)(void *userdata, const char *name,
  *
  * \sa SDL_DelHintCallback
  */
-extern DECLSPEC void SDLCALL SDL_AddHintCallback(const char *name,
-                                                 SDL_HintCallback callback,
-                                                 void *userdata);
+extern DECLSPEC void SDLCALL SDL_AddHintCallback(const char* name, SDL_HintCallback callback,
+												 void* userdata);
 
 /**
  * Remove a function watching a particular hint.
@@ -3315,9 +3265,8 @@ extern DECLSPEC void SDLCALL SDL_AddHintCallback(const char *name,
  *
  * \sa SDL_AddHintCallback
  */
-extern DECLSPEC void SDLCALL SDL_DelHintCallback(const char *name,
-                                                 SDL_HintCallback callback,
-                                                 void *userdata);
+extern DECLSPEC void SDLCALL SDL_DelHintCallback(const char* name, SDL_HintCallback callback,
+												 void* userdata);
 
 /**
  * Clear all hints.

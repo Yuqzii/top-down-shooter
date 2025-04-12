@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -30,7 +30,6 @@
 
 #include "SDL_error.h"
 #include "SDL_stdinc.h"
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -154,7 +153,7 @@ extern DECLSPEC void SDLCALL SDL_Delay(Uint32 ms);
  * in, the periodic alarm continues, otherwise a new alarm is scheduled. If
  * the callback returns 0, the periodic alarm is cancelled.
  */
-typedef Uint32(SDLCALL *SDL_TimerCallback)(Uint32 interval, void *param);
+typedef Uint32(SDLCALL* SDL_TimerCallback)(Uint32 interval, void* param);
 
 /**
  * Definition of the timer ID type.
@@ -193,9 +192,8 @@ typedef int SDL_TimerID;
  *
  * \sa SDL_RemoveTimer
  */
-extern DECLSPEC SDL_TimerID SDLCALL SDL_AddTimer(Uint32 interval,
-                                                 SDL_TimerCallback callback,
-                                                 void *param);
+extern DECLSPEC SDL_TimerID SDLCALL SDL_AddTimer(Uint32 interval, SDL_TimerCallback callback,
+												 void* param);
 
 /**
  * Remove a timer created with SDL_AddTimer().

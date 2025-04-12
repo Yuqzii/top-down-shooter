@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -53,70 +53,70 @@
 #define VERBOSE_MOTION 0x00000020
 
 typedef struct {
-  /* SDL init flags */
-  char **argv;
-  Uint32 flags;
-  Uint32 verbose;
+	/* SDL init flags */
+	char** argv;
+	Uint32 flags;
+	Uint32 verbose;
 
-  /* Video info */
-  const char *videodriver;
-  int display;
-  const char *window_title;
-  const char *window_icon;
-  Uint32 window_flags;
-  SDL_bool flash_on_focus_loss;
-  int window_x;
-  int window_y;
-  int window_w;
-  int window_h;
-  int window_minW;
-  int window_minH;
-  int window_maxW;
-  int window_maxH;
-  int logical_w;
-  int logical_h;
-  float scale;
-  int depth;
-  int refresh_rate;
-  int num_windows;
-  SDL_Window **windows;
+	/* Video info */
+	const char* videodriver;
+	int display;
+	const char* window_title;
+	const char* window_icon;
+	Uint32 window_flags;
+	SDL_bool flash_on_focus_loss;
+	int window_x;
+	int window_y;
+	int window_w;
+	int window_h;
+	int window_minW;
+	int window_minH;
+	int window_maxW;
+	int window_maxH;
+	int logical_w;
+	int logical_h;
+	float scale;
+	int depth;
+	int refresh_rate;
+	int num_windows;
+	SDL_Window** windows;
 
-  /* Renderer info */
-  const char *renderdriver;
-  Uint32 render_flags;
-  SDL_bool skip_renderer;
-  SDL_Renderer **renderers;
-  SDL_Texture **targets;
+	/* Renderer info */
+	const char* renderdriver;
+	Uint32 render_flags;
+	SDL_bool skip_renderer;
+	SDL_Renderer** renderers;
+	SDL_Texture** targets;
 
-  /* Audio info */
-  const char *audiodriver;
-  SDL_AudioSpec audiospec;
+	/* Audio info */
+	const char* audiodriver;
+	SDL_AudioSpec audiospec;
 
-  /* GL settings */
-  int gl_red_size;
-  int gl_green_size;
-  int gl_blue_size;
-  int gl_alpha_size;
-  int gl_buffer_size;
-  int gl_depth_size;
-  int gl_stencil_size;
-  int gl_double_buffer;
-  int gl_accum_red_size;
-  int gl_accum_green_size;
-  int gl_accum_blue_size;
-  int gl_accum_alpha_size;
-  int gl_stereo;
-  int gl_multisamplebuffers;
-  int gl_multisamplesamples;
-  int gl_retained_backing;
-  int gl_accelerated;
-  int gl_major_version;
-  int gl_minor_version;
-  int gl_debug;
-  int gl_profile_mask;
+	/* GL settings */
+	int gl_red_size;
+	int gl_green_size;
+	int gl_blue_size;
+	int gl_alpha_size;
+	int gl_buffer_size;
+	int gl_depth_size;
+	int gl_stencil_size;
+	int gl_double_buffer;
+	int gl_accum_red_size;
+	int gl_accum_green_size;
+	int gl_accum_blue_size;
+	int gl_accum_alpha_size;
+	int gl_stereo;
+	int gl_multisamplebuffers;
+	int gl_multisamplesamples;
+	int gl_retained_backing;
+	int gl_accelerated;
+	int gl_major_version;
+	int gl_minor_version;
+	int gl_debug;
+	int gl_profile_mask;
 
-  /* Additional fields added in 2.0.18 */
-  SDL_Rect confine;
+	/* Additional fields added in 2.0.18 */
+	SDL_Rect confine;
 
 } SDLTest_CommonState;
 
@@ -137,7 +137,7 @@ extern "C" {
  *
  * \returns a newly allocated common state object.
  */
-SDLTest_CommonState *SDLTest_CommonCreateState(char **argv, Uint32 flags);
+SDLTest_CommonState* SDLTest_CommonCreateState(char** argv, Uint32 flags);
 
 /*
  * \brief Process one common argument.
@@ -148,7 +148,7 @@ SDLTest_CommonState *SDLTest_CommonCreateState(char **argv, Uint32 flags);
  * \returns the number of arguments processed (i.e. 1 for --fullscreen, 2 for
  * --video [videodriver], or -1 on error.
  */
-int SDLTest_CommonArg(SDLTest_CommonState *state, int index);
+int SDLTest_CommonArg(SDLTest_CommonState* state, int index);
 
 /*
  * \brief Logs command line usage info.
@@ -163,8 +163,7 @@ int SDLTest_CommonArg(SDLTest_CommonState *state, int index);
  * \param options an array of strings for application specific options. The last
  * element of the array should be NULL.
  */
-void SDLTest_CommonLogUsage(SDLTest_CommonState *state, const char *argv0,
-                            const char **options);
+void SDLTest_CommonLogUsage(SDLTest_CommonState* state, const char* argv0, const char** options);
 
 /*
  * \brief Returns common usage information
@@ -177,7 +176,7 @@ void SDLTest_CommonLogUsage(SDLTest_CommonState *state, const char *argv0,
  * \param state The common state describing the test window to create.
  * \returns a string with usage information
  */
-const char *SDLTest_CommonUsage(SDLTest_CommonState *state);
+const char* SDLTest_CommonUsage(SDLTest_CommonState* state);
 
 /*
  * \brief Open test window.
@@ -186,7 +185,7 @@ const char *SDLTest_CommonUsage(SDLTest_CommonState *state);
  *
  * \returns SDL_TRUE if initialization succeeded, false otherwise
  */
-SDL_bool SDLTest_CommonInit(SDLTest_CommonState *state);
+SDL_bool SDLTest_CommonInit(SDLTest_CommonState* state);
 
 /*
  * \brief Easy argument handling when test app doesn't need any custom args.
@@ -197,8 +196,7 @@ SDL_bool SDLTest_CommonInit(SDLTest_CommonState *state);
  *
  * \returns SDL_FALSE if app should quit, true otherwise.
  */
-SDL_bool SDLTest_CommonDefaultArgs(SDLTest_CommonState *state, const int argc,
-                                   char **argv);
+SDL_bool SDLTest_CommonDefaultArgs(SDLTest_CommonState* state, const int argc, char** argv);
 
 /*
  * \brief Common event handler for test windows.
@@ -208,8 +206,7 @@ SDL_bool SDLTest_CommonDefaultArgs(SDLTest_CommonState *state, const int argc,
  * \param done Flag indicating we are done.
  *
  */
-void SDLTest_CommonEvent(SDLTest_CommonState *state, SDL_Event *event,
-                         int *done);
+void SDLTest_CommonEvent(SDLTest_CommonState* state, SDL_Event* event, int* done);
 
 /*
  * \brief Close test window.
@@ -217,7 +214,7 @@ void SDLTest_CommonEvent(SDLTest_CommonState *state, SDL_Event *event,
  * \param state The common state used to create test window.
  *
  */
-void SDLTest_CommonQuit(SDLTest_CommonState *state);
+void SDLTest_CommonQuit(SDLTest_CommonState* state);
 
 /*
  * \brief Draws various window information (position, size, etc.) to the
@@ -228,8 +225,7 @@ void SDLTest_CommonQuit(SDLTest_CommonState *state);
  * \param usedHeight Returns the height used, so the caller can draw more below.
  *
  */
-void SDLTest_CommonDrawWindowInfo(SDL_Renderer *renderer, SDL_Window *window,
-                                  int *usedHeight);
+void SDLTest_CommonDrawWindowInfo(SDL_Renderer* renderer, SDL_Window* window, int* usedHeight);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

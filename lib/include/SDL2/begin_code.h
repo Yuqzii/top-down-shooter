@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -34,8 +34,7 @@
 #define SDL_begin_code_h
 
 #ifndef SDL_DEPRECATED
-#if defined(__GNUC__) &&                                                       \
-    (__GNUC__ >= 4) /* technically, this arrived in gcc 3.1, but oh well. */
+#if defined(__GNUC__) && (__GNUC__ >= 4) /* technically, this arrived in gcc 3.1, but oh well. */
 #define SDL_DEPRECATED __attribute__((deprecated))
 #elif defined(_MSC_VER)
 #define SDL_DEPRECATED __declspec(deprecated)
@@ -54,8 +53,7 @@
 
 /* Some compilers use a special export keyword */
 #ifndef DECLSPEC
-#if defined(__WIN32__) || defined(__WINRT__) || defined(__CYGWIN__) ||         \
-    defined(__GDK__)
+#if defined(__WIN32__) || defined(__WINRT__) || defined(__CYGWIN__) || defined(__GDK__)
 #ifdef DLL_EXPORT
 #define DECLSPEC __declspec(dllexport)
 #else
@@ -78,8 +76,7 @@
 
 /* By default SDL uses the C calling convention */
 #ifndef SDLCALL
-#if (defined(__WIN32__) || defined(__WINRT__) || defined(__GDK__)) &&          \
-    !defined(__GNUC__)
+#if (defined(__WIN32__) || defined(__WINRT__) || defined(__GDK__)) && !defined(__GNUC__)
 #define SDLCALL __cdecl
 #elif defined(__OS2__) || defined(__EMX__)
 #define SDLCALL _System
@@ -123,9 +120,8 @@
 #ifndef SDL_INLINE
 #if defined(__GNUC__)
 #define SDL_INLINE __inline__
-#elif defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__) ||        \
-    defined(__SC__) || defined(__WATCOMC__) || defined(__LCC__) ||             \
-    defined(__DECC) || defined(__CC_ARM)
+#elif defined(_MSC_VER) || defined(__BORLANDC__) || defined(__DMC__) || defined(__SC__) || \
+	defined(__WATCOMC__) || defined(__LCC__) || defined(__DECC) || defined(__CC_ARM)
 #define SDL_INLINE __inline
 #ifndef __inline__
 #define __inline__ __inline
@@ -164,14 +160,14 @@
 #ifdef __cplusplus
 #define NULL 0
 #else
-#define NULL ((void *)0)
+#define NULL ((void*)0)
 #endif
 #endif /* NULL */
 #endif /* ! Mac OS X - breaks precompiled headers */
 
 #ifndef SDL_FALLTHROUGH
-#if (defined(__cplusplus) && __cplusplus >= 201703L) ||                        \
-    (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L)
+#if (defined(__cplusplus) && __cplusplus >= 201703L) || \
+	(defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L)
 #define SDL_FALLTHROUGH [[fallthrough]]
 #else
 #if defined(__has_attribute) && !defined(__SUNPRO_C) && !defined(__SUNPRO_CC)
@@ -179,15 +175,14 @@
 #else
 #define SDL_HAS_FALLTHROUGH 0
 #endif /* __has_attribute */
-#if SDL_HAS_FALLTHROUGH &&                                                     \
-    ((defined(__GNUC__) && __GNUC__ >= 7) ||                                   \
-     (defined(__clang_major__) && __clang_major__ >= 10))
+#if SDL_HAS_FALLTHROUGH && \
+	((defined(__GNUC__) && __GNUC__ >= 7) || (defined(__clang_major__) && __clang_major__ >= 10))
 #define SDL_FALLTHROUGH __attribute__((__fallthrough__))
 #else
-#define SDL_FALLTHROUGH                                                        \
-  do {                                                                         \
-  } while (0) /* fallthrough */
-#endif        /* SDL_HAS_FALLTHROUGH */
+#define SDL_FALLTHROUGH \
+	do {                \
+	} while (0) /* fallthrough */
+#endif /* SDL_HAS_FALLTHROUGH */
 #undef SDL_HAS_FALLTHROUGH
 #endif /* C++17 or C2x */
 #endif /* SDL_FALLTHROUGH not defined */

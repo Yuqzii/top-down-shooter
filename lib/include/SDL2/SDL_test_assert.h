@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -59,9 +59,8 @@ extern "C" {
  * or pass (!=0).
  * \param assertDescription Message to log with the assert describing it.
  */
-void SDLTest_Assert(int assertCondition,
-                    SDL_PRINTF_FORMAT_STRING const char *assertDescription, ...)
-    SDL_PRINTF_VARARG_FUNC(2);
+void SDLTest_Assert(int assertCondition, SDL_PRINTF_FORMAT_STRING const char* assertDescription,
+					...) SDL_PRINTF_VARARG_FUNC(2);
 
 /*
  * \brief Assert for test cases that logs but does not break execution flow on
@@ -74,9 +73,8 @@ void SDLTest_Assert(int assertCondition,
  * \returns the assertCondition so it can be used to externally to break
  * execution flow if desired.
  */
-int SDLTest_AssertCheck(int assertCondition,
-                        SDL_PRINTF_FORMAT_STRING const char *assertDescription,
-                        ...) SDL_PRINTF_VARARG_FUNC(2);
+int SDLTest_AssertCheck(int assertCondition, SDL_PRINTF_FORMAT_STRING const char* assertDescription,
+						...) SDL_PRINTF_VARARG_FUNC(2);
 
 /*
  * \brief Explicitly pass without checking an assertion condition. Updates
@@ -84,8 +82,8 @@ int SDLTest_AssertCheck(int assertCondition,
  *
  * \param assertDescription Message to log with the assert describing it.
  */
-void SDLTest_AssertPass(SDL_PRINTF_FORMAT_STRING const char *assertDescription,
-                        ...) SDL_PRINTF_VARARG_FUNC(1);
+void SDLTest_AssertPass(SDL_PRINTF_FORMAT_STRING const char* assertDescription, ...)
+	SDL_PRINTF_VARARG_FUNC(1);
 
 /*
  * \brief Resets the assert summary counters to zero.

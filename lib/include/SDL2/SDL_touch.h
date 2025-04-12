@@ -11,11 +11,11 @@
   freely, subject to the following restrictions:
 
   1. The origin of this software must not be misrepresented; you must not
-     claim that you wrote the original software. If you use this software
-     in a product, an acknowledgment in the product documentation would be
-     appreciated but is not required.
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
   2. Altered source versions must be plainly marked as such, and must not be
-     misrepresented as being the original software.
+	 misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
 
@@ -31,7 +31,6 @@
 #include "SDL_error.h"
 #include "SDL_stdinc.h"
 #include "SDL_video.h"
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -42,19 +41,19 @@ typedef Sint64 SDL_TouchID;
 typedef Sint64 SDL_FingerID;
 
 typedef enum {
-  SDL_TOUCH_DEVICE_INVALID = -1,
-  SDL_TOUCH_DEVICE_DIRECT, /* touch screen with window-relative coordinates */
-  SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE, /* trackpad with absolute device
-                                         coordinates */
-  SDL_TOUCH_DEVICE_INDIRECT_RELATIVE  /* trackpad with screen cursor-relative
-                                         coordinates */
+	SDL_TOUCH_DEVICE_INVALID = -1,
+	SDL_TOUCH_DEVICE_DIRECT,			/* touch screen with window-relative coordinates */
+	SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE, /* trackpad with absolute device
+										   coordinates */
+	SDL_TOUCH_DEVICE_INDIRECT_RELATIVE	/* trackpad with screen cursor-relative
+										   coordinates */
 } SDL_TouchDeviceType;
 
 typedef struct SDL_Finger {
-  SDL_FingerID id;
-  float x;
-  float y;
-  float pressure;
+	SDL_FingerID id;
+	float x;
+	float y;
+	float pressure;
 } SDL_Finger;
 
 /* Used as the device ID for mouse events simulated with touch input */
@@ -100,15 +99,14 @@ extern DECLSPEC SDL_TouchID SDLCALL SDL_GetTouchDevice(int index);
  *
  * \since This function is available since SDL 2.0.22.
  */
-extern DECLSPEC const char *SDLCALL SDL_GetTouchName(int index);
+extern DECLSPEC const char* SDLCALL SDL_GetTouchName(int index);
 
 /**
  * Get the type of the given touch device.
  *
  * \since This function is available since SDL 2.0.10.
  */
-extern DECLSPEC SDL_TouchDeviceType SDLCALL
-SDL_GetTouchDeviceType(SDL_TouchID touchID);
+extern DECLSPEC SDL_TouchDeviceType SDLCALL SDL_GetTouchDeviceType(SDL_TouchID touchID);
 
 /**
  * Get the number of active fingers for a given touch device.
@@ -137,8 +135,7 @@ extern DECLSPEC int SDLCALL SDL_GetNumTouchFingers(SDL_TouchID touchID);
  *
  * \sa SDL_RecordGesture
  */
-extern DECLSPEC SDL_Finger *SDLCALL SDL_GetTouchFinger(SDL_TouchID touchID,
-                                                       int index);
+extern DECLSPEC SDL_Finger* SDLCALL SDL_GetTouchFinger(SDL_TouchID touchID, int index);
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
