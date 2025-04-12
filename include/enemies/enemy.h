@@ -56,9 +56,9 @@ private:
 	UI::Slider* healthbarSlider;
 };
 
-class EnemyCollisionPoint : public GameObject {
+class EnemyAttackPoint : public GameObject {
 public:
-	EnemyCollisionPoint();
+	EnemyAttackPoint();
 
 	void initializeParent(const Enemy* parent);
 	const Enemy* parent;

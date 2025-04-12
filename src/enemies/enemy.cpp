@@ -48,7 +48,6 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	else
 		velocity = vector2Df();
 
-
 	GameObject::update(scene, deltaTime); // Update position
 
 	// Update healthbar
@@ -149,12 +148,12 @@ std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 }
 
 
-EnemyCollisionPoint::EnemyCollisionPoint() {
+EnemyAttackPoint::EnemyAttackPoint() {
 	useCollision = true;
 	collisionType = Collision::Types::POINT;
 }
 
-void EnemyCollisionPoint::initializeParent(const Enemy* parent) {
+void EnemyAttackPoint::initializeParent(const Enemy* parent) {
 	this->parent = parent;
 	deleteObject = true;
 }

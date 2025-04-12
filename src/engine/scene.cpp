@@ -77,7 +77,7 @@ template GameObject& Scene::instantiate<GameObject>(const vector2Df& position);
 template Player& Scene::instantiate<Player>(const vector2Df& position);
 template Bullet& Scene::instantiate<Bullet>(const vector2Df& position);
 template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const vector2Df& position);
-template EnemyCollisionPoint& Scene::instantiate<EnemyCollisionPoint>(const vector2Df& position);
+template EnemyAttackPoint& Scene::instantiate<EnemyAttackPoint>(const vector2Df& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D(); // Create new tree

@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 #include "SDL2/SDL_scancode.h"
 #include "enemies/enemy.h"
 #include "engine/gameObject.h"
@@ -89,8 +88,8 @@ inline void Player::shoot(Scene& scene) const {
 }
 
 void Player::onCollision(const GameObject& other) {
-	const EnemyCollisionPoint* enemyCollisionPoint =
-			dynamic_cast<const EnemyCollisionPoint*>(&other);
+	const EnemyAttackPoint* enemyCollisionPoint =
+			dynamic_cast<const EnemyAttackPoint*>(&other);
 
 	if (enemyCollisionPoint == nullptr) // Return if collision is not with enemy attack
 		return;
