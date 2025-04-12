@@ -1,19 +1,19 @@
 #include "scenes/combat_scene.h"
 
 void CombatScene::initialize() {
-  Scene::initialize();
+	Scene::initialize();
 
-  enemyManager = EnemyManager();
+	enemyManager = EnemyManager();
 }
 
-void CombatScene::initialize(GameObjectVector &persistentObjects) {
-  Scene::initialize(persistentObjects);
+void CombatScene::initialize(GameObjectVector& persistentObjects) {
+	Scene::initialize(persistentObjects);
 
-  enemyManager = EnemyManager();
+	enemyManager = EnemyManager();
 }
 
 void CombatScene::update(const float deltaTime) {
-  Scene::update(deltaTime);
+	Scene::update(deltaTime);
 
-  enemyManager.update(*this, deltaTime);
+	enemyManager.update(*this, deltaTime);
 }
