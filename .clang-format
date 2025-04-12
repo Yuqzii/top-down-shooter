@@ -8,4 +8,5 @@ Language: Cpp
 ColumnLimit: 100
 DerivePointerAlignment: false
 PointerAlignment: Left
+IndentAccessModifiers: false
 ---
