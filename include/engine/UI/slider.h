@@ -6,12 +6,12 @@ namespace UI {
 
 class Slider : public Background {
 public:
-	Slider(const SDL_Color& color, Widget* parent);
+  Slider(const SDL_Color &color, Widget *parent);
 
-	void setValue(const float& newValue);
+  void setValue(const float &newValue);
 
 private:
-	float sliderValue;
+  float sliderValue;
 };
 
-}
+} // namespace UI
