@@ -5,8 +5,7 @@ namespace UI {
 Widget::Widget(Widget* parent, AnchorType anchorPosition) {
 	this->parent = parent;
 
-	if (parent != nullptr)
-		parent->addChild(this);
+	if (parent != nullptr) parent->addChild(this);
 
 	this->anchorPosition = anchorPosition;
 }
@@ -33,10 +32,9 @@ void Widget::calculatePosition(const bool& calculateChildren) {
 	// No need to calculate position if widget does not have a parent
 	if (parent == nullptr) {
 		position = localPosition;
-	}
-	else {
+	} else {
 		// Calculate parents position without updating its children to avoid infinite recursion
-		parent->calculatePosition(false); 
+		parent->calculatePosition(false);
 
 		// Update position based on anchoring
 		vector2Df add;
@@ -81,14 +79,12 @@ void Widget::calculateSize() {
 		return;
 	}
 
-	parent->calculateSize(); // Make sure parents size is also correct
+	parent->calculateSize();  // Make sure parents size is also correct
 
 	size.x = parent->size.x * localSize.x / 100;
 	size.y = parent->size.y * localSize.y / 100;
 }
 
-void Widget::addChild(Widget* child) {
-	childWidgets.push_back(std::unique_ptr<Widget>(child));
-}
+void Widget::addChild(Widget* child) { childWidgets.push_back(std::unique_ptr<Widget>(child)); }
 
-}
+}  // namespace UI

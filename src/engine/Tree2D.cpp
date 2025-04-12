@@ -1,25 +1,24 @@
-#include <iostream>
-#include <algorithm>
-#include <ranges>
 #include "engine/Tree2D.h"
+
+#include <algorithm>
+#include <iostream>
+#include <ranges>
+
 #include "engine/gameObject.h"
 
-Tree2D::Tree2D() : root(nullptr) {} 
+Tree2D::Tree2D() : root(nullptr) {}
 
-Tree2D::~Tree2D() {
-	delete root;
-}
+Tree2D::~Tree2D() { delete root; }
 
 void Tree2D::initializeWithList(const std::vector<GameObject*>& objects) {
-	if (objects.empty()) return; // Cannot build tree with no points
+	if (objects.empty()) return;  // Cannot build tree with no points
 
 	initializeTree(objects);
 }
 
 void Tree2D::insert(GameObject* object) {
-	const std::array<float, 2> arrPoint = {
-		object->getPivotPosition().x, object->getPivotPosition().y
-	};
+	const std::array<float, 2> arrPoint = {object->getPivotPosition().x,
+										   object->getPivotPosition().y};
 	// Insert from root and create root if it does not exist
 	root = insertRecursive(root, arrPoint, object, 0);
 }
@@ -30,35 +29,30 @@ void Tree2D::print() const {
 }
 
 GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
-	if (root == nullptr)
-		throw 1;
+	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array
-	const std::array<float, 2> targetArr = { target.x, target.y };
+	const std::array<float, 2> targetArr = {target.x, target.y};
 	const Node* result = nearestNeighbor(root, targetArr, 0);
 
 	// Throw exception if result is null
-	if (result == nullptr)
-		throw 1;
+	if (result == nullptr) throw 1;
 
 	// Convert result to vector
 	const vector2Df vecResult = vector2Df(result->point[0], result->point[1]);
 
 	// Result is the same as target (not good), throw exception.
 	// Usually happens when there is only one enemy.
-	if (result->point[0] == target.x && result->point[1] == target.y)
-		throw 2;
+	if (result->point[0] == target.x && result->point[1] == target.y) throw 2;
 
-	return result->object; // Return the GameObject associated with the result node
+	return result->object;	// Return the GameObject associated with the result node
 }
 
-std::vector<GameObject*> Tree2D::findKClosestObjects(
-		const vector2Df& target, const int k) const {
-	if (root == nullptr)
-		throw 1;
+std::vector<GameObject*> Tree2D::findKClosestObjects(const vector2Df& target, const int k) const {
+	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array
-	const std::array<float, 2> targetArr = { target.x, target.y };
+	const std::array<float, 2> targetArr = {target.x, target.y};
 
 	// Get nearest neighbors into heap
 	std::list<std::pair<float, const Node*>> heap;
@@ -78,28 +72,27 @@ std::vector<GameObject*> Tree2D::findKClosestObjects(
 	return result;
 }
 
-std::vector<GameObject*> Tree2D::findObjectsInRange(
-		const vector2Df& target, const float range) const {
-	if (root == nullptr)
-		throw 1;
+std::vector<GameObject*> Tree2D::findObjectsInRange(const vector2Df& target,
+													const float range) const {
+	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array
-	const std::array<float, 2> targetArr = { target.x, target.y };
+	const std::array<float, 2> targetArr = {target.x, target.y};
 
 	// Finid all nodes in range
 	std::vector<const Node*> nodes;
 	nodesInRange(root, targetArr, 0, range * range, nodes);
 
 	// Get GameObjects from the nodes
-	auto nodesRange = nodes | std::views::transform(
-			[](const Node* node) -> GameObject* { return node->object; });
+	auto nodesRange =
+		nodes | std::views::transform([](const Node* node) -> GameObject* { return node->object; });
 	std::vector<GameObject*> result(nodesRange.begin(), nodesRange.end());
 
-	return result; // Return GameObjects
+	return result;	// Return GameObjects
 }
 
-Tree2D::Node::Node(const std::array<float ,2> pt, GameObject* obj)
-		: point(pt), object(obj), left(nullptr), right(nullptr) {}
+Tree2D::Node::Node(const std::array<float, 2> pt, GameObject* obj)
+	: point(pt), object(obj), left(nullptr), right(nullptr) {}
 
 Tree2D::Node::~Node() {
 	delete left;
@@ -111,43 +104,42 @@ void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
 	std::vector<std::pair<std::array<float, 2>, GameObject*>> sorted;
 	sorted.reserve(objects.size());
 	for (GameObject* object : objects) {
-		const std::array<float, 2> point = {
-			object->getPivotPosition().x, object->getPivotPosition().y
-		};
-		sorted.push_back(std::make_pair(std::array<float, 2>{
-			object->getPivotPosition().x, object->getPivotPosition().y }, object)
-		);
+		const std::array<float, 2> point = {object->getPivotPosition().x,
+											object->getPivotPosition().y};
+		sorted.push_back(std::make_pair(
+			std::array<float, 2>{object->getPivotPosition().x, object->getPivotPosition().y},
+			object));
 	}
 
 	// Sort objects along x-axis to find median x.
 	// This will be used to build the tree from.
 	std::sort(sorted.begin(), sorted.end());
 
-	std::pair<std::array<float, 2>, GameObject*>* median = &sorted[sorted.size() / 2]; // Find the median element
-	root = new Node(median->first, median->second); // Set median as root
-	
+	std::pair<std::array<float, 2>, GameObject*>* median =
+		&sorted[sorted.size() / 2];					 // Find the median element
+	root = new Node(median->first, median->second);	 // Set median as root
+
 	// Insert remaining points into tree
 	for (int i = 0; i < sorted.size(); i++) {
-		if (i == sorted.size() / 2) continue; // Do not insert median again
-		insertRecursive(root, sorted[i].first, sorted[i].second, 0); // Insert point
+		if (i == sorted.size() / 2) continue;						  // Do not insert median again
+		insertRecursive(root, sorted[i].first, sorted[i].second, 0);  // Insert point
 	}
 }
 
 Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2> point,
-		GameObject* object, const int depth) {
+									  GameObject* object, const int depth) {
 	// Create new node if node is null, base case
 	if (node == nullptr) {
 		return new Node(point, object);
 	}
 
-	const int dimension = depth % 2; // Calculate current dimension used
+	const int dimension = depth % 2;  // Calculate current dimension used
 
 	// Compare point with current node
 	if (point[dimension] < node->point[dimension]) {
 		// Go left
 		node->left = insertRecursive(node->left, point, object, depth + 1);
-	}
-	else {
+	} else {
 		// Go right
 		node->right = insertRecursive(node->right, point, object, depth + 1);
 	}
@@ -157,11 +149,11 @@ Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2> poi
 
 // Returns the point closest to the target that is not the same as target
 const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<float, 2>& target,
-		const int depth) const {
+											const int depth) const {
 	// No possible paths from this node, return this node
 	if (node->left == nullptr && node->right == nullptr) return node;
 
-	const int dimension = depth % 2; // Calculate the current dimension of the tree
+	const int dimension = depth % 2;  // Calculate the current dimension of the tree
 
 	Node* nextBranch;
 	Node* otherBranch;
@@ -171,15 +163,14 @@ const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<f
 		// Go left
 		nextBranch = node->left;
 		otherBranch = node->right;
-	}
-	else {
+	} else {
 		// Go right
 		nextBranch = node->right;
 		otherBranch = node->left;
 	}
 
 	const Node* result = nullptr;
-	if (nextBranch != nullptr) { // Check that nextBranch exists
+	if (nextBranch != nullptr) {  // Check that nextBranch exists
 		// Recursively go through tree
 		result = nearestNeighbor(nextBranch, target, depth + 1);
 	}
@@ -188,7 +179,7 @@ const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<f
 	// Get the closest of the result and the current node
 	const Node* closest = findClosestNode(target, result, node);
 
-	if (closest == nullptr) { // Both result and node are the same as target
+	if (closest == nullptr) {  // Both result and node are the same as target
 		// Try to find a valid node under other branch
 		if (otherBranch != nullptr)
 			return nearestNeighbor(otherBranch, target, depth + 1);
@@ -213,16 +204,17 @@ const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<f
 	return closest;
 }
 
-const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node,
-		const std::array<float, 2>& target, const int depth,
-		std::list<std::pair<float, const Node*>>& heap, const int k) const {
+const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node, const std::array<float, 2>& target,
+											  const int depth,
+											  std::list<std::pair<float, const Node*>>& heap,
+											  const int k) const {
 	// Check every visited node against heap
 	updateHeap(heap, node, target, k);
 
 	// No possible paths from this node
-	if (node->left == nullptr && node->right == nullptr) return node; // Return this node
+	if (node->left == nullptr && node->right == nullptr) return node;  // Return this node
 
-	const int dimension = depth % 2; // Calculate the current dimension of the tree
+	const int dimension = depth % 2;  // Calculate the current dimension of the tree
 
 	Node* nextBranch;
 	Node* otherBranch;
@@ -232,15 +224,14 @@ const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node,
 		// Go left
 		nextBranch = node->left;
 		otherBranch = node->right;
-	}
-	else {
+	} else {
 		// Go right
 		nextBranch = node->right;
 		otherBranch = node->left;
 	}
 
 	const Node* result = nullptr;
-	if (nextBranch != nullptr) { // Check that nextBranch exists
+	if (nextBranch != nullptr) {  // Check that nextBranch exists
 		// Recursively go through tree
 		result = kNearestNeighbors(nextBranch, target, depth + 1, heap, k);
 	}
@@ -249,7 +240,7 @@ const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node,
 	// Get the closest of the result and the current node
 	const Node* closest = findClosestNode(target, result, node);
 
-	if (closest == nullptr) { // Both result and node are the same as target
+	if (closest == nullptr) {  // Both result and node are the same as target
 		// Try to find a valid node under the other branch
 		if (otherBranch != nullptr)
 			return kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
@@ -275,8 +266,8 @@ const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node,
 	return closest;
 }
 
-void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target,
-		const int depth, const float range, std::vector<const Node*>& nodesList) const {
+void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target, const int depth,
+						  const float range, std::vector<const Node*>& nodesList) const {
 	// Check if current node is inside range
 	const float targetDist = distanceSquared(node->point, target);
 	if (targetDist <= range) {
@@ -286,7 +277,7 @@ void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target,
 	// No possible paths from this node, exit recursion
 	if (node->left == nullptr && node->right == nullptr) return;
 
-	const int dimension = depth % 2; // Calculate the current dimension of the tree
+	const int dimension = depth % 2;  // Calculate the current dimension of the tree
 
 	Node* nextBranch;
 	Node* otherBranch;
@@ -296,14 +287,13 @@ void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target,
 		// Go left
 		nextBranch = node->left;
 		otherBranch = node->right;
-	}
-	else {
+	} else {
 		// Go right
 		nextBranch = node->right;
 		otherBranch = node->left;
 	}
 
-	if (nextBranch != nullptr) { // Check that nextBranch exists
+	if (nextBranch != nullptr) {  // Check that nextBranch exists
 		// Recursively go through tree
 		nodesInRange(nextBranch, target, depth + 1, range, nodesList);
 	}
@@ -321,11 +311,9 @@ void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target,
 }
 
 void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
-		const std::array<float, 2>& target, const int k) const {
-	
+						const std::array<float, 2>& target, const int k) const {
 	// Node is the same as target, invalid
-	if (target[0] == node->point[0] && target[1] == node->point[1])
-		return;
+	if (target[0] == node->point[0] && target[1] == node->point[1]) return;
 
 	// Get distance to check against heap
 	float dist = distanceSquared(target, node->point);
@@ -334,8 +322,8 @@ void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const No
 	// or the heap is not large enough.
 	if (heap.size() < k || dist < heap.back().first) {
 		// Find position to insert in max heap
-		const auto heapPos = std::lower_bound(heap.cbegin(), heap.cend(),
-				std::make_pair(dist, node));
+		const auto heapPos =
+			std::lower_bound(heap.cbegin(), heap.cend(), std::make_pair(dist, node));
 		heap.insert(heapPos, std::make_pair(dist, node));
 	}
 	// Ensure correct heap size
@@ -344,8 +332,8 @@ void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const No
 	}
 }
 
-const Tree2D::Node* Tree2D::findClosestNode(const std::array<float, 2>& target,
-		const Node* a, const Node* b) const {
+const Tree2D::Node* Tree2D::findClosestNode(const std::array<float, 2>& target, const Node* a,
+											const Node* b) const {
 	// Check for nullptr input
 	if (a == nullptr && b != nullptr)
 		return b;

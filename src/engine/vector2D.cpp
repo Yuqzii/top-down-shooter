@@ -5,10 +5,8 @@ vector2Df::vector2Df(const float& x, const float& y) {
 	this->x = x;
 	this->y = y;
 }
-vector2Df::vector2Df() {
-	x = y = 0;
-}
-vector2Df::vector2Df(const float& degrees) { // Creates direction vector from rotation in degrees
+vector2Df::vector2Df() { x = y = 0; }
+vector2Df::vector2Df(const float& degrees) {  // Creates direction vector from rotation in degrees
 	float radians = (degrees - 90) * M_PI / 180;
 	x = std::cos(radians);
 	y = std::sin(radians);
@@ -22,9 +20,7 @@ vector2Df::vector2Df(const vector2D& vec) {
 	y = vec.y;
 }
 
-float vector2Df::magnitude() const {
-	return std::sqrt(x * x + y * y);
-}
+float vector2Df::magnitude() const { return std::sqrt(x * x + y * y); }
 
 vector2Df vector2Df::normalized() const {
 	float mag = magnitude();
@@ -37,9 +33,9 @@ vector2Df vector2Df::normalized() const {
 }
 
 vector2Df vector2Df::clamped(const float& maxMagnitude) const {
-	float mag= magnitude();
+	float mag = magnitude();
 	vector2Df res(*this);
-	if (mag> maxMagnitude) {
+	if (mag > maxMagnitude) {
 		res.x /= mag;
 		res.y /= mag;
 
@@ -48,16 +44,12 @@ vector2Df vector2Df::clamped(const float& maxMagnitude) const {
 	return res;
 }
 
-int vector2Df::toDegrees() const {
-	return std::atan2(y, x) * 180 / M_PI;
-}
+int vector2Df::toDegrees() const { return std::atan2(y, x) * 180 / M_PI; }
 
-float vector2Df::crossProduct(const vector2Df& other) const {
-	return x * other.x + y * other.y;
-}
+float vector2Df::crossProduct(const vector2Df& other) const { return x * other.x + y * other.y; }
 
 vector2Df vector2Df::rotateAround(vector2Df point, float degrees) const {
-	float radians = (degrees) * M_PI / 180; // Convert angle to radians
+	float radians = (degrees)*M_PI / 180;  // Convert angle to radians
 
 	// Get sine and cosine values
 	float s = std::sin(radians);
@@ -80,13 +72,9 @@ bool vector2Df::operator==(const vector2Df& rhs) const {
 	return this->x == rhs.x && this->y == rhs.y;
 }
 
-bool vector2Df::operator<(const vector2Df& rhs) const {
-	return this->x < rhs.x;
-}
+bool vector2Df::operator<(const vector2Df& rhs) const { return this->x < rhs.x; }
 
-bool vector2Df::operator>(const vector2Df& rhs) const {
-	return this->x > rhs.x;
-}
+bool vector2Df::operator>(const vector2Df& rhs) const { return this->x > rhs.x; }
 
 // vector2D
 vector2D::vector2D(int x, int y) {
@@ -99,9 +87,7 @@ vector2D::vector2D(const vector2Df& vec) {
 	y = round(vec.y);
 }
 
-vector2D::vector2D() {
-	x = y = 0;
-}
+vector2D::vector2D() { x = y = 0; }
 
 vector2D& vector2D::operator=(const vector2Df& other) {
 	x = round(other.x);
@@ -121,10 +107,6 @@ bool vector2D::operator==(const vector2D& rhs) const {
 	return this->x == rhs.x && this->y == rhs.y;
 }
 
-bool vector2D::operator<(const vector2D& rhs) const {
-	return this->x < rhs.x;
-}
+bool vector2D::operator<(const vector2D& rhs) const { return this->x < rhs.x; }
 
-bool vector2D::operator>(const vector2D& rhs) const {
-	return this->x > rhs.x;
-}
+bool vector2D::operator>(const vector2D& rhs) const { return this->x > rhs.x; }

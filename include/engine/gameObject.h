@@ -4,17 +4,18 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+
 #include "SDL2/SDL.h"
+#include "engine/animationData.h"
 #include "engine/collision.h"
 #include "engine/vector2D.h"
-#include "engine/animationData.h"
 
 // Use this inside protected section of child class to set its texture
-#define SETOBJECTTEXTURE(FILE) \
-const std::string& getTextureSheet() const override { \
-	static const std::string file = FILE; \
-	return file; \
-}
+#define SETOBJECTTEXTURE(FILE)                            \
+	const std::string& getTextureSheet() const override { \
+		static const std::string file = FILE;             \
+		return file;                                      \
+	}
 
 class Scene;
 
@@ -49,17 +50,17 @@ public:
 	void addCollision(const GameObject* other);
 	Collision::Types getCollisionType() const { return collisionType; }
 
-	bool deleteObject; // When true object is deleted on next frame
+	bool deleteObject;	// When true object is deleted on next frame
 
 protected:
 	// Position and rotation
 	vector2Df velocity;
 	vector2Df pivotPosition;
 	vector2Df midPosition;
-	double rotation; // Angle of rotation
-	
+	double rotation;  // Angle of rotation
+
 	// Collision
-	
+
 	// If an int exception is thrown inside this function
 	// the entire collisionUpdate is aborted.
 	virtual void onCollision(const GameObject& other) {}
@@ -69,8 +70,8 @@ protected:
 	std::unordered_set<const GameObject*> collisionList;
 
 	// Animation
-	bool isAnimated; // Set true to enable animation
-	float animationSpeed; // Scales all animations
+	bool isAnimated;	   // Set true to enable animation
+	float animationSpeed;  // Scales all animations
 	virtual void changeAnimation(const int sequenceId);
 	// Use this function to define length and speed of different animations
 	virtual const std::vector<AnimationData>& getAnimationData() const {
@@ -88,23 +89,23 @@ protected:
 	vector2D pivotOffset;
 
 	// Rendering
-	virtual const std::string& getTextureSheet() const { 
+	virtual const std::string& getTextureSheet() const {
 		static const std::string file = "default_gameobject.png";
-		return file; 
+		return file;
 	};
 	SDL_RendererFlip flipType;
 	SDL_Rect srcRect, destRect;
 
 	virtual std::function<void(SDL_Renderer*)> debugRender() const;
-	
+
 private:
 	SDL_Texture* texture;
 
 	vector2Df position;
-	
+
 	// Animation
 	void animationUpdate(Scene& scene, const double& deltaTime);
-	float animationCounter; // Keeps track of current animation frame, used as x position
-	int animationSequence; // Keeps track of current animation sequence, used as y position
+	float animationCounter;	 // Keeps track of current animation frame, used as x position
+	int animationSequence;	 // Keeps track of current animation sequence, used as y position
 	int prevFrame;
 };
