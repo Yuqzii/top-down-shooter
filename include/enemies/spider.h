@@ -28,6 +28,8 @@ protected:
 private:
 	std::vector<AnimationEvent> animationEvents;
 
+	void setState(const EnemyStates newState) override;
+
 	// Called at the appropriate time during the attack animation
 	void attack(Scene& scene);
 };

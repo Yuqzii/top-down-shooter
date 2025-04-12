@@ -1,4 +1,3 @@
-#include <iostream>
 #include "enemies/spider.h"
 #include "engine/game.h"
 #include "scenes/combat_scene.h"
@@ -17,29 +16,20 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 	steering = vector2Df(); // Reset steering
 	// Different movement depending on the current state
-	switch (state) {
+	switch (getState()) {
 		case EnemyStates::PURSUIT:
-			isMoving = true;
 			steering += pursuit(combatScene->player, 0.75f);
 			steering += seek(combatScene->player.getPivotPosition()) * 0.75f;
-
-			changeAnimation(0);
 			break;
 		case EnemyStates::EVADE:
 			steering += evade(combatScene->player, 0.4f);
-
-			changeAnimation(0);
-			isMoving = true;
 			break;
 		case EnemyStates::ATTACK:
-			changeAnimation(1);
-			animationSpeed = 1;
-			isMoving = false;
 			break;
 	}
 
 	// Move away from closest enemy if not attacking
-	if (state != EnemyStates::ATTACK) {
+	if (getState() != EnemyStates::ATTACK) {
 		try {
 			// Move away from closest enemy
 			const Enemy* closest = combatScene->getEnemyManager().findClosestEnemy(pivotPosition);
@@ -53,8 +43,8 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 		vector2Df dist = pivotPosition - combatScene->player.getPivotPosition();
 		constexpr static float atkDist = 70.0f;
 		// Enter Attack state when closer than atkDist
-		if (dist.crossProduct(dist) < atkDist * atkDist) {
-			state = EnemyStates::ATTACK;
+		if (dist.crossProduct(dist) <= atkDist * atkDist) {
+			setState(EnemyStates::ATTACK);
 
 			// Make spider point directly towards player
 			const vector2Df playerDir(combatScene->player.getPivotPosition() - pivotPosition);
@@ -72,5 +62,27 @@ void SpiderEnemy::attack(Scene& scene) {
 			vector2Df(pivotPosition + vector2Df(rotation) * 55.0f));
 	attackPoint.initializeParent(this);
 
-	state = EnemyStates::PURSUIT;
+	setState(EnemyStates::PURSUIT);
+}
+
+void SpiderEnemy::setState(const EnemyStates newState) {
+	Enemy::setState(newState);
+
+	switch (newState) {
+		case EnemyStates::ATTACK:
+			isMoving = false;
+			animationSpeed = 1;
+			changeAnimation(1);
+			break;
+		case EnemyStates::PURSUIT:
+			isMoving = true;
+			changeAnimation(0);
+			break;
+		case EnemyStates::EVADE:
+			isMoving = true;
+			changeAnimation(0);
+			break;
+		default:
+			break;
+	}
 }
