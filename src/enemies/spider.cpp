@@ -109,7 +109,11 @@ void SpiderEnemy::avoidOtherEnemies(const float strength) {
 		try {
 			// Move away from closest enemy
 			const Enemy* closest = combatScene->getEnemyManager().findClosestEnemy(pivotPosition);
-			steering += flee(closest->getPivotPosition()) * strength;
+			
+			const vector2Df dist(pivotPosition - closest->getPivotPosition());
+			constexpr float avoidDist = 150.0f;
+			if (dist.crossProduct(dist) <= avoidDist * avoidDist)
+				steering += flee(closest->getPivotPosition()) * strength;
 		}
 		catch (int e) {
 			// Can't find closest enemy. Usually because there is currently only one enemy.
