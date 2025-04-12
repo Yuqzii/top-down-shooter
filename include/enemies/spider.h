@@ -16,7 +16,7 @@ protected:
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {
 			{ 4, 20 }, // Crawl
-			{ 5, 15 }, // Attack
+			{ 6, 15 }, // Attack
 		};
 		return data;
 	};

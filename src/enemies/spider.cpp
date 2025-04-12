@@ -10,7 +10,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 	isAnimated = true;
 	circleCollider.radius = 50;
 
-	animationEvents.emplace_back(1, 5, [this](Scene& scene) { attack(scene); });
+	animationEvents.emplace_back(1, 6, [this](Scene& scene) { attack(scene); });
 }
 
 void SpiderEnemy::update(Scene& scene, const float deltaTime) {
