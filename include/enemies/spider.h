@@ -30,6 +30,11 @@ private:
 
 	void setState(const EnemyStates newState) override;
 
+	void avoidOtherEnemies(const float strength = 0.7f);
+
 	// Called at the appropriate time during the attack animation
 	void attack(Scene& scene);
+	void attackRangeCheck();
+	constexpr static const float repositionTime = 2.5f;
+	float repositionTimer = repositionTime;
 };

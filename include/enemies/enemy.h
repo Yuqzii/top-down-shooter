@@ -11,6 +11,7 @@ enum class EnemyStates {
 	PURSUIT = 0,
 	EVADE,
 	ATTACK,
+	REPOSITION,
 };
 
 class Enemy : public GameObject {
