@@ -16,6 +16,8 @@ public:
 protected:
 	SETOBJECTTEXTURE("player.png");
 
+	void onCollision(const GameObject& other) override;
+
 private:
 	inline void pointToMouse(const Scene& scene);
 	inline void shoot(Scene& scene) const;
@@ -27,4 +29,7 @@ private:
 	// Healthbar
 	UI::Background healthbarBG;
 	UI::Slider* healthbarSlider;
+
+	float health = 100.0f;
+	void takeDamage(const float damage);
 };

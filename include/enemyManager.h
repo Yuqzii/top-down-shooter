@@ -17,8 +17,8 @@ public:
 
 private:
 	std::vector<Enemy*> enemies;
-	constexpr const static float startTime = 1;
-	float currentTime = startTime;
+	constexpr const static float startTime = 3;
+	float currentTime = 0;
 
 	void spawnEnemy(Scene& scene);
 

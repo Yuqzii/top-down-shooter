@@ -47,6 +47,7 @@ public:
 	// Collision
 	Collision::Circle circleCollider;
 	void addCollision(const GameObject* other);
+	Collision::Types getCollisionType() const { return collisionType; }
 
 	bool deleteObject; // When true object is deleted on next frame
 
@@ -61,19 +62,25 @@ protected:
 	
 	// If an int exception is thrown inside this function
 	// the entire collisionUpdate is aborted.
-	virtual void onCollision(const GameObject* other) {}
+	virtual void onCollision(const GameObject& other) {}
 	bool useCollision;
+	Collision::Types collisionType;
 	const float boundingCircle;
 	std::unordered_set<const GameObject*> collisionList;
 
 	// Animation
 	bool isAnimated; // Set true to enable animation
-	int animationSequence; // Keeps track of current animation sequence, used as y position
 	float animationSpeed; // Scales all animations
+	virtual void changeAnimation(const int sequenceId);
 	// Use this function to define length and speed of different animations
 	virtual const std::vector<AnimationData>& getAnimationData() const {
 		static const std::vector<AnimationData> data;
 		return data;
+	}
+	// Use this function to define animation events
+	virtual const std::vector<AnimationEvent>& getAnimationEvents() const {
+		static const std::vector<AnimationEvent> events;
+		return events;
 	}
 
 	// Pivot
@@ -96,6 +103,8 @@ private:
 	vector2Df position;
 	
 	// Animation
-	void animationUpdate(const double& deltaTime);
+	void animationUpdate(Scene& scene, const double& deltaTime);
 	float animationCounter; // Keeps track of current animation frame, used as x position
+	int animationSequence; // Keeps track of current animation sequence, used as y position
+	int prevFrame;
 };
