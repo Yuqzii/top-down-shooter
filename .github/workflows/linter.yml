@@ -21,6 +21,7 @@ jobs:
           VALIDATE_CLANG_FORMAT: true
           FIX_CLANG_FORMAT: true
           LINTER_RULES_PATH: /
+          FILTER_REGEX_EXCLUDE: lib/**
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Commit and push linting fixes
