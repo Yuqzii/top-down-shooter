@@ -33,7 +33,7 @@ void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
 
 	// Initialize enemy at full speed towards player
 	const vector2Df playerDirection =
-		vector2Df(combatScene->player.getPivotPosition() - pivotPosition).normalized();
+		vector2Df(combatScene->player.getPosition() - position).normalized();
 	velocity = playerDirection * moveSpeed;
 }
 
@@ -58,8 +58,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 
 	// Update healthbar
 	if (health < startHealth) {
-		healthbarBG.localPosition.x = pivotPosition.x - healthbarBG.localSize.x / 2;
-		healthbarBG.localPosition.y = pivotPosition.y + 60;
+		healthbarBG.localPosition.x = position.x - healthbarBG.localSize.x / 2;
+		healthbarBG.localPosition.y = position.y + 60;
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
 		// Render healthbar
@@ -96,7 +96,7 @@ void Enemy::die() {
 
 // Steering behaviors
 vector2Df Enemy::seek(const vector2Df& target) const {
-	const vector2Df targetDirection(target - pivotPosition);  // Find target direction
+	const vector2Df targetDirection(target - position);	 // Find target direction
 
 	// Scale desiredVelocity to maximum speed
 	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
@@ -111,7 +111,7 @@ vector2Df Enemy::seek(const vector2Df& target) const {
 }
 
 vector2Df Enemy::flee(const vector2Df& target) const {
-	const vector2Df targetDirection(pivotPosition - target);  // Find target direction
+	const vector2Df targetDirection(position - target);	 // Find target direction
 
 	// Scale desiredVelocity to maximum speed
 	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
@@ -120,22 +120,22 @@ vector2Df Enemy::flee(const vector2Df& target) const {
 }
 
 vector2Df Enemy::pursuit(const GameObject& target, const float& predictionMultiplier) const {
-	const vector2Df distance = target.getPivotPosition() - pivotPosition;
+	const vector2Df distance = target.getPosition() - position;
 	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
 	const vector2Df futurePosition =
-		target.getPivotPosition() + target.getVelocity() * time * predictionMultiplier;
+		target.getPosition() + target.getVelocity() * time * predictionMultiplier;
 	return seek(futurePosition);  // Use seek to move towards this position
 }
 
 vector2Df Enemy::evade(const GameObject& target, const float& predictionMultiplier) const {
-	const vector2Df distance = target.getPivotPosition() - pivotPosition;
+	const vector2Df distance = target.getPosition() - position;
 	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
 	const vector2Df futurePosition =
-		target.getPivotPosition() + target.getVelocity() * time * predictionMultiplier;
+		target.getPosition() + target.getVelocity() * time * predictionMultiplier;
 	return flee(futurePosition);  // Use seek to move towards this position
 }
 
@@ -145,8 +145,8 @@ std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 
 		// Draw line displaying steering direction and strength
 		SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
-						   pivotPosition.x + steering.x * 0.1, pivotPosition.y + steering.y * 0.1);
+		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + steering.x * 0.1,
+						   position.y + steering.y * 0.1);
 	};
 }
 

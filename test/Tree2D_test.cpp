@@ -39,7 +39,7 @@ TEST(Tree2D, General) {
 										 vector2Df(10, 19)};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const vector2Df result = tree.findClosestObject(testPoints[i])->getPivotPosition();
+		const vector2Df result = tree.findClosestObject(testPoints[i])->getPosition();
 		EXPECT_TRUE(result == expected[i]) << "Expected: " << expected[i] << " Found: " << result;
 	}
 
@@ -64,7 +64,7 @@ TEST(Tree2D, CheckingWithExistingPoints) {
 	std::array expected = {vector2Df(10, 5), vector2Df(10, 10)};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const vector2Df result = tree.findClosestObject(testPoints[i])->getPivotPosition();
+		const vector2Df result = tree.findClosestObject(testPoints[i])->getPosition();
 		EXPECT_TRUE(result == expected[i]) << "Expected: " << expected[i] << " Found: " << result;
 	}
 
@@ -82,7 +82,7 @@ TEST(Tree2D, SinglePoint) {
 	EXPECT_THROW(tree.findClosestObject(testPoints[0]), int) << "Expected error 2 thrown";
 
 	vector2Df expected(10, 10);
-	const vector2Df result = tree.findClosestObject(testPoints[1])->getPivotPosition();
+	const vector2Df result = tree.findClosestObject(testPoints[1])->getPosition();
 	EXPECT_TRUE(result == expected) << "Expected: " << expected << " Found: " << result;
 }
 
@@ -100,15 +100,15 @@ TEST(Tree2D, DuplicatePoints) {
 		tree.insert(obj.get());
 	}
 
-	vector2Df result = tree.findClosestObject(vector2Df(5, 2))->getPivotPosition();
+	vector2Df result = tree.findClosestObject(vector2Df(5, 2))->getPosition();
 	EXPECT_TRUE(result == vector2Df(10, 10))
 		<< "Expected: " << vector2Df(10, 10) << " Found: " << result;
 
-	result = tree.findClosestObject(vector2Df(1000000000, 1000000000))->getPivotPosition();
+	result = tree.findClosestObject(vector2Df(1000000000, 1000000000))->getPosition();
 	EXPECT_TRUE(result == vector2Df(10, 10))
 		<< "Expected: " << vector2Df(10, 10) << " Found: " << result;
 
-	result = tree.findClosestObject(vector2Df(10, 10))->getPivotPosition();
+	result = tree.findClosestObject(vector2Df(10, 10))->getPosition();
 	EXPECT_TRUE(result == vector2Df(15, 15))
 		<< "Expected: " << vector2Df(15, 15) << " Found: " << result;
 }
@@ -129,7 +129,7 @@ TEST(Tree2D, DuplicateSinglePoints) {
 
 	EXPECT_THROW(tree.findClosestObject(vector2Df(5, 3)), int) << "Expected error 2 thrown.";
 
-	vector2Df result = tree.findClosestObject(vector2Df(2, 12))->getPivotPosition();
+	vector2Df result = tree.findClosestObject(vector2Df(2, 12))->getPosition();
 	EXPECT_TRUE(result == vector2Df(5, 3))
 		<< "Expected: " << vector2Df(5, 3) << " Found: " << result;
 }
@@ -163,7 +163,7 @@ TEST(Tree2D, MultiplePointQuery) {
 			<< ". Subtest " << i;
 
 		for (int j = 0; j < result.size(); j++) {
-			EXPECT_TRUE(result[j]->getPivotPosition() == expected[i][j])
+			EXPECT_TRUE(result[j]->getPosition() == expected[i][j])
 				<< "Expected: " << expected[i][j] << " Found: " << result[j] << ". Subtest " << i;
 		}
 	}
@@ -227,7 +227,7 @@ TEST(Tree2D, ObjectsInRange) {
 
 		std::set<vector2Df> resultSet;
 		for (auto obj : result) {
-			resultSet.insert(obj->getPivotPosition());
+			resultSet.insert(obj->getPosition());
 		}
 
 		std::cout << "Result: ";
@@ -262,7 +262,7 @@ TEST(Tree2D, ObjectsInRange_OtherBranch) {
 	const std::vector<GameObject*> result = tree.findObjectsInRange(vector2Df(10, 10), 4);
 	std::set<vector2Df> resultPos;
 	for (auto& res : result) {
-		resultPos.insert(res->getPivotPosition());
+		resultPos.insert(res->getPosition());
 	}
 
 	// EXPECT_TRUE(false);

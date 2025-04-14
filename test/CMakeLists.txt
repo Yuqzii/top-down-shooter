@@ -24,7 +24,6 @@ target_include_directories(unit_tests PRIVATE
 # Link GTest and the game library
 target_link_libraries(unit_tests PRIVATE 
 	GTest::gtest_main
-	"${CMAKE_SOURCE_DIR}/lib/libSDL2-2.0.so.0"
 	"${PROJECT_NAME}_lib"
 )
 
