@@ -11,7 +11,9 @@ set(CMAKE_CXX_EXTENSIONS Off)
 # Change this for release
 set(CMAKE_BUILD_TYPE DEBUG)
 
-SET(SOURCE_FILES
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(SOURCE_FILES
 "src/engine/game.cpp"
 "src/engine/scene.cpp"
 "src/engine/resourceManager.cpp"
