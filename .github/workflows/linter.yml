@@ -22,6 +22,8 @@ jobs:
           FIX_CLANG_FORMAT: true
           LINTER_RULES_PATH: /
           FILTER_REGEX_EXCLUDE: lib/**
+          SAVE_SUPER_LINTER_SUMMARY: false
+          ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push linting fixes
