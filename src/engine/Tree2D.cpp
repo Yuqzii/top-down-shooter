@@ -17,8 +17,7 @@ void Tree2D::initializeWithList(const std::vector<GameObject*>& objects) {
 }
 
 void Tree2D::insert(GameObject* object) {
-	const std::array<float, 2> arrPoint = {object->getPosition().x,
-										   object->getPosition().y};
+	const std::array<float, 2> arrPoint = {object->getPosition().x, object->getPosition().y};
 	// Insert from root and create root if it does not exist
 	root = insertRecursive(root, arrPoint, object, 0);
 }
@@ -104,11 +103,9 @@ void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
 	std::vector<std::pair<std::array<float, 2>, GameObject*>> sorted;
 	sorted.reserve(objects.size());
 	for (GameObject* object : objects) {
-		const std::array<float, 2> point = {object->getPosition().x,
-											object->getPosition().y};
+		const std::array<float, 2> point = {object->getPosition().x, object->getPosition().y};
 		sorted.push_back(std::make_pair(
-			std::array<float, 2>{object->getPosition().x, object->getPosition().y},
-			object));
+			std::array<float, 2>{object->getPosition().x, object->getPosition().y}, object));
 	}
 
 	// Sort objects along x-axis to find median x.

@@ -181,8 +181,8 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 		if (useCollision) Collision::drawCircleCollider(renderer, circleCollider);
 		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderDrawLine(renderer, position.x, position.y,
-						   position.x + velocity.x * 0.1, position.y + velocity.y * 0.1);
+		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + velocity.x * 0.1,
+						   position.y + velocity.y * 0.1);
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRect(renderer, &destRect);
 	};

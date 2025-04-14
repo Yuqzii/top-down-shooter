@@ -78,9 +78,8 @@ inline void Player::shoot(Scene& scene) const {
 	vector2Df direction(rotation);
 	// Instantiate bullet
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
-	Bullet& bullet =
-		scene.instantiate<Bullet>(vector2Df(position.x + direction.x * distMultiplier,
-											position.y + direction.y * distMultiplier));
+	Bullet& bullet = scene.instantiate<Bullet>(vector2Df(
+		position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet.initializeDirection(direction, rotation);
 }

@@ -96,7 +96,7 @@ void Enemy::die() {
 
 // Steering behaviors
 vector2Df Enemy::seek(const vector2Df& target) const {
-	const vector2Df targetDirection(target - position);  // Find target direction
+	const vector2Df targetDirection(target - position);	 // Find target direction
 
 	// Scale desiredVelocity to maximum speed
 	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
@@ -111,7 +111,7 @@ vector2Df Enemy::seek(const vector2Df& target) const {
 }
 
 vector2Df Enemy::flee(const vector2Df& target) const {
-	const vector2Df targetDirection(position - target);  // Find target direction
+	const vector2Df targetDirection(position - target);	 // Find target direction
 
 	// Scale desiredVelocity to maximum speed
 	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
@@ -145,8 +145,8 @@ std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 
 		// Draw line displaying steering direction and strength
 		SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-		SDL_RenderDrawLine(renderer, position.x, position.y,
-						   position.x + steering.x * 0.1, position.y + steering.y * 0.1);
+		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + steering.x * 0.1,
+						   position.y + steering.y * 0.1);
 	};
 }
 
