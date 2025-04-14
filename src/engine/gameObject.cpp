@@ -64,12 +64,6 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 	pivotPosition.x = pivot.x + destRect.x;
 	pivotPosition.y = pivot.y + destRect.y;
 
-	// Update midPosition
-	midPosition.x = position.x + destRect.w / 2.0f;
-	midPosition.y = position.y + destRect.h / 2.0f;
-	midPosition =
-		midPosition.rotateAround(vector2Df(destRect.x + pivot.x, destRect.y + pivot.y), rotation);
-
 	// Update collider position
 	circleCollider.position = pivotPosition;
 
@@ -187,7 +181,6 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 		if (useCollision) Collision::drawCircleCollider(renderer, circleCollider);
 		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderDrawPoint(renderer, midPosition.x, midPosition.y);
 		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
 						   pivotPosition.x + velocity.x * 0.1, pivotPosition.y + velocity.y * 0.1);
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);

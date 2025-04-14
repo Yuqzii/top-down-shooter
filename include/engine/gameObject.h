@@ -37,7 +37,6 @@ public:
 	// Position and rotation
 	vector2Df getPosition() const { return position; };
 	vector2Df getPivotPosition() const { return pivotPosition; };
-	vector2Df getMidPosition() const { return midPosition; };
 	vector2Df getVelocity() const { return velocity; };
 	// Returns the rotation as a direction vector
 	inline vector2Df getDirection() const {
@@ -56,7 +55,6 @@ protected:
 	// Position and rotation
 	vector2Df velocity;
 	vector2Df pivotPosition;
-	vector2Df midPosition;
 	double rotation;  // Angle of rotation
 
 	// Collision
