@@ -69,8 +69,8 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
-	vector2Df direction(scene.getGame().getMousePos().x - pivotPosition.x,
-						scene.getGame().getMousePos().y - pivotPosition.y);
+	vector2Df direction(scene.getGame().getMousePos().x - position.x,
+						scene.getGame().getMousePos().y - position.y);
 	rotation = direction.toDegrees() + 90;
 }
 
@@ -79,8 +79,8 @@ inline void Player::shoot(Scene& scene) const {
 	// Instantiate bullet
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
 	Bullet& bullet =
-		scene.instantiate<Bullet>(vector2Df(pivotPosition.x + direction.x * distMultiplier,
-											pivotPosition.y + direction.y * distMultiplier));
+		scene.instantiate<Bullet>(vector2Df(position.x + direction.x * distMultiplier,
+											position.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet.initializeDirection(direction, rotation);
 }

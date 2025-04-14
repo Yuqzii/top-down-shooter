@@ -34,13 +34,13 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 	pivot.y = destRect.h / 2 + pivotOffset.y;
 
 	// Initialze position
-	pivotPosition = startPosition;
+	position = startPosition;
 
-	position.x = pivotPosition.x - pivot.x;
-	position.y = pivotPosition.y - pivot.y;
+	renderPosition.x = position.x - pivot.x;
+	renderPosition.y = position.y - pivot.y;
 
-	destRect.x = round(position.x);
-	destRect.y = round(position.y);
+	destRect.x = round(renderPosition.x);
+	destRect.y = round(renderPosition.y);
 
 	// Reset rotation
 	rotation = 0;
@@ -48,24 +48,24 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 
 	// Initialize collider
 	circleCollider.radius = (float)destRect.w / 2;
-	circleCollider.position = pivotPosition;
+	circleCollider.position = position;
 }
 
 void GameObject::update(Scene& scene, const float deltaTime) {
 	collisionList.clear();	// Make sure collisionList only contains collisions from this frame
 
-	position += velocity * deltaTime;
+	renderPosition += velocity * deltaTime;
 
 	// Update render position
-	destRect.x = round(position.x);
-	destRect.y = round(position.y);
+	destRect.x = round(renderPosition.x);
+	destRect.y = round(renderPosition.y);
 
 	// Update pivotPosition
-	pivotPosition.x = pivot.x + destRect.x;
-	pivotPosition.y = pivot.y + destRect.y;
+	position.x = pivot.x + destRect.x;
+	position.y = pivot.y + destRect.y;
 
 	// Update collider position
-	circleCollider.position = pivotPosition;
+	circleCollider.position = position;
 
 	if (isAnimated) animationUpdate(scene, deltaTime);
 
@@ -81,7 +81,7 @@ void GameObject::checkCollisions(const Scene& scene) {
 	std::vector<GameObject*> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+		closeObjects = scene.getObjectTree().findObjectsInRange(position, boundingCircle);
 	} catch (int e) {
 		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
 	}
@@ -104,7 +104,7 @@ void GameObject::checkCollisions(const Scene& scene) {
 				break;
 
 			case POINT:
-				if (Collision::checkCollision(object->getPivotPosition(), circleCollider)) {
+				if (Collision::checkCollision(object->getPosition(), circleCollider)) {
 					addCollision(object);
 				}
 				break;
@@ -181,8 +181,8 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 		if (useCollision) Collision::drawCircleCollider(renderer, circleCollider);
 		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderDrawLine(renderer, pivotPosition.x, pivotPosition.y,
-						   pivotPosition.x + velocity.x * 0.1, pivotPosition.y + velocity.y * 0.1);
+		SDL_RenderDrawLine(renderer, position.x, position.y,
+						   position.x + velocity.x * 0.1, position.y + velocity.y * 0.1);
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRect(renderer, &destRect);
 	};

@@ -20,7 +20,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 		using enum EnemyStates;
 		case PURSUIT:
 			steering += pursuit(combatScene->player, 0.75f);
-			steering += seek(combatScene->player.getPivotPosition()) * 0.75f;
+			steering += seek(combatScene->player.getPosition()) * 0.75f;
 			avoidOtherEnemies(0.5f);
 			attackRangeCheck();
 			break;
@@ -35,7 +35,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 			break;
 
 		case REPOSITION:
-			steering += flee(combatScene->player.getPivotPosition()) * 1.75f;
+			steering += flee(combatScene->player.getPosition()) * 1.75f;
 			avoidOtherEnemies(0.3f);
 
 			// Change to pursuit after repositionTime has passed
@@ -53,21 +53,21 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 void SpiderEnemy::attack(Scene& scene) {
 	// Create attack point to check for collision against player
 	EnemyAttackPoint& attackPoint =
-		scene.instantiate<EnemyAttackPoint>(vector2Df(pivotPosition + vector2Df(rotation) * 55.0f));
+		scene.instantiate<EnemyAttackPoint>(vector2Df(position + vector2Df(rotation) * 55.0f));
 	attackPoint.initializeParent(this);
 
 	setState(EnemyStates::REPOSITION);
 }
 
 void SpiderEnemy::attackRangeCheck() {
-	vector2Df dist = pivotPosition - combatScene->player.getPivotPosition();
+	vector2Df dist = position - combatScene->player.getPosition();
 	constexpr static float atkDist = 70.0f;
 	// Enter Attack state when closer than atkDist
 	if (dist.crossProduct(dist) <= atkDist * atkDist) {
 		setState(EnemyStates::ATTACK);
 
 		// Make spider point directly towards player
-		const vector2Df playerDir(combatScene->player.getPivotPosition() - pivotPosition);
+		const vector2Df playerDir(combatScene->player.getPosition() - position);
 		rotation = playerDir.toDegrees() + 90;
 	}
 }
@@ -108,12 +108,12 @@ void SpiderEnemy::setState(const EnemyStates newState) {
 void SpiderEnemy::avoidOtherEnemies(const float strength) {
 	try {
 		// Move away from closest enemy
-		const Enemy* closest = combatScene->getEnemyManager().findClosestEnemy(pivotPosition);
+		const Enemy* closest = combatScene->getEnemyManager().findClosestEnemy(position);
 
-		const vector2Df dist(pivotPosition - closest->getPivotPosition());
+		const vector2Df dist(position - closest->getPosition());
 		constexpr float avoidDist = 150.0f;
 		if (dist.crossProduct(dist) <= avoidDist * avoidDist)
-			steering += flee(closest->getPivotPosition()) * strength;
+			steering += flee(closest->getPosition()) * strength;
 	} catch (int e) {
 		// Can't find closest enemy. Usually because there is currently only one enemy.
 		// Does not require further action, hence why this catch is empty.

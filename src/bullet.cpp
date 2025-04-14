@@ -7,11 +7,11 @@
 void Bullet::initialize(const vector2Df& position, const Scene& scene) {
 	GameObject::initialize(position, scene);  // Call base initialize
 
-	previousPosition = pivotPosition;
+	previousPosition = position;
 }
 
 void Bullet::update(Scene& scene, const float deltaTime) {
-	previousPosition = pivotPosition;
+	previousPosition = position;
 	GameObject::update(scene, deltaTime);  // Update position
 
 	timeLeft -= deltaTime;
@@ -24,9 +24,9 @@ void Bullet::update(Scene& scene, const float deltaTime) {
 void Bullet::checkCollisions(const Scene& scene) {
 	// Get all GameObjects withing bounding circle
 	const std::vector<GameObject*> closeObjects =
-		scene.getObjectTree().findObjectsInRange(pivotPosition, boundingCircle);
+		scene.getObjectTree().findObjectsInRange(position, boundingCircle);
 
-	const Collision::Line movementLine(previousPosition, pivotPosition);
+	const Collision::Line movementLine(previousPosition, position);
 
 	for (GameObject* object : closeObjects) {
 		if (!object->getUseCollision() || collisionList.count(object) || object == this) continue;

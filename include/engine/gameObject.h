@@ -35,8 +35,8 @@ public:
 	bool getUseCollision() const { return useCollision; }
 
 	// Position and rotation
+	vector2Df getRenderPosition() const { return renderPosition; };
 	vector2Df getPosition() const { return position; };
-	vector2Df getPivotPosition() const { return pivotPosition; };
 	vector2Df getVelocity() const { return velocity; };
 	// Returns the rotation as a direction vector
 	inline vector2Df getDirection() const {
@@ -54,7 +54,7 @@ public:
 protected:
 	// Position and rotation
 	vector2Df velocity;
-	vector2Df pivotPosition;
+	vector2Df position;
 	double rotation;  // Angle of rotation
 
 	// Collision
@@ -99,7 +99,7 @@ protected:
 private:
 	SDL_Texture* texture;
 
-	vector2Df position;
+	vector2Df renderPosition;
 
 	// Animation
 	void animationUpdate(Scene& scene, const double& deltaTime);
