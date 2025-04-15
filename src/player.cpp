@@ -88,7 +88,7 @@ void Player::shoot(Scene& scene) {
 	Bullet& bullet = scene.instantiate<Bullet>(vector2Df(
 		position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
-	bullet.initializeDirection(direction, rotation);
+	bullet.initializeBullet(direction, rotation, *currentGun);
 
 	timeSinceShot = 0.0f;
 }

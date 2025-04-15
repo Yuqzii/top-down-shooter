@@ -3,6 +3,7 @@
 #include "engine/collision.h"
 #include "engine/gameObject.h"
 #include "engine/scene.h"
+#include "gunData.h"
 
 Bullet::Bullet() : GameObject(vector2Df(1, 2)) { setSize(vector2Df{1.75f, 1.75f}); }
 
@@ -48,8 +49,10 @@ void Bullet::onCollision(const GameObject& other) {
 	throw 1;
 }
 
-void Bullet::initializeDirection(const vector2Df direction, const float rotation) {
-	velocity.x = direction.x * speed;
-	velocity.y = direction.y * speed;
+void Bullet::initializeBullet(const vector2Df& direction, const float rotation,
+							  const GunData& data) {
+	velocity.x = direction.x * data.bulletSpeed;
+	velocity.y = direction.y * data.bulletSpeed;
 	this->rotation = rotation;
+	this->data = &data;
 }
