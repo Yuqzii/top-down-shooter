@@ -16,7 +16,9 @@ GameObject::GameObject()
 	: deleteObject{false},
 	  srcRect{0, 0, 32, 32}, destRect{0, 0, srcRect.w * 3, srcRect.h * 3},
 	  pivotOffset{0, 0}, isAnimated{false}, animationCounter{0}, animationSequence{0}, prevFrame{0},
-	  boundingCircle{500.0f}, useCollision{false}, collisionList{}, collisionType{} {}
+	  boundingCircle{500.0f}, useCollision{false}, collisionList{}, collisionType{},
+	  rotation{0}, flipType{SDL_FLIP_NONE}
+{}
 
 void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
@@ -35,13 +37,11 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 	destRect.x = round(renderPosition.x);
 	destRect.y = round(renderPosition.y);
 
-	// Reset rotation
-	rotation = 0;
-	flipType = SDL_FLIP_NONE;
-
 	// Initialize collider
-	circleCollider.radius = (float)destRect.w / 2;
-	circleCollider.position = position;
+	if (collisionType == Collision::Types::CIRCLE) {
+		circleCollider.radius = (float)destRect.w / 2;
+		circleCollider.position = position;
+	}
 }
 
 void GameObject::update(Scene& scene, const float deltaTime) {
