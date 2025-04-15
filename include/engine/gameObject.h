@@ -21,6 +21,7 @@ class Scene;
 
 class GameObject {
 public:
+	GameObject(const vector2Df& srcRectSize);
 	GameObject();
 	virtual ~GameObject() = default;
 
