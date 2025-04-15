@@ -6,6 +6,8 @@ class Game;
 
 class Bullet : public GameObject {
 public:
+	Bullet();
+
 	void initialize(const vector2Df& startPosition, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 

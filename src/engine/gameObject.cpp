@@ -12,9 +12,9 @@
 
 // Initialize destination rectangle (part of screen GameObject is displayed on)
 // Create global macro or sum for size instead of 3?
-GameObject::GameObject()
+GameObject::GameObject(const vector2Df& srcRectSize)
 	: deleteObject{false},
-	  srcRect{0, 0, 32, 32},
+	  srcRect{0, 0, (int)srcRectSize.x, (int)srcRectSize.y},
 	  destRect{0, 0, srcRect.w * 3, srcRect.h * 3},
 	  pivotOffset{0, 0},
 	  isAnimated{false},
@@ -27,6 +27,8 @@ GameObject::GameObject()
 	  collisionType{},
 	  rotation{0},
 	  flipType{SDL_FLIP_NONE} {}
+
+GameObject::GameObject() : GameObject(vector2Df(32, 32)) {}
 
 void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
