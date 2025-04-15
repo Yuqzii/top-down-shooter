@@ -7,7 +7,7 @@
 #include "scenes/combat_scene.h"
 
 Game::Game(const char* title, const int width, const int height)
-	: window(nullptr), renderer(nullptr) {
+	: window(nullptr), renderer(nullptr), input{}, mouseInput{}, onMouseDown{} {
 	isRunning = true;
 
 	// Check that SDL initializes
