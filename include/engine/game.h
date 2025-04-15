@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "SDL2/SDL.h"
 #include "engine/gameObject.h"
 #include "engine/renderManager.h"
 #include "engine/vector2D.h"
@@ -35,7 +34,10 @@ public:
 	RenderManager& getRenderManager() { return renderManager; }
 
 	const std::array<bool, 256>& getInput() const { return input; }
+	// Button value true if button is being held
 	const std::array<bool, 32>& getMouseInput() const { return mouseInput; }
+	// Button value true if pressed this frame
+	const std::array<bool, 32>& getOnMouseDown() const { return onMouseDown; }
 	const vector2Df& getMousePos() const { return mousePos; }
 
 private:
@@ -45,6 +47,7 @@ private:
 
 	std::array<bool, 256> input;
 	std::array<bool, 32> mouseInput;
+	std::array<bool, 32> onMouseDown;
 	vector2Df mousePos;
 
 	Uint64 prevTime;

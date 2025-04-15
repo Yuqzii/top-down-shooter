@@ -47,7 +47,8 @@ Game::Game(const char* title, const int width, const int height)
 Game::~Game() {}
 
 void Game::handleEvents() {
-	mouseInput.fill(false);	 // Reset mouseInput
+	// Reset mouse down, so that it is only true on the frame button is pressed
+	onMouseDown.fill(false); 
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
@@ -68,6 +69,10 @@ void Game::handleEvents() {
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				mouseInput[event.button.button] = true;
+				onMouseDown[event.button.button] = true;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				mouseInput[event.button.button] = false;
 				break;
 			default:
 				break;
