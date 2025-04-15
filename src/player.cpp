@@ -9,9 +9,10 @@
 #include "engine/gameObject.h"
 #include "engine/scene.h"
 
-Player::Player() : healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}),
-				   currentGun(std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)),
-				   timeSinceShot(0.0f) {
+Player::Player()
+	: healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}),
+	  currentGun(std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)),
+	  timeSinceShot(0.0f) {
 	pivotOffset.y = 20;
 	useCollision = true;
 
@@ -55,12 +56,9 @@ void Player::update(Scene& scene, const float deltaTime) {
 	timeSinceShot += deltaTime;
 	const bool enoughTimePassed = timeSinceShot >= currentGun->timeBetweenShots;
 	if (currentGun->isAuto) {
-		if (scene.getGame().getMouseInput()[SDL_BUTTON_LEFT] && enoughTimePassed)
-			shoot(scene);
-	}
-	else {
-		if (scene.getGame().getOnMouseDown()[SDL_BUTTON_LEFT] && enoughTimePassed)
-			shoot(scene);
+		if (scene.getGame().getMouseInput()[SDL_BUTTON_LEFT] && enoughTimePassed) shoot(scene);
+	} else {
+		if (scene.getGame().getOnMouseDown()[SDL_BUTTON_LEFT] && enoughTimePassed) shoot(scene);
 	}
 
 	healthbarBG.update();

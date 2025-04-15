@@ -48,7 +48,7 @@ Game::~Game() {}
 
 void Game::handleEvents() {
 	// Reset mouse down, so that it is only true on the frame button is pressed
-	onMouseDown.fill(false); 
+	onMouseDown.fill(false);
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
