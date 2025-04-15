@@ -4,6 +4,8 @@
 #include "engine/gameObject.h"
 #include "engine/scene.h"
 
+Bullet::Bullet() : GameObject(vector2Df(1, 2)) {}
+
 void Bullet::initialize(const vector2Df& position, const Scene& scene) {
 	GameObject::initialize(position, scene);  // Call base initialize
 
