@@ -16,14 +16,13 @@ public:
 	void onCollision(const GameObject& other) override;
 
 	/*
-	* @abstract		Initializes the bullet with a direction, and its corresponding GunData object.
-	*				If this function is not called the bullet will not work, and likely results in
-	*				errors.
-	* @param		direction	The direction the bullet will travel in.
-	* @param		rotation	The rotation of the bullet. (Used because rotation is already
-	*							calculated for the player, avoids recomputation).
-	* @param		gunData		Data object for the gun this bullet was fired from.
-	*/
+	 * @abstract		Initializes the bullet with a direction, and its corresponding GunData
+	 *object. If this function is not called the bullet will not work, and likely results in errors.
+	 * @param		direction	The direction the bullet will travel in.
+	 * @param		rotation	The rotation of the bullet. (Used because rotation is already
+	 *							calculated for the player, avoids recomputation).
+	 * @param		gunData		Data object for the gun this bullet was fired from.
+	 */
 	void initializeBullet(const vector2Df& direction, const float rotation, const GunData& gunData);
 
 	const GunData& getData() const { return *data; }
