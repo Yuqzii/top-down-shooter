@@ -7,23 +7,26 @@
 #include "engine/resourceManager.h"
 #include "engine/scene.h"
 
-GameObject::GameObject() : boundingCircle(500.0f), useCollision(false) {
-	deleteObject = false;
+// Initialize source rectangle (part of textureSheet that is displayed)
+// default to top left 32x32
 
-	// Initialize source rectangle (part of textureSheet that is displayed)
-	// default to top left 32x32
-	srcRect.h = srcRect.w = 32;
-	srcRect.x = srcRect.y = 0;
-
-	// Initialize destination rectangle (part of screen GameObject is displayed on)
-	destRect.w = srcRect.w * 3;	 // Create global macro or sum for size instead of 3?
-	destRect.h = srcRect.h * 3;
-
-	pivotOffset.x = pivotOffset.y = 0;
-
-	isAnimated = false;
-	animationCounter = animationSequence = 0;
-}
+// Initialize destination rectangle (part of screen GameObject is displayed on)
+// Create global macro or sum for size instead of 3?
+GameObject::GameObject()
+	: deleteObject{false},
+	  srcRect{0, 0, 32, 32},
+	  destRect{0, 0, srcRect.w * 3, srcRect.h * 3},
+	  pivotOffset{0, 0},
+	  isAnimated{false},
+	  animationCounter{0},
+	  animationSequence{0},
+	  prevFrame{0},
+	  boundingCircle{500.0f},
+	  useCollision{false},
+	  collisionList{},
+	  collisionType{},
+	  rotation{0},
+	  flipType{SDL_FLIP_NONE} {}
 
 void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
@@ -42,13 +45,11 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 	destRect.x = round(renderPosition.x);
 	destRect.y = round(renderPosition.y);
 
-	// Reset rotation
-	rotation = 0;
-	flipType = SDL_FLIP_NONE;
-
 	// Initialize collider
-	circleCollider.radius = (float)destRect.w / 2;
-	circleCollider.position = position;
+	if (collisionType == Collision::Types::CIRCLE) {
+		circleCollider.radius = (float)destRect.w / 2;
+		circleCollider.position = position;
+	}
 }
 
 void GameObject::update(Scene& scene, const float deltaTime) {
