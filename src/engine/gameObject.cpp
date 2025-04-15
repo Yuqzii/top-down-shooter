@@ -14,8 +14,10 @@
 // Create global macro or sum for size instead of 3?
 GameObject::GameObject(const vector2Df& srcRectSize)
 	: deleteObject{false},
+	  size{1, 1},
+	  baseSize{srcRectSize},
 	  srcRect{0, 0, (int)srcRectSize.x, (int)srcRectSize.y},
-	  destRect{0, 0, srcRect.w * 3, srcRect.h * 3},
+	  destRect{0, 0, srcRect.w * Game::pixelSize, srcRect.h * Game::pixelSize},
 	  pivotOffset{0, 0},
 	  isAnimated{false},
 	  animationCounter{0},
@@ -57,15 +59,15 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 void GameObject::update(Scene& scene, const float deltaTime) {
 	collisionList.clear();	// Make sure collisionList only contains collisions from this frame
 
-	renderPosition += velocity * deltaTime;
+	position += velocity * deltaTime;
+
+	// Update render positon
+	renderPosition.x = position.x - pivot.x;
+	renderPosition.y = position.y - pivot.y;
 
 	// Update render position
 	destRect.x = round(renderPosition.x);
 	destRect.y = round(renderPosition.y);
-
-	// Update pivotPosition
-	position.x = pivot.x + destRect.x;
-	position.y = pivot.y + destRect.y;
 
 	// Update collider position
 	circleCollider.position = position;
@@ -75,6 +77,18 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 #ifdef DEBUG_GIZMO
 	scene.getGame().getRenderManager().addRenderCall(debugRender(), this);
 #endif
+}
+
+void GameObject::setSize(const vector2Df& newSize) {
+	size = newSize;
+
+	// Update render rect
+	destRect.w = size.x * baseSize.x * Game::pixelSize;
+	destRect.h = size.y * baseSize.y * Game::pixelSize;
+
+	// Update pivot
+	pivot.x = (float)destRect.w / 2 + pivotOffset.x * size.x;
+	pivot.y = (float)destRect.h / 2 + pivotOffset.y * size.y;
 }
 
 void GameObject::checkCollisions(const Scene& scene) {

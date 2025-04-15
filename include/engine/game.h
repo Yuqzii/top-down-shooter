@@ -30,6 +30,7 @@ public:
 	// SDL stuff
 	SDL_Window* getWindow() const { return window; }
 	SDL_Renderer* getRenderer() const { return renderer; }
+	constexpr static const int pixelSize = 3;
 
 	RenderManager& getRenderManager() { return renderManager; }
 
