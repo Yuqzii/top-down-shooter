@@ -13,10 +13,10 @@
 // Initialize destination rectangle (part of screen GameObject is displayed on)
 // Create global macro or sum for size instead of 3?
 GameObject::GameObject()
-	: deleteObject(false),
+	: deleteObject{false},
 	  srcRect{0, 0, 32, 32}, destRect{0, 0, srcRect.w * 3, srcRect.h * 3},
-	  pivotOffset{0, 0}, isAnimated(false), animationCounter(0), animationSequence(0), prevFrame(0),
-	  boundingCircle(500.0f), useCollision(false) {}
+	  pivotOffset{0, 0}, isAnimated{false}, animationCounter{0}, animationSequence{0}, prevFrame{0},
+	  boundingCircle{500.0f}, useCollision{false}, collisionList{}, collisionType{} {}
 
 void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
