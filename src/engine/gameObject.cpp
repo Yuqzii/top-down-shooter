@@ -176,8 +176,8 @@ void GameObject::animationUpdate(Scene& scene, const double& deltaTime) {
 	const int frame = std::trunc(animationCounter);
 
 	if (frame != prevFrame) {
-		srcRect.x = frame * 32;
-		srcRect.y = animationSequence * 32;
+		srcRect.x = frame + frame * 32;
+		srcRect.y = animationSequence + animationSequence * 32;
 	}
 
 	prevFrame = frame;
