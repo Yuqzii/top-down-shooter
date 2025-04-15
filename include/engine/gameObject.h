@@ -36,9 +36,10 @@ public:
 	bool getUseCollision() const { return useCollision; }
 
 	// Position and rotation
-	vector2Df getRenderPosition() const { return renderPosition; };
-	vector2Df getPosition() const { return position; };
-	vector2Df getVelocity() const { return velocity; };
+	vector2Df getRenderPosition() const { return renderPosition; }
+	vector2Df getPosition() const { return position; }
+	vector2Df getVelocity() const { return velocity; }
+	vector2Df getSize() const { return size; }
 	// Returns the rotation as a direction vector
 	inline vector2Df getDirection() const {
 		float radians = (rotation - 90) * M_PI / 180;
@@ -57,6 +58,8 @@ protected:
 	vector2Df velocity;
 	vector2Df position;
 	double rotation;  // Angle of rotation
+
+	void setSize(const vector2Df& newSize);
 
 	// Collision
 
@@ -99,6 +102,9 @@ protected:
 
 private:
 	SDL_Texture* texture;
+
+	const vector2Df baseSize;
+	vector2Df size;
 
 	vector2Df renderPosition;
 
