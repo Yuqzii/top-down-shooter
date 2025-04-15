@@ -146,7 +146,7 @@ void GameObject::collisionUpdate() {
 void GameObject::addCollision(const GameObject* other) { collisionList.insert(other); }
 
 void GameObject::render(SDL_Renderer* renderer) const {
-	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
+	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, round(rotation), &pivot, flipType);
 }
 
 void GameObject::animationUpdate(Scene& scene, const double& deltaTime) {
@@ -176,8 +176,8 @@ void GameObject::animationUpdate(Scene& scene, const double& deltaTime) {
 	const int frame = std::trunc(animationCounter);
 
 	if (frame != prevFrame) {
-		srcRect.x = frame * 32;
-		srcRect.y = animationSequence * 32;
+		srcRect.x = frame + frame * 32;
+		srcRect.y = animationSequence + animationSequence * 32;
 	}
 
 	prevFrame = frame;
