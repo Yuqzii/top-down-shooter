@@ -4,9 +4,7 @@
 #include "engine/gameObject.h"
 #include "engine/scene.h"
 
-Bullet::Bullet() : GameObject(vector2Df(1, 2)) {
-	setSize(vector2Df{1.75f, 1.75f});
-}
+Bullet::Bullet() : GameObject(vector2Df(1, 2)) { setSize(vector2Df{1.75f, 1.75f}); }
 
 void Bullet::initialize(const vector2Df& position, const Scene& scene) {
 	GameObject::initialize(position, scene);  // Call base initialize

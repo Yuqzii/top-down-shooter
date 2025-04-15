@@ -58,7 +58,7 @@ protected:
 	vector2Df velocity;
 	vector2Df position;
 	double rotation;  // Angle of rotation
-	
+
 	void setSize(const vector2Df& newSize);
 
 	// Collision
