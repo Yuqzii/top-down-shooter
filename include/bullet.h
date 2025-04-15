@@ -3,6 +3,7 @@
 #include "engine/gameObject.h"
 
 class Game;
+class GunData;
 
 class Bullet : public GameObject {
 public:
@@ -14,9 +15,18 @@ public:
 	void checkCollisions(const Scene& scene) override;
 	void onCollision(const GameObject& other) override;
 
-	void initializeDirection(const vector2Df direction, const float rotation);
+	/*
+	* @abstract		Initializes the bullet with a direction, and its corresponding GunData object.
+	*				If this function is not called the bullet will not work, and likely results in
+	*				errors.
+	* @param		direction	The direction the bullet will travel in.
+	* @param		rotation	The rotation of the bullet. (Used because rotation is already
+	*							calculated for the player, avoids recomputation).
+	* @param		gunData		Data object for the gun this bullet was fired from.
+	*/
+	void initializeBullet(const vector2Df& direction, const float rotation, const GunData& gunData);
 
-	float getDamage() const { return damage; }
+	const GunData& getData() const { return *data; }
 
 protected:
 	SETOBJECTTEXTURE("bullet.png");
@@ -24,8 +34,8 @@ protected:
 private:
 	vector2Df direction;
 	vector2Df previousPosition;
-	constexpr static const float speed = 1000;
-	constexpr static const float damage = 25;
+
+	const GunData* data;
 
 	constexpr static const float startTime = 4;
 	float timeLeft = startTime;

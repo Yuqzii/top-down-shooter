@@ -71,7 +71,7 @@ void Enemy::onCollision(const GameObject& other) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(&other);
 	if (bullet == nullptr) return;	// Return if colliding with something that is not a bullet
 
-	takeDamage(bullet->getDamage());
+	takeDamage(bullet->getData().damage);
 }
 
 void Enemy::takeDamage(const float damage) {
