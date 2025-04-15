@@ -3,6 +3,7 @@
 #include "engine/UI/background.h"
 #include "engine/UI/slider.h"
 #include "engine/gameObject.h"
+#include "gunData.h"
 
 class Game;
 
@@ -13,14 +14,13 @@ public:
 	void initialize(const vector2Df& position, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
-protected:
+private:
 	SETOBJECTTEXTURE("player.png");
 
-	void onCollision(const GameObject& other) override;
-
-private:
 	inline void pointToMouse(const Scene& scene);
-	inline void shoot(Scene& scene) const;
+	inline void shoot(Scene& scene);
+
+	void onCollision(const GameObject& other) override;
 
 	bool moveLeft, moveRight, moveUp, moveDown;
 	vector2Df moveDir;
@@ -32,4 +32,7 @@ private:
 
 	float health = 100.0f;
 	void takeDamage(const float damage);
+
+	std::unique_ptr<GunData> currentGun;
+	float timeSinceShot;
 };
