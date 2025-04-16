@@ -17,3 +17,9 @@ void CombatScene::update(const float deltaTime) {
 
 	enemyManager.update(*this, deltaTime);
 }
+
+void CombatScene::render(SDL_Renderer* renderer) const {
+	Scene::render(renderer);
+
+	terrainManager.render(renderer);
+}
