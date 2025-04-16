@@ -17,8 +17,8 @@ void TerrainManager::render(SDL_Renderer* renderer) const {
 		for (int y = 0; y < ySize; y++) {
 			// Add render rect if there is terrain at the current position
 			if (terrainMap[x][y]) {
-				rects.push_back(SDL_Rect{x * Game::pixelSize * 2, y * Game::pixelSize * 2,
-					Game::pixelSize * 2, Game::pixelSize * 2});
+				rects.push_back(SDL_Rect{x * Game::pixelSize * 5, y * Game::pixelSize * 5,
+					Game::pixelSize * 5, Game::pixelSize * 5});
 			}
 		}
 
