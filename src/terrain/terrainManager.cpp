@@ -39,5 +39,4 @@ void TerrainManager::render(SDL_Renderer* renderer) const {
 	for (auto& rectList : renderRects) {
 		SDL_RenderFillRects(renderer, &rectList[0], rectList.size());
 	}
-	// Draw all the terrain "pixels" for the current x-position
 }
