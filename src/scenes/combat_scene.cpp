@@ -1,5 +1,30 @@
 #include "scenes/combat_scene.h"
 
+const std::vector<std::vector<char>> terrainMap {
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0},
+	std::vector<char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	std::vector<char>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	std::vector<char>{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+};
+
+CombatScene::CombatScene(Game& game_) :
+	Scene{game_},
+	player{instantiate<Player>(vector2Df(700, 400))},
+	terrainManager{terrainMap, SDL_Color{56, 28, 40, 255}}
+{}
+
 void CombatScene::initialize() {
 	Scene::initialize();
 

@@ -2,12 +2,14 @@
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
 
-TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_)
-	: terrainMap{terrainMap_}, xSize{terrainMap.size()}, ySize{terrainMap[0].size()}
+TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_,
+							   const SDL_Color& color_)
+	: terrainMap{terrainMap_}, xSize{terrainMap.size()}, ySize{terrainMap[0].size()},
+	  color(color_)
 {}
 
 void TerrainManager::render(SDL_Renderer* renderer) const {
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
 	for (int x = 0; x < xSize; x++) {
 		std::vector<SDL_Rect> rects;
