@@ -31,6 +31,7 @@ set(SOURCE_FILES
 "src/engine/Tree2D.cpp"
 "src/scenes/combat_scene.cpp"
 "src/enemies/spider.cpp"
+"src/terrain/terrainManager.cpp"
 )
 
 # Build the game as a static library
