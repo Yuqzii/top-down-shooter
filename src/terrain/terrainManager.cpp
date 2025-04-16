@@ -9,18 +9,18 @@ TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_
 void TerrainManager::render(SDL_Renderer* renderer) const {
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-	SDL_Rect rects[xSize][ySize];
 	for (int x = 0; x < xSize; x++) {
+		std::vector<SDL_Rect> rects;
+		rects.reserve(ySize);
 		for (int y = 0; y < ySize; y++) {
 			// Add render rect if there is terrain at the current position
 			if (terrainMap[x][y]) {
-				rects[x][y] = SDL_Rect{x * Game::pixelSize * 2, y * Game::pixelSize * 2,
-					Game::pixelSize * 2, Game::pixelSize * 2};
+				rects.push_back(SDL_Rect{x * Game::pixelSize * 2, y * Game::pixelSize * 2,
+					Game::pixelSize * 2, Game::pixelSize * 2});
 			}
-			else rects[x][y] = SDL_Rect{0,0,0,0};
 		}
 
 		// Draw all the terrain "pixels" for the current x-position
-		SDL_RenderFillRects(renderer, rects[x], ySize);
+		SDL_RenderFillRects(renderer, &rects[0], rects.size());
 	}
 }
