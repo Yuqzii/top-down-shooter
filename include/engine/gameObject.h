@@ -1,11 +1,11 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
-#include "SDL2/SDL.h"
+#include "SDL2/SDL_render.h"
 #include "engine/animationData.h"
 #include "engine/collision.h"
 #include "engine/vector2D.h"
@@ -25,15 +25,10 @@ public:
 	GameObject();
 	virtual ~GameObject() = default;
 
-	// Initialize must be overriden to change initialization of things such as collider settings
 	virtual void initialize(const vector2Df& position, const Scene& scene);
 	// Should be called after finishing velocity calculations
 	virtual void update(Scene& scene, const float deltaTime);
 	void render(SDL_Renderer* renderer) const;
-
-	virtual void checkCollisions(const Scene& scene);
-	void collisionUpdate();
-	bool getUseCollision() const { return useCollision; }
 
 	// Position and rotation
 	vector2Df getRenderPosition() const { return renderPosition; }
@@ -46,10 +41,12 @@ public:
 		return vector2Df((float)std::cos(radians), (float)std::sin(radians));
 	};
 
-	// Collision
-	Collision::Circle circleCollider;
-	void addCollision(const GameObject* other);
-	Collision::Types getCollisionType() const { return collisionType; }
+	//----- COLLISION -----//
+	
+	Collider* getCollider() const { return collider.get(); }
+	// If an int exception is thrown inside this function
+	// the entire collisionUpdate is aborted.
+	virtual void onCollision(const Collider& other) {}
 
 	bool deleteObject;	// When true object is deleted on next frame
 
@@ -61,15 +58,7 @@ protected:
 
 	void setSize(const vector2Df& newSize);
 
-	// Collision
-
-	// If an int exception is thrown inside this function
-	// the entire collisionUpdate is aborted.
-	virtual void onCollision(const GameObject& other) {}
-	bool useCollision;
-	Collision::Types collisionType;
-	const float boundingCircle;
-	std::unordered_set<const GameObject*> collisionList;
+	std::unique_ptr<Collider> collider;
 
 	// Animation
 	bool isAnimated;	   // Set true to enable animation

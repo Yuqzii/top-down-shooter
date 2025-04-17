@@ -33,6 +33,16 @@ void TerrainManager::update() {
 	}
 }
 
+void TerrainManager::updateCollisions() {
+	
+
+	for (int x = 0; x < xSize; x++) {
+		for (int y = 0; y < ySize; y++) {
+			
+		}
+	}
+}
+
 void TerrainManager::render(SDL_Renderer* renderer) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 

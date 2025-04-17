@@ -19,8 +19,10 @@ Enemy::Enemy(const float health_, const float damage_, const float speed, const 
 	  isMoving(true),
 	  healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{255, 0, 0, 255}),
 	  state() {
-	useCollision = true;
-	circleCollider.radius = 40;
+
+	Collision::Circle collisionCircle{40.0f};
+	collider = std::make_unique<CircleCollider>(std::move(collisionCircle), 500.0f, this);
+	circleCollider = static_cast<CircleCollider*>(collider.get());
 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
@@ -29,7 +31,7 @@ void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
 	GameObject::initialize(startPosition, scene);  // Call base initialize
 
 	// Store Scene as CombatScene to avoid unnecessary casts at update
-	combatScene = dynamic_cast<const CombatScene*>(&scene);
+	combatScene = static_cast<const CombatScene*>(&scene);
 
 	// Initialize enemy at full speed towards player
 	const vector2Df playerDirection =
@@ -55,6 +57,7 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 		velocity = vector2Df();
 
 	GameObject::update(scene, deltaTime);  // Update position
+	circleCollider->circle.position = position; // Update collider position
 
 	// Update healthbar
 	if (health < startHealth) {
@@ -67,8 +70,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	}
 }
 
-void Enemy::onCollision(const GameObject& other) {
-	const Bullet* bullet = dynamic_cast<const Bullet*>(&other);
+void Enemy::onCollision(const Collider& other) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(other.getParent());
 	if (bullet == nullptr) return;	// Return if colliding with something that is not a bullet
 
 	takeDamage(bullet->getData().damage);
@@ -151,11 +154,11 @@ std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 }
 
 EnemyAttackPoint::EnemyAttackPoint() {
-	useCollision = true;
-	collisionType = Collision::Types::POINT;
+	collider = std::make_unique<CircleCollider>(std::move(Collision::Circle{10.0f}), 100.0f, this);
 }
 
 void EnemyAttackPoint::initializeParent(const Enemy* parent) {
 	this->parent = parent;
+	static_cast<CircleCollider*>(collider.get())->circle.position = position;
 	deleteObject = true;
 }

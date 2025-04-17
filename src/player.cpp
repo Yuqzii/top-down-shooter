@@ -1,7 +1,9 @@
 #include "player.h"
 
 #include <cmath>
+#include <iostream>
 
+#include "SDL2/SDL_mouse.h"
 #include "SDL2/SDL_scancode.h"
 #include "bullet.h"
 #include "enemies/enemy.h"
@@ -10,19 +12,21 @@
 #include "engine/scene.h"
 
 Player::Player()
-	: healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}),
-	  currentGun(std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)),
-	  timeSinceShot(0.0f) {
+	: healthbarBG{vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}},
+	  currentGun{std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
+	  timeSinceShot{0.0f} {
+	  
 	pivotOffset.y = 20;
-	useCollision = true;
+
+	Collision::Circle collisionCircle{40.0f};
+	collider = std::make_unique<CircleCollider>(std::move(collisionCircle), 500.0f, this);
+	circleCollider = static_cast<CircleCollider*>(collider.get());
 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
 void Player::initialize(const vector2Df& position, const Scene& scene) {
 	GameObject::initialize(position, scene);  // Call base initialize
-
-	circleCollider.radius = 40;	 // Change collider size
 }
 
 // Do player specific processing here
@@ -50,6 +54,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 	velocity = moveDir * moveSpeed;	 // Update velocity
 
 	GameObject::update(scene, deltaTime);  // Call base GameObject update (Updates position)
+	circleCollider->circle.position = position; // Update collider position
 
 	pointToMouse(scene);
 
@@ -93,13 +98,16 @@ void Player::shoot(Scene& scene) {
 	timeSinceShot = 0.0f;
 }
 
-void Player::onCollision(const GameObject& other) {
-	const EnemyAttackPoint* enemyCollisionPoint = dynamic_cast<const EnemyAttackPoint*>(&other);
+void Player::onCollision(const Collider& other) {
+	const EnemyAttackPoint* enemyAttackPoint =
+		dynamic_cast<const EnemyAttackPoint*>(other.getParent());
 
-	if (enemyCollisionPoint == nullptr)	 // Return if collision is not with enemy attack
+	if (enemyAttackPoint == nullptr)	 // Return if collision is not with enemy attack
 		return;
 
-	takeDamage(enemyCollisionPoint->parent->damage);
+	std::cout << "Player colliding!\n";
+
+	takeDamage(enemyAttackPoint->parent->damage);
 }
 
 void Player::takeDamage(const float damage) {

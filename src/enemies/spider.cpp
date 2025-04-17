@@ -8,7 +8,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 						 const float maxSteer, const float steerMult, const float slowingRadius)
 	: Enemy(startHealth, damage, moveSpeed, maxSteer, steerMult, slowingRadius) {
 	isAnimated = true;
-	circleCollider.radius = 50;
+	circleCollider->circle.radius = 50;
 
 	animationEvents.emplace_back(1, 6, [this](Scene& scene) { attack(scene); });
 }

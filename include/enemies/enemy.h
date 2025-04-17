@@ -23,11 +23,13 @@ public:
 	virtual void initialize(const vector2Df& position, const Scene& scene) override;
 	virtual void update(Scene& scene, const float deltaTime) override;
 
-	virtual void onCollision(const GameObject& other) override;
+	virtual void onCollision(const Collider& other) override;
 
 	const float damage;
 
 protected:
+	CircleCollider* circleCollider;
+
 	// Steering behaviors
 	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;

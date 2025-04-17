@@ -33,12 +33,14 @@ void Scene::update(const float deltaTime) {
 
 	// Check for collisions after all GameObjects are updated
 	for (auto& object : gameObjects) {
-		object->checkCollisions(*this);
+		if (object->getCollider() == nullptr) continue;
+		object->getCollider()->checkCollisions(*this);
 	}
 
 	// Update GameObjects according to registered collisions
 	for (auto& object : gameObjects) {
-		object->collisionUpdate();
+		if (object->getCollider() == nullptr) continue;
+		object->getCollider()->collisionUpdate();
 	}
 }
 

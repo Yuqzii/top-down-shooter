@@ -12,12 +12,12 @@ public:
 	void initialize(const vector2Df& startPosition, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
-	void checkCollisions(const Scene& scene) override;
-	void onCollision(const GameObject& other) override;
+	void onCollision(const Collider& other) override;
 
 	/*
-	 * @abstract		Initializes the bullet with a direction, and its corresponding GunData
-	 *object. If this function is not called the bullet will not work, and likely results in errors.
+	 * @abstract	Initializes the bullet with a direction, and its corresponding GunData object.
+	 *				If this function is not called the bullet will not work,
+	 *				and likely results in errors.
 	 * @param		direction	The direction the bullet will travel in.
 	 * @param		rotation	The rotation of the bullet. (Used because rotation is already
 	 *							calculated for the player, avoids recomputation).
@@ -32,7 +32,7 @@ protected:
 
 private:
 	vector2Df direction;
-	vector2Df previousPosition;
+	LineCollider* lineCollider;
 
 	const GunData* data;
 

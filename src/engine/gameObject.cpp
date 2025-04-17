@@ -23,10 +23,7 @@ GameObject::GameObject(const vector2Df& srcRectSize)
 	  animationCounter{0},
 	  animationSequence{0},
 	  prevFrame{0},
-	  boundingCircle{500.0f},
-	  useCollision{false},
-	  collisionList{},
-	  collisionType{},
+	  collider{nullptr},
 	  rotation{0},
 	  flipType{SDL_FLIP_NONE} {}
 
@@ -48,17 +45,9 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 
 	destRect.x = round(renderPosition.x);
 	destRect.y = round(renderPosition.y);
-
-	// Initialize collider
-	if (collisionType == Collision::Types::CIRCLE) {
-		circleCollider.radius = (float)destRect.w / 2;
-		circleCollider.position = position;
-	}
 }
 
 void GameObject::update(Scene& scene, const float deltaTime) {
-	collisionList.clear();	// Make sure collisionList only contains collisions from this frame
-
 	position += velocity * deltaTime;
 
 	// Update render positon
@@ -68,9 +57,6 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 	// Update render position
 	destRect.x = round(renderPosition.x);
 	destRect.y = round(renderPosition.y);
-
-	// Update collider position
-	circleCollider.position = position;
 
 	if (isAnimated) animationUpdate(scene, deltaTime);
 
@@ -91,59 +77,59 @@ void GameObject::setSize(const vector2Df& newSize) {
 	pivot.y = (float)destRect.h / 2 + pivotOffset.y * size.y;
 }
 
-void GameObject::checkCollisions(const Scene& scene) {
-	// Point collisions are not checking collision with others
-	if (collisionType == Collision::Types::POINT) return;
-
-	std::vector<GameObject*> closeObjects;
-	try {
-		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(position, boundingCircle);
-	} catch (int e) {
-		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
-	}
-
-	for (GameObject* object : closeObjects) {
-		// No need to check collision if object is not collideable,
-		// or we know we have already collided,
-		// or if it is "colliding" with itself.
-		if (!object->useCollision || collisionList.count(object) || object == this) continue;
-
-		switch (object->collisionType) {
-			using namespace Collision;
-			using enum Types;
-
-			case CIRCLE:
-				if (Collision::checkCollision(circleCollider, object->circleCollider)) {
-					addCollision(object);
-					object->addCollision(this);
-				}
-				break;
-
-			case POINT:
-				if (Collision::checkCollision(object->getPosition(), circleCollider)) {
-					addCollision(object);
-				}
-				break;
-		}
-	}
-}
-
-void GameObject::collisionUpdate() {
-	for (const GameObject* object : collisionList) {
-		if (object == nullptr)	// Ensure that object exists
-			continue;
-
-		try {
-			onCollision(*object);
-		} catch (int e) {
-			// Stop collision detection when throwing exception
-			break;
-		}
-	}
-}
-
-void GameObject::addCollision(const GameObject* other) { collisionList.insert(other); }
+//void GameObject::checkCollisions(const Scene& scene) {
+//	// Point collisions are not checking collision with others
+//	if (collisionType == Collision::Types::POINT) return;
+//
+//	std::vector<GameObject*> closeObjects;
+//	try {
+//		// Get all GameObjects withing our bounding circle
+//		closeObjects = scene.getObjectTree().findObjectsInRange(position, boundingCircle);
+//	} catch (int e) {
+//		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
+//	}
+//
+//	for (GameObject* object : closeObjects) {
+//		// No need to check collision if object is not collideable,
+//		// or we know we have already collided,
+//		// or if it is "colliding" with itself.
+//		if (!object->useCollision || collisionList.count(object) || object == this) continue;
+//
+//		switch (object->collisionType) {
+//			using namespace Collision;
+//			using enum Types;
+//
+//			case CIRCLE:
+//				if (Collision::checkCollision(circleCollider, object->circleCollider)) {
+//					addCollision(object);
+//					object->addCollision(this);
+//				}
+//				break;
+//
+//			case POINT:
+//				if (Collision::checkCollision(object->getPosition(), circleCollider)) {
+//					addCollision(object);
+//				}
+//				break;
+//		}
+//	}
+//}
+//
+//void GameObject::collisionUpdate() {
+//	for (const GameObject* object : collisionList) {
+//		if (object == nullptr)	// Ensure that object exists
+//			continue;
+//
+//		try {
+//			onCollision(*object);
+//		} catch (int e) {
+//			// Stop collision detection when throwing exception
+//			break;
+//		}
+//	}
+//}
+//
+//void GameObject::addCollision(const GameObject* other) { collisionList.insert(other); }
 
 void GameObject::render(SDL_Renderer* renderer) const {
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
@@ -195,7 +181,9 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 	// Return lambda with debug render stuff
 	return [this](SDL_Renderer* renderer) {
 		// Collider
-		if (useCollision) Collision::drawCircleCollider(renderer, circleCollider);
+		CircleCollider* circleCollider = dynamic_cast<CircleCollider*>(collider.get());
+		if (circleCollider != nullptr)
+			Collision::drawCircleCollider(renderer, circleCollider->circle);
 		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + velocity.x * 0.1,

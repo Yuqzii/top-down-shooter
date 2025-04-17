@@ -1,6 +1,5 @@
 #pragma once
 
-#include <optional>
 #include <vector>
 #include "SDL2/SDL_pixels.h"
 #include "SDL2/SDL_rect.h"
@@ -12,6 +11,7 @@ public:
 	TerrainManager(const std::vector<std::vector<char>>& terrainMap, const SDL_Color& color);
 
 	void update();
+	void updateCollisions();
 	void render(SDL_Renderer* renderer) const;
 
 private:

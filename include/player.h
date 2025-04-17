@@ -20,7 +20,8 @@ private:
 	inline void pointToMouse(const Scene& scene);
 	inline void shoot(Scene& scene);
 
-	void onCollision(const GameObject& other) override;
+	CircleCollider* circleCollider;
+	void onCollision(const Collider& other) override;
 
 	bool moveLeft, moveRight, moveUp, moveDown;
 	vector2Df moveDir;

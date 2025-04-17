@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "SDL2/SDL.h"
+#include "SDL2/SDL_render.h"
 #include "engine/Tree2D.h"
 #include "engine/vector2D.h"
 
