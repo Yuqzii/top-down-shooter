@@ -5,6 +5,10 @@ vector2Df::vector2Df(const float& x, const float& y) {
 	this->x = x;
 	this->y = y;
 }
+vector2Df::vector2Df(const int& x, const int& y) {
+	this->x = x;
+	this->y = y;
+}
 vector2Df::vector2Df() { x = y = 0; }
 vector2Df::vector2Df(const float& degrees) {  // Creates direction vector from rotation in degrees
 	float radians = (degrees - 90) * M_PI / 180;

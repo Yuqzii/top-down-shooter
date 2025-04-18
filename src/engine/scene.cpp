@@ -8,6 +8,7 @@
 #include "engine/game.h"
 #include "engine/gameObject.h"
 #include "player.h"
+#include "terrain/terrainCollider.h"
 
 Scene::Scene(Game& game_) : game(game_) {}
 
@@ -80,6 +81,7 @@ template Player& Scene::instantiate<Player>(const vector2Df& position);
 template Bullet& Scene::instantiate<Bullet>(const vector2Df& position);
 template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const vector2Df& position);
 template EnemyAttackPoint& Scene::instantiate<EnemyAttackPoint>(const vector2Df& position);
+template TerrainCollider& Scene::instantiate<TerrainCollider>(const vector2Df& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D();	// Create new tree

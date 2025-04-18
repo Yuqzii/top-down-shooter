@@ -131,10 +131,26 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 	// Return lambda with debug render stuff
 	return [this](SDL_Renderer* renderer) {
 		// Collider
-		CircleCollider* circleCollider = dynamic_cast<CircleCollider*>(collider.get());
-		if (circleCollider != nullptr)
-			Collision::drawCircleCollider(renderer, circleCollider->circle);
-		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+		switch (collider->getCollisionType()) {
+			using enum Collision::Types;
+
+			case CIRCLE: {
+				CircleCollider* circleCollider = static_cast<CircleCollider*>(collider.get());
+				Collision::drawCircleCollider(renderer, circleCollider->circle);
+				break;
+			}
+			case LINE: {
+				LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
+				SDL_RenderDrawLineF(renderer, lineCollider->line.start.x, lineCollider->line.start.y,
+									lineCollider->line.end.x, lineCollider->line.end.y);
+			}
+			case POINT: {
+				PointCollider* pointCollider = static_cast<PointCollider*>(collider.get());
+				SDL_RenderDrawPoint(renderer, pointCollider->point.x, pointCollider->point.y);
+			}
+		}
+		SDL_RenderDrawPoint(renderer, position.x, position.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + velocity.x * 0.1,
 						   position.y + velocity.y * 0.1);

@@ -1,6 +1,6 @@
 #include "terrain/terrainCollider.h"
 
-TerrainCollider::TerrainCollider() {
+TerrainCollider::TerrainCollider() : GameObject{vector2Df{}} {
 	collider = std::make_unique<LineCollider>(Collision::Line{}, 300.0f, this);
 	isStatic = true;
 }

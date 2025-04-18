@@ -103,6 +103,7 @@ void CombatScene::initialize() {
 	Scene::initialize();
 
 	enemyManager = EnemyManager();
+	terrainManager.updateCollisions(*this);
 }
 
 void CombatScene::initialize(GameObjectVector& persistentObjects) {
