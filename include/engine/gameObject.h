@@ -47,6 +47,7 @@ public:
 	// If an int exception is thrown inside this function
 	// the entire collisionUpdate is aborted.
 	virtual void onCollision(const Collider& other) {}
+	bool getIsStatic() const { return isStatic; }
 
 	bool deleteObject;	// When true object is deleted on next frame
 
@@ -59,6 +60,7 @@ protected:
 	void setSize(const vector2Df& newSize);
 
 	std::unique_ptr<Collider> collider;
+	bool isStatic;
 
 	// Animation
 	bool isAnimated;	   // Set true to enable animation
@@ -74,6 +76,7 @@ protected:
 		static const std::vector<AnimationEvent> events;
 		return events;
 	}
+	bool renderObject;
 
 	// Pivot
 	SDL_Point pivot;

@@ -1,6 +1,7 @@
 #include "terrain/terrainManager.h"
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
+#include "terrain/terrainCollider.h"
 
 TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_,
 							   const SDL_Color& color_)
@@ -33,8 +34,12 @@ void TerrainManager::update() {
 	}
 }
 
-void TerrainManager::updateCollisions() {
-	
+void TerrainManager::updateCollisions(Scene& scene) {
+	// Remove previous colliders
+	for (auto it = terrainColliders.begin(); it != terrainColliders.end();) {
+		(*it)->deleteObject = true;
+		it = terrainColliders.erase(it);
+	}
 
 	for (int x = 0; x < xSize; x++) {
 		for (int y = 0; y < ySize; y++) {

@@ -70,6 +70,6 @@ public:
 	void initializeParent(const Enemy* parent);
 	const Enemy* parent;
 
-protected:
+private:
 	SETOBJECTTEXTURE("empty.png");
 };

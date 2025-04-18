@@ -155,6 +155,7 @@ std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 
 EnemyAttackPoint::EnemyAttackPoint() {
 	collider = std::make_unique<CircleCollider>(std::move(Collision::Circle{10.0f}), 100.0f, this);
+	renderObject = false;
 }
 
 void EnemyAttackPoint::initializeParent(const Enemy* parent) {

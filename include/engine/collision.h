@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SDL2/SDL_rect.h"
-#include <memory>
 #include <unordered_set>
 
 #include "engine/vector2D.h"
@@ -15,8 +14,6 @@ namespace Collision {
 enum class Types {
 	CIRCLE = 0,
 	LINE,
-	// POINT is only used checking collision that is not part of standard collider,
-	// not in a "full" GameObject.
 	POINT,
 };
 
