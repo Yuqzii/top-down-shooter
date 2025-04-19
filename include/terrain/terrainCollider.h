@@ -8,6 +8,11 @@ public:
 
 	void initializeCollider(const vector2Df& start, const vector2Df& end);
 
+	void update(Scene& scene, const float deltaTime) override;
+
 private:
 	SETOBJECTTEXTURE("empty.png");
+
+	// testing, REMOVE
+	vector2Df normal;
 };

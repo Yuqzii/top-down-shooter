@@ -5,6 +5,7 @@
 
 #include "SDL2/SDL_mouse.h"
 #include "SDL2/SDL_scancode.h"
+#include "SDL2/SDL_timer.h"
 #include "bullet.h"
 #include "enemies/enemy.h"
 #include "engine/game.h"
@@ -78,6 +79,8 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 	// Tell UIManager to render healthbar
 	scene.getGame().getRenderManager().addRenderCall(healthbarBG.getRenderFunction(), this);
+
+	//SDL_Delay(100);
 }
 
 // Points player towards the mouse
@@ -109,9 +112,19 @@ void Player::onCollision(const Collision::Event& event) {
 		
 	const TerrainCollider* terrainCollider =
 		dynamic_cast<const TerrainCollider*>(event.other->getParent());
-//	if (terrainCollider) {
-//		float depth = 
-//	}
+	if (terrainCollider) {
+		const LineCollider* line = static_cast<LineCollider*>(terrainCollider->getCollider());
+		vector2Df normal = vector2Df{line->line.start - line->line.end}.normalized();
+		normal = vector2Df{normal.y, normal.x * -1};
+		const float angle = std::acos(normal.normalized().dotProduct(
+			(position - terrainCollider->getPosition()).normalized()));
+		const float degrees = angle * 180 / M_PI;
+		std::cout << degrees << "\n";
+		if (degrees >= 90.0f && degrees <= 180.0f)
+			position -= normal * event.depth;
+		else
+			position += normal * event.depth;
+	}
 }
 
 void Player::takeDamage(const float damage) {

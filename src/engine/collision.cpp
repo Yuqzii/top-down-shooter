@@ -22,17 +22,17 @@ int roundUpToMultipleOfEight(int x) { return (x + (8 - 1)) & -8; }
 vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
 	vector2Df tangent = line.end - line.start;
 
-	if ((point - line.start).crossProduct(tangent) <= 0) {
+	if ((point - line.start).dotProduct(tangent) <= 0) {
 		return line.start;	// point is at or before start of line
 	}
 
-	if ((point - line.end).crossProduct(tangent) >= 0) {
+	if ((point - line.end).dotProduct(tangent) >= 0) {
 		return line.end;  // point is at after end of line
 	}
 
 	tangent = tangent.normalized();
 	const vector2Df relativePos = point - line.start;
-	return line.start + tangent * (tangent.crossProduct(relativePos));
+	return line.start + tangent * (tangent.dotProduct(relativePos));
 }
 
 // Given three collinear points p, q, r, the function checks if 
@@ -107,11 +107,11 @@ Collision::Event checkCollision(const Circle& c, const Line& l) {
 	if (eInside.collided) return std::move(eInside);
 
 	const vector2Df delta = c.position - closestPointOnLine(c.position, l);
-
 	// Is distance from closest point to circle larger than its radius?
-	const float depth = delta.crossProduct(delta) - c.radius * c.radius;
-	if (depth <= 0)
-		return Event{true, depth * -1};
+	if (delta.dotProduct(delta) < c.radius * c.radius) {
+		const float depth = c.radius - delta.magnitude();
+		return Event{true, depth};
+	}
 	else
 		return Event{false};
 }

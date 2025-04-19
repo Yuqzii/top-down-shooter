@@ -20,7 +20,7 @@ struct vector2Df {
 	vector2Df normalized() const;
 	vector2Df clamped(const float& maxMagnitude) const;
 
-	float crossProduct(const vector2Df& other) const;
+	float dotProduct(const vector2Df& other) const;
 
 	int toDegrees() const;
 

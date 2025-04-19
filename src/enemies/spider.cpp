@@ -63,7 +63,7 @@ void SpiderEnemy::attackRangeCheck() {
 	vector2Df dist = position - combatScene->player.getPosition();
 	constexpr static float atkDist = 70.0f;
 	// Enter Attack state when closer than atkDist
-	if (dist.crossProduct(dist) <= atkDist * atkDist) {
+	if (dist.dotProduct(dist) <= atkDist * atkDist) {
 		setState(EnemyStates::ATTACK);
 
 		// Make spider point directly towards player
@@ -112,7 +112,7 @@ void SpiderEnemy::avoidOtherEnemies(const float strength) {
 
 		const vector2Df dist(position - closest->getPosition());
 		constexpr float avoidDist = 150.0f;
-		if (dist.crossProduct(dist) <= avoidDist * avoidDist)
+		if (dist.dotProduct(dist) <= avoidDist * avoidDist)
 			steering += flee(closest->getPosition()) * strength;
 	} catch (int e) {
 		// Can't find closest enemy. Usually because there is currently only one enemy.
