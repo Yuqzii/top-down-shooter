@@ -70,8 +70,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	}
 }
 
-void Enemy::onCollision(const Collider& other) {
-	const Bullet* bullet = dynamic_cast<const Bullet*>(other.getParent());
+void Enemy::onCollision(const Collision::Event& event) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
 	if (bullet == nullptr) return;	// Return if colliding with something that is not a bullet
 
 	takeDamage(bullet->getData().damage);

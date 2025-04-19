@@ -46,7 +46,7 @@ public:
 	Collider* getCollider() const { return collider.get(); }
 	// If an int exception is thrown inside this function
 	// the entire collisionUpdate is aborted.
-	virtual void onCollision(const Collider& other) {}
+	virtual void onCollision(const Collision::Event& event) {}
 	bool getIsStatic() const { return isStatic; }
 
 	bool deleteObject;	// When true object is deleted on next frame

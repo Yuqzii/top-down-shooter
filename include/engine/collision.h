@@ -2,14 +2,27 @@
 
 #include "SDL2/SDL_rect.h"
 #include <unordered_set>
+#include <vector>
 
 #include "engine/vector2D.h"
 
 class SDL_Renderer;
 class GameObject;
 class Scene;
+class Collider;
 
 namespace Collision {
+
+struct Event {
+	const bool collided;
+	const float depth;
+	const Collider* other;
+
+	Event(const bool collided_, const float depth_, const Collider* other_)
+		: collided{collided_}, depth{depth_}, other{other_} {}
+	Event(const bool collided_, const float depth_) : Event{collided_, depth_, nullptr} {}
+	Event(const bool collided_) : Event{collided_, 0} {}
+};
 
 enum class Types {
 	CIRCLE = 0,
@@ -34,13 +47,14 @@ struct Line {
 	Line(const vector2Df& s, const vector2Df& e) : start(s), end(e) {}
 };
 
-bool checkCollision(const SDL_Rect& a, const SDL_Rect& b);
-bool checkCollision(const Circle& a, const Circle& b);
-bool checkCollision(const vector2Df& point, const Circle& circle);
-bool checkCollision(const Circle& circle, const Line& line);
+Collision::Event checkCollision(const SDL_Rect& a, const SDL_Rect& b);
+Collision::Event checkCollision(const Circle& a, const Circle& b);
+Collision::Event checkCollision(const vector2Df& point, const Circle& circle);
+Collision::Event checkCollision(const Circle& circle, const Line& line);
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);
 }
+
 
 class Collider {
 public:
@@ -48,7 +62,7 @@ public:
 	Collider(const Collision::Types collisionType, const float checkRadius);
 
 	void collisionUpdate();
-	void addCollision(const Collider* other);
+	void addCollision(const Collision::Event event);
 	virtual void checkCollisions(const Scene& scene) = 0;
 
 	Collision::Types getCollisionType() const { return collisionType; }
@@ -60,11 +74,12 @@ protected:
 	* @abstract	Called when colliding with another collider.
 	*			Default behavior is calling onCollision in parent.
 	*			Override in deriving class to define custom behavior.
-	* @param	other	Reference to the collider it is colliding with.
+	* @param	event	Reference to the collision event that occured.
 	*/
-	virtual void onCollision(const Collider& other);
+	virtual void onCollision(const Collision::Event& event);
 
-	std::unordered_set<const Collider*> collisionList;
+	std::unordered_set<const Collider*> haveCollidedWith;
+	std::vector<Collision::Event> collisionEvents;
 	const float checkRadius;
 
 private:
@@ -102,3 +117,5 @@ public:
 
 	void checkCollisions(const Scene& scene) override;
 };
+
+

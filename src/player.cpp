@@ -10,6 +10,7 @@
 #include "engine/game.h"
 #include "engine/gameObject.h"
 #include "engine/scene.h"
+#include "terrain/terrainCollider.h"
 
 Player::Player()
 	: healthbarBG{vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}},
@@ -98,16 +99,19 @@ void Player::shoot(Scene& scene) {
 	timeSinceShot = 0.0f;
 }
 
-void Player::onCollision(const Collider& other) {
+void Player::onCollision(const Collision::Event& event) {
 	const EnemyAttackPoint* enemyAttackPoint =
-		dynamic_cast<const EnemyAttackPoint*>(other.getParent());
-
-	if (enemyAttackPoint == nullptr)	 // Return if collision is not with enemy attack
+		dynamic_cast<const EnemyAttackPoint*>(event.other->getParent());
+	if (enemyAttackPoint) {
+		takeDamage(enemyAttackPoint->parent->damage);
 		return;
-
-	std::cout << "Player colliding!\n";
-
-	takeDamage(enemyAttackPoint->parent->damage);
+	} 
+		
+	const TerrainCollider* terrainCollider =
+		dynamic_cast<const TerrainCollider*>(event.other->getParent());
+//	if (terrainCollider) {
+//		float depth = 
+//	}
 }
 
 void Player::takeDamage(const float damage) {

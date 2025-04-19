@@ -50,7 +50,7 @@ void Bullet::update(Scene& scene, const float deltaTime) {
 //	}
 //}
 
-void Bullet::onCollision(const Collider& other) {
+void Bullet::onCollision(const Collision::Event& event) {
 	// Delete object when colliding with something and stop further collision updates
 	deleteObject = true;
 	throw 1;

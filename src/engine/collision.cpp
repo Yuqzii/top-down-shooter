@@ -66,7 +66,8 @@ int orientation(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
 }  // namespace
 
 // Returns true if rect a overlaps with rect b
-bool checkCollision(const SDL_Rect& a, const SDL_Rect& b) {
+// Not used
+Collision::Event checkCollision(const SDL_Rect& a, const SDL_Rect& b) {
 	if (a.y + a.h <= b.y || a.y >= b.y + b.h || a.x + a.w <= b.x || a.x >= b.x + b.w) {
 		return false;
 	} else {
@@ -74,62 +75,75 @@ bool checkCollision(const SDL_Rect& a, const SDL_Rect& b) {
 	}
 }
 
-bool checkCollision(const Circle& a, const Circle& b) {
+Collision::Event checkCollision(const Circle& a, const Circle& b) {
 	// We can use distance squared instead of just distance to optimize,
 	// because getting the normal distance requires square root (an expensive operation),
 	// but if x > y then x^2 > y^2, so we can square both values and compare instead
 	int totalRadiusSquared = (a.radius + b.radius);
 	totalRadiusSquared *= totalRadiusSquared;
 
+	const float depth = distanceSquared(a.position, b.position) - totalRadiusSquared;
 	// If distance between center of circles is less than sum of their radii
-	if (distanceSquared(a.position, b.position) < totalRadiusSquared) {
-		return true;
+	if (depth < 0) {
+		return Event{true, depth * -1};
 	}
-	return false;
+	return Event{false};
 }
 
-bool checkCollision(const vector2Df& point, const Circle& c) {
-	return distanceSquared(point, c.position) <= c.radius * c.radius;
+Collision::Event checkCollision(const vector2Df& point, const Circle& c) {
+	const float dist = distanceSquared(point, c.position);
+	const float depth = dist - c.radius * c.radius;
+	if (depth <= 0)
+		return Event{true, depth * -1};
+	else
+		return Event{false};
 }
 
-bool checkCollision(const Circle& c, const Line& l) {
+Collision::Event checkCollision(const Circle& c, const Line& l) {
 	// Are any of the endpoints inside the circle?
-	if (checkCollision(l.start, c) || checkCollision(l.end, c)) return true;
+	const Event sInside = checkCollision(l.start, c);
+	if (sInside.collided) return std::move(sInside);
+	const Event eInside = checkCollision(l.end, c);
+	if (eInside.collided) return std::move(eInside);
 
 	const vector2Df delta = c.position - closestPointOnLine(c.position, l);
 
 	// Is distance from closest point to circle larger than its radius?
-	return delta.crossProduct(delta) <= c.radius * c.radius;
+	const float depth = delta.crossProduct(delta) - c.radius * c.radius;
+	if (depth <= 0)
+		return Event{true, depth * -1};
+	else
+		return Event{false};
 }
 
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-bool checkCollision(const Line& a, const Line& b) {
+Collision::Event checkCollision(const Line& a, const Line& b) {
 	const int o1 = orientation(a.start, a.end, b.start);
 	const int o2 = orientation(a.start, a.end, b.end);
 	const int o3 = orientation(b.start, b.end, a.start);
 	const int o4 = orientation(b.start, b.end, a.end);
 
 	if (o1 != o2 && o3 != o4)
-		return true;
+		return Event{true};
 
     // Special Cases 
 	// a.start, a.end and b.start are collinear and b.start lies on segment a
-	if (o1 == 0 && onSegment(a.start, b.start, a.end)) return true; 
+	if (o1 == 0 && onSegment(a.start, b.start, a.end)) return Event{true}; 
 
 	// a.start, a.end and b.end are collinear and b.end lies on segment a
-	if (o2 == 0 && onSegment(a.start, b.end, a.end)) return true; 
+	if (o2 == 0 && onSegment(a.start, b.end, a.end)) return Event{true}; 
 
 	// b.start, b.end and a.start are collinear and a.start lies on segment b
-	if (o3 == 0 && onSegment(b.start, a.start, b.end)) return true; 
+	if (o3 == 0 && onSegment(b.start, a.start, b.end)) return Event{true}; 
 
 	// b.start, b.end and a.end are collinear and a.end lies on segment b
-	if (o4 == 0 && onSegment(b.start, a.end, b.end)) return true; 
+	if (o4 == 0 && onSegment(b.start, a.end, b.end)) return Event{true}; 
 
-	return false; // Doesn't fall in any of the above cases 
+	return Event{false}; // Doesn't fall in any of the above cases 
 }
 
-bool checkCollision(const vector2Df& a, const vector2Df& b) {
-	return a == b;
+Collision::Event checkCollision(const vector2Df& a, const vector2Df& b) {
+	return Event{a == b};
 }
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
@@ -204,28 +218,30 @@ PointCollider::PointCollider(vector2Df point_, const float checkRadius_)
 	: PointCollider{std::move(point_), checkRadius_, nullptr} {}
 
 void Collider::collisionUpdate() {
-	for (const Collider* other : collisionList) {
-		if (other == nullptr) // Ensure that other collider exists
-			continue;
-
+	for (const Collision::Event& event : collisionEvents) {
 		try {
-			onCollision(*other);
+			onCollision(event);
 		} catch (int e) {
 			// Stop collision detection when throwing exception
 			break;
 		}
 	}
 
-	collisionList.clear(); // Make sure collisionList only contains collisions from one frame
+	// Make sure only collisions from one frame are registered
+	haveCollidedWith.clear();
+	collisionEvents.clear();
 }
 
-void Collider::addCollision(const Collider* other) {
-	collisionList.insert(other);
+void Collider::addCollision(const Collision::Event event) {
+	if (!haveCollidedWith.count(event.other)) {
+		haveCollidedWith.insert(event.other);
+		collisionEvents.push_back(event);
+	}
 }
 
-void Collider::onCollision(const Collider& other) {
+void Collider::onCollision(const Collision::Event& event) {
 	if (parent == nullptr) return;
-	parent->onCollision(other);
+	parent->onCollision(event);
 }
 
 void CircleCollider::checkCollisions(const Scene& scene) {
@@ -243,7 +259,7 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || collisionList.count(otherCollider) || object == getParent())
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) || object == getParent())
 			continue;
 		
 		switch (otherCollider->getCollisionType()) {
@@ -251,25 +267,34 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 
 			case CIRCLE: {
 				CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
-				if (Collision::checkCollision(circle, otherCircle->circle)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(circle, otherCircle->circle);
+				if (event.collided) {
+					event.other = otherCircle;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
 			case LINE: {
 				LineCollider* otherLine = static_cast<LineCollider*>(otherCollider);
-				if (Collision::checkCollision(circle, otherLine->line)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(circle, otherLine->line);
+				if (event.collided) {
+					event.other = otherLine;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
 			case POINT: {
 				PointCollider* otherPoint = static_cast<PointCollider*>(otherCollider);
-				if (Collision::checkCollision(otherPoint->point, circle)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(otherPoint->point, circle);
+				if (event.collided) {
+					event.other = otherPoint;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
@@ -292,7 +317,7 @@ void LineCollider::checkCollisions(const Scene& scene) {
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || collisionList.count(otherCollider) || object == getParent())
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) || object == getParent())
 			continue;
 		
 		switch (otherCollider->getCollisionType()) {
@@ -300,17 +325,23 @@ void LineCollider::checkCollisions(const Scene& scene) {
 
 			case CIRCLE: {
 				CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
-				if (Collision::checkCollision(otherCircle->circle, line)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(otherCircle->circle, line);
+				if (event.collided) {
+					event.other = otherCircle;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
 			case LINE: {
 				LineCollider* otherLine = static_cast<LineCollider*>(otherCollider);
-				if (Collision::checkCollision(line, otherLine->line)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(line, otherLine->line);
+				if (event.collided) {
+					event.other = otherLine;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
@@ -337,7 +368,7 @@ void PointCollider::checkCollisions(const Scene& scene) {
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || collisionList.count(otherCollider) || object == getParent())
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) || object == getParent())
 			continue;
 		
 		switch (otherCollider->getCollisionType()) {
@@ -345,9 +376,12 @@ void PointCollider::checkCollisions(const Scene& scene) {
 
 			case CIRCLE: {
 				CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
-				if (Collision::checkCollision(point, otherCircle->circle)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(point, otherCircle->circle);
+				if (event.collided) {
+					event.other = otherCircle;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
@@ -356,9 +390,12 @@ void PointCollider::checkCollisions(const Scene& scene) {
 			}
 			case POINT: {
 				PointCollider* otherPoint = static_cast<PointCollider*>(otherCollider);
-				if (Collision::checkCollision(point, otherPoint->point)) {
-					addCollision(otherCollider);
-					otherCollider->addCollision(this);
+				Collision::Event event = Collision::checkCollision(point, otherPoint->point);
+				if (event.collided) {
+					event.other = otherPoint;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
 				break;
 			}
