@@ -1,5 +1,6 @@
 #include "terrain/terrainManager.h"
 
+#include <iostream>
 #include <map>
 
 #include "SDL2/SDL_render.h"
@@ -8,9 +9,9 @@
 #include "engine/scene.h"
 
 TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_,
-							   const SDL_Color& color_)
+							   const SDL_Color& color_, Scene& scene_)
 	: terrainMap{terrainMap_}, xSize{terrainMap.size()}, ySize{terrainMap[0].size()},
-	  color(color_) {
+	  color{color_}, scene{scene_} {
 	renderRects.resize(xSize);
 	for (auto& rectList : renderRects)
 		rectList.resize(ySize);
@@ -38,7 +39,7 @@ void TerrainManager::update() {
 	}
 }
 
-void TerrainManager::updateCollisions(Scene& scene) {
+void TerrainManager::updateCollisions() {
 	// Remove previous colliders
 	for (auto it = terrainColliders.begin(); it != terrainColliders.end();) {
 		(*it)->deleteObject = true;
@@ -67,61 +68,61 @@ void TerrainManager::updateCollisions(Scene& scene) {
 				continue; // Terrain in all directions
 			else if (!left && right && above && below) {
 				// Only empty to the left
-				tryExtendCollider(topLeft, botLeft, currentColliders, scene);
+				tryExtendCollider(topLeft, botLeft, currentColliders);
 			}
 			else if (left && !right && above && below) {
 				// Only empty to the right
-				tryExtendCollider(topRight, botRight, currentColliders, scene);
+				tryExtendCollider(topRight, botRight, currentColliders);
 			}
 			else if (left && right && !above && below) {
 				// Only empty above
-				tryExtendCollider(topLeft, topRight, currentColliders, scene);
+				tryExtendCollider(topLeft, topRight, currentColliders);
 			}
 			else if (left && right && above && !below) {
 				// Only empty below
-				tryExtendCollider(botLeft, botRight, currentColliders, scene);
+				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
 			else if (!left && !right && above && below) {
 				// Straight vertical line
-				tryExtendCollider(topLeft, botLeft, currentColliders, scene);
-				tryExtendCollider(topRight, botRight, currentColliders, scene);
+				tryExtendCollider(topLeft, botLeft, currentColliders);
+				tryExtendCollider(topRight, botRight, currentColliders);
 			}
 			else if ((!left && right && !above && below) || (left && !right && above && !below)) {
 				// Diagonal line from top right to bottom left
-				tryExtendCollider(topRight, botLeft, currentColliders, scene);
+				tryExtendCollider(topRight, botLeft, currentColliders);
 			}
 			else if ((!left && right && above && !below) || (left && !right && !above && below)) {
 				// Diagonal from top left to bottom right
-				tryExtendCollider(topLeft, botRight, currentColliders, scene);
+				tryExtendCollider(topLeft, botRight, currentColliders);
 			}
 			else if (left && right && !above && !below) {
 				// Straight horizontal line
-				tryExtendCollider(topLeft, topRight, currentColliders, scene);
-				tryExtendCollider(botLeft, botRight, currentColliders, scene);
+				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
 			else if (!left && !right && !above && below) {
 				// Three lines, vertical left, horizontal above, and vertical right
-				tryExtendCollider(topLeft, botLeft, currentColliders, scene);
-				tryExtendCollider(topLeft, topRight, currentColliders, scene);
-				tryExtendCollider(topRight, botRight, currentColliders, scene);
+				tryExtendCollider(topLeft, botLeft, currentColliders);
+				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(topRight, botRight, currentColliders);
 			}
 			else if (!left && !right && above && !below) {
 				// Three line, vertical left, vertical right, and horizontal below
-				tryExtendCollider(topLeft, topRight, currentColliders, scene);
-				tryExtendCollider(topRight, botRight, currentColliders, scene);
-				tryExtendCollider(botLeft, botRight, currentColliders, scene);
+				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(topRight, botRight, currentColliders);
+				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
 			else if (!left && right && !above && !below) {
 				// Three lines, vertical left, horizontal above, and horizontal below
-				tryExtendCollider(topLeft, botLeft, currentColliders, scene);
-				tryExtendCollider(topLeft, topRight, currentColliders, scene);
-				tryExtendCollider(botLeft, botRight, currentColliders, scene);
+				tryExtendCollider(topLeft, botLeft, currentColliders);
+				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
 			else if (left && !right && !above && !below) {
 				// Three lines, vertical right, horizontal above, and horizontal below
-				tryExtendCollider(topRight, botRight, currentColliders, scene);
-				tryExtendCollider(topLeft, topRight, currentColliders, scene);
-				tryExtendCollider(botLeft, botRight, currentColliders, scene);
+				tryExtendCollider(topRight, botRight, currentColliders);
+				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
 		}
 	}
@@ -129,7 +130,7 @@ void TerrainManager::updateCollisions(Scene& scene) {
 	// Construct colliders
 	for (const auto& [end, start] : currentColliders) {
 		createCollider(vector2Df{start.first, start.second},
-					   vector2Df{end.first, end.second}, scene);
+					   vector2Df{end.first, end.second});
 	}
 
 	updateTree();
@@ -138,14 +139,14 @@ void TerrainManager::updateCollisions(Scene& scene) {
 void TerrainManager::tryExtendCollider(const std::pair<int, int>& start,
 									   const std::pair<int, int>& end,
 									   std::map<std::pair<int, int>, std::pair<int, int>>&
-									   currentColliders, Scene& scene) {
+									   currentColliders) {
 	const vector2Df startVec{start.first, start.second};
 	const vector2Df endVec{end.first, end.second};
 
 	// Create collider if there already is one ending at end
 	if (currentColliders.count(end)) {
 		createCollider(vector2Df{currentColliders[end].first, currentColliders[end].second},
-				 endVec, scene);
+				 endVec);
 		currentColliders.erase(end);
 	}
 
@@ -165,10 +166,10 @@ void TerrainManager::tryExtendCollider(const std::pair<int, int>& start,
 	currentColliders[end] = start;
 }
 
-void TerrainManager::createCollider(const vector2Df& start, const vector2Df& end, Scene& scene) {
+void TerrainManager::createCollider(const vector2Df& start, const vector2Df& end) {
 		const vector2Df position{start + (end - start) * 0.5f};
 		TerrainCollider& collider = scene.instantiate<TerrainCollider>(position);
-		collider.initializeCollider(start, end);
+		collider.initializeCollider(start, end, *this);
 		terrainColliders.push_back(&collider);
 }
 
@@ -183,4 +184,22 @@ void TerrainManager::render(SDL_Renderer* renderer) const {
 	for (auto& rectList : renderRects) {
 		SDL_RenderFillRects(renderer, &rectList[0], rectList.size());
 	}
+}
+
+void TerrainManager::removePixel(const vector2Df& position) {
+	const auto [x, y] = posToTerrainCoord(position);
+	if (!terrainMap[x][y]) {
+		std::cout << "not on anything\n";
+		return;
+	}
+
+	terrainMap[x][y] = false;
+	update();
+	updateCollisions();
+}
+
+std::pair<int, int> TerrainManager::posToTerrainCoord(const vector2Df& position) const {
+	const int x = position.x / pixelSize;
+	const int y = position.y / pixelSize;
+	return std::move(std::pair<int, int>{x, y});
 }

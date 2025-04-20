@@ -1,16 +1,28 @@
 #include "terrain/terrainCollider.h"
+#include "bullet.h"
 #include "engine/scene.h"
 #include "engine/game.h"
+#include "terrain/terrainManager.h"
 
 TerrainCollider::TerrainCollider() : GameObject{vector2Df{}} {
 	collider = std::make_unique<LineCollider>(Collision::Line{}, 300.0f, this);
 	isStatic = true;
 }
 
-void TerrainCollider::initializeCollider(const vector2Df& start, const vector2Df& end) {
+void TerrainCollider::initializeCollider(const vector2Df& start, const vector2Df& end,
+										 TerrainManager& manager) {
 	LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
 	lineCollider->line.start = start;
 	lineCollider->line.end = end;
+	this->manager = &manager;
+}
+
+void TerrainCollider::onCollision(const Collision::Event& event) {
+	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
+	if (bullet) {
+		// Remove pixel at collision position
+		manager->removePixel(event.position + bullet->getDirection() * 2.0f);
+	}
 }
 
 // ONLY USED FOR DEBUG GIZMOS

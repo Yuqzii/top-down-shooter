@@ -17,11 +17,16 @@ namespace Collision {
 struct Event {
 	const bool collided;
 	const float depth;
+	const vector2Df position;
 	const Collider* other;
 
-	Event(const bool collided_, const float depth_, const Collider* other_)
-		: collided{collided_}, depth{depth_}, other{other_} {}
-	Event(const bool collided_, const float depth_) : Event{collided_, depth_, nullptr} {}
+	Event(const bool collided_, const float depth_, const vector2Df& position_, 
+	     const Collider* other_)
+		: collided{collided_}, depth{depth_}, position{position_}, other{other_} {}
+	Event(const bool collided_, const float depth_, const vector2Df& position_)
+		: Event{collided_, depth_, position_, nullptr} {}
+	Event(const bool collided_, const vector2Df& position_) : Event{collided_, 0, position_} {}
+	Event(const bool collided_, const float depth_) : Event{collided_, depth_, vector2Df{}} {}
 	Event(const bool collided_) : Event{collided_, 0} {}
 };
 
