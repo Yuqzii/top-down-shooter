@@ -111,19 +111,8 @@ void Player::onCollision(const Collision::Event& event) {
 	const TerrainCollider* terrainCollider =
 		dynamic_cast<const TerrainCollider*>(event.other->getParent());
 	if (terrainCollider) {
-		// Find the normal direction of the line
-		const LineCollider* line = static_cast<LineCollider*>(terrainCollider->getCollider());
-		vector2Df normal = vector2Df{line->line.start - line->line.end}.normalized();
-		normal = vector2Df{normal.y, normal.x * -1};
-		// Check what side of line player is on
-		const float angle = std::acos(normal.normalized().dotProduct(
-			(position - terrainCollider->getPosition()).normalized()));
-		const float degrees = angle * 180 / M_PI;
-		// Update position according to collision depth and what side player is on
-		if (degrees >= 90.0f && degrees <= 180.0f)
-			position -= normal * event.depth;
-		else
-			position += normal * event.depth;
+		position += Collision::resolveStaticLine(event, position);
+		return;
 	}
 }
 

@@ -148,6 +148,22 @@ Collision::Event checkCollision(const vector2Df& a, const vector2Df& b) {
 	return Event{a == b};
 }
 
+vector2Df resolveStaticLine(const Collision::Event& event, const vector2Df& position) {
+	const LineCollider& line = static_cast<const LineCollider&>(*event.other);
+	// Find the normal direction of the line
+	vector2Df normal = vector2Df{line.line.start - line.line.end}.normalized();
+	normal = vector2Df{normal.y, normal.x * -1};
+	// Check what side of line position is on
+	const float angle = std::acos(normal.normalized().dotProduct(
+		(position - event.other->getParent()->getPosition()).normalized()));
+	const float degrees = angle * 180 / M_PI;
+	// Calculate movement according to collision depth and what side position is on
+	if (degrees >= 90.0f && degrees <= 180.0f)
+		return normal * event.depth * -1.0f;
+	else
+		return normal * event.depth;
+}
+
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 	const int arrSize = roundUpToMultipleOfEight(collider.radius * 8 * 35 / 49);
 	std::vector<SDL_Point> points(arrSize);

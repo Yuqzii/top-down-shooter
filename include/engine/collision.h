@@ -10,6 +10,7 @@ class SDL_Renderer;
 class GameObject;
 class Scene;
 class Collider;
+class LineCollider;
 
 namespace Collision {
 
@@ -51,6 +52,16 @@ Collision::Event checkCollision(const SDL_Rect& a, const SDL_Rect& b);
 Collision::Event checkCollision(const Circle& a, const Circle& b);
 Collision::Event checkCollision(const vector2Df& point, const Circle& circle);
 Collision::Event checkCollision(const Circle& circle, const Line& line);
+
+/*
+ * @abstract	Calculates the necessary movement after a collision with a static LineCollider
+ *				to resolve the collision.
+ * @param	event	Reference to the collision event
+ * @param	position	Position of the collider that collided with the static LineCollider.
+ *						This is what we will calculate the movement for.
+ * @return	Movement vector. Apply this to the position to resolve collision.
+ */
+vector2Df resolveStaticLine(const Collision::Event& event, const vector2Df& position);
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);
 }
