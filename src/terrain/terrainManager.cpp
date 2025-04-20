@@ -124,6 +124,13 @@ void TerrainManager::updateCollisions() {
 				tryExtendCollider(topLeft, topRight, currentColliders);
 				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
+			else if (!left && !right && !above && !below) {
+				// Collidersr on every side
+				tryExtendCollider(topLeft, botLeft, currentColliders);
+				tryExtendCollider(topRight, botRight, currentColliders);
+				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(botLeft, botRight, currentColliders);
+			}
 		}
 	}
 
