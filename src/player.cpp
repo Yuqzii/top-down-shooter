@@ -2,27 +2,29 @@
 
 #include <cmath>
 
+#include "SDL2/SDL_mouse.h"
 #include "SDL2/SDL_scancode.h"
 #include "bullet.h"
 #include "enemies/enemy.h"
 #include "engine/game.h"
 #include "engine/gameObject.h"
 #include "engine/scene.h"
+#include "terrain/terrainCollider.h"
 
 Player::Player()
-	: healthbarBG(vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}),
-	  currentGun(std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)),
-	  timeSinceShot(0.0f) {
+	: healthbarBG{vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}},
+	  currentGun{std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
+	  timeSinceShot{0.0f},
+	  GameObject{std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
+	  circleCollider{static_cast<CircleCollider&>(*collider)}{
+	  
 	pivotOffset.y = 20;
-	useCollision = true;
 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
 void Player::initialize(const vector2Df& position, const Scene& scene) {
 	GameObject::initialize(position, scene);  // Call base initialize
-
-	circleCollider.radius = 40;	 // Change collider size
 }
 
 // Do player specific processing here
@@ -50,8 +52,9 @@ void Player::update(Scene& scene, const float deltaTime) {
 	velocity = moveDir * moveSpeed;	 // Update velocity
 
 	GameObject::update(scene, deltaTime);  // Call base GameObject update (Updates position)
-
 	pointToMouse(scene);
+
+	circleCollider.circle.position = position + getDirection() * 10.0f; // Update collider position
 
 	timeSinceShot += deltaTime;
 	const bool enoughTimePassed = timeSinceShot >= currentGun->timeBetweenShots;
@@ -93,13 +96,20 @@ void Player::shoot(Scene& scene) {
 	timeSinceShot = 0.0f;
 }
 
-void Player::onCollision(const GameObject& other) {
-	const EnemyAttackPoint* enemyCollisionPoint = dynamic_cast<const EnemyAttackPoint*>(&other);
-
-	if (enemyCollisionPoint == nullptr)	 // Return if collision is not with enemy attack
+void Player::onCollision(const Collision::Event& event) {
+	const EnemyAttackPoint* enemyAttackPoint =
+		dynamic_cast<const EnemyAttackPoint*>(event.other->getParent());
+	if (enemyAttackPoint) {
+		takeDamage(enemyAttackPoint->parent->damage);
 		return;
-
-	takeDamage(enemyCollisionPoint->parent->damage);
+	} 
+		
+	const TerrainCollider* terrainCollider =
+		dynamic_cast<const TerrainCollider*>(event.other->getParent());
+	if (terrainCollider) {
+		position += Collision::resolveStaticLine(event, position);
+		return;
+	}
 }
 
 void Player::takeDamage(const float damage) {

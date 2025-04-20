@@ -8,6 +8,7 @@
 #include "engine/game.h"
 #include "engine/gameObject.h"
 #include "player.h"
+#include "terrain/terrainCollider.h"
 
 Scene::Scene(Game& game_) : game(game_) {}
 
@@ -33,12 +34,14 @@ void Scene::update(const float deltaTime) {
 
 	// Check for collisions after all GameObjects are updated
 	for (auto& object : gameObjects) {
-		object->checkCollisions(*this);
+		if (object->getCollider() == nullptr) continue;
+		object->getCollider()->checkCollisions(*this);
 	}
 
 	// Update GameObjects according to registered collisions
 	for (auto& object : gameObjects) {
-		object->collisionUpdate();
+		if (object->getCollider() == nullptr) continue;
+		object->getCollider()->collisionUpdate();
 	}
 }
 
@@ -78,6 +81,7 @@ template Player& Scene::instantiate<Player>(const vector2Df& position);
 template Bullet& Scene::instantiate<Bullet>(const vector2Df& position);
 template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const vector2Df& position);
 template EnemyAttackPoint& Scene::instantiate<EnemyAttackPoint>(const vector2Df& position);
+template TerrainCollider& Scene::instantiate<TerrainCollider>(const vector2Df& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D();	// Create new tree

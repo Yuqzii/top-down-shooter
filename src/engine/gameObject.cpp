@@ -1,7 +1,6 @@
 #include "engine/gameObject.h"
 
 #include <cassert>
-#include <iostream>
 
 #include "engine/game.h"
 #include "engine/resourceManager.h"
@@ -12,7 +11,7 @@
 
 // Initialize destination rectangle (part of screen GameObject is displayed on)
 // Create global macro or sum for size instead of 3?
-GameObject::GameObject(const vector2Df& srcRectSize)
+GameObject::GameObject(std::unique_ptr<Collider> collider_, const vector2Df& srcRectSize)
 	: deleteObject{false},
 	  size{1, 1},
 	  baseSize{srcRectSize},
@@ -23,14 +22,15 @@ GameObject::GameObject(const vector2Df& srcRectSize)
 	  animationCounter{0},
 	  animationSequence{0},
 	  prevFrame{0},
-	  boundingCircle{500.0f},
-	  useCollision{false},
-	  collisionList{},
-	  collisionType{},
+	  collider{std::move(collider_)},
 	  rotation{0},
-	  flipType{SDL_FLIP_NONE} {}
+	  flipType{SDL_FLIP_NONE},
+	  isStatic{false},
+	  renderObject{true} {}
 
-GameObject::GameObject() : GameObject(vector2Df(32, 32)) {}
+GameObject::GameObject(const vector2Df& srcRectSize) : GameObject{nullptr, srcRectSize} {}
+
+GameObject::GameObject() : GameObject{nullptr} {}
 
 void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) {
 	// Load texture
@@ -48,29 +48,20 @@ void GameObject::initialize(const vector2Df& startPosition, const Scene& scene) 
 
 	destRect.x = round(renderPosition.x);
 	destRect.y = round(renderPosition.y);
-
-	// Initialize collider
-	if (collisionType == Collision::Types::CIRCLE) {
-		circleCollider.radius = (float)destRect.w / 2;
-		circleCollider.position = position;
-	}
 }
 
 void GameObject::update(Scene& scene, const float deltaTime) {
-	collisionList.clear();	// Make sure collisionList only contains collisions from this frame
+	if (!isStatic) {
+		position += velocity * deltaTime;
 
-	position += velocity * deltaTime;
+		// Update render positon
+		renderPosition.x = position.x - pivot.x;
+		renderPosition.y = position.y - pivot.y;
 
-	// Update render positon
-	renderPosition.x = position.x - pivot.x;
-	renderPosition.y = position.y - pivot.y;
-
-	// Update render position
-	destRect.x = round(renderPosition.x);
-	destRect.y = round(renderPosition.y);
-
-	// Update collider position
-	circleCollider.position = position;
+		// Update render rectangle
+		destRect.x = round(renderPosition.x);
+		destRect.y = round(renderPosition.y);
+	}
 
 	if (isAnimated) animationUpdate(scene, deltaTime);
 
@@ -91,61 +82,8 @@ void GameObject::setSize(const vector2Df& newSize) {
 	pivot.y = (float)destRect.h / 2 + pivotOffset.y * size.y;
 }
 
-void GameObject::checkCollisions(const Scene& scene) {
-	// Point collisions are not checking collision with others
-	if (collisionType == Collision::Types::POINT) return;
-
-	std::vector<GameObject*> closeObjects;
-	try {
-		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(position, boundingCircle);
-	} catch (int e) {
-		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
-	}
-
-	for (GameObject* object : closeObjects) {
-		// No need to check collision if object is not collideable,
-		// or we know we have already collided,
-		// or if it is "colliding" with itself.
-		if (!object->useCollision || collisionList.count(object) || object == this) continue;
-
-		switch (object->collisionType) {
-			using namespace Collision;
-			using enum Types;
-
-			case CIRCLE:
-				if (Collision::checkCollision(circleCollider, object->circleCollider)) {
-					addCollision(object);
-					object->addCollision(this);
-				}
-				break;
-
-			case POINT:
-				if (Collision::checkCollision(object->getPosition(), circleCollider)) {
-					addCollision(object);
-				}
-				break;
-		}
-	}
-}
-
-void GameObject::collisionUpdate() {
-	for (const GameObject* object : collisionList) {
-		if (object == nullptr)	// Ensure that object exists
-			continue;
-
-		try {
-			onCollision(*object);
-		} catch (int e) {
-			// Stop collision detection when throwing exception
-			break;
-		}
-	}
-}
-
-void GameObject::addCollision(const GameObject* other) { collisionList.insert(other); }
-
 void GameObject::render(SDL_Renderer* renderer) const {
+	if (!renderObject) return;
 	SDL_RenderCopyEx(renderer, texture, &srcRect, &destRect, rotation, &pivot, flipType);
 }
 
@@ -195,8 +133,26 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 	// Return lambda with debug render stuff
 	return [this](SDL_Renderer* renderer) {
 		// Collider
-		if (useCollision) Collision::drawCircleCollider(renderer, circleCollider);
-		SDL_RenderDrawPoint(renderer, pivot.x + destRect.x, pivot.y + destRect.y);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+		switch (collider->getCollisionType()) {
+			using enum Collision::Types;
+
+			case CIRCLE: {
+				CircleCollider* circleCollider = static_cast<CircleCollider*>(collider.get());
+				Collision::drawCircleCollider(renderer, circleCollider->circle);
+				break;
+			}
+			case LINE: {
+				LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
+				SDL_RenderDrawLineF(renderer, lineCollider->line.start.x, lineCollider->line.start.y,
+									lineCollider->line.end.x, lineCollider->line.end.y);
+			}
+			case POINT: {
+				PointCollider* pointCollider = static_cast<PointCollider*>(collider.get());
+				SDL_RenderDrawPoint(renderer, pointCollider->point.x, pointCollider->point.y);
+			}
+		}
+		SDL_RenderDrawPoint(renderer, position.x, position.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + velocity.x * 0.1,
 						   position.y + velocity.y * 0.1);
