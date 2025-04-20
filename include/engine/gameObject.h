@@ -21,6 +21,7 @@ class Scene;
 
 class GameObject {
 public:
+	GameObject(std::unique_ptr<Collider> collider, const vector2Df& srcRectSize = {32, 32});
 	GameObject(const vector2Df& srcRectSize);
 	GameObject();
 	virtual ~GameObject() = default;

@@ -28,7 +28,7 @@ public:
 	const float damage;
 
 protected:
-	CircleCollider* circleCollider;
+	CircleCollider& circleCollider;
 
 	// Steering behaviors
 	vector2Df steering;

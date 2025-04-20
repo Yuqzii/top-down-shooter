@@ -8,7 +8,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 						 const float maxSteer, const float steerMult, const float slowingRadius)
 	: Enemy(startHealth, damage, moveSpeed, maxSteer, steerMult, slowingRadius) {
 	isAnimated = true;
-	circleCollider->circle.radius = 50;
+	circleCollider.circle.radius = 50;
 
 	animationEvents.emplace_back(1, 6, [this](Scene& scene) { attack(scene); });
 }
@@ -46,7 +46,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 			break;
 	}
 
-	avoidTerrain(1.75f, circleCollider->circle.radius + 10);
+	avoidTerrain(1.75f, circleCollider.circle.radius + 10);
 	// Calculate velocity and update position
 	Enemy::update(scene, deltaTime);
 }

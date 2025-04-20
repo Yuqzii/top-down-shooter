@@ -139,27 +139,30 @@ void TerrainManager::tryExtendCollider(const std::pair<int, int>& start,
 									   const std::pair<int, int>& end,
 									   std::map<std::pair<int, int>, std::pair<int, int>>&
 									   currentColliders, Scene& scene) {
-		const vector2Df startVec{start.first, start.second};
-		const vector2Df endVec{end.first, end.second};
+	const vector2Df startVec{start.first, start.second};
+	const vector2Df endVec{end.first, end.second};
 
-		if (currentColliders.count(end)) {
-			createCollider(vector2Df{currentColliders[end].first, currentColliders[end].second},
-				  endVec, scene);
-			currentColliders.erase(end);
+	// Create collider if there already is one ending at end
+	if (currentColliders.count(end)) {
+		createCollider(vector2Df{currentColliders[end].first, currentColliders[end].second},
+				 endVec, scene);
+		currentColliders.erase(end);
+	}
+
+	// Is there a collider ending at start?
+	if (currentColliders.count(start)){
+		const vector2Df curStartVec{currentColliders[start].first,
+			currentColliders[start].second};
+
+		// Change end point if line is going the same direction
+		if ((startVec - curStartVec).normalized() == (endVec - startVec).normalized()) {
+			auto node = currentColliders.extract(start);
+			node.key() = end;
+			currentColliders.insert(std::move(node));
+			return;
 		}
-
-		if (currentColliders.count(start)){
-			const vector2Df curStartVec{currentColliders[start].first,
-										currentColliders[start].second};
-
-			if ((startVec - curStartVec).normalized() == (endVec - startVec).normalized()) {
-				auto node = currentColliders.extract(start);
-				node.key() = end;
-				currentColliders.insert(std::move(node));
-				return;
-			}
-		}
-		currentColliders[end] = start;
+	}
+	currentColliders[end] = start;
 }
 
 void TerrainManager::createCollider(const vector2Df& start, const vector2Df& end, Scene& scene) {

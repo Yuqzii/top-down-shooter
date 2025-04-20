@@ -8,8 +8,7 @@
 Bullet::Bullet() : GameObject(vector2Df(1, 2)) {
 	setSize(vector2Df{1.75f, 1.75f});
 
-	Collision::Line collisionLine;
-	collider = std::make_unique<LineCollider>(std::move(collisionLine), 1000.0f, this);
+	collider = std::make_unique<LineCollider>(std::move(Collision::Line{}), 1000.0f, this);
 	lineCollider = static_cast<LineCollider*>(collider.get());
 }
 
@@ -30,25 +29,6 @@ void Bullet::update(Scene& scene, const float deltaTime) {
 		deleteObject = true;
 	}
 }
-
-//void Bullet::checkCollisions(const Scene& scene) {
-//	// Get all GameObjects withing bounding circle
-//	const std::vector<GameObject*> closeObjects =
-//		scene.getObjectTree().findObjectsInRange(position, boundingCircle);
-//
-//	const Collision::Line movementLine(previousPosition, position);
-//
-//	for (GameObject* object : closeObjects) {
-//		if (!object->getUseCollision() || collisionList.count(object) || object == this) continue;
-//
-//		// Check if bullet travelled through any of the objects
-//		if (Collision::checkCollision(object->circleCollider, movementLine)) {
-//			addCollision(object);
-//			object->addCollision(this);
-//			break;	// Bullet is deleted upon collision anyways, no point in checking more
-//		}
-//	}
-//}
 
 void Bullet::onCollision(const Collision::Event& event) {
 	// Delete object when colliding with something and stop further collision updates

@@ -19,11 +19,9 @@ Enemy::Enemy(const float health_, const float damage_, const float speed, const 
 	  slowingRadius(slowing),
 	  isMoving(true),
 	  healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{255, 0, 0, 255}),
-	  state() {
-
-	Collision::Circle collisionCircle{40.0f};
-	collider = std::make_unique<CircleCollider>(std::move(collisionCircle), 500.0f, this);
-	circleCollider = static_cast<CircleCollider*>(collider.get());
+	  state(),
+	  GameObject{std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
+	  circleCollider{static_cast<CircleCollider&>(*collider)} {
 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
@@ -58,7 +56,7 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 		velocity = vector2Df();
 
 	GameObject::update(scene, deltaTime);  // Update position
-	circleCollider->circle.position = position; // Update collider position
+	circleCollider.circle.position = position; // Update collider position
 
 	// Update healthbar
 	if (health < startHealth) {
