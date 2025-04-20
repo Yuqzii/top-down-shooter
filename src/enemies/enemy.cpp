@@ -6,6 +6,7 @@
 #include "engine/scene.h"
 #include "player.h"
 #include "scenes/combat_scene.h"
+#include "terrain/terrainCollider.h"
 
 Enemy::Enemy(const float health_, const float damage_, const float speed, const float steer,
 			 const float sMult, const float slowing)
@@ -72,9 +73,17 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 
 void Enemy::onCollision(const Collision::Event& event) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
-	if (bullet == nullptr) return;	// Return if colliding with something that is not a bullet
-
-	takeDamage(bullet->getData().damage);
+	if (bullet) {
+		takeDamage(bullet->getData().damage);
+		return;
+	}
+	
+	const TerrainCollider* terrainCollider = 
+		dynamic_cast<const TerrainCollider*>(event.other->getParent());
+	if (terrainCollider) {
+		position += Collision::resolveStaticLine(event, position);
+		return;
+	}
 }
 
 void Enemy::takeDamage(const float damage) {
