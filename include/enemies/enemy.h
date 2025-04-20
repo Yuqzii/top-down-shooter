@@ -37,6 +37,8 @@ protected:
 	vector2Df pursuit(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 	vector2Df evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 
+	void avoidTerrain(const float strength, const float avoidDist);
+
 	virtual void setState(const EnemyStates newState) { state = newState; }
 	EnemyStates getState() const { return state; }
 

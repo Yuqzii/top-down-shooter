@@ -19,22 +19,6 @@ int distanceSquared(const vector2D& a, const vector2D& b) {
 
 int roundUpToMultipleOfEight(int x) { return (x + (8 - 1)) & -8; }
 
-vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
-	vector2Df tangent = line.end - line.start;
-
-	if ((point - line.start).dotProduct(tangent) <= 0) {
-		return line.start;	// point is at or before start of line
-	}
-
-	if ((point - line.end).dotProduct(tangent) >= 0) {
-		return line.end;  // point is at after end of line
-	}
-
-	tangent = tangent.normalized();
-	const vector2Df relativePos = point - line.start;
-	return line.start + tangent * (tangent.dotProduct(relativePos));
-}
-
 // Given three collinear points p, q, r, the function checks if 
 // point q lies on line segment 'pr' 
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
@@ -64,6 +48,23 @@ int orientation(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
 }
 
 }  // namespace
+
+vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
+	vector2Df tangent = line.end - line.start;
+
+	if ((point - line.start).dotProduct(tangent) <= 0) {
+		return line.start;	// point is at or before start of line
+	}
+
+	if ((point - line.end).dotProduct(tangent) >= 0) {
+		return line.end;  // point is at after end of line
+	}
+
+	tangent = tangent.normalized();
+	const vector2Df relativePos = point - line.start;
+	return line.start + tangent * (tangent.dotProduct(relativePos));
+}
+
 
 // Returns true if rect a overlaps with rect b
 // Not used

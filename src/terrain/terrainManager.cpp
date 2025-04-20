@@ -131,6 +131,8 @@ void TerrainManager::updateCollisions(Scene& scene) {
 		createCollider(vector2Df{start.first, start.second},
 					   vector2Df{end.first, end.second}, scene);
 	}
+
+	updateTree();
 }
 
 void TerrainManager::tryExtendCollider(const std::pair<int, int>& start,
@@ -165,6 +167,11 @@ void TerrainManager::createCollider(const vector2Df& start, const vector2Df& end
 		TerrainCollider& collider = scene.instantiate<TerrainCollider>(position);
 		collider.initializeCollider(start, end);
 		terrainColliders.push_back(&collider);
+}
+
+void TerrainManager::updateTree() {
+	terrainTree = Tree2D{};
+	terrainTree.initializeWithList(terrainColliders);
 }
 
 void TerrainManager::render(SDL_Renderer* renderer) const {

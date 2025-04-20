@@ -151,6 +151,21 @@ vector2Df Enemy::evade(const GameObject& target, const float& predictionMultipli
 	return flee(futurePosition);  // Use seek to move towards this position
 }
 
+void Enemy::avoidTerrain(const float strength, const float avoidDist) {
+	// Find closest terrain object
+	const GameObject* closest =
+			combatScene->getTerrainManager().getTree().findClosestObject(position);
+	// Find the closest point to this enemy on the LineCollider
+	const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
+	const vector2Df closestPoint = Collision::closestPointOnLine(position, line);
+
+	const vector2Df dist{closestPoint - position}; // Find distance to the closest point
+	if (dist.dotProduct(dist) <= avoidDist * avoidDist) {
+		// Avoid the middle position of the collider
+		steering += flee(closest->getPosition()) * strength;
+	}
+}
+
 std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
 	return [this](SDL_Renderer* renderer) {
 		GameObject::debugRender()(renderer);  // Call parent debugRender and pass in renderer

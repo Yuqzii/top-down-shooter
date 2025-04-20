@@ -48,6 +48,8 @@ struct Line {
 	Line(const vector2Df& s, const vector2Df& e) : start(s), end(e) {}
 };
 
+vector2Df closestPointOnLine(const vector2Df& point, const Line& line);
+
 Collision::Event checkCollision(const SDL_Rect& a, const SDL_Rect& b);
 Collision::Event checkCollision(const Circle& a, const Circle& b);
 Collision::Event checkCollision(const vector2Df& point, const Circle& circle);

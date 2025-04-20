@@ -4,6 +4,7 @@
 #include <vector>
 #include "SDL2/SDL_pixels.h"
 #include "SDL2/SDL_rect.h"
+#include "engine/Tree2D.h"
 #include "engine/game.h"
 
 class SDL_Renderer;
@@ -18,6 +19,8 @@ public:
 	void updateCollisions(Scene& scene);
 	void render(SDL_Renderer* renderer) const;
 
+	const Tree2D& getTree() const { return terrainTree; }
+
 private:
 	std::vector<std::vector<char>> terrainMap;
 	const size_t xSize, ySize;
@@ -26,7 +29,9 @@ private:
 
 	std::vector<std::vector<SDL_Rect>> renderRects;
 
-	std::vector<TerrainCollider*> terrainColliders;
+	std::vector<GameObject*> terrainColliders;
+	Tree2D terrainTree;
+	void updateTree();
 	/*
 	* @abstract	Creates a TerrainCollider at the middle point between start and end,
 	*			with a line collider from start to end.

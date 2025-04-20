@@ -18,6 +18,7 @@ public:
 
 	const Player& player;
 	const EnemyManager& getEnemyManager() const { return enemyManager; }
+	const TerrainManager& getTerrainManager() const { return terrainManager; }
 
 private:
 	EnemyManager enemyManager;

@@ -46,6 +46,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 			break;
 	}
 
+	avoidTerrain(1.75f, circleCollider->circle.radius + 10);
 	// Calculate velocity and update position
 	Enemy::update(scene, deltaTime);
 }
