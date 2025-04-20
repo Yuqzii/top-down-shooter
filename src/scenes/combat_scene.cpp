@@ -1,4 +1,5 @@
 #include "scenes/combat_scene.h"
+#include "SDL2/SDL_mouse.h"
 
 const std::vector<std::vector<char>> terrainMap {
 	std::vector<char>{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -113,6 +114,10 @@ void CombatScene::initialize(GameObjectVector& persistentObjects) {
 }
 
 void CombatScene::update(const float deltaTime) {
+	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
+		terrainManager.removeInRange(getGame().getMousePos(), 5);
+	}
+
 	Scene::update(deltaTime);
 
 	enemyManager.update(*this, deltaTime);

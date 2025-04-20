@@ -195,12 +195,34 @@ void TerrainManager::render(SDL_Renderer* renderer) const {
 
 void TerrainManager::removePixel(const vector2Df& position) {
 	const auto [x, y] = posToTerrainCoord(position);
-	if (x >= xSize || y >= ySize || !terrainMap[x][y]) {
-		std::cout << "not on anything\n";
+	if (x >= xSize || y >= ySize || !terrainMap[x][y])
 		return;
-	}
 
 	terrainMap[x][y] = false;
+	update();
+	updateCollisions();
+}
+
+void TerrainManager::removeInRange(const vector2Df& center, int range) {
+	++range; // Increment range to make calculations work correctly
+
+	// Find the height (sine) of every x position based on the range (radius)
+	std::vector<int> maxY(range);
+	for (int x = 0; x < range; ++x) {
+		maxY[x] = std::round(std::sin(std::acos((float)x / range)) * range);
+	}
+
+	
+	const auto [cX, cY] = posToTerrainCoord(center); // Get center to remove from
+	// Loop through and deactivate pixels
+	for (int x = -range + 1; x < range; ++x) {
+		if (cX + x < 0 || cX + x >= xSize) continue;
+		for (int y = -maxY[std::abs(x)] + 1; y < maxY[std::abs(x)]; ++y) {
+			if (cY + y < 0 || cY + y >= ySize) continue;
+			terrainMap[cX + x][cY + y] = false;
+		}
+	}
+
 	update();
 	updateCollisions();
 }

@@ -21,6 +21,12 @@ public:
 	void render(SDL_Renderer* renderer) const;
 
 	void removePixel(const vector2Df& position);
+	/*
+	 * @abstract	Removes all pixels in range of the center and recalculate collisions.
+	 * @param	center	Center position to remove from.
+	 * @param	range	The range to remove from. (Radius of circle).
+	 */
+	void removeInRange(const vector2Df& center, const int range);
 
 	const Tree2D& getTree() const { return terrainTree; }
 
