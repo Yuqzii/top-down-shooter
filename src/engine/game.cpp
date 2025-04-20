@@ -98,7 +98,7 @@ void Game::update() {
 	scenes[currentScene]->updateDelete();
 
 #ifdef DEBUG_GIZMO
-	//std::cout << "\rFPS: " << 1 / deltaTime;
+	std::cout << "\rFPS: " << 1 / deltaTime;
 #endif
 }
 

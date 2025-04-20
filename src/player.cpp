@@ -56,9 +56,9 @@ void Player::update(Scene& scene, const float deltaTime) {
 	velocity = moveDir * moveSpeed;	 // Update velocity
 
 	GameObject::update(scene, deltaTime);  // Call base GameObject update (Updates position)
-	circleCollider->circle.position = position; // Update collider position
-
 	pointToMouse(scene);
+
+	circleCollider->circle.position = position + getDirection() * 10.0f; // Update collider position
 
 	timeSinceShot += deltaTime;
 	const bool enoughTimePassed = timeSinceShot >= currentGun->timeBetweenShots;
@@ -79,8 +79,6 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 	// Tell UIManager to render healthbar
 	scene.getGame().getRenderManager().addRenderCall(healthbarBG.getRenderFunction(), this);
-
-	//SDL_Delay(100);
 }
 
 // Points player towards the mouse
@@ -113,13 +111,15 @@ void Player::onCollision(const Collision::Event& event) {
 	const TerrainCollider* terrainCollider =
 		dynamic_cast<const TerrainCollider*>(event.other->getParent());
 	if (terrainCollider) {
+		// Find the normal direction of the line
 		const LineCollider* line = static_cast<LineCollider*>(terrainCollider->getCollider());
 		vector2Df normal = vector2Df{line->line.start - line->line.end}.normalized();
 		normal = vector2Df{normal.y, normal.x * -1};
+		// Check what side of line player is on
 		const float angle = std::acos(normal.normalized().dotProduct(
 			(position - terrainCollider->getPosition()).normalized()));
 		const float degrees = angle * 180 / M_PI;
-		std::cout << degrees << "\n";
+		// Update position according to collision depth and what side player is on
 		if (degrees >= 90.0f && degrees <= 180.0f)
 			position -= normal * event.depth;
 		else

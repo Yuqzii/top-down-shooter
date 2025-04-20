@@ -92,9 +92,11 @@ Collision::Event checkCollision(const Circle& a, const Circle& b) {
 
 Collision::Event checkCollision(const vector2Df& point, const Circle& c) {
 	const float dist = distanceSquared(point, c.position);
-	const float depth = dist - c.radius * c.radius;
-	if (depth <= 0)
-		return Event{true, depth * -1};
+	if (dist < c.radius * c.radius) {
+		const vector2Df delta = c.position - point;
+		const float depth = c.radius - delta.magnitude();
+		return Event{true, depth};
+	}
 	else
 		return Event{false};
 }
