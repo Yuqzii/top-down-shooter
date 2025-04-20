@@ -108,7 +108,7 @@ void TerrainManager::updateCollisions() {
 			}
 			else if (!left && !right && above && !below) {
 				// Three line, vertical left, vertical right, and horizontal below
-				tryExtendCollider(topLeft, topRight, currentColliders);
+				tryExtendCollider(topLeft, botLeft, currentColliders);
 				tryExtendCollider(topRight, botRight, currentColliders);
 				tryExtendCollider(botLeft, botRight, currentColliders);
 			}
@@ -188,7 +188,7 @@ void TerrainManager::render(SDL_Renderer* renderer) const {
 
 void TerrainManager::removePixel(const vector2Df& position) {
 	const auto [x, y] = posToTerrainCoord(position);
-	if (!terrainMap[x][y]) {
+	if (x >= xSize || y >= ySize || !terrainMap[x][y]) {
 		std::cout << "not on anything\n";
 		return;
 	}
