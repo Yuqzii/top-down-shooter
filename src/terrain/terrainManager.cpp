@@ -85,8 +85,8 @@ void TerrainManager::updateCollisions() {
 				tryExtendCollider(topRight, botRight, currentColliders);
 			}
 			else if ((!left && right && !above && below) || (left && !right && above && !below)) {
-				// Diagonal line from top right to bottom left
-				tryExtendCollider(topRight, botLeft, currentColliders);
+				// Diagonal line from bottom left to top right
+				tryExtendCollider(botLeft, topRight, currentColliders);
 			}
 			else if ((!left && right && above && !below) || (left && !right && !above && below)) {
 				// Diagonal from top left to bottom right
