@@ -62,6 +62,14 @@ if(APPLE)
 	)
 endif()
 
+if(WIN32)
+	message("Windows platform detected.")
+	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2.dll"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2_image.dll"
+	)
+endif()
+
 option(DEBUG_GIZMO "Enable this to render debug gizmos" OFF)
 if(DEBUG_GIZMO)
 	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D DEBUG_GIZMO")
