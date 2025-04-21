@@ -15,9 +15,9 @@ Player::Player()
 	: healthbarBG{vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}},
 	  currentGun{std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
 	  timeSinceShot{0.0f},
-	  GameObject{std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
-	  circleCollider{static_cast<CircleCollider&>(*collider)}{
-	  
+	  GameObject{
+		  std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
+	  circleCollider{static_cast<CircleCollider&>(*collider)} {
 	pivotOffset.y = 20;
 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
@@ -54,7 +54,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 	GameObject::update(scene, deltaTime);  // Call base GameObject update (Updates position)
 	pointToMouse(scene);
 
-	circleCollider.circle.position = position + getDirection() * 10.0f; // Update collider position
+	circleCollider.circle.position = position + getDirection() * 10.0f;	 // Update collider position
 
 	timeSinceShot += deltaTime;
 	const bool enoughTimePassed = timeSinceShot >= currentGun->timeBetweenShots;
@@ -102,8 +102,8 @@ void Player::onCollision(const Collision::Event& event) {
 	if (enemyAttackPoint) {
 		takeDamage(enemyAttackPoint->parent->damage);
 		return;
-	} 
-		
+	}
+
 	const TerrainCollider* terrainCollider =
 		dynamic_cast<const TerrainCollider*>(event.other->getParent());
 	if (terrainCollider) {

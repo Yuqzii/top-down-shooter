@@ -1,12 +1,12 @@
 #include "engine/collision.h"
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 #include "SDL2/SDL_render.h"
-#include "engine/scene.h"
 #include "engine/gameObject.h"
+#include "engine/scene.h"
 
 namespace Collision {
 
@@ -19,32 +19,31 @@ int distanceSquared(const vector2D& a, const vector2D& b) {
 
 int roundUpToMultipleOfEight(int x) { return (x + (8 - 1)) & -8; }
 
-// Given three collinear points p, q, r, the function checks if 
-// point q lies on line segment 'pr' 
+// Given three collinear points p, q, r, the function checks if
+// point q lies on line segment 'pr'
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
 bool onSegment(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
-	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && 
-		q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y)) 
-		return true; 
-  
-    return false;
+	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) &&
+		q.y >= std::min(p.y, r.y))
+		return true;
+
+	return false;
 }
 
-// To find orientation of ordered triplet (p, q, r). 
-// The function returns following values 
-// 0 --> p, q and r are collinear 
-// 1 --> Clockwise 
-// 2 --> Counterclockwise 
+// To find orientation of ordered triplet (p, q, r).
+// The function returns following values
+// 0 --> p, q and r are collinear
+// 1 --> Clockwise
+// 2 --> Counterclockwise
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
 int orientation(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
-	// See https://www.geeksforgeeks.org/orientation-3-ordered-points/ 
-    // for details of below formula. 
-    const int val = (q.y - p.y) * (r.x - q.x) - 
-              (q.x - p.x) * (r.y - q.y); 
-  
-    if (val == 0) return 0;  // collinear 
-  
-    return (val > 0) ? 1 : 2; // clock or counterclock wise 
+	// See https://www.geeksforgeeks.org/orientation-3-ordered-points/
+	// for details of below formula.
+	const int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+	if (val == 0) return 0;	 // collinear
+
+	return (val > 0) ? 1 : 2;  // clock or counterclock wise
 }
 
 }  // namespace
@@ -64,7 +63,6 @@ vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
 	const vector2Df relativePos = point - line.start;
 	return line.start + tangent * (tangent.dotProduct(relativePos));
 }
-
 
 // Returns true if rect a overlaps with rect b
 // Not used
@@ -98,8 +96,7 @@ Collision::Event checkCollision(const vector2Df& point, const Circle& c) {
 		const vector2Df delta = c.position - point;
 		const float depth = c.radius - delta.magnitude();
 		return Event{true, depth, point};
-	}
-	else
+	} else
 		return Event{false};
 }
 
@@ -116,8 +113,7 @@ Collision::Event checkCollision(const Circle& c, const Line& l) {
 	if (delta.dotProduct(delta) < c.radius * c.radius) {
 		const float depth = c.radius - delta.magnitude();
 		return Event{true, depth, closestPoint};
-	}
-	else
+	} else
 		return Event{false};
 }
 
@@ -148,25 +144,23 @@ Collision::Event checkCollision(const Line& a, const Line& b) {
 		return Event{true, res};
 	}
 
-    // Special Cases 
+	// Special Cases
 	// a.start, a.end and b.start are collinear and b.start lies on segment a
-	if (o1 == 0 && onSegment(a.start, b.start, a.end)) return Event{true}; 
+	if (o1 == 0 && onSegment(a.start, b.start, a.end)) return Event{true};
 
 	// a.start, a.end and b.end are collinear and b.end lies on segment a
-	if (o2 == 0 && onSegment(a.start, b.end, a.end)) return Event{true}; 
+	if (o2 == 0 && onSegment(a.start, b.end, a.end)) return Event{true};
 
 	// b.start, b.end and a.start are collinear and a.start lies on segment b
-	if (o3 == 0 && onSegment(b.start, a.start, b.end)) return Event{true}; 
+	if (o3 == 0 && onSegment(b.start, a.start, b.end)) return Event{true};
 
 	// b.start, b.end and a.end are collinear and a.end lies on segment b
-	if (o4 == 0 && onSegment(b.start, a.end, b.end)) return Event{true}; 
+	if (o4 == 0 && onSegment(b.start, a.end, b.end)) return Event{true};
 
-	return Event{false}; // Doesn't fall in any of the above cases 
+	return Event{false};  // Doesn't fall in any of the above cases
 }
 
-Collision::Event checkCollision(const vector2Df& a, const vector2Df& b) {
-	return Event{a == b};
-}
+Collision::Event checkCollision(const vector2Df& a, const vector2Df& b) { return Event{a == b}; }
 
 vector2Df resolveStaticLine(const Collision::Event& event, const vector2Df& position) {
 	const LineCollider& line = static_cast<const LineCollider&>(*event.other);
@@ -227,7 +221,7 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 	SDL_RenderDrawPoints(renderer, &points[0], drawCount);
 }
 
-}
+}  // namespace Collision
 
 Collider::Collider(const Collision::Types collisionType_, const float checkRadius_,
 				   GameObject* parent_)
@@ -297,9 +291,10 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) || object == getParent())
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
+			object == getParent())
 			continue;
-		
+
 		switch (otherCollider->getCollisionType()) {
 			using enum Collision::Types;
 
@@ -355,9 +350,10 @@ void LineCollider::checkCollisions(const Scene& scene) {
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) || object == getParent())
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
+			object == getParent())
 			continue;
-		
+
 		switch (otherCollider->getCollisionType()) {
 			using enum Collision::Types;
 
@@ -406,9 +402,10 @@ void PointCollider::checkCollisions(const Scene& scene) {
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) || object == getParent())
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
+			object == getParent())
 			continue;
-		
+
 		switch (otherCollider->getCollisionType()) {
 			using enum Collision::Types;
 

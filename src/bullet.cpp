@@ -19,9 +19,9 @@ void Bullet::initialize(const vector2Df& position, const Scene& scene) {
 }
 
 void Bullet::update(Scene& scene, const float deltaTime) {
-	lineCollider->line.start = position; // Change collision start before position update
+	lineCollider->line.start = position;   // Change collision start before position update
 	GameObject::update(scene, deltaTime);  // Update position
-	lineCollider->line.end = position; // Change collision end after position update
+	lineCollider->line.end = position;	   // Change collision end after position update
 
 	timeLeft -= deltaTime;
 	if (timeLeft <= 0) {

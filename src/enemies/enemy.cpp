@@ -20,9 +20,9 @@ Enemy::Enemy(const float health_, const float damage_, const float speed, const 
 	  isMoving(true),
 	  healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{255, 0, 0, 255}),
 	  state(),
-	  GameObject{std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
+	  GameObject{
+		  std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
 	  circleCollider{static_cast<CircleCollider&>(*collider)} {
-
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
@@ -55,8 +55,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	} else
 		velocity = vector2Df();
 
-	GameObject::update(scene, deltaTime);  // Update position
-	circleCollider.circle.position = position; // Update collider position
+	GameObject::update(scene, deltaTime);		// Update position
+	circleCollider.circle.position = position;	// Update collider position
 
 	// Update healthbar
 	if (health < startHealth) {
@@ -75,8 +75,8 @@ void Enemy::onCollision(const Collision::Event& event) {
 		takeDamage(bullet->getData().damage);
 		return;
 	}
-	
-	const TerrainCollider* terrainCollider = 
+
+	const TerrainCollider* terrainCollider =
 		dynamic_cast<const TerrainCollider*>(event.other->getParent());
 	if (terrainCollider) {
 		position += Collision::resolveStaticLine(event, position);
@@ -152,12 +152,12 @@ vector2Df Enemy::evade(const GameObject& target, const float& predictionMultipli
 void Enemy::avoidTerrain(const float strength, const float avoidDist) {
 	// Find closest terrain object
 	const GameObject* closest =
-			combatScene->getTerrainManager().getTree().findClosestObject(position);
+		combatScene->getTerrainManager().getTree().findClosestObject(position);
 	// Find the closest point to this enemy on the LineCollider
 	const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
 	const vector2Df closestPoint = Collision::closestPointOnLine(position, line);
 
-	const vector2Df dist{closestPoint - position}; // Find distance to the closest point
+	const vector2Df dist{closestPoint - position};	// Find distance to the closest point
 	if (dist.dotProduct(dist) <= avoidDist * avoidDist) {
 		// Avoid the middle position of the collider
 		steering += flee(closest->getPosition()) * strength;

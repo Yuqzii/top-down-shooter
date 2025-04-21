@@ -1,8 +1,8 @@
 #pragma once
 
 #include "enemyManager.h"
-#include "terrain/terrainManager.h"
 #include "engine/scene.h"
+#include "terrain/terrainManager.h"
 
 class Player;
 

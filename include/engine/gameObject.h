@@ -43,7 +43,7 @@ public:
 	};
 
 	//----- COLLISION -----//
-	
+
 	Collider* getCollider() const { return collider.get(); }
 	// If an int exception is thrown inside this function
 	// the entire collisionUpdate is aborted.

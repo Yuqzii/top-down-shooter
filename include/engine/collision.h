@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SDL2/SDL_rect.h"
 #include <unordered_set>
 #include <vector>
 
+#include "SDL2/SDL_rect.h"
 #include "engine/vector2D.h"
 
 class SDL_Renderer;
@@ -20,8 +20,8 @@ struct Event {
 	const vector2Df position;
 	const Collider* other;
 
-	Event(const bool collided_, const float depth_, const vector2Df& position_, 
-	     const Collider* other_)
+	Event(const bool collided_, const float depth_, const vector2Df& position_,
+		  const Collider* other_)
 		: collided{collided_}, depth{depth_}, position{position_}, other{other_} {}
 	Event(const bool collided_, const float depth_, const vector2Df& position_)
 		: Event{collided_, depth_, position_, nullptr} {}
@@ -71,8 +71,7 @@ Collision::Event checkCollision(const Circle& circle, const Line& line);
 vector2Df resolveStaticLine(const Collision::Event& event, const vector2Df& position);
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);
-}
-
+}  // namespace Collision
 
 class Collider {
 public:
@@ -89,11 +88,11 @@ public:
 
 protected:
 	/*
-	* @abstract	Called when colliding with another collider.
-	*			Default behavior is calling onCollision in parent.
-	*			Override in deriving class to define custom behavior.
-	* @param	event	Reference to the collision event that occured.
-	*/
+	 * @abstract	Called when colliding with another collider.
+	 *			Default behavior is calling onCollision in parent.
+	 *			Override in deriving class to define custom behavior.
+	 * @param	event	Reference to the collision event that occured.
+	 */
 	virtual void onCollision(const Collision::Event& event);
 
 	std::unordered_set<const Collider*> haveCollidedWith;
@@ -135,5 +134,3 @@ public:
 
 	void checkCollisions(const Scene& scene) override;
 };
-
-

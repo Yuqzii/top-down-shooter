@@ -144,8 +144,9 @@ std::function<void(SDL_Renderer*)> GameObject::debugRender() const {
 			}
 			case LINE: {
 				LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
-				SDL_RenderDrawLineF(renderer, lineCollider->line.start.x, lineCollider->line.start.y,
-									lineCollider->line.end.x, lineCollider->line.end.y);
+				SDL_RenderDrawLineF(renderer, lineCollider->line.start.x,
+									lineCollider->line.start.y, lineCollider->line.end.x,
+									lineCollider->line.end.y);
 			}
 			case POINT: {
 				PointCollider* pointCollider = static_cast<PointCollider*>(collider.get());
