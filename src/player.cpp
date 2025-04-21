@@ -96,7 +96,7 @@ void Player::shoot(Scene& scene) {
 	timeSinceShot = 0.0f;
 }
 
-void Player::onCollision(const Collision::Event& event) {
+void Player::onCollision(const Collision::Event& event, Scene& scene) {
 	const EnemyAttackPoint* enemyAttackPoint =
 		dynamic_cast<const EnemyAttackPoint*>(event.other->getParent());
 	if (enemyAttackPoint) {

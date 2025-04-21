@@ -23,7 +23,7 @@ public:
 	virtual void initialize(const vector2Df& position, const Scene& scene) override;
 	virtual void update(Scene& scene, const float deltaTime) override;
 
-	virtual void onCollision(const Collision::Event& event) override;
+	virtual void onCollision(const Collision::Event& event, Scene& scene) override;
 
 	const float damage;
 

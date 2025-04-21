@@ -21,7 +21,7 @@ private:
 	inline void shoot(Scene& scene);
 
 	CircleCollider& circleCollider;
-	void onCollision(const Collision::Event& event) override;
+	void onCollision(const Collision::Event& event, Scene& scene) override;
 
 	bool moveLeft, moveRight, moveUp, moveDown;
 	vector2Df moveDir;

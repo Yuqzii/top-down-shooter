@@ -249,10 +249,10 @@ PointCollider::PointCollider(vector2Df point_, const float checkRadius_, GameObj
 PointCollider::PointCollider(vector2Df point_, const float checkRadius_)
 	: PointCollider{std::move(point_), checkRadius_, nullptr} {}
 
-void Collider::collisionUpdate() {
+void Collider::collisionUpdate(Scene& scene) {
 	for (const Collision::Event& event : collisionEvents) {
 		try {
-			onCollision(event);
+			onCollision(event, scene);
 		} catch (int e) {
 			// Stop collision detection when throwing exception
 			break;
@@ -271,9 +271,9 @@ void Collider::addCollision(const Collision::Event event) {
 	}
 }
 
-void Collider::onCollision(const Collision::Event& event) {
+void Collider::onCollision(const Collision::Event& event, Scene& scene) {
 	if (parent == nullptr) return;
-	parent->onCollision(event);
+	parent->onCollision(event, scene);
 }
 
 void CircleCollider::checkCollisions(const Scene& scene) {

@@ -41,7 +41,7 @@ void Scene::update(const float deltaTime) {
 	// Update GameObjects according to registered collisions
 	for (auto& object : gameObjects) {
 		if (object->getCollider() == nullptr) continue;
-		object->getCollider()->collisionUpdate();
+		object->getCollider()->collisionUpdate(*this);
 	}
 }
 

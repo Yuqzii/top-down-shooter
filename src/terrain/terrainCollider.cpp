@@ -18,7 +18,7 @@ void TerrainCollider::initializeCollider(const vector2Df& start, const vector2Df
 	this->manager = &manager;
 }
 
-void TerrainCollider::onCollision(const Collision::Event& event) {
+void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
 	if (bullet) {
 		// Remove pixel at collision position
