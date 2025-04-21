@@ -23,17 +23,21 @@ public:
 	virtual void initialize(const vector2Df& position, const Scene& scene) override;
 	virtual void update(Scene& scene, const float deltaTime) override;
 
-	virtual void onCollision(const GameObject& other) override;
+	virtual void onCollision(const Collision::Event& event) override;
 
 	const float damage;
 
 protected:
+	CircleCollider& circleCollider;
+
 	// Steering behaviors
 	vector2Df steering;
 	vector2Df seek(const vector2Df& target) const;
 	vector2Df flee(const vector2Df& target) const;
 	vector2Df pursuit(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 	vector2Df evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
+
+	void avoidTerrain(const float strength, const float avoidDist);
 
 	virtual void setState(const EnemyStates newState) { state = newState; }
 	EnemyStates getState() const { return state; }
@@ -68,6 +72,6 @@ public:
 	void initializeParent(const Enemy* parent);
 	const Enemy* parent;
 
-protected:
+private:
 	SETOBJECTTEXTURE("empty.png");
 };

@@ -8,7 +8,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 						 const float maxSteer, const float steerMult, const float slowingRadius)
 	: Enemy(startHealth, damage, moveSpeed, maxSteer, steerMult, slowingRadius) {
 	isAnimated = true;
-	circleCollider.radius = 50;
+	circleCollider.circle.radius = 50;
 
 	animationEvents.emplace_back(1, 6, [this](Scene& scene) { attack(scene); });
 }
@@ -46,6 +46,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 			break;
 	}
 
+	avoidTerrain(1.75f, circleCollider.circle.radius + 10);
 	// Calculate velocity and update position
 	Enemy::update(scene, deltaTime);
 }
@@ -63,7 +64,7 @@ void SpiderEnemy::attackRangeCheck() {
 	vector2Df dist = position - combatScene->player.getPosition();
 	constexpr static float atkDist = 70.0f;
 	// Enter Attack state when closer than atkDist
-	if (dist.crossProduct(dist) <= atkDist * atkDist) {
+	if (dist.dotProduct(dist) <= atkDist * atkDist) {
 		setState(EnemyStates::ATTACK);
 
 		// Make spider point directly towards player
@@ -112,7 +113,7 @@ void SpiderEnemy::avoidOtherEnemies(const float strength) {
 
 		const vector2Df dist(position - closest->getPosition());
 		constexpr float avoidDist = 150.0f;
-		if (dist.crossProduct(dist) <= avoidDist * avoidDist)
+		if (dist.dotProduct(dist) <= avoidDist * avoidDist)
 			steering += flee(closest->getPosition()) * strength;
 	} catch (int e) {
 		// Can't find closest enemy. Usually because there is currently only one enemy.

@@ -10,6 +10,7 @@ struct vector2Df {
 	float y;
 
 	vector2Df(const float& x, const float& y);
+	vector2Df(const int& x, const int& y);
 	vector2Df();
 	vector2Df(const float& degrees);
 	vector2Df(const vector2Df& vec);
@@ -19,7 +20,7 @@ struct vector2Df {
 	vector2Df normalized() const;
 	vector2Df clamped(const float& maxMagnitude) const;
 
-	float crossProduct(const vector2Df& other) const;
+	float dotProduct(const vector2Df& other) const;
 
 	int toDegrees() const;
 

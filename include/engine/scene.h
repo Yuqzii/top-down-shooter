@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "SDL2/SDL.h"
+#include "SDL2/SDL_render.h"
 #include "engine/Tree2D.h"
 #include "engine/vector2D.h"
 
@@ -42,6 +42,7 @@ public:
 	 * @return	Tree2D of current GameObjects, reference
 	 */
 	const Tree2D& getObjectTree() const { return objectTree; }
+	const GameObjectVector& getGameObjects() const { return gameObjects; }
 
 	Game& getGame() const { return game; }
 

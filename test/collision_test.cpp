@@ -14,7 +14,7 @@ TEST(Collision, Line_Circle) {
 	const std::array<bool, testLines.size()> expected = {true, true, true, false, true, true};
 
 	for (int i = 0; i < testLines.size(); i++) {
-		EXPECT_TRUE(checkCollision(c, testLines[i]) == expected[i])
+		EXPECT_TRUE(checkCollision(c, testLines[i]).collided == expected[i])
 			<< "Line: " << testLines[i].start << " to " << testLines[i].end;
 	}
 };

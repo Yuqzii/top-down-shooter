@@ -5,6 +5,10 @@ vector2Df::vector2Df(const float& x, const float& y) {
 	this->x = x;
 	this->y = y;
 }
+vector2Df::vector2Df(const int& x, const int& y) {
+	this->x = x;
+	this->y = y;
+}
 vector2Df::vector2Df() { x = y = 0; }
 vector2Df::vector2Df(const float& degrees) {  // Creates direction vector from rotation in degrees
 	float radians = (degrees - 90) * M_PI / 180;
@@ -46,7 +50,7 @@ vector2Df vector2Df::clamped(const float& maxMagnitude) const {
 
 int vector2Df::toDegrees() const { return std::atan2(y, x) * 180 / M_PI; }
 
-float vector2Df::crossProduct(const vector2Df& other) const { return x * other.x + y * other.y; }
+float vector2Df::dotProduct(const vector2Df& other) const { return x * other.x + y * other.y; }
 
 vector2Df vector2Df::rotateAround(vector2Df point, float degrees) const {
 	float radians = (degrees)*M_PI / 180;  // Convert angle to radians
