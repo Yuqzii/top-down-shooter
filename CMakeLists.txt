@@ -65,8 +65,8 @@ endif()
 if(WIN32)
 	message("Windows platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
-		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2.dll"
-		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2_image.dll"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2.lib"
+		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2_image.lib"
 	)
 endif()
 
