@@ -22,7 +22,7 @@ public:
 
 	void removePixel(const vector2Df& position);
 	/*
-	 * @abstract	Removes all pixels in range of the center and recalculate collisions.
+	 * @abstract	Removes all pixels in range of the center and recalculates collisions.
 	 * @param	center	Center position to remove from.
 	 * @param	range	The range to remove from. (Radius of circle).
 	 */
