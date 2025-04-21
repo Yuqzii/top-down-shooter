@@ -1,4 +1,5 @@
 #include "engine/vector2D.h"
+#include <cmath>
 
 // vector2Df
 vector2Df::vector2Df(const float& x, const float& y) {

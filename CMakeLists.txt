@@ -68,6 +68,7 @@ if(WIN32)
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2.lib"
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2_image.lib"
 	)
+	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D _USE_MATH_DEFINES")
 endif()
 
 option(DEBUG_GIZMO "Enable this to render debug gizmos" OFF)
