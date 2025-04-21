@@ -1,6 +1,5 @@
 #include "terrain/terrainManager.h"
 
-#include <iostream>
 #include <map>
 
 #include "SDL2/SDL_render.h"
@@ -15,8 +14,6 @@ TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_
 	renderRects.resize(xSize);
 	for (auto& rectList : renderRects)
 		rectList.resize(ySize);
-
-	update();
 }
 
 void TerrainManager::update() {

@@ -42,6 +42,7 @@ public:
 	 * @return	Tree2D of current GameObjects, reference
 	 */
 	const Tree2D& getObjectTree() const { return objectTree; }
+	const GameObjectVector& getGameObjects() const { return gameObjects; }
 
 	Game& getGame() const { return game; }
 

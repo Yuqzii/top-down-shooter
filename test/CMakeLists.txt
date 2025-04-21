@@ -15,6 +15,7 @@ include(GoogleTest)
 add_executable(unit_tests
 	"Tree2D_test.cpp"
 	"collision_test.cpp"
+	"terrain_test.cpp"
 )
 
 target_include_directories(unit_tests PRIVATE
