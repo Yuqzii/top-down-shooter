@@ -13,7 +13,7 @@ public:
 	// ONLY USED FOR DEBUG_GIZMO
 	void update(Scene& scene, const float deltaTime) override;
 
-	void onCollision(const Collision::Event& event) override;
+	void onCollision(const Collision::Event& event, Scene& scene) override;
 
 private:
 	SETOBJECTTEXTURE("empty.png");

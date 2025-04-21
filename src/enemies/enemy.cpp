@@ -69,7 +69,7 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 	}
 }
 
-void Enemy::onCollision(const Collision::Event& event) {
+void Enemy::onCollision(const Collision::Event& event, Scene& scene) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
 	if (bullet) {
 		takeDamage(bullet->getData().damage);

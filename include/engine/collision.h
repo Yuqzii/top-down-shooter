@@ -78,7 +78,7 @@ public:
 	Collider(const Collision::Types collisionType, const float checkRadius, GameObject* parent);
 	Collider(const Collision::Types collisionType, const float checkRadius);
 
-	void collisionUpdate();
+	void collisionUpdate(Scene& scene);
 	void addCollision(const Collision::Event event);
 	virtual void checkCollisions(const Scene& scene) = 0;
 
@@ -93,7 +93,7 @@ protected:
 	 *			Override in deriving class to define custom behavior.
 	 * @param	event	Reference to the collision event that occured.
 	 */
-	virtual void onCollision(const Collision::Event& event);
+	virtual void onCollision(const Collision::Event& event, Scene& scene);
 
 	std::unordered_set<const Collider*> haveCollidedWith;
 	std::vector<Collision::Event> collisionEvents;

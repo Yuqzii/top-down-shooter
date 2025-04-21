@@ -12,7 +12,7 @@ public:
 	void initialize(const vector2Df& startPosition, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
-	void onCollision(const Collision::Event& event) override;
+	void onCollision(const Collision::Event& event, Scene& scene) override;
 
 	/*
 	 * @abstract	Initializes the bullet with a direction, and its corresponding GunData object.
