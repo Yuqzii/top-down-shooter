@@ -97,7 +97,7 @@ Collision::Event checkCollision(const vector2Df& point, const Circle& c) {
 		// Point is inside circle
 		const vector2Df delta = c.position - point;
 		const float depth = c.radius - delta.magnitude();
-		return Event{true, depth};
+		return Event{true, depth, point};
 	}
 	else
 		return Event{false};
@@ -110,11 +110,12 @@ Collision::Event checkCollision(const Circle& c, const Line& l) {
 	const Event eInside = checkCollision(l.end, c);
 	if (eInside.collided) return std::move(eInside);
 
-	const vector2Df delta = c.position - closestPointOnLine(c.position, l);
+	const vector2Df closestPoint = closestPointOnLine(c.position, l);
+	const vector2Df delta = c.position - closestPoint;
 	// Is distance from closest point to circle larger than its radius?
 	if (delta.dotProduct(delta) < c.radius * c.radius) {
 		const float depth = c.radius - delta.magnitude();
-		return Event{true, depth};
+		return Event{true, depth, closestPoint};
 	}
 	else
 		return Event{false};
@@ -127,8 +128,25 @@ Collision::Event checkCollision(const Line& a, const Line& b) {
 	const int o3 = orientation(b.start, b.end, a.start);
 	const int o4 = orientation(b.start, b.end, a.end);
 
-	if (o1 != o2 && o3 != o4)
-		return Event{true};
+	if (o1 != o2 && o3 != o4) {
+		// Source: https://www.geeksforgeeks.org/line-intersection-in-cpp/
+		const float a1 = a.end.y - a.start.y;
+		const float b1 = a.start.x - a.end.x;
+		const float c1 = a1 * a.start.x + b1 * a.start.y;
+
+		const float a2 = b.end.y - b.start.y;
+		const float b2 = b.start.x - b.end.x;
+		const float c2 = a2 * b.start.x + b2 * b.start.y;
+
+		const float determinant = a1 * b2 - a2 * b1;
+		vector2Df res{};
+		if (determinant != 0) {
+			res.x = (c1 * b2 - c2 * b1) / determinant;
+			res.y = (a1 * c2 - a2 * c1) / determinant;
+		}
+
+		return Event{true, res};
+	}
 
     // Special Cases 
 	// a.start, a.end and b.start are collinear and b.start lies on segment a
