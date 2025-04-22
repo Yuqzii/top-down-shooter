@@ -1,8 +1,8 @@
 #pragma once
 
+#include <array>
 #include <memory>
 #include <vector>
-#include <array>
 
 #include "engine/gameObject.h"
 #include "engine/renderManager.h"
