@@ -18,7 +18,7 @@ TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_
 	for (auto& rectList : renderRects) rectList.resize(ySize);
 }
 
-void TerrainManager::update() {
+void TerrainManager::updateRender() {
 	for (int x = 0; x < xSize; x++) {
 		for (int y = 0; y < ySize; y++) {
 			// Add render rect if there is terrain at the current position
@@ -181,7 +181,7 @@ void TerrainManager::removePixel(const vector2Df& position) {
 	if (x >= xSize || y >= ySize || !terrainMap[x][y]) return;
 
 	terrainMap[x][y] = false;
-	update();
+	updateRender();
 	updateCollisions();
 }
 
@@ -204,7 +204,7 @@ void TerrainManager::removeInRange(const vector2Df& center, int range) {
 		}
 	}
 
-	update();
+	updateRender();
 	updateCollisions();
 }
 

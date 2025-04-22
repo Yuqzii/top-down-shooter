@@ -6,7 +6,8 @@
 #include "terrain/terrainManager.h"
 
 TerrainCollider::TerrainCollider() : GameObject{vector2Df{}} {
-	collider = std::make_unique<LineCollider>(Collision::Line{}, 300.0f, this);
+	// Create a static line collider and set this GameObject as static
+	collider = std::make_unique<LineCollider>(Collision::Line{}, true, this);
 	isStatic = true;
 }
 
