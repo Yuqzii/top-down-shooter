@@ -1,5 +1,7 @@
 #include "engine/UI/slider.h"
 
+#include <algorithm>
+
 namespace UI {
 
 Slider::Slider(const SDL_Color& color, Widget* parent)

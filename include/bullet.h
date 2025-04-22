@@ -3,7 +3,7 @@
 #include "engine/gameObject.h"
 
 class Game;
-class GunData;
+struct GunData;
 
 class Bullet : public GameObject {
 public:
@@ -28,7 +28,7 @@ public:
 	const GunData& getData() const { return *data; }
 
 protected:
-	SETOBJECTTEXTURE("bullet.png");
+	SETOBJECTTEXTURE("bullet.bmp");
 
 private:
 	vector2Df direction;

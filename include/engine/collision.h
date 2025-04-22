@@ -6,11 +6,10 @@
 #include "SDL2/SDL_rect.h"
 #include "engine/vector2D.h"
 
-class SDL_Renderer;
+struct SDL_Renderer;
 class GameObject;
 class Scene;
 class Collider;
-class LineCollider;
 
 namespace Collision {
 

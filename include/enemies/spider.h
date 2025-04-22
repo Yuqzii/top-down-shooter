@@ -11,7 +11,7 @@ public:
 	void update(Scene& scene, const float deltaTime) override;
 
 protected:
-	SETOBJECTTEXTURE("spider-sheet.png");
+	SETOBJECTTEXTURE("spider-sheet.bmp");
 
 	const std::vector<AnimationData>& getAnimationData() const override {
 		static const std::vector<AnimationData> data = {

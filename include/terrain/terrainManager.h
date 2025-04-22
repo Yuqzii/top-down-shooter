@@ -8,7 +8,7 @@
 #include "engine/Tree2D.h"
 #include "engine/game.h"
 
-class SDL_Renderer;
+struct SDL_Renderer;
 class Scene;
 class TerrainCollider;
 
