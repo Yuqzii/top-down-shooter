@@ -3,7 +3,7 @@
 #include "engine/gameObject.h"
 
 class Game;
-class GunData;
+struct GunData;
 
 class Bullet : public GameObject {
 public:
