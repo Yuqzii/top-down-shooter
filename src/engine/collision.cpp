@@ -224,8 +224,7 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 }  // namespace Collision
 
 Collider::Collider(const Collision::Types collisionType_, const bool isStatic_, GameObject* parent_)
-	: collisionType{collisionType_}, checkRadius{0.0f}, isStatic{isStatic_},
-	  parent{parent_} {
+	: collisionType{collisionType_}, checkRadius{0.0f}, isStatic{isStatic_}, parent{parent_} {
 	if (!isStatic_) {
 		std::cout << "Collider used static constructor, but is not marked static.\n";
 	}
@@ -239,13 +238,11 @@ Collider::Collider(const Collision::Types collisionType_, const float checkRadiu
 	: Collider{collisionType_, checkRadius_, nullptr} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const bool isStatic_, GameObject* parent)
-	: circle{std::move(circle_)},
-	  Collider{Collision::Types::CIRCLE, isStatic_, parent} {}
+	: circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, isStatic_, parent} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const float checkRadius_,
 							   GameObject* parent_)
-	: circle{std::move(circle_)},
-	  Collider{Collision::Types::CIRCLE, checkRadius_, parent_} {}
+	: circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, checkRadius_, parent_} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const float checkRadius_)
 	: CircleCollider{std::move(circle_), checkRadius_, nullptr} {}

@@ -34,8 +34,8 @@ void Scene::update(const float deltaTime) {
 
 	// Check for collisions after all GameObjects are updated
 	for (auto& object : gameObjects) {
-		if (object->getCollider() == nullptr) continue; // Collider does not exist
-		if (object->getCollider()->getIsStatic()) continue; // Don't check static colliders
+		if (object->getCollider() == nullptr) continue;		 // Collider does not exist
+		if (object->getCollider()->getIsStatic()) continue;	 // Don't check static colliders
 		object->getCollider()->checkCollisions(*this);
 	}
 
