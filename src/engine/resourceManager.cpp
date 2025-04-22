@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 #ifndef NDEBUG
 #define ASSERT(condition, message)                                                       \

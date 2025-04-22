@@ -49,7 +49,6 @@ if(UNIX AND NOT APPLE)
 	message("Linux platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2-2.0.so.0"
-		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2_image-2.0.so.0"
 		)
 endif()
 
@@ -58,7 +57,6 @@ if(APPLE)
 	message("Apple platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2-2.0.0.dylib"
-		"${CMAKE_CURRENT_SOURCE_DIR}/lib/libSDL2_image-2.0.0.dylib"
 	)
 endif()
 
@@ -66,7 +64,6 @@ if(WIN32)
 	message("Windows platform detected.")
 	target_link_libraries(${PROJECT_NAME}_lib PRIVATE
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2.lib"
-		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2_image.lib"
 	)
 	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D _USE_MATH_DEFINES")
 
@@ -93,16 +90,12 @@ else() # Not running tests, build game executable
 	add_executable(${PROJECT_NAME} "src/main.cpp")
 
 	if (WIN32)
-		set(SDL_CMAKE_DEBUG_POSTFIX "" 
-     	CACHE STRING "Name suffix for debug builds") 
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		COMMAND "${CMAKE_COMMAND}" -E copy_if_different
 		"${CMAKE_SOURCE_DIR}/lib/SDL2.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
 		VERBATIM)
-		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-		"${CMAKE_SOURCE_DIR}/lib/SDL2_image.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-		VERBATIM)
+
+		# Add debug dll
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		COMMAND "${CMAKE_COMMAND}" -E copy_if_different
 		"${CMAKE_SOURCE_DIR}/lib/SDL2d.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"

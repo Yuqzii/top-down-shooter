@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-#include "SDL2/SDL_image.h"
+//#include "SDL2/SDL_image.h"
+#include "SDL2/SDL.h"
 #include "engine/scene.h"
 #include "scenes/combat_scene.h"
 
@@ -21,12 +22,12 @@ Game::Game(const char* title, const int width, const int height)
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
 	SDL_SetWindowTitle(window, title);	// Set title
 
-	int flagsIMG = IMG_INIT_PNG;
-	if ((IMG_Init(flagsIMG) & flagsIMG) != flagsIMG) {
-		std::cerr << "SDL Image could not be initialized" << std::endl;
-		isRunning = false;
-		return;
-	}
+//	int flagsIMG = IMG_INIT_PNG;
+//	if ((IMG_Init(flagsIMG) & flagsIMG) != flagsIMG) {
+//		std::cerr << "SDL Image could not be initialized" << std::endl;
+//		isRunning = false;
+//		return;
+//	}
 
 	// Make alpha/transparency work
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
