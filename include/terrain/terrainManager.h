@@ -17,7 +17,7 @@ public:
 	TerrainManager(const std::vector<std::vector<char>>& terrainMap, const SDL_Color& color,
 				   Scene& scene);
 
-	void update();
+	void updateRender();
 	void updateCollisions();
 	void render(SDL_Renderer* renderer) const;
 
