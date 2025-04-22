@@ -69,6 +69,8 @@ if(WIN32)
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2_image.lib"
 	)
 	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D _USE_MATH_DEFINES")
+
+
 endif()
 
 option(DEBUG_GIZMO "Enable this to render debug gizmos" OFF)
@@ -78,7 +80,7 @@ endif()
 
 # Define assets path
 target_compile_definitions(${PROJECT_NAME}_lib PRIVATE
-	ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
+	ASSETS_PATH="${CMAKE_SOURCE_DIR}/assets/"
 )
 
 # Testing
@@ -90,9 +92,30 @@ else() # Not running tests, build game executable
 	# Create game executable
 	add_executable(${PROJECT_NAME} "src/main.cpp")
 
+	if (WIN32)
+		set(SDL_CMAKE_DEBUG_POSTFIX "" 
+     	CACHE STRING "Name suffix for debug builds") 
+		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+		"${CMAKE_SOURCE_DIR}/lib/SDL2.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+		VERBATIM)
+		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+		"${CMAKE_SOURCE_DIR}/lib/SDL2_image.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+		VERBATIM)
+		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+		"${CMAKE_SOURCE_DIR}/lib/SDL2d.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+		VERBATIM)
+	endif()
+
 	if(DEBUG_GIZMO)
 		target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG_GIZMO")
 	endif()
+
+	target_compile_definitions(${PROJECT_NAME} PRIVATE
+	ASSETS_PATH="${CMAKE_SOURCE_DIR}/assets/")
+
 
 	# Link game library to executable
 	target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_NAME}_lib")

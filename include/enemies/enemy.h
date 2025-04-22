@@ -73,5 +73,5 @@ public:
 	const Enemy* parent;
 
 private:
-	SETOBJECTTEXTURE("empty.png");
+	SETOBJECTTEXTURE("empty.bmp");
 };

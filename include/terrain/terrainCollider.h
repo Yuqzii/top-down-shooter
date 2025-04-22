@@ -16,7 +16,7 @@ public:
 	void onCollision(const Collision::Event& event, Scene& scene) override;
 
 private:
-	SETOBJECTTEXTURE("empty.png");
+	SETOBJECTTEXTURE("empty.bmp");
 
 	TerrainManager* manager;
 

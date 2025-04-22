@@ -28,7 +28,7 @@ public:
 	const GunData& getData() const { return *data; }
 
 protected:
-	SETOBJECTTEXTURE("bullet.png");
+	SETOBJECTTEXTURE("bullet.bmp");
 
 private:
 	vector2Df direction;

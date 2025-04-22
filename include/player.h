@@ -15,7 +15,7 @@ public:
 	void update(Scene& scene, const float deltaTime) override;
 
 private:
-	SETOBJECTTEXTURE("player.png");
+	SETOBJECTTEXTURE("player.bmp");
 
 	inline void pointToMouse(const Scene& scene);
 	inline void shoot(Scene& scene);
