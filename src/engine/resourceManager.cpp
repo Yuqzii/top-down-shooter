@@ -36,7 +36,6 @@ SDL_Texture* LoadTexture(const std::string& filename, SDL_Renderer* renderer) {
 		std::terminate();
 #define ASSETS_PATH ""	// Just here to hide lsp error (not actual error)
 #endif
-		std::cout << "Loading asset " << ASSETS_PATH + filename << "\n";
 		const std::string path = ASSETS_PATH + filename;
 		// Check that file exists
 		ASSERT(std::filesystem::exists(path), "Could not load texture \"" + filename + "\"");

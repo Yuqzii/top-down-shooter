@@ -66,8 +66,6 @@ if(WIN32)
 		"${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL2.lib"
 	)
 	target_compile_options(${PROJECT_NAME}_lib PRIVATE "-D _USE_MATH_DEFINES")
-
-
 endif()
 
 option(DEBUG_GIZMO "Enable this to render debug gizmos" OFF)
@@ -105,10 +103,6 @@ else() # Not running tests, build game executable
 	if(DEBUG_GIZMO)
 		target_compile_options(${PROJECT_NAME} PRIVATE "-D DEBUG_GIZMO")
 	endif()
-
-	target_compile_definitions(${PROJECT_NAME} PRIVATE
-	ASSETS_PATH="${CMAKE_SOURCE_DIR}/assets/")
-
 
 	# Link game library to executable
 	target_link_libraries(${PROJECT_NAME} PRIVATE "${PROJECT_NAME}_lib")
