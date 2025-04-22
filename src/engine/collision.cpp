@@ -223,25 +223,44 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 
 }  // namespace Collision
 
+Collider::Collider(const Collision::Types collisionType_, const bool isStatic_, GameObject* parent_)
+	: collisionType{collisionType_}, checkRadius{0.0f}, isStatic{isStatic_},
+	  parent{parent_} {
+	if (!isStatic_) {
+		std::cout << "Collider used static constructor, but is not marked static.\n";
+	}
+}
+
 Collider::Collider(const Collision::Types collisionType_, const float checkRadius_,
 				   GameObject* parent_)
-	: collisionType{collisionType_}, checkRadius{checkRadius_}, parent{parent_} {}
+	: collisionType{collisionType_}, checkRadius{checkRadius_}, isStatic{false}, parent{parent_} {}
 
 Collider::Collider(const Collision::Types collisionType_, const float checkRadius_)
 	: Collider{collisionType_, checkRadius_, nullptr} {}
 
+CircleCollider::CircleCollider(Collision::Circle circle_, const bool isStatic_, GameObject* parent)
+	: circle{std::move(circle_)},
+	  Collider{Collision::Types::CIRCLE, isStatic_, parent} {}
+
 CircleCollider::CircleCollider(Collision::Circle circle_, const float checkRadius_,
-							   GameObject* parent)
-	: circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, checkRadius_, parent} {}
+							   GameObject* parent_)
+	: circle{std::move(circle_)},
+	  Collider{Collision::Types::CIRCLE, checkRadius_, parent_} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const float checkRadius_)
 	: CircleCollider{std::move(circle_), checkRadius_, nullptr} {}
 
+LineCollider::LineCollider(Collision::Line line_, const bool isStatic_, GameObject* parent)
+	: line{std::move(line_)}, Collider{Collision::Types::LINE, isStatic_, parent} {}
+
 LineCollider::LineCollider(Collision::Line line_, const float checkRadius_, GameObject* parent)
-	: line{std::move(line_)}, Collider{Collision::Types::LINE, checkRadius_, parent} {}
+	: line{line_}, Collider{Collision::Types::LINE, checkRadius_, parent} {}
 
 LineCollider::LineCollider(Collision::Line line_, const float checkRadius_)
 	: LineCollider{std::move(line_), checkRadius_, nullptr} {}
+
+PointCollider::PointCollider(vector2Df point_, const bool isStatic_, GameObject* parent)
+	: point{std::move(point_)}, Collider{Collision::Types::POINT, isStatic_, parent} {}
 
 PointCollider::PointCollider(vector2Df point_, const float checkRadius_, GameObject* parent)
 	: point{std::move(point_)}, Collider{Collision::Types::POINT, checkRadius_, parent} {}
@@ -280,7 +299,7 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 	std::vector<GameObject*> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(circle.position, checkRadius);
+		closeObjects = scene.getObjectTree().findObjectsInRange(circle.position, getCheckRadius());
 	} catch (int e) {
 		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
 		return;
@@ -339,7 +358,7 @@ void LineCollider::checkCollisions(const Scene& scene) {
 	std::vector<GameObject*> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(line.start, checkRadius);
+		closeObjects = scene.getObjectTree().findObjectsInRange(line.start, getCheckRadius());
 	} catch (int e) {
 		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
 		return;
@@ -391,7 +410,7 @@ void PointCollider::checkCollisions(const Scene& scene) {
 	std::vector<GameObject*> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(point, checkRadius);
+		closeObjects = scene.getObjectTree().findObjectsInRange(point, getCheckRadius());
 	} catch (int e) {
 		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
 		return;

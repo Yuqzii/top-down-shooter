@@ -74,6 +74,7 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);
 
 class Collider {
 public:
+	Collider(const Collision::Types collisionType, const bool isStatic, GameObject* parent);
 	Collider(const Collision::Types collisionType, const float checkRadius, GameObject* parent);
 	Collider(const Collision::Types collisionType, const float checkRadius);
 
@@ -84,6 +85,8 @@ public:
 	Collision::Types getCollisionType() const { return collisionType; }
 
 	const GameObject* getParent() const { return parent; }
+	float getCheckRadius() const { return checkRadius; }
+	bool getIsStatic() const { return isStatic; }
 
 protected:
 	/*
@@ -96,7 +99,10 @@ protected:
 
 	std::unordered_set<const Collider*> haveCollidedWith;
 	std::vector<Collision::Event> collisionEvents;
+
+private:
 	const float checkRadius;
+	const bool isStatic;
 
 private:
 	Collision::Types collisionType;
@@ -106,6 +112,7 @@ private:
 
 class CircleCollider : public Collider {
 public:
+	CircleCollider(Collision::Circle collider, const bool isStatic, GameObject* parent);
 	CircleCollider(Collision::Circle collider, const float checkRadius, GameObject* parent);
 	CircleCollider(Collision::Circle collider, const float checkRadius);
 
@@ -116,6 +123,7 @@ public:
 
 class LineCollider : public Collider {
 public:
+	LineCollider(Collision::Line collider, const bool isStatic, GameObject* parent);
 	LineCollider(Collision::Line collider, const float checkRadius, GameObject* parent);
 	LineCollider(Collision::Line collider, const float checkRadius);
 
@@ -126,6 +134,7 @@ public:
 
 class PointCollider : public Collider {
 public:
+	PointCollider(vector2Df point, const bool isStatic, GameObject* parent);
 	PointCollider(vector2Df point, const float checkRadius, GameObject* parent);
 	PointCollider(vector2Df point, const float checkRadius);
 
