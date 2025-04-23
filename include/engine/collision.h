@@ -77,6 +77,7 @@ public:
 	Collider(const Collision::Types collisionType, const bool isStatic, GameObject* parent);
 	Collider(const Collision::Types collisionType, const float checkRadius, GameObject* parent);
 	Collider(const Collision::Types collisionType, const float checkRadius);
+	virtual ~Collider() = default;
 
 	void collisionUpdate(Scene& scene);
 	void addCollision(const Collision::Event event);
