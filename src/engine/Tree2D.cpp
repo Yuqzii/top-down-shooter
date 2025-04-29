@@ -177,16 +177,14 @@ const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<f
 	const Node* closest = findClosestNode(target, result, node);
 
 	if (closest == nullptr) {  // Both result and node are the same as target
+		if (!otherBranch) return nullptr;
 		// Try to find a valid node under other branch
-		if (otherBranch != nullptr)
-			return nearestNeighbor(otherBranch, target, depth + 1);
-		else
-			return nullptr;
+		return nearestNeighbor(otherBranch, target, depth + 1);
 	}
 
 	// Calculate distance from target to the closest node
 	float radiusSquared = distanceSquared(target, closest->point);
-	// Calculatedistance from target to the split made by this node
+	// Calculate distance from target to the split made by this node
 	float dist = target[dimension] - node->point[dimension];
 
 	// If distance to split is smaller than to the closest node there is a possibility that
@@ -238,16 +236,14 @@ const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node, const std::array
 	const Node* closest = findClosestNode(target, result, node);
 
 	if (closest == nullptr) {  // Both result and node are the same as target
+		if (!otherBranch) return nullptr;
 		// Try to find a valid node under the other branch
-		if (otherBranch != nullptr)
-			return kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
-		else
-			return nullptr;
+		return kNearestNeighbors(otherBranch, target, depth + 1, heap, k);
 	}
 
 	// Calculate distance from target to the closest node
 	float radiusSquared = distanceSquared(target, closest->point);
-	// Calculatedistance from target to the split made by this node
+	// Calculate distance from target to the split made by this node
 	float dist = target[dimension] - node->point[dimension];
 
 	// If distance to split is smaller than to the closest node there is a possibility that
