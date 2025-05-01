@@ -149,17 +149,22 @@ Vec2 Enemy::evade(const GameObject& target, const float& predictionMultiplier) c
 }
 
 void Enemy::avoidTerrain(const float strength, const float avoidDist) {
-	// Find closest terrain object
-	const GameObject* closest =
-		combatScene->getTerrainManager().getTree().findClosestObject(position);
-	// Find the closest point to this enemy on the LineCollider
-	const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
-	const Vec2 closestPoint = Collision::closestPointOnLine(position, line);
+	try {
+		// Find closest terrain object
+		const GameObject* closest =
+			combatScene->getTerrainManager().getTree().findClosestObject(position);
+		// Find the closest point to this enemy on the LineCollider
+		const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
+		const Vec2 closestPoint = Collision::closestPointOnLine(position, line);
 
-	const Vec2 dist{closestPoint - position};  // Find distance to the closest point
-	if (dist.dotProduct(dist) <= avoidDist * avoidDist) {
-		// Avoid the middle position of the collider
-		steering += flee(closest->getPosition()) * strength;
+		const Vec2 dist{closestPoint - position};  // Find distance to the closest point
+		if (dist.dotProduct(dist) <= avoidDist * avoidDist) {
+			// Avoid the middle position of the collider
+			steering += flee(closest->getPosition()) * strength;
+		}
+	} catch (const int e) {
+		// Could not get the closest object from the tree, likely due to it being empty.
+		// Does not require further action, hence this catch block is empty.
 	}
 }
 
