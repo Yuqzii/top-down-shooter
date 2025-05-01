@@ -63,7 +63,7 @@ void Scene::render(SDL_Renderer* renderer) const {
 }
 
 template <class T>
-T& Scene::instantiate(const vector2Df& position) {
+T& Scene::instantiate(const Vec2& position) {
 	// Compile time check that we don't try to instantiate a non-GameObject
 	static_assert(std::is_base_of<GameObject, T>(),
 				  "Object to instantiate must inherit from GameObject");
@@ -77,12 +77,12 @@ T& Scene::instantiate(const vector2Df& position) {
 	return static_cast<T&>(*gameObjects.back().get());
 }
 // Create all valid templates
-template GameObject& Scene::instantiate<GameObject>(const vector2Df& position);
-template Player& Scene::instantiate<Player>(const vector2Df& position);
-template Bullet& Scene::instantiate<Bullet>(const vector2Df& position);
-template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const vector2Df& position);
-template EnemyAttackPoint& Scene::instantiate<EnemyAttackPoint>(const vector2Df& position);
-template TerrainCollider& Scene::instantiate<TerrainCollider>(const vector2Df& position);
+template GameObject& Scene::instantiate<GameObject>(const Vec2& position);
+template Player& Scene::instantiate<Player>(const Vec2& position);
+template Bullet& Scene::instantiate<Bullet>(const Vec2& position);
+template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const Vec2& position);
+template EnemyAttackPoint& Scene::instantiate<EnemyAttackPoint>(const Vec2& position);
+template TerrainCollider& Scene::instantiate<TerrainCollider>(const Vec2& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D();	// Create new tree

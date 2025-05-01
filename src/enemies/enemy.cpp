@@ -18,7 +18,7 @@ Enemy::Enemy(const float health_, const float damage_, const float speed, const 
 	  steerStrength(sMult),
 	  slowingRadius(slowing),
 	  isMoving(true),
-	  healthbarBG(vector2Df(), vector2Df(75, 10), SDL_Color{255, 0, 0, 255}),
+	  healthbarBG(Vec2(), Vec2(75, 10), SDL_Color{255, 0, 0, 255}),
 	  state(),
 	  GameObject{
 		  std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
@@ -26,15 +26,15 @@ Enemy::Enemy(const float health_, const float damage_, const float speed, const 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
-void Enemy::initialize(const vector2Df& startPosition, const Scene& scene) {
+void Enemy::initialize(const Vec2& startPosition, const Scene& scene) {
 	GameObject::initialize(startPosition, scene);  // Call base initialize
 
 	// Store Scene as CombatScene to avoid unnecessary casts at update
 	combatScene = static_cast<const CombatScene*>(&scene);
 
 	// Initialize enemy at full speed towards player
-	const vector2Df playerDirection =
-		vector2Df(combatScene->player.getPosition() - position).normalized();
+	const Vec2 playerDirection =
+		Vec2(combatScene->player.getPosition() - position).normalized();
 	velocity = playerDirection * moveSpeed;
 }
 
@@ -53,7 +53,7 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 		// Calculate animation speed based on movement speed
 		animationSpeed = velocity.magnitude() / moveSpeed;
 	} else
-		velocity = vector2Df();
+		velocity = Vec2();
 
 	GameObject::update(scene, deltaTime);		// Update position
 	circleCollider.circle.position = position;	// Update collider position
@@ -105,11 +105,11 @@ void Enemy::die() {
 }
 
 // Steering behaviors
-vector2Df Enemy::seek(const vector2Df& target) const {
-	const vector2Df targetDirection(target - position);	 // Find target direction
+Vec2 Enemy::seek(const Vec2& target) const {
+	const Vec2 targetDirection(target - position);	 // Find target direction
 
 	// Scale desiredVelocity to maximum speed
-	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
+	Vec2 desiredVelocity = targetDirection.normalized() * moveSpeed;
 
 	const float distance = targetDirection.magnitude();
 	// Slow down if inside the slowing radius
@@ -120,31 +120,31 @@ vector2Df Enemy::seek(const vector2Df& target) const {
 	return desiredVelocity - velocity;	// Return calculated force
 }
 
-vector2Df Enemy::flee(const vector2Df& target) const {
-	const vector2Df targetDirection(position - target);	 // Find target direction
+Vec2 Enemy::flee(const Vec2& target) const {
+	const Vec2 targetDirection(position - target);	 // Find target direction
 
 	// Scale desiredVelocity to maximum speed
-	vector2Df desiredVelocity = targetDirection.normalized() * moveSpeed;
+	Vec2 desiredVelocity = targetDirection.normalized() * moveSpeed;
 
 	return desiredVelocity - velocity;	// Return calculated force
 }
 
-vector2Df Enemy::pursuit(const GameObject& target, const float& predictionMultiplier) const {
-	const vector2Df distance = target.getPosition() - position;
+Vec2 Enemy::pursuit(const GameObject& target, const float& predictionMultiplier) const {
+	const Vec2 distance = target.getPosition() - position;
 	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
-	const vector2Df futurePosition =
+	const Vec2 futurePosition =
 		target.getPosition() + target.getVelocity() * time * predictionMultiplier;
 	return seek(futurePosition);  // Use seek to move towards this position
 }
 
-vector2Df Enemy::evade(const GameObject& target, const float& predictionMultiplier) const {
-	const vector2Df distance = target.getPosition() - position;
+Vec2 Enemy::evade(const GameObject& target, const float& predictionMultiplier) const {
+	const Vec2 distance = target.getPosition() - position;
 	const float time = distance.magnitude() / moveSpeed;
 
 	// Calculate the targets position in the future
-	const vector2Df futurePosition =
+	const Vec2 futurePosition =
 		target.getPosition() + target.getVelocity() * time * predictionMultiplier;
 	return flee(futurePosition);  // Use seek to move towards this position
 }
@@ -155,9 +155,9 @@ void Enemy::avoidTerrain(const float strength, const float avoidDist) {
 		combatScene->getTerrainManager().getTree().findClosestObject(position);
 	// Find the closest point to this enemy on the LineCollider
 	const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
-	const vector2Df closestPoint = Collision::closestPointOnLine(position, line);
+	const Vec2 closestPoint = Collision::closestPointOnLine(position, line);
 
-	const vector2Df dist{closestPoint - position};	// Find distance to the closest point
+	const Vec2 dist{closestPoint - position};	// Find distance to the closest point
 	if (dist.dotProduct(dist) <= avoidDist * avoidDist) {
 		// Avoid the middle position of the collider
 		steering += flee(closest->getPosition()) * strength;

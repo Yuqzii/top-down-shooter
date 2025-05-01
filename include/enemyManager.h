@@ -14,7 +14,7 @@ public:
 	// Returns a vector of all enemies
 	const std::vector<Enemy*> getEnemies() const { return enemies; }
 	// Returns the position of the closest enemy
-	const Enemy* findClosestEnemy(const vector2Df& target) const;
+	const Enemy* findClosestEnemy(const Vec2& target) const;
 
 private:
 	std::vector<Enemy*> enemies;

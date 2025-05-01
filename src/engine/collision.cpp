@@ -11,7 +11,7 @@
 namespace Collision {
 
 namespace {
-int distanceSquared(const vector2Df& a, const vector2Df& b) {
+int distanceSquared(const Vec2& a, const Vec2& b) {
 	int deltaX = b.x - a.x;
 	int deltaY = b.y - a.y;
 	return deltaX * deltaX + deltaY * deltaY;
@@ -22,7 +22,7 @@ int roundUpToMultipleOfEight(int x) { return (x + (8 - 1)) & -8; }
 // Given three collinear points p, q, r, the function checks if
 // point q lies on line segment 'pr'
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-bool onSegment(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
+bool onSegment(const Vec2& p, const Vec2& q, const Vec2& r) {
 	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) &&
 		q.y >= std::min(p.y, r.y))
 		return true;
@@ -36,7 +36,7 @@ bool onSegment(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
 // 1 --> Clockwise
 // 2 --> Counterclockwise
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
-int orientation(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
+int orientation(const Vec2& p, const Vec2& q, const Vec2& r) {
 	// See https://www.geeksforgeeks.org/orientation-3-ordered-points/
 	// for details of below formula.
 	const int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
@@ -48,8 +48,8 @@ int orientation(const vector2Df& p, const vector2Df& q, const vector2Df& r) {
 
 }  // namespace
 
-vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
-	vector2Df tangent = line.end - line.start;
+Vec2 closestPointOnLine(const Vec2& point, const Line& line) {
+	Vec2 tangent = line.end - line.start;
 
 	if ((point - line.start).dotProduct(tangent) <= 0) {
 		return line.start;	// point is at or before start of line
@@ -60,7 +60,7 @@ vector2Df closestPointOnLine(const vector2Df& point, const Line& line) {
 	}
 
 	tangent = tangent.normalized();
-	const vector2Df relativePos = point - line.start;
+	const Vec2 relativePos = point - line.start;
 	return line.start + tangent * (tangent.dotProduct(relativePos));
 }
 
@@ -89,11 +89,11 @@ Collision::Event checkCollision(const Circle& a, const Circle& b) {
 	return Event{false};
 }
 
-Collision::Event checkCollision(const vector2Df& point, const Circle& c) {
+Collision::Event checkCollision(const Vec2& point, const Circle& c) {
 	const float dist = distanceSquared(point, c.position);
 	if (dist < c.radius * c.radius) {
 		// Point is inside circle
-		const vector2Df delta = c.position - point;
+		const Vec2 delta = c.position - point;
 		const float depth = c.radius - delta.magnitude();
 		return Event{true, depth, point};
 	} else
@@ -107,8 +107,8 @@ Collision::Event checkCollision(const Circle& c, const Line& l) {
 	const Event eInside = checkCollision(l.end, c);
 	if (eInside.collided) return std::move(eInside);
 
-	const vector2Df closestPoint = closestPointOnLine(c.position, l);
-	const vector2Df delta = c.position - closestPoint;
+	const Vec2 closestPoint = closestPointOnLine(c.position, l);
+	const Vec2 delta = c.position - closestPoint;
 	// Is distance from closest point to circle larger than its radius?
 	if (delta.dotProduct(delta) < c.radius * c.radius) {
 		const float depth = c.radius - delta.magnitude();
@@ -135,7 +135,7 @@ Collision::Event checkCollision(const Line& a, const Line& b) {
 		const float c2 = a2 * b.start.x + b2 * b.start.y;
 
 		const float determinant = a1 * b2 - a2 * b1;
-		vector2Df res{};
+		Vec2 res{};
 		if (determinant != 0) {
 			res.x = (c1 * b2 - c2 * b1) / determinant;
 			res.y = (a1 * c2 - a2 * c1) / determinant;
@@ -160,13 +160,13 @@ Collision::Event checkCollision(const Line& a, const Line& b) {
 	return Event{false};  // Doesn't fall in any of the above cases
 }
 
-Collision::Event checkCollision(const vector2Df& a, const vector2Df& b) { return Event{a == b}; }
+Collision::Event checkCollision(const Vec2& a, const Vec2& b) { return Event{a == b}; }
 
-vector2Df resolveStaticLine(const Collision::Event& event, const vector2Df& position) {
+Vec2 resolveStaticLine(const Collision::Event& event, const Vec2& position) {
 	const LineCollider& line = static_cast<const LineCollider&>(*event.other);
 	// Find the normal direction of the line
-	vector2Df normal = vector2Df{line.line.start - line.line.end}.normalized();
-	normal = vector2Df{normal.y, normal.x * -1};
+	Vec2 normal = Vec2{line.line.start - line.line.end}.normalized();
+	normal = Vec2{normal.y, normal.x * -1};
 	// Check what side of line position is on
 	const float angle = std::acos(normal.normalized().dotProduct(
 		(position - event.other->getParent()->getPosition()).normalized()));
@@ -256,13 +256,13 @@ LineCollider::LineCollider(Collision::Line line_, const float checkRadius_, Game
 LineCollider::LineCollider(Collision::Line line_, const float checkRadius_)
 	: LineCollider{std::move(line_), checkRadius_, nullptr} {}
 
-PointCollider::PointCollider(vector2Df point_, const bool isStatic_, GameObject* parent)
+PointCollider::PointCollider(Vec2 point_, const bool isStatic_, GameObject* parent)
 	: point{std::move(point_)}, Collider{Collision::Types::POINT, isStatic_, parent} {}
 
-PointCollider::PointCollider(vector2Df point_, const float checkRadius_, GameObject* parent)
+PointCollider::PointCollider(Vec2 point_, const float checkRadius_, GameObject* parent)
 	: point{std::move(point_)}, Collider{Collision::Types::POINT, checkRadius_, parent} {}
 
-PointCollider::PointCollider(vector2Df point_, const float checkRadius_)
+PointCollider::PointCollider(Vec2 point_, const float checkRadius_)
 	: PointCollider{std::move(point_), checkRadius_, nullptr} {}
 
 void Collider::collisionUpdate(Scene& scene) {

@@ -40,7 +40,7 @@ public:
 	const std::array<bool, 32>& getMouseInput() const { return mouseInput; }
 	// Button value true if pressed this frame
 	const std::array<bool, 32>& getOnMouseDown() const { return onMouseDown; }
-	const vector2Df& getMousePos() const { return mousePos; }
+	const Vec2& getMousePos() const { return mousePos; }
 
 private:
 	bool isRunning;
@@ -50,7 +50,7 @@ private:
 	std::array<bool, 256> input;
 	std::array<bool, 32> mouseInput;
 	std::array<bool, 32> onMouseDown;
-	vector2Df mousePos;
+	Vec2 mousePos;
 
 	Uint64 prevTime;
 

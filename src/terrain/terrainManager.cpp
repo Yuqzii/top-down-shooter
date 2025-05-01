@@ -122,7 +122,7 @@ void TerrainManager::updateCollisions() {
 
 	// Construct colliders
 	for (const auto& [end, start] : currentColliders) {
-		createCollider(vector2Df{start.first, start.second}, vector2Df{end.first, end.second});
+		createCollider(Vec2{start.first, start.second}, Vec2{end.first, end.second});
 	}
 
 	updateTree();
@@ -131,19 +131,19 @@ void TerrainManager::updateCollisions() {
 void TerrainManager::tryExtendCollider(
 	const std::pair<int, int>& start, const std::pair<int, int>& end,
 	std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders) {
-	const vector2Df startVec{start.first, start.second};
-	const vector2Df endVec{end.first, end.second};
+	const Vec2 startVec{start.first, start.second};
+	const Vec2 endVec{end.first, end.second};
 
 	// Create collider if there already is one ending at end
 	if (currentColliders.count(end)) {
-		createCollider(vector2Df{currentColliders[end].first, currentColliders[end].second},
+		createCollider(Vec2{currentColliders[end].first, currentColliders[end].second},
 					   endVec);
 		currentColliders.erase(end);
 	}
 
 	// Is there a collider ending at start?
 	if (currentColliders.count(start)) {
-		const vector2Df curStartVec{currentColliders[start].first, currentColliders[start].second};
+		const Vec2 curStartVec{currentColliders[start].first, currentColliders[start].second};
 
 		// Change end point if line is going the same direction
 		if ((startVec - curStartVec).normalized() == (endVec - startVec).normalized()) {
@@ -156,8 +156,8 @@ void TerrainManager::tryExtendCollider(
 	currentColliders[end] = start;
 }
 
-void TerrainManager::createCollider(const vector2Df& start, const vector2Df& end) {
-	const vector2Df position{start + (end - start) * 0.5f};
+void TerrainManager::createCollider(const Vec2& start, const Vec2& end) {
+	const Vec2 position{start + (end - start) * 0.5f};
 	TerrainCollider& collider = scene.instantiate<TerrainCollider>(position);
 	collider.initializeCollider(start, end, *this);
 	terrainColliders.push_back(&collider);
@@ -176,7 +176,7 @@ void TerrainManager::render(SDL_Renderer* renderer) const {
 	}
 }
 
-void TerrainManager::removePixel(const vector2Df& position) {
+void TerrainManager::removePixel(const Vec2& position) {
 	const auto [x, y] = posToTerrainCoord(position);
 	if (x >= xSize || y >= ySize || !terrainMap[x][y]) return;
 
@@ -185,7 +185,7 @@ void TerrainManager::removePixel(const vector2Df& position) {
 	updateCollisions();
 }
 
-void TerrainManager::removeInRange(const vector2Df& center, int range) {
+void TerrainManager::removeInRange(const Vec2& center, int range) {
 	++range;  // Increment range to make calculations work correctly
 
 	// Find the height (sine) of every x position based on the range (radius)
@@ -208,7 +208,7 @@ void TerrainManager::removeInRange(const vector2Df& center, int range) {
 	updateCollisions();
 }
 
-std::pair<int, int> TerrainManager::posToTerrainCoord(const vector2Df& position) const {
+std::pair<int, int> TerrainManager::posToTerrainCoord(const Vec2& position) const {
 	const int x = position.x / pixelSize;
 	const int y = position.y / pixelSize;
 	return std::move(std::pair<int, int>{x, y});

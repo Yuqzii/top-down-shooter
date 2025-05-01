@@ -11,7 +11,7 @@ class Player : public GameObject {
 public:
 	Player();
 
-	void initialize(const vector2Df& position, const Scene& scene) override;
+	void initialize(const Vec2& position, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
 private:
@@ -24,7 +24,7 @@ private:
 	void onCollision(const Collision::Event& event, Scene& scene) override;
 
 	bool moveLeft, moveRight, moveUp, moveDown;
-	vector2Df moveDir;
+	Vec2 moveDir;
 	constexpr static const float moveSpeed = 300;
 
 	// Healthbar

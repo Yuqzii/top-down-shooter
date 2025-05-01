@@ -3,5 +3,5 @@
 
 class MockGameObject : public GameObject {
 public:
-	MockGameObject(const vector2Df& pos) { position = pos; }
+	MockGameObject(const Vec2& pos) { position = pos; }
 };
