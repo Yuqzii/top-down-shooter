@@ -14,7 +14,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 }
 
 void SpiderEnemy::update(Scene& scene, const float deltaTime) {
-	steering = Vec2();	 // Reset steering
+	steering = Vec2();	// Reset steering
 	// Different movement depending on the current state
 	switch (getState()) {
 		using enum EnemyStates;

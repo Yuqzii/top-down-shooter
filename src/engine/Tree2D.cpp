@@ -71,8 +71,7 @@ std::vector<GameObject*> Tree2D::findKClosestObjects(const Vec2& target, const i
 	return result;
 }
 
-std::vector<GameObject*> Tree2D::findObjectsInRange(const Vec2& target,
-													const float range) const {
+std::vector<GameObject*> Tree2D::findObjectsInRange(const Vec2& target, const float range) const {
 	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array

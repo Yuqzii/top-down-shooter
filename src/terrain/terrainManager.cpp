@@ -136,8 +136,7 @@ void TerrainManager::tryExtendCollider(
 
 	// Create collider if there already is one ending at end
 	if (currentColliders.count(end)) {
-		createCollider(Vec2{currentColliders[end].first, currentColliders[end].second},
-					   endVec);
+		createCollider(Vec2{currentColliders[end].first, currentColliders[end].second}, endVec);
 		currentColliders.erase(end);
 	}
 

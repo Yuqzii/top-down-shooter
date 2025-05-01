@@ -19,8 +19,7 @@ struct Event {
 	const Vec2 position;
 	const Collider* other;
 
-	Event(const bool collided_, const float depth_, const Vec2& position_,
-		  const Collider* other_)
+	Event(const bool collided_, const float depth_, const Vec2& position_, const Collider* other_)
 		: collided{collided_}, depth{depth_}, position{position_}, other{other_} {}
 	Event(const bool collided_, const float depth_, const Vec2& position_)
 		: Event{collided_, depth_, position_, nullptr} {}

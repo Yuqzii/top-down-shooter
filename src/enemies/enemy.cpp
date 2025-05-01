@@ -33,8 +33,7 @@ void Enemy::initialize(const Vec2& startPosition, const Scene& scene) {
 	combatScene = static_cast<const CombatScene*>(&scene);
 
 	// Initialize enemy at full speed towards player
-	const Vec2 playerDirection =
-		Vec2(combatScene->player.getPosition() - position).normalized();
+	const Vec2 playerDirection = Vec2(combatScene->player.getPosition() - position).normalized();
 	velocity = playerDirection * moveSpeed;
 }
 
@@ -106,7 +105,7 @@ void Enemy::die() {
 
 // Steering behaviors
 Vec2 Enemy::seek(const Vec2& target) const {
-	const Vec2 targetDirection(target - position);	 // Find target direction
+	const Vec2 targetDirection(target - position);	// Find target direction
 
 	// Scale desiredVelocity to maximum speed
 	Vec2 desiredVelocity = targetDirection.normalized() * moveSpeed;
@@ -121,7 +120,7 @@ Vec2 Enemy::seek(const Vec2& target) const {
 }
 
 Vec2 Enemy::flee(const Vec2& target) const {
-	const Vec2 targetDirection(position - target);	 // Find target direction
+	const Vec2 targetDirection(position - target);	// Find target direction
 
 	// Scale desiredVelocity to maximum speed
 	Vec2 desiredVelocity = targetDirection.normalized() * moveSpeed;
@@ -157,7 +156,7 @@ void Enemy::avoidTerrain(const float strength, const float avoidDist) {
 	const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
 	const Vec2 closestPoint = Collision::closestPointOnLine(position, line);
 
-	const Vec2 dist{closestPoint - position};	// Find distance to the closest point
+	const Vec2 dist{closestPoint - position};  // Find distance to the closest point
 	if (dist.dotProduct(dist) <= avoidDist * avoidDist) {
 		// Avoid the middle position of the collider
 		steering += flee(closest->getPosition()) * strength;

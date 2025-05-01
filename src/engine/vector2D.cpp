@@ -12,7 +12,7 @@ Vec2::Vec2(const int& x, const int& y) {
 	this->y = y;
 }
 Vec2::Vec2() { x = y = 0; }
-Vec2::Vec2(const float& degrees) {  // Creates direction vector from rotation in degrees
+Vec2::Vec2(const float& degrees) {	// Creates direction vector from rotation in degrees
 	float radians = (degrees - 90) * M_PI / 180;
 	x = std::cos(radians);
 	y = std::sin(radians);
@@ -70,9 +70,7 @@ Vec2 Vec2::rotateAround(Vec2 point, float degrees) const {
 	return rotated;
 }
 
-bool Vec2::operator==(const Vec2& rhs) const {
-	return this->x == rhs.x && this->y == rhs.y;
-}
+bool Vec2::operator==(const Vec2& rhs) const { return this->x == rhs.x && this->y == rhs.y; }
 
 bool Vec2::operator<(const Vec2& rhs) const { return this->x < rhs.x; }
 

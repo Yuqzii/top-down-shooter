@@ -36,8 +36,7 @@ void Bullet::onCollision(const Collision::Event& event, Scene& scene) {
 	throw 1;
 }
 
-void Bullet::initializeBullet(const Vec2& direction, const float rotation,
-							  const GunData& data) {
+void Bullet::initializeBullet(const Vec2& direction, const float rotation, const GunData& data) {
 	velocity.x = direction.x * data.bulletSpeed;
 	velocity.y = direction.y * data.bulletSpeed;
 	this->rotation = rotation;

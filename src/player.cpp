@@ -80,7 +80,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
 	Vec2 direction(scene.getGame().getMousePos().x - position.x,
-						scene.getGame().getMousePos().y - position.y);
+				   scene.getGame().getMousePos().y - position.y);
 	rotation = direction.toDegrees() + 90;
 }
 
@@ -88,8 +88,8 @@ void Player::shoot(Scene& scene) {
 	Vec2 direction(rotation);
 	// Instantiate bullet
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
-	Bullet& bullet = scene.instantiate<Bullet>(Vec2(
-		position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
+	Bullet& bullet = scene.instantiate<Bullet>(
+		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet.initializeBullet(direction, rotation, *currentGun);
 
