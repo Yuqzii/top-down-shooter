@@ -136,8 +136,6 @@ TEST(Tree2D, MultiplePointQuery) {
 	auto testData = testInit(points);
 	tree.initializeWithList(testData);
 
-	tree.print();
-
 	std::array<Vec2, 3> testPoints = {Vec2(2, 5), Vec2(12, 12), Vec2(25, 5)};
 
 	std::array<std::vector<Vec2>, 3> expected = {
@@ -177,8 +175,6 @@ TEST(Tree2D, MultiplePoint_DuplicatePoints) {
 		tree.insert(obj.get());
 	}
 
-	tree.print();
-
 	EXPECT_NO_THROW(tree.findKClosestObjects(Vec2(10, 10), 2));
 
 	EXPECT_THROW(tree.findKClosestObjects(Vec2(10, 10), 3), int);
@@ -196,8 +192,6 @@ TEST(Tree2D, ObjectsInRange) {
 
 	auto testData = testInit(points);
 	tree.initializeWithList(testData);
-
-	tree.print();
 
 	std::array<Vec2, 3> testPoints{Vec2(12, 12), Vec2(25, 5), Vec2(2, 7)};
 	std::array<float, testPoints.size()> testRanges{6, 17.5, 10};
@@ -220,11 +214,6 @@ TEST(Tree2D, ObjectsInRange) {
 			resultSet.insert(obj->getPosition());
 		}
 
-		std::cout << "Result: ";
-		for (auto a : resultSet) std::cout << a << "  ";
-		std::cout << "\nExpected: ";
-		for (auto a : expected[i]) std::cout << a << "  ";
-
 		EXPECT_TRUE(resultSet == expected[i]) << "Test " << i;
 	}
 }
@@ -245,8 +234,6 @@ TEST(Tree2D, ObjectsInRange_OtherBranch) {
 	for (auto& obj : objects) {
 		tree.insert(obj.get());
 	}
-
-	tree.print();
 
 	const std::vector<GameObject*> result = tree.findObjectsInRange(Vec2(10, 10), 4);
 	std::set<Vec2> resultPos;
