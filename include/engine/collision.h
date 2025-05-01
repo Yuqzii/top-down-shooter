@@ -16,16 +16,15 @@ namespace Collision {
 struct Event {
 	const bool collided;
 	const float depth;
-	const vector2Df position;
+	const Vec2 position;
 	const Collider* other;
 
-	Event(const bool collided_, const float depth_, const vector2Df& position_,
-		  const Collider* other_)
+	Event(const bool collided_, const float depth_, const Vec2& position_, const Collider* other_)
 		: collided{collided_}, depth{depth_}, position{position_}, other{other_} {}
-	Event(const bool collided_, const float depth_, const vector2Df& position_)
+	Event(const bool collided_, const float depth_, const Vec2& position_)
 		: Event{collided_, depth_, position_, nullptr} {}
-	Event(const bool collided_, const vector2Df& position_) : Event{collided_, 0, position_} {}
-	Event(const bool collided_, const float depth_) : Event{collided_, depth_, vector2Df{}} {}
+	Event(const bool collided_, const Vec2& position_) : Event{collided_, 0, position_} {}
+	Event(const bool collided_, const float depth_) : Event{collided_, depth_, Vec2{}} {}
 	Event(const bool collided_) : Event{collided_, 0} {}
 };
 
@@ -36,27 +35,27 @@ enum class Types {
 };
 
 struct Circle {
-	vector2Df position;
+	Vec2 position;
 	float radius;
 
-	Circle(const vector2Df& pos, const float r) : position{pos}, radius{r} {}
-	Circle(const float r) : Circle{vector2Df(), r} {}
-	Circle() : Circle{vector2Df(), 0.0f} {}
+	Circle(const Vec2& pos, const float r) : position{pos}, radius{r} {}
+	Circle(const float r) : Circle{Vec2(), r} {}
+	Circle() : Circle{Vec2(), 0.0f} {}
 };
 
 struct Line {
-	vector2Df start;
-	vector2Df end;
+	Vec2 start;
+	Vec2 end;
 
 	Line() : start(), end() {}
-	Line(const vector2Df& s, const vector2Df& e) : start(s), end(e) {}
+	Line(const Vec2& s, const Vec2& e) : start(s), end(e) {}
 };
 
-vector2Df closestPointOnLine(const vector2Df& point, const Line& line);
+Vec2 closestPointOnLine(const Vec2& point, const Line& line);
 
 Collision::Event checkCollision(const SDL_Rect& a, const SDL_Rect& b);
 Collision::Event checkCollision(const Circle& a, const Circle& b);
-Collision::Event checkCollision(const vector2Df& point, const Circle& circle);
+Collision::Event checkCollision(const Vec2& point, const Circle& circle);
 Collision::Event checkCollision(const Circle& circle, const Line& line);
 
 /*
@@ -67,7 +66,7 @@ Collision::Event checkCollision(const Circle& circle, const Line& line);
  *						This is what we will calculate the movement for.
  * @return	Movement vector. Apply this to the position to resolve collision.
  */
-vector2Df resolveStaticLine(const Collision::Event& event, const vector2Df& position);
+Vec2 resolveStaticLine(const Collision::Event& event, const Vec2& position);
 
 void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider);
 }  // namespace Collision
@@ -135,11 +134,11 @@ public:
 
 class PointCollider : public Collider {
 public:
-	PointCollider(vector2Df point, const bool isStatic, GameObject* parent);
-	PointCollider(vector2Df point, const float checkRadius, GameObject* parent);
-	PointCollider(vector2Df point, const float checkRadius);
+	PointCollider(Vec2 point, const bool isStatic, GameObject* parent);
+	PointCollider(Vec2 point, const float checkRadius, GameObject* parent);
+	PointCollider(Vec2 point, const float checkRadius);
 
-	vector2Df point;
+	Vec2 point;
 
 	void checkCollisions(const Scene& scene) override;
 };

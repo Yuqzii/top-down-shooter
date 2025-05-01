@@ -21,25 +21,25 @@ class Scene;
 
 class GameObject {
 public:
-	GameObject(std::unique_ptr<Collider> collider, const vector2Df& srcRectSize = {32, 32});
-	GameObject(const vector2Df& srcRectSize);
+	GameObject(std::unique_ptr<Collider> collider, const Vec2& srcRectSize = {32, 32});
+	GameObject(const Vec2& srcRectSize);
 	GameObject();
 	virtual ~GameObject() = default;
 
-	virtual void initialize(const vector2Df& position, const Scene& scene);
+	virtual void initialize(const Vec2& position, const Scene& scene);
 	// Should be called after finishing velocity calculations
 	virtual void update(Scene& scene, const float deltaTime);
 	void render(SDL_Renderer* renderer) const;
 
 	// Position and rotation
-	vector2Df getRenderPosition() const { return renderPosition; }
-	vector2Df getPosition() const { return position; }
-	vector2Df getVelocity() const { return velocity; }
-	vector2Df getSize() const { return size; }
+	Vec2 getRenderPosition() const { return renderPosition; }
+	Vec2 getPosition() const { return position; }
+	Vec2 getVelocity() const { return velocity; }
+	Vec2 getSize() const { return size; }
 	// Returns the rotation as a direction vector
-	inline vector2Df getDirection() const {
+	inline Vec2 getDirection() const {
 		float radians = (rotation - 90) * M_PI / 180;
-		return vector2Df((float)std::cos(radians), (float)std::sin(radians));
+		return Vec2((float)std::cos(radians), (float)std::sin(radians));
 	};
 
 	//----- COLLISION -----//
@@ -54,11 +54,11 @@ public:
 
 protected:
 	// Position and rotation
-	vector2Df velocity;
-	vector2Df position;
+	Vec2 velocity;
+	Vec2 position;
 	double rotation;  // Angle of rotation
 
-	void setSize(const vector2Df& newSize);
+	void setSize(const Vec2& newSize);
 
 	std::unique_ptr<Collider> collider;
 	bool isStatic;
@@ -81,7 +81,7 @@ protected:
 
 	// Pivot
 	SDL_Point pivot;
-	vector2D pivotOffset;
+	Vec2 pivotOffset;
 
 	// Rendering
 	virtual const std::string& getTextureSheet() const {
@@ -96,10 +96,10 @@ protected:
 private:
 	SDL_Texture* texture;
 
-	const vector2Df baseSize;
-	vector2Df size;
+	const Vec2 baseSize;
+	Vec2 size;
 
-	vector2Df renderPosition;
+	Vec2 renderPosition;
 
 	// Animation
 	void animationUpdate(Scene& scene, const double& deltaTime);

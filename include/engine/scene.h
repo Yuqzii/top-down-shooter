@@ -36,7 +36,7 @@ public:
 	 * @return	Pointer to the instantiated GameObject.
 	 */
 	template <class T>
-	T& instantiate(const vector2Df& position);
+	T& instantiate(const Vec2& position);
 
 	/*
 	 * @return	Tree2D of current GameObjects, reference

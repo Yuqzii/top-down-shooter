@@ -21,13 +21,13 @@ public:
 	void updateCollisions();
 	void render(SDL_Renderer* renderer) const;
 
-	void removePixel(const vector2Df& position);
+	void removePixel(const Vec2& position);
 	/*
 	 * @abstract	Removes all pixels in range of the center and recalculates collisions.
 	 * @param	center	Center position to remove from.
 	 * @param	range	The range to remove from. (Radius of circle).
 	 */
-	void removeInRange(const vector2Df& center, const int range);
+	void removeInRange(const Vec2& center, const int range);
 
 	const Tree2D& getTree() const { return terrainTree; }
 
@@ -51,7 +51,7 @@ private:
 	 * @param	end		End position of LineCollider.
 	 * @param	scene	The scene to create the collider in.
 	 */
-	void createCollider(const vector2Df& start, const vector2Df& end);
+	void createCollider(const Vec2& start, const Vec2& end);
 	/*
 	 * @abstract	Tries to extend an existing collider that ends at start to ending at end.
 	 * @param	start	Start position of new collider, used to check against existing ends.
@@ -67,7 +67,7 @@ private:
 	 * @param	position	Position to translate to indices.
 	 * @return	Array indices of the world position.
 	 */
-	std::pair<int, int> posToTerrainCoord(const vector2Df& position) const;
+	std::pair<int, int> posToTerrainCoord(const Vec2& position) const;
 
 	SDL_Color color;
 };

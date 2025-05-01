@@ -9,7 +9,7 @@ class Bullet : public GameObject {
 public:
 	Bullet();
 
-	void initialize(const vector2Df& startPosition, const Scene& scene) override;
+	void initialize(const Vec2& startPosition, const Scene& scene) override;
 	void update(Scene& scene, const float deltaTime) override;
 
 	void onCollision(const Collision::Event& event, Scene& scene) override;
@@ -23,7 +23,7 @@ public:
 	 *							calculated for the player, avoids recomputation).
 	 * @param		gunData		Data object for the gun this bullet was fired from.
 	 */
-	void initializeBullet(const vector2Df& direction, const float rotation, const GunData& gunData);
+	void initializeBullet(const Vec2& direction, const float rotation, const GunData& gunData);
 
 	const GunData& getData() const { return *data; }
 
@@ -31,7 +31,7 @@ protected:
 	SETOBJECTTEXTURE("bullet.bmp");
 
 private:
-	vector2Df direction;
+	Vec2 direction;
 	LineCollider* lineCollider;
 
 	const GunData* data;

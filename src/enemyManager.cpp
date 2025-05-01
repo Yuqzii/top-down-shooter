@@ -24,7 +24,7 @@ void EnemyManager::update(Scene& scene, const float deltaTime) {
 	updateTree();
 }
 
-const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
+const Enemy* EnemyManager::findClosestEnemy(const Vec2& target) const {
 	try {
 		// Try to return as const Enemy*
 		return static_cast<const Enemy*>(enemyTree->findClosestObject(target));
@@ -35,7 +35,7 @@ const Enemy* EnemyManager::findClosestEnemy(const vector2Df& target) const {
 }
 
 void EnemyManager::spawnEnemy(Scene& scene) {
-	Enemy& enemy = scene.instantiate<SpiderEnemy>(vector2Df(200, 200));
+	Enemy& enemy = scene.instantiate<SpiderEnemy>(Vec2(200, 200));
 	enemies.push_back(&enemy);
 }
 

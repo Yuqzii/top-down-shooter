@@ -27,7 +27,7 @@ void Tree2D::print() const {
 	std::cout << std::endl;
 }
 
-GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
+GameObject* Tree2D::findClosestObject(const Vec2& target) const {
 	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array
@@ -38,7 +38,7 @@ GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
 	if (result == nullptr) throw 1;
 
 	// Convert result to vector
-	const vector2Df vecResult = vector2Df(result->point[0], result->point[1]);
+	const Vec2 vecResult = Vec2(result->point[0], result->point[1]);
 
 	// Result is the same as target (not good), throw exception.
 	// Usually happens when there is only one enemy.
@@ -47,7 +47,7 @@ GameObject* Tree2D::findClosestObject(const vector2Df& target) const {
 	return result->object;	// Return the GameObject associated with the result node
 }
 
-std::vector<GameObject*> Tree2D::findKClosestObjects(const vector2Df& target, const int k) const {
+std::vector<GameObject*> Tree2D::findKClosestObjects(const Vec2& target, const int k) const {
 	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array
@@ -71,8 +71,7 @@ std::vector<GameObject*> Tree2D::findKClosestObjects(const vector2Df& target, co
 	return result;
 }
 
-std::vector<GameObject*> Tree2D::findObjectsInRange(const vector2Df& target,
-													const float range) const {
+std::vector<GameObject*> Tree2D::findObjectsInRange(const Vec2& target, const float range) const {
 	if (root == nullptr) throw 1;
 
 	// Convert vector2Df to two dimensional array

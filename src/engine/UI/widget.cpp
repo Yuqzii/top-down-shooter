@@ -37,7 +37,7 @@ void Widget::calculatePosition(const bool& calculateChildren) {
 		parent->calculatePosition(false);
 
 		// Update position based on anchoring
-		vector2Df add;
+		Vec2 add;
 		switch (anchorPosition.x) {
 			case XAnchorType::XANCHOR_CENTER:
 				add.x = 50 - (size.x / parent->size.x) * 50;

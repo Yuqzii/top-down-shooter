@@ -186,7 +186,7 @@ const std::vector<std::vector<char>> terrainMap{
 
 CombatScene::CombatScene(Game& game_)
 	: Scene{game_},
-	  player{instantiate<Player>(vector2Df(700, 400))},
+	  player{instantiate<Player>(Vec2(700, 400))},
 	  terrainManager{terrainMap, SDL_Color{56, 28, 40, 255}, *this} {}
 
 void CombatScene::initialize() {

@@ -20,7 +20,7 @@ public:
 		  const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
 		  const float steerMult = 2.0f, const float slowingRadius = 100.0f);
 
-	virtual void initialize(const vector2Df& position, const Scene& scene) override;
+	virtual void initialize(const Vec2& position, const Scene& scene) override;
 	virtual void update(Scene& scene, const float deltaTime) override;
 
 	virtual void onCollision(const Collision::Event& event, Scene& scene) override;
@@ -31,11 +31,11 @@ protected:
 	CircleCollider& circleCollider;
 
 	// Steering behaviors
-	vector2Df steering;
-	vector2Df seek(const vector2Df& target) const;
-	vector2Df flee(const vector2Df& target) const;
-	vector2Df pursuit(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
-	vector2Df evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
+	Vec2 steering;
+	Vec2 seek(const Vec2& target) const;
+	Vec2 flee(const Vec2& target) const;
+	Vec2 pursuit(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
+	Vec2 evade(const GameObject& target, const float& predictionMultiplier = 1.0f) const;
 
 	void avoidTerrain(const float strength, const float avoidDist);
 

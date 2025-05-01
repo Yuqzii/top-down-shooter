@@ -12,7 +12,7 @@
 #include "terrain/terrainCollider.h"
 
 Player::Player()
-	: healthbarBG{vector2Df(20, 0), vector2Df(250, 30), SDL_Color{255, 0, 0, 255}},
+	: healthbarBG{Vec2(20, 0), Vec2(250, 30), SDL_Color{255, 0, 0, 255}},
 	  currentGun{std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
 	  timeSinceShot{0.0f},
 	  GameObject{
@@ -23,7 +23,7 @@ Player::Player()
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
-void Player::initialize(const vector2Df& position, const Scene& scene) {
+void Player::initialize(const Vec2& position, const Scene& scene) {
 	GameObject::initialize(position, scene);  // Call base initialize
 }
 
@@ -79,17 +79,17 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
-	vector2Df direction(scene.getGame().getMousePos().x - position.x,
-						scene.getGame().getMousePos().y - position.y);
+	Vec2 direction(scene.getGame().getMousePos().x - position.x,
+				   scene.getGame().getMousePos().y - position.y);
 	rotation = direction.toDegrees() + 90;
 }
 
 void Player::shoot(Scene& scene) {
-	vector2Df direction(rotation);
+	Vec2 direction(rotation);
 	// Instantiate bullet
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
-	Bullet& bullet = scene.instantiate<Bullet>(vector2Df(
-		position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
+	Bullet& bullet = scene.instantiate<Bullet>(
+		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
 	// Initialize bullet with correct rotation
 	bullet.initializeBullet(direction, rotation, *currentGun);
 

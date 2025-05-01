@@ -14,7 +14,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 }
 
 void SpiderEnemy::update(Scene& scene, const float deltaTime) {
-	steering = vector2Df();	 // Reset steering
+	steering = Vec2();	// Reset steering
 	// Different movement depending on the current state
 	switch (getState()) {
 		using enum EnemyStates;
@@ -54,21 +54,21 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 void SpiderEnemy::attack(Scene& scene) {
 	// Create attack point to check for collision against player
 	EnemyAttackPoint& attackPoint =
-		scene.instantiate<EnemyAttackPoint>(vector2Df(position + vector2Df(rotation) * 55.0f));
+		scene.instantiate<EnemyAttackPoint>(Vec2(position + Vec2(rotation) * 55.0f));
 	attackPoint.initializeParent(this);
 
 	setState(EnemyStates::REPOSITION);
 }
 
 void SpiderEnemy::attackRangeCheck() {
-	vector2Df dist = position - combatScene->player.getPosition();
+	Vec2 dist = position - combatScene->player.getPosition();
 	constexpr static float atkDist = 70.0f;
 	// Enter Attack state when closer than atkDist
 	if (dist.dotProduct(dist) <= atkDist * atkDist) {
 		setState(EnemyStates::ATTACK);
 
 		// Make spider point directly towards player
-		const vector2Df playerDir(combatScene->player.getPosition() - position);
+		const Vec2 playerDir(combatScene->player.getPosition() - position);
 		rotation = playerDir.toDegrees() + 90;
 	}
 }
@@ -111,7 +111,7 @@ void SpiderEnemy::avoidOtherEnemies(const float strength) {
 		// Move away from closest enemy
 		const Enemy* closest = combatScene->getEnemyManager().findClosestEnemy(position);
 
-		const vector2Df dist(position - closest->getPosition());
+		const Vec2 dist(position - closest->getPosition());
 		constexpr float avoidDist = 150.0f;
 		if (dist.dotProduct(dist) <= avoidDist * avoidDist)
 			steering += flee(closest->getPosition()) * strength;

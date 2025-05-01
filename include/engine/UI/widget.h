@@ -3,7 +3,6 @@
 #include <functional>
 #include <list>
 #include <memory>
-#include <vector>
 
 #include "SDL2/SDL_render.h"
 #include "engine/UI/anchorTypes.h"
@@ -30,14 +29,14 @@ public:
 	void addChild(Widget* child);
 
 	// If widget has parent these values are based on percentage of parent size
-	vector2Df localPosition;
-	vector2Df localSize;
+	Vec2 localPosition;
+	Vec2 localSize;
 
 protected:
 	Widget* parent;
 
-	vector2D position;	// Rendering position, pixels
-	vector2Df size;
+	Vec2 position;	// Rendering position, pixels
+	Vec2 size;
 
 private:
 	AnchorType anchorPosition;
