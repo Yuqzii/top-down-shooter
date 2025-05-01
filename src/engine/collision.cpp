@@ -11,7 +11,7 @@
 namespace Collision {
 
 namespace {
-int distanceSquared(const vector2D& a, const vector2D& b) {
+int distanceSquared(const vector2Df& a, const vector2Df& b) {
 	int deltaX = b.x - a.x;
 	int deltaY = b.y - a.y;
 	return deltaX * deltaX + deltaY * deltaY;

@@ -81,7 +81,7 @@ protected:
 
 	// Pivot
 	SDL_Point pivot;
-	vector2D pivotOffset;
+	vector2Df pivotOffset;
 
 	// Rendering
 	virtual const std::string& getTextureSheet() const {

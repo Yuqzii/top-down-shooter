@@ -3,7 +3,6 @@
 #include <functional>
 #include <list>
 #include <memory>
-#include <vector>
 
 #include "SDL2/SDL_render.h"
 #include "engine/UI/anchorTypes.h"
@@ -36,7 +35,7 @@ public:
 protected:
 	Widget* parent;
 
-	vector2D position;	// Rendering position, pixels
+	vector2Df position;	// Rendering position, pixels
 	vector2Df size;
 
 private:

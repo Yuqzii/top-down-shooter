@@ -21,10 +21,6 @@ vector2Df::vector2Df(const vector2Df& vec) {
 	x = vec.x;
 	y = vec.y;
 }
-vector2Df::vector2Df(const vector2D& vec) {
-	x = vec.x;
-	y = vec.y;
-}
 
 float vector2Df::magnitude() const { return std::sqrt(x * x + y * y); }
 
@@ -81,38 +77,3 @@ bool vector2Df::operator==(const vector2Df& rhs) const {
 bool vector2Df::operator<(const vector2Df& rhs) const { return this->x < rhs.x; }
 
 bool vector2Df::operator>(const vector2Df& rhs) const { return this->x > rhs.x; }
-
-// vector2D
-vector2D::vector2D(int x, int y) {
-	this->x = x;
-	this->y = y;
-}
-
-vector2D::vector2D(const vector2Df& vec) {
-	x = round(vec.x);
-	y = round(vec.y);
-}
-
-vector2D::vector2D() { x = y = 0; }
-
-vector2D& vector2D::operator=(const vector2Df& other) {
-	x = round(other.x);
-	y = round(other.y);
-	return *this;
-}
-
-vector2D& vector2D::operator=(const vector2D& other) {
-	if (this != &other) {
-		x = other.x;
-		y = other.y;
-	}
-	return *this;
-}
-
-bool vector2D::operator==(const vector2D& rhs) const {
-	return this->x == rhs.x && this->y == rhs.y;
-}
-
-bool vector2D::operator<(const vector2D& rhs) const { return this->x < rhs.x; }
-
-bool vector2D::operator>(const vector2D& rhs) const { return this->x > rhs.x; }

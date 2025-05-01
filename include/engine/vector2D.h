@@ -3,8 +3,6 @@
 #include <cmath>
 #include <ostream>
 
-struct vector2D;
-
 struct vector2Df {
 	float x;
 	float y;
@@ -14,7 +12,6 @@ struct vector2Df {
 	vector2Df();
 	vector2Df(const float& degrees);
 	vector2Df(const vector2Df& vec);
-	vector2Df(const vector2D& vec);
 
 	float magnitude() const;
 	vector2Df normalized() const;
@@ -31,25 +28,7 @@ struct vector2Df {
 	bool operator<(const vector2Df& rhs) const;
 	bool operator>(const vector2Df& rhs) const;
 };
-
-struct vector2D {
-	int x;
-	int y;
-
-	vector2D(int x, int y);
-	vector2D(const vector2Df& vec);
-	vector2D();
-
-	vector2D& operator=(const vector2Df& other);
-
-	vector2D& operator=(const vector2D& other);
-
-	bool operator==(const vector2D& rhs) const;
-
-	bool operator<(const vector2D& rhs) const;
-	bool operator>(const vector2D& rhs) const;
-};
-
+//
 // Operator overloading
 // + and +=
 inline vector2Df& operator+=(vector2Df& lhs, const vector2Df& rhs) {
@@ -58,40 +37,7 @@ inline vector2Df& operator+=(vector2Df& lhs, const vector2Df& rhs) {
 	return lhs;
 }
 
-inline vector2Df& operator+=(vector2Df& lhs, const vector2D& rhs) {
-	lhs.x += rhs.x;
-	lhs.y += rhs.y;
-	return lhs;
-}
-
-inline vector2D& operator+=(vector2D& lhs, const vector2D& rhs) {
-	lhs.x += rhs.x;
-	lhs.y += rhs.y;
-	return lhs;
-}
-
-inline vector2D& operator+=(vector2D& lhs, const vector2Df& rhs) {
-	lhs.x += round(rhs.x);
-	lhs.y += round(rhs.y);
-	return lhs;
-}
-
 inline vector2Df operator+(vector2Df lhs, const vector2Df& rhs) {
-	lhs += rhs;
-	return lhs;
-}
-
-inline vector2Df operator+(vector2Df lhs, const vector2D& rhs) {
-	lhs += rhs;
-	return lhs;
-}
-
-inline vector2D operator+(vector2D lhs, const vector2D& rhs) {
-	lhs += rhs;
-	return lhs;
-}
-
-inline vector2D operator+(vector2D lhs, const vector2Df& rhs) {
 	lhs += rhs;
 	return lhs;
 }
@@ -103,40 +49,7 @@ inline vector2Df& operator-=(vector2Df& lhs, const vector2Df& rhs) {
 	return lhs;
 }
 
-inline vector2Df& operator-=(vector2Df& lhs, const vector2D& rhs) {
-	lhs.x -= rhs.x;
-	lhs.y -= rhs.y;
-	return lhs;
-}
-
-inline vector2D& operator-=(vector2D& lhs, const vector2Df& rhs) {
-	lhs.x = round(lhs.x - rhs.x);
-	lhs.y = round(lhs.y - rhs.y);
-	return lhs;
-}
-
-inline vector2D& operator-=(vector2D& lhs, const vector2D& rhs) {
-	lhs.x -= rhs.x;
-	lhs.y -= rhs.y;
-	return lhs;
-}
-
 inline vector2Df operator-(vector2Df lhs, const vector2Df& rhs) {
-	lhs -= rhs;
-	return lhs;
-}
-
-inline vector2Df operator-(vector2Df lhs, const vector2D& rhs) {
-	lhs -= rhs;
-	return lhs;
-}
-
-inline vector2D operator-(vector2D lhs, const vector2Df& rhs) {
-	lhs -= rhs;
-	return lhs;
-}
-
-inline vector2D operator-(vector2D lhs, const vector2D& rhs) {
 	lhs -= rhs;
 	return lhs;
 }
@@ -148,42 +61,13 @@ inline vector2Df& operator*=(vector2Df& lhs, const vector2Df& rhs) {
 	return lhs;
 }
 
-inline vector2Df& operator*=(vector2Df& lhs, const vector2D& rhs) {
-	lhs.x *= rhs.x;
-	lhs.y *= rhs.y;
-	return lhs;
-}
-
 inline vector2Df& operator*=(vector2Df& lhs, const double& rhs) {
 	lhs.x *= rhs;
 	lhs.y *= rhs;
 	return lhs;
 }
 
-inline vector2D& operator*=(vector2D& lhs, const int& rhs) {
-	lhs.x *= rhs;
-	lhs.y *= rhs;
-	return lhs;
-}
-
-inline vector2D& operator*=(vector2D& lhs, const vector2Df& rhs) {
-	lhs.x = round(lhs.x * rhs.x);
-	lhs.y = round(lhs.y * rhs.y);
-	return lhs;
-}
-
-inline vector2D& operator*=(vector2D& lhs, const vector2D& rhs) {
-	lhs.x *= rhs.x;
-	lhs.y *= rhs.y;
-	return lhs;
-}
-
 inline vector2Df operator*(vector2Df lhs, const vector2Df& rhs) {
-	lhs *= rhs;
-	return lhs;
-}
-
-inline vector2Df operator*(vector2Df lhs, const vector2D& rhs) {
 	lhs *= rhs;
 	return lhs;
 }
@@ -193,28 +77,8 @@ inline vector2Df operator*(vector2Df lhs, const double& rhs) {
 	return lhs;
 }
 
-inline vector2D operator*(vector2D lhs, const vector2Df& rhs) {
-	lhs *= rhs;
-	return lhs;
-}
-
-inline vector2D operator*(vector2D lhs, const vector2D& rhs) {
-	lhs *= rhs;
-	return lhs;
-}
-
-inline vector2D operator*(vector2D lhs, const int& rhs) {
-	lhs *= rhs;
-	return lhs;
-}
-
 // << overloading
 inline std::ostream& operator<<(std::ostream& os, const vector2Df& vec) {
-	os << "(" << vec.x << ", " << vec.y << ")";
-	return os;
-}
-
-inline std::ostream& operator<<(std::ostream& os, const vector2D& vec) {
 	os << "(" << vec.x << ", " << vec.y << ")";
 	return os;
 }
