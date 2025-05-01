@@ -162,8 +162,7 @@ void Enemy::avoidTerrain(const float strength, const float avoidDist) {
 			// Avoid the middle position of the collider
 			steering += flee(closest->getPosition()) * strength;
 		}
-	}
-	catch (const int e) {
+	} catch (const int e) {
 		// Could not get the closest object from the tree, likely due to it being empty.
 		// Does not require further action, hence this catch block is empty.
 	}
