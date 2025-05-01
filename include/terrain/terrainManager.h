@@ -14,6 +14,7 @@ class TerrainCollider;
 
 class TerrainManager {
 public:
+	// Must be initialized with a non-empty terrainMap vector
 	TerrainManager(const std::vector<std::vector<char>>& terrainMap, const SDL_Color& color,
 				   Scene& scene);
 
