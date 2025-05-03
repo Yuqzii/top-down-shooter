@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "SDL2/SDL_render.h"
+#include "bullet.h"
 #include "engine/Tree2D.h"
 #include "engine/gameObject.h"
 #include "player.h"
@@ -40,7 +41,7 @@ public:
 	T& instantiate(Args... args) {
 		// Compile time check that we don't try to instantiate a non-GameObject
 		static_assert(std::is_base_of<GameObject, T>(),
-		"Object to instantiate must inherit from GameObject");
+					  "Object to instantiate must inherit from GameObject");
 
 		// Create the new GameObject as a unique_ptr to clarify that Scene has ownership
 		std::unique_ptr<T> newObject = std::make_unique<T>();
