@@ -2,14 +2,6 @@
 
 #include <ranges>
 
-#include "bullet.h"
-#include "enemies/enemy.h"
-#include "enemies/spider.h"
-#include "engine/game.h"
-#include "engine/gameObject.h"
-#include "player.h"
-#include "terrain/terrainCollider.h"
-
 Scene::Scene(Game& game_) : game(game_) {}
 
 void Scene::initialize(std::vector<std::unique_ptr<GameObject>>& persistentObjects) {
@@ -61,28 +53,6 @@ void Scene::render(SDL_Renderer* renderer) const {
 		object->render(renderer);
 	}
 }
-
-template <class T>
-T& Scene::instantiate(const Vec2& position) {
-	// Compile time check that we don't try to instantiate a non-GameObject
-	static_assert(std::is_base_of<GameObject, T>(),
-				  "Object to instantiate must inherit from GameObject");
-
-	// Create the new GameObject as a unique_ptr to clarify that Scene has ownership
-	std::unique_ptr<T> newObject = std::make_unique<T>();
-	newObject->initialize(position, *this);		  // Initialize GameObject
-	gameObjects.push_back(std::move(newObject));  // Add GameObject to list
-
-	// Returns the newest GameObject, e.g. the one created now
-	return static_cast<T&>(*gameObjects.back().get());
-}
-// Create all valid templates
-template GameObject& Scene::instantiate<GameObject>(const Vec2& position);
-template Player& Scene::instantiate<Player>(const Vec2& position);
-template Bullet& Scene::instantiate<Bullet>(const Vec2& position);
-template SpiderEnemy& Scene::instantiate<SpiderEnemy>(const Vec2& position);
-template EnemyAttackPoint& Scene::instantiate<EnemyAttackPoint>(const Vec2& position);
-template TerrainCollider& Scene::instantiate<TerrainCollider>(const Vec2& position);
 
 void Scene::updateObjectTree() {
 	objectTree = Tree2D();	// Create new tree

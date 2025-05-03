@@ -9,7 +9,8 @@ class Bullet : public GameObject {
 public:
 	Bullet();
 
-	void initialize(const Vec2& startPosition, const Scene& scene) override;
+	void initialize(const Scene& scene, const Vec2& startPos, const Vec2& direction,
+					const float rotation, const std::shared_ptr<GunData>& gunData);
 	void update(Scene& scene, const float deltaTime) override;
 
 	void onCollision(const Collision::Event& event, Scene& scene) override;
@@ -23,8 +24,6 @@ public:
 	 *							calculated for the player, avoids recomputation).
 	 * @param		gunData		Data object for the gun this bullet was fired from.
 	 */
-	void initializeBullet(const Vec2& direction, const float rotation, const GunData& gunData);
-
 	const GunData& getData() const { return *data; }
 
 protected:
@@ -34,7 +33,7 @@ private:
 	Vec2 direction;
 	LineCollider* lineCollider;
 
-	const GunData* data;
+	std::shared_ptr<GunData> data;
 
 	constexpr static const float startTime = 4;
 	float timeLeft = startTime;

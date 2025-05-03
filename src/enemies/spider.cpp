@@ -54,8 +54,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 void SpiderEnemy::attack(Scene& scene) {
 	// Create attack point to check for collision against player
 	EnemyAttackPoint& attackPoint =
-		scene.instantiate<EnemyAttackPoint>(Vec2(position + Vec2(rotation) * 55.0f));
-	attackPoint.initializeParent(this);
+		scene.instantiate<EnemyAttackPoint>(Vec2(position + Vec2(rotation) * 55.0f), this);
 
 	setState(EnemyStates::REPOSITION);
 }

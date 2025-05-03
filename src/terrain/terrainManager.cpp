@@ -157,8 +157,7 @@ void TerrainManager::tryExtendCollider(
 
 void TerrainManager::createCollider(const Vec2& start, const Vec2& end) {
 	const Vec2 position{start + (end - start) * 0.5f};
-	TerrainCollider& collider = scene.instantiate<TerrainCollider>(position);
-	collider.initializeCollider(start, end, *this);
+	TerrainCollider& collider = scene.instantiate<TerrainCollider>(position, start, end, this);
 	terrainColliders.push_back(&collider);
 }
 

@@ -11,7 +11,7 @@ class Player : public GameObject {
 public:
 	Player();
 
-	void initialize(const Vec2& position, const Scene& scene) override;
+	void initialize(const Scene& scene, const Vec2& startPos);
 	void update(Scene& scene, const float deltaTime) override;
 
 private:
@@ -34,6 +34,6 @@ private:
 	float health = 100.0f;
 	void takeDamage(const float damage);
 
-	std::unique_ptr<GunData> currentGun;
+	std::shared_ptr<GunData> currentGun;
 	float timeSinceShot;
 };

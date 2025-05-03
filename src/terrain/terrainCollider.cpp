@@ -11,12 +11,14 @@ TerrainCollider::TerrainCollider() : GameObject{Vec2{}} {
 	isStatic = true;
 }
 
-void TerrainCollider::initializeCollider(const Vec2& start, const Vec2& end,
-										 TerrainManager& manager) {
+void TerrainCollider::initialize(const Scene& scene, const Vec2& position, const Vec2& start,
+								 const Vec2& end, TerrainManager* manager) {
+	GameObject::initialize(scene, position);
+
 	LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
 	lineCollider->line.start = start;
 	lineCollider->line.end = end;
-	this->manager = &manager;
+	this->manager = manager;
 }
 
 void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {

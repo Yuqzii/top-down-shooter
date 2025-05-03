@@ -26,7 +26,7 @@ public:
 	GameObject();
 	virtual ~GameObject() = default;
 
-	virtual void initialize(const Vec2& position, const Scene& scene);
+	void initialize(const Scene& scene, const Vec2& startPos = {0, 0});
 	// Should be called after finishing velocity calculations
 	virtual void update(Scene& scene, const float deltaTime);
 	void render(SDL_Renderer* renderer) const;

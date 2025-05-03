@@ -3,7 +3,6 @@
 #include "engine/collision.h"
 #include "engine/gameObject.h"
 #include "engine/scene.h"
-#include "gunData.h"
 
 Bullet::Bullet() : GameObject(Vec2(1, 2)) {
 	setSize(Vec2{1.75f, 1.75f});
@@ -12,8 +11,13 @@ Bullet::Bullet() : GameObject(Vec2(1, 2)) {
 	lineCollider = static_cast<LineCollider*>(collider.get());
 }
 
-void Bullet::initialize(const Vec2& position, const Scene& scene) {
-	GameObject::initialize(position, scene);  // Call base initialize
+void Bullet::initialize(const Scene& scene, const Vec2& startPos, const Vec2& direction,
+						const float rotation, const std::shared_ptr<GunData>& data) {
+	GameObject::initialize(scene, startPos);  // Call base initialize
+	velocity.x = direction.x * data->bulletSpeed;
+	velocity.y = direction.y * data->bulletSpeed;
+	this->rotation = rotation;
+	this->data = data;
 
 	lineCollider->line.start = lineCollider->line.end = position;
 }
@@ -34,11 +38,4 @@ void Bullet::onCollision(const Collision::Event& event, Scene& scene) {
 	// Delete object when colliding with something and stop further collision updates
 	deleteObject = true;
 	throw 1;
-}
-
-void Bullet::initializeBullet(const Vec2& direction, const float rotation, const GunData& data) {
-	velocity.x = direction.x * data.bulletSpeed;
-	velocity.y = direction.y * data.bulletSpeed;
-	this->rotation = rotation;
-	this->data = &data;
 }
