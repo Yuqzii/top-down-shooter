@@ -26,8 +26,8 @@ Enemy::Enemy(const float health_, const float damage_, const float speed, const 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
-void Enemy::initialize(const Vec2& startPosition, const Scene& scene) {
-	GameObject::initialize(startPosition, scene);  // Call base initialize
+void Enemy::initialize(const Scene& scene, const Vec2& startPos) {
+	GameObject::initialize(scene, startPos);  // Call base initialize
 
 	// Store Scene as CombatScene to avoid unnecessary casts at update
 	combatScene = static_cast<const CombatScene*>(&scene);
@@ -184,7 +184,8 @@ EnemyAttackPoint::EnemyAttackPoint() {
 	renderObject = false;
 }
 
-void EnemyAttackPoint::initializeParent(const Enemy* parent) {
+void EnemyAttackPoint::initialize(const Scene& scene, const Vec2& position, const Enemy* parent) {
+	GameObject::initialize(scene, position);
 	this->parent = parent;
 	static_cast<CircleCollider*>(collider.get())->circle.position = position;
 	deleteObject = true;

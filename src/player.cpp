@@ -1,6 +1,7 @@
 #include "player.h"
 
 #include <cmath>
+#include <memory>
 
 #include "SDL2/SDL_mouse.h"
 #include "SDL2/SDL_scancode.h"
@@ -13,7 +14,7 @@
 
 Player::Player()
 	: healthbarBG{Vec2(20, 0), Vec2(250, 30), SDL_Color{255, 0, 0, 255}},
-	  currentGun{std::make_unique<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
+	  currentGun{std::make_shared<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
 	  timeSinceShot{0.0f},
 	  GameObject{
 		  std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
@@ -23,8 +24,8 @@ Player::Player()
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
-void Player::initialize(const Vec2& position, const Scene& scene) {
-	GameObject::initialize(position, scene);  // Call base initialize
+void Player::initialize(const Scene& scene, const Vec2& startPos) {
+	GameObject::initialize(scene, startPos);  // Call base initialize
 }
 
 // Do player specific processing here
@@ -89,9 +90,10 @@ void Player::shoot(Scene& scene) {
 	// Instantiate bullet
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
 	Bullet& bullet = scene.instantiate<Bullet>(
-		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier));
+		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier),
+		direction, rotation, currentGun);
 	// Initialize bullet with correct rotation
-	bullet.initializeBullet(direction, rotation, *currentGun);
+	//bullet.initializeBullet(direction, rotation, *currentGun);
 
 	timeSinceShot = 0.0f;
 }

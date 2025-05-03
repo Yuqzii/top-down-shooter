@@ -20,7 +20,7 @@ public:
 		  const float moveSpeed = 300.0f, const float maxSteer = 650.0f,
 		  const float steerMult = 2.0f, const float slowingRadius = 100.0f);
 
-	virtual void initialize(const Vec2& position, const Scene& scene) override;
+	virtual void initialize(const Scene& scene, const Vec2& startPos);
 	virtual void update(Scene& scene, const float deltaTime) override;
 
 	virtual void onCollision(const Collision::Event& event, Scene& scene) override;
@@ -69,7 +69,7 @@ class EnemyAttackPoint : public GameObject {
 public:
 	EnemyAttackPoint();
 
-	void initializeParent(const Enemy* parent);
+	void initialize(const Scene& scene, const Vec2& position, const Enemy* parent);
 	const Enemy* parent;
 
 private:

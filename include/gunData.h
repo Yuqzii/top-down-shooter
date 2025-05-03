@@ -17,4 +17,5 @@ struct GunData {
 		  bulletSpeed(bulletSpeed_),
 		  isAuto(isAuto_),
 		  timeBetweenShots(timeBetweenShots_) {}
+	GunData() : GunData("", 0, 0, false, 0) {}
 };

@@ -8,7 +8,8 @@ class TerrainCollider : public GameObject {
 public:
 	TerrainCollider();
 
-	void initializeCollider(const Vec2& start, const Vec2& end, TerrainManager& manager);
+	void initialize(const Scene& scene, const Vec2& position, const Vec2& start, const Vec2& end,
+				 TerrainManager* manager);
 
 	// ONLY USED FOR DEBUG_GIZMO
 	void update(Scene& scene, const float deltaTime) override;

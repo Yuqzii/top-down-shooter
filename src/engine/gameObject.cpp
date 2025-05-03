@@ -32,7 +32,7 @@ GameObject::GameObject(const Vec2& srcRectSize) : GameObject{nullptr, srcRectSiz
 
 GameObject::GameObject() : GameObject{nullptr} {}
 
-void GameObject::initialize(const Vec2& startPosition, const Scene& scene) {
+void GameObject::initialize(const Scene& scene, const Vec2& startPosition) {
 	// Load texture
 	texture = ResourceManager::LoadTexture(getTextureSheet(), scene.getGame().getRenderer());
 
