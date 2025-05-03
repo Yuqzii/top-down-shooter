@@ -2,12 +2,6 @@
 
 #include <ranges>
 
-#include "bullet.h"
-#include "enemies/enemy.h"
-#include "engine/game.h"
-#include "engine/gameObject.h"
-#include "player.h"
-
 Scene::Scene(Game& game_) : game(game_) {}
 
 void Scene::initialize(std::vector<std::unique_ptr<GameObject>>& persistentObjects) {

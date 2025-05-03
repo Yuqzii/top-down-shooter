@@ -89,11 +89,10 @@ void Player::shoot(Scene& scene) {
 	Vec2 direction(rotation);
 	// Instantiate bullet
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
+	// Instantiate and initialize bullet with correct rotation
 	Bullet& bullet = scene.instantiate<Bullet>(
 		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier),
 		direction, rotation, currentGun);
-	// Initialize bullet with correct rotation
-	//bullet.initializeBullet(direction, rotation, *currentGun);
 
 	timeSinceShot = 0.0f;
 }

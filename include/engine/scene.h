@@ -4,8 +4,8 @@
 
 #include "SDL2/SDL_render.h"
 #include "engine/Tree2D.h"
+#include "engine/gameObject.h"
 #include "player.h"
-#include "bullet.h"
 
 class Game;
 
