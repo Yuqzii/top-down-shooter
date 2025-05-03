@@ -10,7 +10,7 @@ public:
 	Bullet();
 
 	void initialize(const Scene& scene, const Vec2& startPos, const Vec2& direction,
-				 const float rotation, const std::shared_ptr<GunData>& gunData);
+					const float rotation, const std::shared_ptr<GunData>& gunData);
 	void update(Scene& scene, const float deltaTime) override;
 
 	void onCollision(const Collision::Event& event, Scene& scene) override;

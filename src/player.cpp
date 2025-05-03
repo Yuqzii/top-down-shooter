@@ -93,7 +93,7 @@ void Player::shoot(Scene& scene) {
 		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier),
 		direction, rotation, currentGun);
 	// Initialize bullet with correct rotation
-	//bullet.initializeBullet(direction, rotation, *currentGun);
+	// bullet.initializeBullet(direction, rotation, *currentGun);
 
 	timeSinceShot = 0.0f;
 }

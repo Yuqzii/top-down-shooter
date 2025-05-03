@@ -39,4 +39,3 @@ void Bullet::onCollision(const Collision::Event& event, Scene& scene) {
 	deleteObject = true;
 	throw 1;
 }
-
