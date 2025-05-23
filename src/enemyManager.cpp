@@ -4,8 +4,8 @@
 #include "engine/game.h"
 #include "engine/scene.h"
 
-const std::array<const Vec2, 4> spawnPositions = {Vec2{200, 170}, Vec2{200, 550},
-															Vec2{1100, 350}, Vec2{1200, 740}};
+const std::array<const Vec2, 4> spawnPositions = {Vec2{200, 170}, Vec2{200, 550}, Vec2{1100, 350},
+												  Vec2{1200, 740}};
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
