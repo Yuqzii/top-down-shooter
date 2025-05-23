@@ -4,6 +4,9 @@
 #include "engine/game.h"
 #include "engine/scene.h"
 
+const std::array<const Vec2, 4> spawnPositions = {Vec2{200, 170}, Vec2{200, 550}, Vec2{1100, 350},
+												  Vec2{1200, 740}};
+
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
 	for (std::vector<Enemy*>::iterator it = enemies.begin(); it != enemies.end();) {
@@ -35,7 +38,10 @@ const Enemy* EnemyManager::findClosestEnemy(const Vec2& target) const {
 }
 
 void EnemyManager::spawnEnemy(Scene& scene) {
-	Enemy& enemy = scene.instantiate<SpiderEnemy>(Vec2(200, 200));
+	srand(time(NULL));
+	int randIdx = rand() % spawnPositions.size();
+
+	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[randIdx]);
 	enemies.push_back(&enemy);
 }
 
