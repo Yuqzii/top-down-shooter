@@ -1,7 +1,6 @@
 #include "scenes/combat_scene.h"
 
 #include "SDL2/SDL_mouse.h"
-
 #include "scenes/combat_map.h"
 
 CombatScene::CombatScene(Game& game_)
