@@ -14,7 +14,7 @@ I build it using these commands from the project root:
 mkdir build
 cd build
 cmake ..
-cmake --build
+cmake --build .
 ```
 If on Linux/Mac this should create an executable called "game". Simply run this to run the game.\
 On windows the build process might be a bit different, but I have tested building it with Visual Studio which should work fine.
