@@ -5,6 +5,7 @@
 #include "SDL2/SDL_render.h"
 #include "bullet.h"
 #include "engine/Tree2D.h"
+#include "engine/camera.h"
 #include "engine/gameObject.h"
 #include "player.h"
 
@@ -59,8 +60,12 @@ public:
 	const GameObjectVector& getGameObjects() const { return gameObjects; }
 
 	Game& getGame() const { return game; }
+	const Camera& getCam() const { return cam; }
 
 	void reset();
+
+protected:
+	Camera cam;
 
 private:
 	Game& game;

@@ -6,12 +6,13 @@
 #include "gunData.h"
 
 class Game;
+class Camera;
 
 class Player : public GameObject {
 public:
 	Player();
 
-	void initialize(const Scene& scene, const Vec2& startPos);
+	void initialize(const Scene& scene, const Vec2& startPos, Camera* sceneCam);
 	void update(Scene& scene, const float deltaTime) override;
 
 private:
@@ -22,6 +23,8 @@ private:
 
 	CircleCollider& circleCollider;
 	void onCollision(const Collision::Event& event, Scene& scene) override;
+
+	Camera* cam;
 
 	bool moveLeft, moveRight, moveUp, moveDown;
 	Vec2 moveDir;

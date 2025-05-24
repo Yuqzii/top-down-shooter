@@ -5,7 +5,7 @@
 
 CombatScene::CombatScene(Game& game_)
 	: Scene{game_},
-	  player{instantiate<Player>(Vec2{700, 400})},
+	  player{instantiate<Player>(Vec2{700, 400}, &cam)},
 	  terrainManager{terrainMap, SDL_Color{56, 28, 40, 255}, *this} {}
 
 void CombatScene::initialize() {
@@ -35,5 +35,5 @@ void CombatScene::update(const float deltaTime) {
 void CombatScene::render(SDL_Renderer* renderer) const {
 	Scene::render(renderer);
 
-	terrainManager.render(renderer);
+	terrainManager.render(renderer, getCam());
 }

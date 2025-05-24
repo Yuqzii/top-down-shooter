@@ -11,6 +11,7 @@
 struct SDL_Renderer;
 class Scene;
 class TerrainCollider;
+class Camera;
 
 class TerrainManager {
 public:
@@ -20,7 +21,7 @@ public:
 
 	void updateRender();
 	void updateCollisions();
-	void render(SDL_Renderer* renderer) const;
+	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
 	void removePixel(const Vec2& position);
 	/*

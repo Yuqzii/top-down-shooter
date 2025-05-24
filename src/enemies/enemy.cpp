@@ -59,8 +59,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 
 	// Update healthbar
 	if (health < startHealth) {
-		healthbarBG.localPosition.x = position.x - healthbarBG.localSize.x / 2;
-		healthbarBG.localPosition.y = position.y + 60;
+		healthbarBG.localPosition.x = getScreenPosition().x - healthbarBG.localSize.x / 2;
+		healthbarBG.localPosition.y = getScreenPosition().y + 60;
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
 		// Render healthbar

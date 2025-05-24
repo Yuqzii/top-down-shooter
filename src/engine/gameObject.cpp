@@ -54,9 +54,12 @@ void GameObject::update(Scene& scene, const float deltaTime) {
 	if (!isStatic) {
 		position += velocity * deltaTime;
 
+		const Vec2 camPos = scene.getCam().getPos();
+		screenPosition.x = position.x - camPos.x;
+		screenPosition.y = position.y - camPos.y;
 		// Update render positon
-		renderPosition.x = position.x - pivot.x;
-		renderPosition.y = position.y - pivot.y;
+		renderPosition.x = screenPosition.x - pivot.x;
+		renderPosition.y = screenPosition.y - pivot.y;
 
 		// Update render rectangle
 		destRect.x = round(renderPosition.x);

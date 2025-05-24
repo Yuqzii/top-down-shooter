@@ -33,6 +33,7 @@ public:
 
 	// Position and rotation
 	Vec2 getRenderPosition() const { return renderPosition; }
+	Vec2 getScreenPosition() const { return screenPosition; }
 	Vec2 getPosition() const { return position; }
 	Vec2 getVelocity() const { return velocity; }
 	Vec2 getSize() const { return size; }
@@ -99,7 +100,8 @@ private:
 	const Vec2 baseSize;
 	Vec2 size;
 
-	Vec2 renderPosition;
+	Vec2 renderPosition;  // Top left (position given to SDL for rendering)
+	Vec2 screenPosition;  // Center of object on screen
 
 	// Animation
 	void animationUpdate(Scene& scene, const double& deltaTime);

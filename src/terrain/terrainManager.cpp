@@ -166,11 +166,17 @@ void TerrainManager::updateTree() {
 	terrainTree.initializeWithList(terrainColliders);
 }
 
-void TerrainManager::render(SDL_Renderer* renderer) const {
+void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
 	for (auto& rectList : renderRects) {
-		SDL_RenderFillRects(renderer, &rectList[0], rectList.size());
+		std::vector<SDL_Rect> rects{rectList};
+		for (auto& rect : rects) {
+			const Vec2 camPos = cam.getPos();
+			rect.x -= camPos.x;
+			rect.y -= camPos.y;
+		}
+		SDL_RenderFillRects(renderer, &rects[0], rects.size());
 	}
 }
 
