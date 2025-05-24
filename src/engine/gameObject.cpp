@@ -172,6 +172,6 @@ std::function<void(Scene&)> GameObject::debugRender() const {
 						   screenPosition.x + velocity.x * 0.1,
 						   screenPosition.y + velocity.y * 0.1);
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		 SDL_RenderDrawRect(renderer, &destRect);
+		SDL_RenderDrawRect(renderer, &destRect);
 	};
 }
