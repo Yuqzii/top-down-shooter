@@ -4,8 +4,7 @@
 
 RenderManager::RenderManager() { renderCallCnt = 0; }
 
-void RenderManager::addRenderCall(std::function<void(SDL_Renderer*)> func,
-								  const GameObject* parent) {
+void RenderManager::addRenderCall(std::function<void(Scene&)> func, const GameObject* parent) {
 	if (renderCalls.size() > renderCallCnt) {
 		// Can just reassign existing variable
 		renderCalls[renderCallCnt].first = func;
@@ -29,9 +28,9 @@ void RenderManager::update() {
 	}
 }
 
-void RenderManager::render(SDL_Renderer* renderer) const {
+void RenderManager::render(Scene& scene) const {
 	// Iterate over all render calls and call the render function
 	for (int i = 0; i < renderCallCnt; i++) {
-		renderCalls[i].first(renderer);
+		renderCalls[i].first(scene);
 	}
 }

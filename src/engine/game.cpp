@@ -105,7 +105,7 @@ void Game::render() const {
 	SDL_RenderClear(renderer);							// Clear screen
 
 	scenes[currentScene]->render(renderer);	 // Render scene
-	renderManager.render(renderer);			 // Render overlays passed to RenderManager
+	renderManager.render(*scenes[currentScene]);			 // Render overlays passed to RenderManager
 
 	SDL_RenderPresent(renderer);  // Update screen
 }

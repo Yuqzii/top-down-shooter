@@ -46,7 +46,7 @@ protected:
 
 	const CombatScene* combatScene;
 
-	std::function<void(SDL_Renderer*)> debugRender() const override;
+	std::function<void(Scene&)> debugRender() const override;
 
 private:
 	const float moveSpeed;

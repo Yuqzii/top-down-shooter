@@ -8,6 +8,8 @@
 #include "engine/UI/anchorTypes.h"
 #include "engine/vector2D.h"
 
+class Scene;
+
 namespace UI {
 // A widget without a parent should be constructed normally as an object,
 // but child widgets should be made as raw pointers using the "new" keyword with a pointer to the
@@ -20,7 +22,7 @@ public:
 	// Should be called at the end of inheriting objects functions
 	virtual void update();
 	virtual void render(SDL_Renderer* renderer) const;
-	std::function<void(SDL_Renderer*)> getRenderFunction() const;
+	std::function<void(Scene&)> getRenderFunction() const;
 
 	// calculateChildren means it will update children positions as well
 	virtual void calculatePosition(const bool& calculateChildren = true);
