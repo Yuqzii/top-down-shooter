@@ -24,7 +24,8 @@ void CombatScene::initialize(GameObjectVector& persistentObjects) {
 
 void CombatScene::update(const float deltaTime) {
 	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
-		terrainManager.removeInRange(getGame().getMousePos(), 5);
+		const Vec2 pos = getGame().getMousePos() + cam.getPos();
+		terrainManager.removeInRange(pos, 5);
 	}
 
 	Scene::update(deltaTime);
