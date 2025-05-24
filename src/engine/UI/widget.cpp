@@ -1,5 +1,8 @@
 #include "engine/UI/widget.h"
 
+#include "engine/game.h"
+#include "engine/scene.h"
+
 namespace UI {
 
 Widget::Widget(Widget* parent, AnchorType anchorPosition) {
@@ -24,8 +27,8 @@ void Widget::render(SDL_Renderer* renderer) const {
 
 // Creates a lambda of the render() function and returns it
 // To be used when adding render call to UIManager
-std::function<void(SDL_Renderer*)> Widget::getRenderFunction() const {
-	return [this](SDL_Renderer* renderer) { this->render(renderer); };
+std::function<void(Scene&)> Widget::getRenderFunction() const {
+	return [this](Scene& scene) { this->render(scene.getGame().getRenderer()); };
 }
 
 void Widget::calculatePosition(const bool& calculateChildren) {

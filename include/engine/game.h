@@ -33,6 +33,8 @@ public:
 	SDL_Renderer* getRenderer() const { return renderer; }
 	constexpr static const int pixelSize = 3;
 
+	const Vec2& getWinDimensions() const { return winDimensions; }
+
 	RenderManager& getRenderManager() { return renderManager; }
 
 	const std::array<bool, 256>& getInput() const { return input; }
@@ -46,6 +48,7 @@ private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+	const Vec2 winDimensions;
 
 	std::array<bool, 256> input;
 	std::array<bool, 32> mouseInput;

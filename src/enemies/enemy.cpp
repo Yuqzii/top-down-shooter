@@ -59,8 +59,8 @@ void Enemy::update(Scene& scene, const float deltaTime) {
 
 	// Update healthbar
 	if (health < startHealth) {
-		healthbarBG.localPosition.x = position.x - healthbarBG.localSize.x / 2;
-		healthbarBG.localPosition.y = position.y + 60;
+		healthbarBG.localPosition.x = getScreenPosition().x - healthbarBG.localSize.x / 2;
+		healthbarBG.localPosition.y = getScreenPosition().y + 60;
 		healthbarBG.calculatePosition();
 		healthbarBG.update();
 		// Render healthbar
@@ -168,14 +168,16 @@ void Enemy::avoidTerrain(const float strength, const float avoidDist) {
 	}
 }
 
-std::function<void(SDL_Renderer*)> Enemy::debugRender() const {
-	return [this](SDL_Renderer* renderer) {
-		GameObject::debugRender()(renderer);  // Call parent debugRender and pass in renderer
+std::function<void(Scene&)> Enemy::debugRender() const {
+	return [this](Scene& scene) {
+		GameObject::debugRender()(scene);  // Call parent debugRender
 
+		SDL_Renderer* renderer = scene.getGame().getRenderer();
 		// Draw line displaying steering direction and strength
 		SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
-		SDL_RenderDrawLine(renderer, position.x, position.y, position.x + steering.x * 0.1,
-						   position.y + steering.y * 0.1);
+		SDL_RenderDrawLine(renderer, getScreenPosition().x, getScreenPosition().y,
+						   getScreenPosition().x + steering.x * 0.1,
+						   getScreenPosition().y + steering.y * 0.1);
 	};
 }
 

@@ -9,6 +9,7 @@ TerrainCollider::TerrainCollider() : GameObject{Vec2{}} {
 	// Create a static line collider and set this GameObject as static
 	collider = std::make_unique<LineCollider>(Collision::Line{}, true, this);
 	isStatic = true;
+	renderObject = false;
 }
 
 void TerrainCollider::initialize(const Scene& scene, const Vec2& position, const Vec2& start,
@@ -40,9 +41,11 @@ void TerrainCollider::update(Scene& scene, const float deltaTime) {
 	const Vec2 dir = Vec2(lineCollider->line.end - lineCollider->line.start).normalized();
 	normal = Vec2(dir.y, dir.x * -1.0f) * 25.0f;
 	scene.getGame().getRenderManager().addRenderCall(
-		[this](SDL_Renderer* renderer) {
-			SDL_RenderDrawLine(renderer, position.x, position.y, position.x + normal.x,
-							   position.y + normal.y);
+		[this](Scene& scene) {
+			const Vec2 camPos = scene.getCam().getPos();
+			SDL_RenderDrawLine(scene.getGame().getRenderer(), position.x - camPos.x,
+							   position.y - camPos.y, position.x - camPos.x + normal.x,
+							   position.y - camPos.y + normal.y);
 		},
 		this);
 }

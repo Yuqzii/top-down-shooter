@@ -7,7 +7,12 @@
 #include "scenes/combat_scene.h"
 
 Game::Game(const char* title, const int width, const int height)
-	: window(nullptr), renderer(nullptr), input{}, mouseInput{}, onMouseDown{} {
+	: winDimensions{width, height},
+	  window{nullptr},
+	  renderer{nullptr},
+	  input{},
+	  mouseInput{},
+	  onMouseDown{} {
 	isRunning = true;
 
 	// Check that SDL initializes
@@ -99,8 +104,8 @@ void Game::render() const {
 	SDL_SetRenderDrawColor(renderer, 84, 47, 63, 255);	// Set background color
 	SDL_RenderClear(renderer);							// Clear screen
 
-	scenes[currentScene]->render(renderer);	 // Render scene
-	renderManager.render(renderer);			 // Render overlays passed to RenderManager
+	scenes[currentScene]->render(renderer);		  // Render scene
+	renderManager.render(*scenes[currentScene]);  // Render overlays passed to RenderManager
 
 	SDL_RenderPresent(renderer);  // Update screen
 }

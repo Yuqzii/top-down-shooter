@@ -24,11 +24,11 @@ Player::Player()
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
 }
 
-void Player::initialize(const Scene& scene, const Vec2& startPos) {
+void Player::initialize(const Scene& scene, const Vec2& startPos, Camera* sceneCam) {
 	GameObject::initialize(scene, startPos);  // Call base initialize
+	cam = sceneCam;
 }
 
-// Do player specific processing here
 void Player::update(Scene& scene, const float deltaTime) {
 	// Get input
 	moveLeft = scene.getGame().getInput()[SDL_SCANCODE_A];
@@ -54,6 +54,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 	GameObject::update(scene, deltaTime);  // Call base GameObject update (Updates position)
 	pointToMouse(scene);
+	cam->setPos(position - scene.getGame().getWinDimensions() * 0.5);
 
 	circleCollider.circle.position = position + getDirection() * 10.0f;	 // Update collider position
 
@@ -80,8 +81,8 @@ void Player::update(Scene& scene, const float deltaTime) {
 
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
-	Vec2 direction(scene.getGame().getMousePos().x - position.x,
-				   scene.getGame().getMousePos().y - position.y);
+	Vec2 direction(scene.getGame().getMousePos().x - getScreenPosition().x,
+				   scene.getGame().getMousePos().y - getScreenPosition().y);
 	rotation = direction.toDegrees() + 90;
 }
 
