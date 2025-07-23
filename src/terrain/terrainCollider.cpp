@@ -1,5 +1,8 @@
 #include "terrain/terrainCollider.h"
 
+#include <cmath>
+#include <utility>
+
 #include "bullet.h"
 #include "engine/game.h"
 #include "engine/scene.h"
@@ -25,8 +28,20 @@ void TerrainCollider::initialize(const Scene& scene, const Vec2& position, const
 void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
 	if (bullet) {
-		// Remove pixel at collision position
-		manager->removePixel(event.position + bullet->getDirection() * 2.0f);
+		Vec2 newPos = event.position + bullet->getDirection() * 0.1f;
+		const auto [nx, ny] = manager->posToTerrainCoord(newPos);
+		const auto [ox, oy] = manager->posToTerrainCoord(event.position);
+		if (nx != ox && ny != oy) {
+			// newPos is beyond where it should be able to hit,
+			// so we choose the one closest to the original collision position.
+			const int rx = std::round(newPos.x);
+			const int ry = std::round(newPos.y);
+			if (std::abs(rx - newPos.x) > std::abs(ry - newPos.y))
+				manager->removePixel(std::make_pair(ox, ny));
+			else
+				manager->removePixel(std::make_pair(nx, oy));
+		} else
+			manager->removePixel(std::make_pair(nx, ny));
 	}
 }
 
