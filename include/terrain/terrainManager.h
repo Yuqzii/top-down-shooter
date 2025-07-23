@@ -24,12 +24,19 @@ public:
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
 	void removePixel(const Vec2& position);
+	void removePixel(const std::pair<int, int>& position);
 	/*
 	 * @abstract	Removes all pixels in range of the center and recalculates collisions.
 	 * @param	center	Center position to remove from.
 	 * @param	range	The range to remove from. (Radius of circle).
 	 */
 	void removeInRange(const Vec2& center, const int range);
+	/*
+	 * @abstract	Get the array indices of the terrain pixel at the given world position.
+	 * @param	position	Position to translate to indices.
+	 * @return	Array indices of the world position.
+	 */
+	std::pair<int, int> posToTerrainCoord(const Vec2& position) const;
 
 	const Tree2D& getTree() const { return terrainTree; }
 
@@ -63,13 +70,6 @@ private:
 	 */
 	void tryExtendCollider(const std::pair<int, int>& start, const std::pair<int, int>& end,
 						   std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders);
-
-	/*
-	 * @abstract	Get the array indices of the terrain pixel at the given world position.
-	 * @param	position	Position to translate to indices.
-	 * @return	Array indices of the world position.
-	 */
-	std::pair<int, int> posToTerrainCoord(const Vec2& position) const;
 
 	SDL_Color color;
 };

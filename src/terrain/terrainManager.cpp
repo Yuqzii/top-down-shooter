@@ -181,7 +181,12 @@ void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
 }
 
 void TerrainManager::removePixel(const Vec2& position) {
-	const auto [x, y] = posToTerrainCoord(position);
+	const auto pixelPos = posToTerrainCoord(position);
+	removePixel(pixelPos);
+}
+
+void TerrainManager::removePixel(const std::pair<int, int>& position) {
+	const auto [x, y] = position;
 	if (x >= xSize || y >= ySize || !terrainMap[x][y]) return;
 
 	terrainMap[x][y] = false;
