@@ -7,11 +7,10 @@
 #include "engine/scene.h"
 #include "terrain/terrainCollider.h"
 
-TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_,
-							   const SDL_Color& color_, Scene& scene_)
-	: terrainMap{terrainMap_},
-	  xSize{terrainMap.size()},
-	  ySize{terrainMap[0].size()},
+TerrainManager::TerrainManager(const Terrain& terrain, const SDL_Color& color_, Scene& scene_)
+	: terrain{terrain},
+	  xSize{terrain.map.size()},
+	  ySize{terrain.map[0].size()},
 	  color{color_},
 	  scene{scene_} {
 	renderRects.resize(xSize);
@@ -22,7 +21,7 @@ void TerrainManager::updateRender() {
 	for (int x = 0; x < xSize; x++) {
 		for (int y = 0; y < ySize; y++) {
 			// Add render rect if there is terrain at the current position
-			if (terrainMap[x][y]) {
+			if (terrain.map[x][y]) {
 				// Does this pixel need recalculation?
 				if (renderRects[x][y].w != 0) continue;
 
@@ -49,7 +48,7 @@ void TerrainManager::updateCollisions() {
 	for (int x = 0; x < xSize; ++x) {
 		const float xPos = x * pixelSize;
 		for (int y = 0; y < ySize; ++y) {
-			if (!terrainMap[x][y]) continue;
+			if (!terrain.map[x][y]) continue;
 
 			const float yPos = y * pixelSize;
 			const std::pair<int, int> topLeft{xPos, yPos};
@@ -57,10 +56,10 @@ void TerrainManager::updateCollisions() {
 			const std::pair<int, int> botLeft{xPos, yPos + pixelSize};
 			const std::pair<int, int> botRight{xPos + pixelSize, yPos + pixelSize};
 
-			const bool left = x > 0 && terrainMap[x - 1][y];
-			const bool right = x < xSize - 1 && terrainMap[x + 1][y];
-			const bool above = y > 0 && terrainMap[x][y - 1];
-			const bool below = y < ySize - 1 && terrainMap[x][y + 1];
+			const bool left = x > 0 && terrain.map[x - 1][y];
+			const bool right = x < xSize - 1 && terrain.map[x + 1][y];
+			const bool above = y > 0 && terrain.map[x][y - 1];
+			const bool below = y < ySize - 1 && terrain.map[x][y + 1];
 
 			if (left && right && above && below)
 				continue;  // Terrain in all directions
@@ -187,9 +186,9 @@ void TerrainManager::removePixel(const Vec2& position) {
 
 void TerrainManager::removePixel(const std::pair<int, int>& position) {
 	const auto [x, y] = position;
-	if (x >= xSize || y >= ySize || !terrainMap[x][y]) return;
+	if (x >= xSize || y >= ySize || !terrain.map[x][y]) return;
 
-	terrainMap[x][y] = false;
+	terrain.map[x][y] = false;
 	updateRender();
 	updateCollisions();
 }
@@ -209,7 +208,7 @@ void TerrainManager::removeInRange(const Vec2& center, int range) {
 		if (cX + x < 0 || cX + x >= xSize) continue;
 		for (int y = -maxY[std::abs(x)] + 1; y < maxY[std::abs(x)]; ++y) {
 			if (cY + y < 0 || cY + y >= ySize) continue;
-			terrainMap[cX + x][cY + y] = false;
+			terrain.map[cX + x][cY + y] = false;
 		}
 	}
 

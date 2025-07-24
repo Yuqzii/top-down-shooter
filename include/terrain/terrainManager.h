@@ -7,6 +7,7 @@
 #include "SDL2/SDL_rect.h"
 #include "engine/Tree2D.h"
 #include "engine/game.h"
+#include "terrain/terrain.h"
 
 struct SDL_Renderer;
 class Scene;
@@ -16,8 +17,7 @@ class Camera;
 class TerrainManager {
 public:
 	// Must be initialized with a non-empty terrainMap vector
-	TerrainManager(const std::vector<std::vector<char>>& terrainMap, const SDL_Color& color,
-				   Scene& scene);
+	TerrainManager(const Terrain& terrain, const SDL_Color& color, Scene& scene);
 
 	void updateRender();
 	void updateCollisions();
@@ -43,7 +43,7 @@ public:
 private:
 	Scene& scene;
 
-	std::vector<std::vector<char>> terrainMap;
+	Terrain terrain;
 	const size_t xSize, ySize;
 	constexpr static const int pixelSizeMultiplier = 5;
 	constexpr static const int pixelSize = Game::pixelSize * pixelSizeMultiplier;

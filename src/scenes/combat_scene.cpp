@@ -6,7 +6,7 @@
 CombatScene::CombatScene(Game& game_)
 	: Scene{game_},
 	  player{instantiate<Player>(Vec2{700, 400}, &cam)},
-	  terrainManager{terrainMap, SDL_Color{56, 28, 40, 255}, *this} {}
+	  terrainManager{Terrain{terrainMap}, SDL_Color{56, 28, 40, 255}, *this} {}
 
 void CombatScene::initialize() {
 	Scene::initialize();
