@@ -33,6 +33,7 @@ set(SOURCE_FILES
 "src/enemies/spider.cpp"
 "src/terrain/terrainManager.cpp"
 "src/terrain/terrainCollider.cpp"
+"src/terrain/terrainGenerator.cpp"
 )
 
 # Build the game as a static library

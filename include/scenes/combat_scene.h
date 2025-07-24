@@ -18,9 +18,9 @@ public:
 
 	const Player& player;
 	const EnemyManager& getEnemyManager() const { return enemyManager; }
-	const TerrainManager& getTerrainManager() const { return terrainManager; }
+	const TerrainManager& getTerrainManager() const { return *terrainManager.get(); }
 
 private:
 	EnemyManager enemyManager;
-	TerrainManager terrainManager;
+	std::unique_ptr<TerrainManager> terrainManager;
 };

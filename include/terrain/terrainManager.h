@@ -45,7 +45,7 @@ private:
 
 	Terrain terrain;
 	const size_t xSize, ySize;
-	constexpr static const int pixelSizeMultiplier = 5;
+	constexpr static const int pixelSizeMultiplier = 10;
 	constexpr static const int pixelSize = Game::pixelSize * pixelSizeMultiplier;
 
 	std::vector<std::vector<SDL_Rect>> renderRects;
