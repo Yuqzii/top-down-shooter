@@ -6,12 +6,16 @@
 
 class TerrainGenerator {
 public:
-	TerrainGenerator(const unsigned int seed, const int generations, const double fillProb);
+	TerrainGenerator(const unsigned int seed, const int shapeGenerations,
+					 const double shapeFillProb, const int cornerGenerations,
+					 const double cornerFillProb);
 	TerrainGenerator();
 
 	Terrain generateTerrain(const size_t xSize, const size_t ySize, const size_t shapeSize);
 	void setSeed(const unsigned int seed) { this->seed = seed; }
-	void setGenerations(const int generations) { this->shapeGenerations = generations; }
+	void setShapeGenerations(const int generations) { this->shapeGenerations = generations; }
+	void setDetailsGenerations(const int generations) { this->cornerGenerations = generations; }
+	void setBlockSize(const int size) { this->blockSize = size; }
 
 private:
 	unsigned int seed;
@@ -23,7 +27,8 @@ private:
 	Terrain generateShape(const size_t xSize, const size_t ySize) const;
 	unsigned char calculateShape(const size_t x, const size_t y, const Terrain& terrain) const;
 
-	double detailsFillProb;
+	double cornerFillProb;
+	int cornerGenerations;
 	std::vector<std::vector<std::array<bool, 4>>> corners;
 
 	/* Finds all corners (empty cell with at least two neighboring filled cells such
@@ -33,11 +38,12 @@ private:
 	 */
 	std::vector<std::vector<std::array<bool, 4>>> checkCorners(const Terrain& terrain) const;
 
-	Terrain generateDetails(const Terrain& shape);
+	Terrain generateCorners(const Terrain& shape);
 	/* Generates random terrain for corners in terrain. Requires corners variable to
 	 * match the provided terrain.
 	 */
-	void randomDetails(const size_t x, const size_t y, Terrain& terrain) const;
+	void randomCorners(const size_t x, const size_t y, Terrain& terrain) const;
+	unsigned char calculateCorners(const size_t x, const size_t y, const Terrain& terrain) const;
 
 	int getWallCount(const size_t x, const size_t y, const int range, const Terrain& terrain) const;
 	/* Fills every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2
@@ -45,8 +51,10 @@ private:
 	 */
 	void fillAreaRandom(const size_t x1, const size_t y1, const size_t x2, const size_t y2,
 						Terrain& terrain, const double fillProb) const;
+	void fillArea(const size_t x1, const size_t y1, const size_t x2, const size_t y2,
+				  Terrain& terrain, const unsigned char value) const;
 	/* Sets every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2 to the output
-	 * of the func argument.
+	 * of the func parameter.
 	 *
 	 * @param func	Callable function returning unsigned char taking in x and y position,
 	 *				and a Terrain& to calculate the the value for (x, y).
