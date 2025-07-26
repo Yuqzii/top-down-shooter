@@ -1,7 +1,6 @@
 #include "terrain/terrainGenerator.h"
 
 #include <algorithm>
-#include <array>
 #include <cassert>
 #include <cstdlib>
 #include <functional>
@@ -96,13 +95,13 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 				const size_t yMid = y * blockSize + blockSize / 2;
 				const size_t bot = (y + 1) * blockSize;
 
-				if (corners[y][x][Corners::TOP_RIGHT])
+				if (corners[y][x].topRight)
 					calculatePortion(xMid, top, right, yMid, terrain, curTerrain, calc);
-				if (corners[y][x][Corners::BOT_RIGHT])
+				if (corners[y][x].botRight)
 					calculatePortion(xMid, yMid, right, bot, terrain, curTerrain, calc);
-				if (corners[y][x][Corners::BOT_LEFT])
+				if (corners[y][x].botLeft)
 					calculatePortion(left, yMid, xMid, bot, terrain, curTerrain, calc);
-				if (corners[y][x][Corners::TOP_LEFT])
+				if (corners[y][x].topLeft)
 					calculatePortion(left, top, xMid, yMid, terrain, curTerrain, calc);
 			}
 		}
@@ -125,10 +124,10 @@ unsigned char TerrainGenerator::calculateCorners(const size_t x, const size_t y,
 		return 0;
 }
 
-std::vector<std::vector<std::array<bool, 4>>> TerrainGenerator::checkCorners(
+std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorners(
 	const Terrain& terrain) const {
-	std::vector<std::vector<std::array<bool, 4>>> result(
-		terrain.getYSize(), std::vector<std::array<bool, 4>>(terrain.getXSize()));
+	std::vector<std::vector<TerrainGenerator::Corner>> result(
+		terrain.getYSize(), std::vector<TerrainGenerator::Corner>(terrain.getXSize()));
 
 	for (size_t x = 0; x < terrain.getXSize(); x++) {
 		for (size_t y = 0; y < terrain.getYSize(); y++) {
@@ -142,10 +141,10 @@ std::vector<std::vector<std::array<bool, 4>>> TerrainGenerator::checkCorners(
 								 terrain.map[y][x - 1];
 			const bool topLeft = x > 0 && y > 0 && terrain.map[y - 1][x] && terrain.map[y][x - 1];
 
-			result[y][x][Corners::TOP_RIGHT] = topRight;
-			result[y][x][Corners::BOT_RIGHT] = botRight;
-			result[y][x][Corners::BOT_LEFT] = botLeft;
-			result[y][x][Corners::TOP_LEFT] = topLeft;
+			result[y][x].topRight = topRight;
+			result[y][x].botRight = botRight;
+			result[y][x].botLeft = botLeft;
+			result[y][x].topLeft = topLeft;
 		}
 	}
 
@@ -163,14 +162,10 @@ void TerrainGenerator::randomCorners(const size_t x, const size_t y, Terrain& te
 	const size_t yMid = y * blockSize + blockSize / 2;
 	const size_t bot = (y + 1) * blockSize;
 
-	if (corners[y][x][Corners::TOP_RIGHT])
-		fillAreaRandom(xMid, top, right, yMid, terrain, cornerFillProb);
-	if (corners[y][x][Corners::BOT_RIGHT])
-		fillAreaRandom(xMid, yMid, right, bot, terrain, cornerFillProb);
-	if (corners[y][x][Corners::BOT_LEFT])
-		fillAreaRandom(left, yMid, xMid, bot, terrain, cornerFillProb);
-	if (corners[y][x][Corners::TOP_LEFT])
-		fillAreaRandom(left, top, xMid, yMid, terrain, cornerFillProb);
+	if (corners[y][x].topRight) fillAreaRandom(xMid, top, right, yMid, terrain, cornerFillProb);
+	if (corners[y][x].botRight) fillAreaRandom(xMid, yMid, right, bot, terrain, cornerFillProb);
+	if (corners[y][x].botLeft) fillAreaRandom(left, yMid, xMid, bot, terrain, cornerFillProb);
+	if (corners[y][x].topLeft) fillAreaRandom(left, top, xMid, yMid, terrain, cornerFillProb);
 }
 
 void TerrainGenerator::fillAreaRandom(const size_t x1, const size_t y1, const size_t x2,
