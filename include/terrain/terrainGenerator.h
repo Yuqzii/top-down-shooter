@@ -44,6 +44,9 @@ private:
 	int cornerGenerations;
 	std::vector<std::vector<Corner>> corners;
 
+	int detailsGenerations = 2;
+	double detailsRandomness = 0.1;
+
 	/* Finds all corners (empty cell with at least two neighboring filled cells such
 	 * that it is in a corner) in the provided Terrain.
 	 *
@@ -58,6 +61,11 @@ private:
 	 */
 	void randomCorners(const size_t x, const size_t y, Terrain& terrain) const;
 	unsigned char calculateCorners(const size_t x, const size_t y, const Terrain& terrain) const;
+
+	Terrain generateDetails(const Terrain& reference) const;
+	unsigned char calculateDetails(const size_t x, const size_t y, const Terrain& terrain) const;
+	unsigned char randomDetails(const size_t x, const size_t y, const int range, const int wallSize,
+								const Terrain& terrain) const;
 
 	int getWallCount(const size_t x, const size_t y, const int range, const Terrain& terrain) const;
 	/* Fills every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2
