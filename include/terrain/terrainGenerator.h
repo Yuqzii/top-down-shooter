@@ -35,6 +35,7 @@ private:
 	double shapeFillProb;
 	int shapeGenerations;
 	size_t blockSize;
+	std::vector<std::vector<BlockPosition>> blockPositions;
 
 	Terrain generateShape(const size_t xSize, const size_t ySize) const;
 	unsigned char calculateShape(const size_t x, const size_t y, const Terrain& terrain) const;

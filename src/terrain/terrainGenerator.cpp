@@ -69,6 +69,7 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 	Terrain terrain{shape.getXSize() * blockSize, shape.getYSize() * blockSize};
 
 	corners = checkCorners(shape);
+	blockPositions = getBlockPositions(shape);
 
 	for (size_t x = 0; x < shape.getXSize(); x++) {
 		for (size_t y = 0; y < shape.getYSize(); y++) {
@@ -88,21 +89,23 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 		for (size_t x = 0; x < shape.getXSize(); x++) {
 			for (size_t y = 0; y < shape.getYSize(); y++) {
 				if (shape.map[y][x]) continue;
-				const size_t left = x * blockSize;
-				const size_t xMid = x * blockSize + blockSize / 2;
-				const size_t right = (x + 1) * blockSize;
-				const size_t top = y * blockSize;
-				const size_t yMid = y * blockSize + blockSize / 2;
-				const size_t bot = (y + 1) * blockSize;
 
 				if (corners[y][x].topRight)
-					calculatePortion(xMid, top, right, yMid, terrain, curTerrain, calc);
+					calculatePortion(blockPositions[y][x].xMid, blockPositions[y][x].top,
+									 blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
+									 curTerrain, calc);
 				if (corners[y][x].botRight)
-					calculatePortion(xMid, yMid, right, bot, terrain, curTerrain, calc);
+					calculatePortion(blockPositions[y][x].xMid, blockPositions[y][x].yMid,
+									 blockPositions[y][x].right, blockPositions[y][x].bot, terrain,
+									 curTerrain, calc);
 				if (corners[y][x].botLeft)
-					calculatePortion(left, yMid, xMid, bot, terrain, curTerrain, calc);
+					calculatePortion(blockPositions[y][x].left, blockPositions[y][x].yMid,
+									 blockPositions[y][x].xMid, blockPositions[y][x].bot, terrain,
+									 curTerrain, calc);
 				if (corners[y][x].topLeft)
-					calculatePortion(left, top, xMid, yMid, terrain, curTerrain, calc);
+					calculatePortion(blockPositions[y][x].left, blockPositions[y][x].top,
+									 blockPositions[y][x].xMid, blockPositions[y][x].yMid, terrain,
+									 curTerrain, calc);
 			}
 		}
 		terrain = curTerrain;
@@ -126,8 +129,8 @@ unsigned char TerrainGenerator::calculateCorners(const size_t x, const size_t y,
 
 std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorners(
 	const Terrain& terrain) const {
-	std::vector<std::vector<TerrainGenerator::Corner>> result(
-		terrain.getYSize(), std::vector<TerrainGenerator::Corner>(terrain.getXSize()));
+	std::vector<std::vector<Corner>> result(terrain.getYSize(),
+											std::vector<Corner>(terrain.getXSize()));
 
 	for (size_t x = 0; x < terrain.getXSize(); x++) {
 		for (size_t y = 0; y < terrain.getYSize(); y++) {
@@ -151,21 +154,45 @@ std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorner
 	return result;
 }
 
+std::vector<std::vector<TerrainGenerator::BlockPosition>> TerrainGenerator::getBlockPositions(
+	const Terrain& terrain) const {
+	std::vector<std::vector<BlockPosition>> result(terrain.getYSize(),
+												   std::vector<BlockPosition>(terrain.getXSize()));
+
+	for (size_t x = 0; x < terrain.getXSize(); x++) {
+		for (size_t y = 0; y < terrain.getYSize(); y++) {
+			result[y][x].left = x * blockSize;
+			result[y][x].xMid = x * blockSize + blockSize / 2;
+			result[y][x].right = (x + 1) * blockSize;
+			result[y][x].top = y * blockSize;
+			result[y][x].yMid = y * blockSize + blockSize / 2;
+			result[y][x].bot = (y + 1) * blockSize;
+		}
+	}
+
+	return result;
+}
+
 void TerrainGenerator::randomCorners(const size_t x, const size_t y, Terrain& terrain) const {
 	assert(!corners.empty() && x < corners[0].size() && x >= 0 && y < corners.size() && y >= 0 &&
 		   "corners must be generated for position x and y.");
 
-	const size_t left = x * blockSize;
-	const size_t xMid = x * blockSize + blockSize / 2;
-	const size_t right = (x + 1) * blockSize;
-	const size_t top = y * blockSize;
-	const size_t yMid = y * blockSize + blockSize / 2;
-	const size_t bot = (y + 1) * blockSize;
-
-	if (corners[y][x].topRight) fillAreaRandom(xMid, top, right, yMid, terrain, cornerFillProb);
-	if (corners[y][x].botRight) fillAreaRandom(xMid, yMid, right, bot, terrain, cornerFillProb);
-	if (corners[y][x].botLeft) fillAreaRandom(left, yMid, xMid, bot, terrain, cornerFillProb);
-	if (corners[y][x].topLeft) fillAreaRandom(left, top, xMid, yMid, terrain, cornerFillProb);
+	if (corners[y][x].topRight)
+		fillAreaRandom(blockPositions[y][x].xMid, blockPositions[y][x].top,
+					   blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
+					   cornerFillProb);
+	if (corners[y][x].botRight)
+		fillAreaRandom(blockPositions[y][x].xMid, blockPositions[y][x].yMid,
+					   blockPositions[y][x].right, blockPositions[y][x].bot, terrain,
+					   cornerFillProb);
+	if (corners[y][x].botLeft)
+		fillAreaRandom(blockPositions[y][x].left, blockPositions[y][x].yMid,
+					   blockPositions[y][x].xMid, blockPositions[y][x].bot, terrain,
+					   cornerFillProb);
+	if (corners[y][x].topLeft)
+		fillAreaRandom(blockPositions[y][x].left, blockPositions[y][x].top,
+					   blockPositions[y][x].xMid, blockPositions[y][x].yMid, terrain,
+					   cornerFillProb);
 }
 
 void TerrainGenerator::fillAreaRandom(const size_t x1, const size_t y1, const size_t x2,
