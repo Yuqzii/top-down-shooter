@@ -3,7 +3,7 @@
 #include <array>
 #include <cassert>
 #include <cstdlib>
-#include <iostream>
+#include <functional>
 
 TerrainGenerator::TerrainGenerator(const unsigned int seed, const int generations,
 								   const double fillProb)
@@ -28,6 +28,7 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 Terrain TerrainGenerator::generateShape(const size_t xSize, const size_t ySize) const {
 	Terrain terrain{xSize, ySize};
 
+	// Fill entire terrain randomly
 	for (int x = 0; x < xSize; x++) {
 		for (int y = 0; y < ySize; y++) {
 			const double result = static_cast<double>(rand()) / RAND_MAX;
@@ -35,32 +36,20 @@ Terrain TerrainGenerator::generateShape(const size_t xSize, const size_t ySize) 
 		}
 	}
 
-	for (int x = 0; x < xSize; x++) {
-		for (int y = 0; y < ySize; y++) {
-			std::cout << (terrain.map[y][x] == 1 ? "#" : ".");
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n";
-
+	// Calculate the entire terrain per generation
+	auto calc = std::bind(&TerrainGenerator::calculateShape, this, std::placeholders::_1,
+						  std::placeholders::_2, std::placeholders::_3);
 	for (int gen = 0; gen < shapeGenerations; gen++) {
-		auto curMap = terrain.map;
-		for (size_t x = 0; x < xSize; x++) {
-			for (size_t y = 0; y < ySize; y++) {
-				curMap[y][x] = calculateShape(x, y, terrain);
-				std::cout << (curMap[y][x] == 1 ? "#" : ".");
-			}
-			std::cout << "\n";
-		}
-		terrain.map = curMap;
-		std::cout << "\n";
+		Terrain curTerrain = terrain;
+		calculatePortion(0, 0, xSize - 1, ySize - 1, terrain, curTerrain, calc);
+		terrain = curTerrain;
 	}
 
 	return terrain;
 }
 
 unsigned char TerrainGenerator::calculateShape(const size_t x, const size_t y,
-											   Terrain& terrain) const {
+											   const Terrain& terrain) const {
 	constexpr int wallsCloseRange = 1, wallsFarRange = 4;
 	const int wallsClose = getWallCount(x, y, wallsCloseRange, terrain);
 	const int wallsFar = getWallCount(x, y, wallsFarRange, terrain);
@@ -146,6 +135,23 @@ void TerrainGenerator::fillAreaRandom(const size_t x1, const size_t y1, const si
 		for (int y = y1; y <= y2; y++) {
 			const double result = static_cast<double>(rand()) / RAND_MAX;
 			terrain.map[y][x] = result <= fillProb;
+		}
+	}
+}
+
+void TerrainGenerator::calculatePortion(
+	const size_t x1, const size_t y1, const size_t x2, const size_t y2, const Terrain& refTerrain,
+	Terrain& terrain,
+	std::function<unsigned char(const size_t, const size_t, const Terrain&)> func) const {
+	assert(refTerrain.getXSize() == terrain.getXSize() &&
+		   refTerrain.getYSize() == terrain.getYSize() &&
+		   "refTerrain and terrain must be the same size.");
+	assert(x1 >= 0 && x1 < terrain.getXSize() && y1 >= 0 && y1 < terrain.getYSize() &&
+		   "Coordinates must be inside the terrain size.");
+
+	for (size_t x = x1; x <= x2; x++) {
+		for (size_t y = y1; y <= y2; y++) {
+			terrain.map[y][x] = func(x, y, refTerrain);
 		}
 	}
 }
