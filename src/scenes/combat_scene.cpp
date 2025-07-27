@@ -9,13 +9,17 @@
 
 CombatScene::CombatScene(Game& game_)
 	: Scene{game_}, player{instantiate<Player>(Vec2{700, 400}, &cam)} {
-	const unsigned int mapSeed = std::time({});
-	constexpr int shapeGenerations = 5;
-	constexpr double shapeFillProb = 0.2;
-	constexpr int detailsGenerations = 3;
-	constexpr double detailsFillProb = 0.4;
-	TerrainGenerator gen{mapSeed, shapeGenerations, shapeFillProb, detailsGenerations,
-						 detailsFillProb};
+	TerrainGenerator gen;
+	gen.setShapeGenerations(5);
+	gen.setShapeFillProb(0.2);
+	gen.setShapeWallRandomness(0.4);
+	gen.setShapeConsecutiveWallRange(1);
+	gen.setShapeMinConsecutiveWall(3);
+	gen.setCornerFillProb(0.3);
+	gen.setCornerGenerations(3);
+	gen.setDetailsGenerations(2);
+
+	gen.setSeed(std::time({}));
 	Terrain terrain = gen.generateTerrain(500, 500, 10);
 
 	terrainManager = std::make_unique<TerrainManager>(terrain, SDL_Color{56, 28, 40, 255}, *this);

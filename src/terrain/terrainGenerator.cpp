@@ -21,9 +21,6 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 										  const size_t shapeSize) {
 	assert(xSize % shapeSize == 0 && ySize % shapeSize == 0 &&
 		   "shapeSize must divide xSize and ySize.");
-
-	srand(seed);
-
 	blockSize = shapeSize;
 
 	Terrain shape = generateShape(xSize / shapeSize, ySize / shapeSize);
@@ -52,8 +49,8 @@ Terrain TerrainGenerator::generateShape(const size_t xSize, const size_t ySize) 
 	Terrain terrain{xSize, ySize};
 
 	// Fill entire terrain randomly
-	for (int x = 0; x < xSize; x++) {
-		for (int y = 0; y < ySize; y++) {
+	for (size_t x = 0; x < xSize; x++) {
+		for (size_t y = 0; y < ySize; y++) {
 			const double result = static_cast<double>(rand()) / RAND_MAX;
 			terrain.map[y][x] = result <= shapeFillProb;
 		}
@@ -66,6 +63,14 @@ Terrain TerrainGenerator::generateShape(const size_t xSize, const size_t ySize) 
 		Terrain curTerrain = terrain;
 		calculatePortion(0, 0, xSize - 1, ySize - 1, terrain, curTerrain, calc);
 		terrain = curTerrain;
+	}
+
+	for (size_t x = 1; x < xSize - 1; x++) {
+		for (size_t y = 1; y < ySize - 1; y++) {
+			terrain.map[y][x] =
+				randomizeConsecutiveWall(x, y, shapeConsecutiveWallRange, shapeMinConsecutiveWall,
+										 shapeWallRandomness, terrain);
+		}
 	}
 
 	return terrain;
@@ -228,7 +233,7 @@ Terrain TerrainGenerator::generateDetails(const Terrain& reference) const {
 	Terrain newTerrain = terrain;
 	for (size_t x = 1; x < terrain.getXSize() - 1; x++) {
 		for (size_t y = 1; y < terrain.getYSize() - 1; y++) {
-			newTerrain.map[y][x] = randomDetails(x, y, 3, 3, terrain);
+			// newTerrain.map[y][x] = randomDetails(x, y, 3, 3, terrain);
 		}
 	}
 	terrain = newTerrain;
@@ -245,70 +250,6 @@ unsigned char TerrainGenerator::calculateDetails(const size_t x, const size_t y,
 		return 0;
 	else
 		return 1;
-}
-
-unsigned char TerrainGenerator::randomDetails(const size_t x, const size_t y, const int range,
-											  const int wallSize, const Terrain& terrain) const {
-	assert(y < terrain.getYSize() - 1 && y > 0 &&
-		   "There must be at least one cell above and below.");
-	assert(x < terrain.getXSize() - 1 && x > 0 &&
-		   "There must be at least one cell to the left and right.");
-
-	auto checkVertical = [&terrain, x](const size_t y) -> bool {
-		const bool above = terrain.map[y - 1][x];
-		const bool right = terrain.map[y][x + 1];
-		const bool below = terrain.map[y + 1][x];
-		const bool left = terrain.map[y][x - 1];
-
-		return ((above && below) && (left != right));
-	};
-	int vertical = 0;
-	for (size_t v = y; v >= std::max(y - range, static_cast<size_t>(1)); v--) {
-		if (checkVertical(v))
-			++vertical;
-		else
-			break;
-	}
-	for (size_t v = y + 1; v <= std::min(y + range, terrain.getYSize() - 2); v++) {
-		if (checkVertical(v))
-			++vertical;
-		else
-			break;
-	}
-
-	if (vertical >= wallSize) {
-		const double result = static_cast<double>(rand()) / RAND_MAX;
-		return result <= detailsRandomness;
-	}
-
-	auto checkHorizontal = [&terrain, y](const size_t x) -> bool {
-		const bool above = terrain.map[y - 1][x];
-		const bool right = terrain.map[y][x + 1];
-		const bool below = terrain.map[y + 1][x];
-		const bool left = terrain.map[y][x - 1];
-
-		return ((left && right) && (above != below));
-	};
-	int horizontal = 0;
-	for (size_t h = x; h >= std::max(x - range, static_cast<size_t>(1)); h--) {
-		if (checkHorizontal(h))
-			++horizontal;
-		else
-			break;
-	}
-	for (size_t h = x + 1; h <= std::min(x + range, terrain.getXSize() - 2); h++) {
-		if (checkHorizontal(h))
-			++horizontal;
-		else
-			break;
-	}
-
-	if (horizontal >= wallSize) {
-		const double result = static_cast<double>(rand()) / RAND_MAX;
-		return result <= detailsRandomness;
-	}
-
-	return terrain.map[y][x];
 }
 
 void TerrainGenerator::fillAreaRandom(const size_t x1, const size_t y1, const size_t x2,
@@ -353,6 +294,73 @@ void TerrainGenerator::calculatePortion(
 		}
 	}
 }
+
+unsigned char TerrainGenerator::randomizeConsecutiveWall(const size_t x, const size_t y,
+														 const int range, const int wallLength,
+														 const double prob,
+														 const Terrain& terrain) const {
+	assert(y < terrain.getYSize() - 1 && y > 0 &&
+		   "There must be at least one cell above and below.");
+	assert(x < terrain.getXSize() - 1 && x > 0 &&
+		   "There must be at least one cell to the left and right.");
+
+	auto checkVertical = [&terrain, x](const size_t y) -> bool {
+		const bool above = terrain.map[y - 1][x];
+		const bool right = terrain.map[y][x + 1];
+		const bool below = terrain.map[y + 1][x];
+		const bool left = terrain.map[y][x - 1];
+
+		return ((above && below) && (left != right));
+	};
+	int vertical = 0;
+	for (size_t v = y; v >= std::max(y - range, static_cast<size_t>(1)); v--) {
+		if (checkVertical(v))
+			++vertical;
+		else
+			break;
+	}
+	for (size_t v = y + 1; v <= std::min(y + range, terrain.getYSize() - 2); v++) {
+		if (checkVertical(v))
+			++vertical;
+		else
+			break;
+	}
+
+	if (vertical >= wallLength) {
+		const double result = static_cast<double>(rand()) / RAND_MAX;
+		return result <= prob;
+	}
+
+	auto checkHorizontal = [&terrain, y](const size_t x) -> bool {
+		const bool above = terrain.map[y - 1][x];
+		const bool right = terrain.map[y][x + 1];
+		const bool below = terrain.map[y + 1][x];
+		const bool left = terrain.map[y][x - 1];
+
+		return ((left && right) && (above != below));
+	};
+	int horizontal = 0;
+	for (size_t h = x; h >= std::max(x - range, static_cast<size_t>(1)); h--) {
+		if (checkHorizontal(h))
+			++horizontal;
+		else
+			break;
+	}
+	for (size_t h = x + 1; h <= std::min(x + range, terrain.getXSize() - 2); h++) {
+		if (checkHorizontal(h))
+			++horizontal;
+		else
+			break;
+	}
+
+	if (horizontal >= wallLength) {
+		const double result = static_cast<double>(rand()) / RAND_MAX;
+		return result <= prob;
+	}
+
+	return terrain.map[y][x];
+}
+
 
 int TerrainGenerator::getWallCount(const size_t midX, const size_t midY, const int range,
 								   const Terrain& terrain) const {

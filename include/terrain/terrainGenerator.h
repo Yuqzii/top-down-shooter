@@ -12,10 +12,18 @@ public:
 	TerrainGenerator();
 
 	Terrain generateTerrain(const size_t xSize, const size_t ySize, const size_t shapeSize);
+
 	void setSeed(const unsigned int seed) { this->seed = seed; }
+	void setShapeFillProb(const double prob) { this->shapeFillProb = prob; }
 	void setShapeGenerations(const int generations) { this->shapeGenerations = generations; }
-	void setDetailsGenerations(const int generations) { this->cornerGenerations = generations; }
-	void setBlockSize(const int size) { this->blockSize = size; }
+	void setShapeConsecutiveWallRange(const int range) { this->shapeConsecutiveWallRange = range; }
+	void setShapeMinConsecutiveWall(const int value) { this->shapeMinConsecutiveWall = value; }
+	void setShapeWallRandomness(const double value) { this->shapeWallRandomness = value; }
+
+	void setCornerFillProb(const double prob) { this->cornerFillProb = prob; }
+	void setCornerGenerations(const int generations) { this->cornerGenerations = generations; }
+
+	void setDetailsGenerations(const int generations) { this->detailsGenerations = generations; }
 
 private:
 	struct Corner {
@@ -34,6 +42,9 @@ private:
 
 	double shapeFillProb;
 	int shapeGenerations;
+	int shapeConsecutiveWallRange;
+	int shapeMinConsecutiveWall;
+	double shapeWallRandomness;
 	size_t blockSize;
 	std::vector<std::vector<BlockPosition>> blockPositions;
 
@@ -44,8 +55,7 @@ private:
 	int cornerGenerations;
 	std::vector<std::vector<Corner>> corners;
 
-	int detailsGenerations = 2;
-	double detailsRandomness = 0.1;
+	int detailsGenerations;
 
 	/* Finds all corners (empty cell with at least two neighboring filled cells such
 	 * that it is in a corner) in the provided Terrain.
@@ -64,8 +74,6 @@ private:
 
 	Terrain generateDetails(const Terrain& reference) const;
 	unsigned char calculateDetails(const size_t x, const size_t y, const Terrain& terrain) const;
-	unsigned char randomDetails(const size_t x, const size_t y, const int range, const int wallSize,
-								const Terrain& terrain) const;
 
 	int getWallCount(const size_t x, const size_t y, const int range, const Terrain& terrain) const;
 	/* Fills every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2
@@ -85,4 +93,16 @@ private:
 		const size_t x1, const size_t y1, const size_t x2, const size_t y2,
 		const Terrain& refTerrain, Terrain& terrain,
 		std::function<unsigned char(const size_t, const size_t, const Terrain&)> func) const;
+
+	/* Checks if the location (x, y) is part of a straight horizontal or vertical wall with minimum
+	 * length wallLength.
+	 *
+	 * @param range			How far in each direction to check for walls.
+	 * @param wallLength	Minimum length the wall must have for the randomization to occur.
+	 * @param prob			The probability of the wall remaining a wall if it matches the previous
+	 *						requirements.
+	 */
+	unsigned char randomizeConsecutiveWall(const size_t x, const size_t y, const int range,
+										   const int wallLength, const double prob,
+										   const Terrain& terrain) const;
 };
