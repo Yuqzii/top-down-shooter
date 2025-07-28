@@ -22,6 +22,8 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 	assert(xSize % shapeSize == 0 && ySize % shapeSize == 0 &&
 		   "shapeSize must divide xSize and ySize.");
 
+	srand(seed);
+
 	blockSize = shapeSize;
 
 	Terrain shape = generateShape(xSize / shapeSize, ySize / shapeSize);
