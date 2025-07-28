@@ -21,6 +21,7 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 										  const size_t shapeSize) {
 	assert(xSize % shapeSize == 0 && ySize % shapeSize == 0 &&
 		   "shapeSize must divide xSize and ySize.");
+
 	blockSize = shapeSize;
 
 	Terrain shape = generateShape(xSize / shapeSize, ySize / shapeSize);
@@ -78,14 +79,10 @@ Terrain TerrainGenerator::generateShape(const size_t xSize, const size_t ySize) 
 
 unsigned char TerrainGenerator::calculateShape(const size_t x, const size_t y,
 											   const Terrain& terrain) const {
-	constexpr int wallsCloseRange = 1, wallsFarRange = 4;
-	const int wallsClose = getWallCount(x, y, wallsCloseRange, terrain);
-	const int wallsFar = getWallCount(x, y, wallsFarRange, terrain);
+	const int wallsClose = getWallCount(x, y, shapeCalcCloseRange, terrain);
+	const int wallsFar = getWallCount(x, y, shapeCalcFarRange, terrain);
 
-	if (wallsClose >= 5 || wallsFar <= 15)
-		return 1;
-	else
-		return 0;
+	return wallsClose >= shapeCalcMinCloseFill || wallsFar <= shapeCalcMaxFarFill;
 }
 
 Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
@@ -139,15 +136,9 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 
 unsigned char TerrainGenerator::calculateCorners(const size_t x, const size_t y,
 												 const Terrain& terrain) const {
-	constexpr int closeRange = 1;
-	constexpr int farRange = 4;
-	const int close = getWallCount(x, y, closeRange, terrain);
-	const int far = getWallCount(x, y, farRange, terrain);
+	const int count = getWallCount(x, y, cornerCalcRange, terrain);
 
-	if (close >= 3)
-		return 1;
-	else
-		return 0;
+	return count >= cornerCalcMinFill;
 }
 
 std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorners(
@@ -244,12 +235,9 @@ Terrain TerrainGenerator::generateDetails(const Terrain& reference) const {
 unsigned char TerrainGenerator::calculateDetails(const size_t x, const size_t y,
 												 const Terrain& terrain) const {
 	constexpr int closeRange = 2;
-	const int close = getWallCount(x, y, closeRange, terrain);
+	const int count = getWallCount(x, y, detailsCalcRange, terrain);
 
-	if (close <= 7)
-		return 0;
-	else
-		return 1;
+	return count >= detailsCalcMinFill;
 }
 
 void TerrainGenerator::fillAreaRandom(const size_t x1, const size_t y1, const size_t x2,
@@ -360,7 +348,6 @@ unsigned char TerrainGenerator::randomizeConsecutiveWall(const size_t x, const s
 
 	return terrain.map[y][x];
 }
-
 
 int TerrainGenerator::getWallCount(const size_t midX, const size_t midY, const int range,
 								   const Terrain& terrain) const {

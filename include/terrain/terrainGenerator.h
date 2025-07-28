@@ -13,17 +13,30 @@ public:
 
 	Terrain generateTerrain(const size_t xSize, const size_t ySize, const size_t shapeSize);
 
-	void setSeed(const unsigned int seed) { this->seed = seed; }
-	void setShapeFillProb(const double prob) { this->shapeFillProb = prob; }
-	void setShapeGenerations(const int generations) { this->shapeGenerations = generations; }
-	void setShapeConsecutiveWallRange(const int range) { this->shapeConsecutiveWallRange = range; }
-	void setShapeMinConsecutiveWall(const int value) { this->shapeMinConsecutiveWall = value; }
-	void setShapeWallRandomness(const double value) { this->shapeWallRandomness = value; }
+	unsigned int seed;
 
-	void setCornerFillProb(const double prob) { this->cornerFillProb = prob; }
-	void setCornerGenerations(const int generations) { this->cornerGenerations = generations; }
+	double shapeFillProb;
+	int shapeGenerations;
+	int shapeConsecutiveWallRange;
+	int shapeMinConsecutiveWall;
+	double shapeWallRandomness;
+	int shapeCalcCloseRange;
+	int shapeCalcFarRange;
+	// Minimum amount of filled cells within close range to fill the current cell.
+	int shapeCalcMinCloseFill;
+	// Maximum amount of filled cells within far range to fill the current cell.
+	int shapeCalcMaxFarFill;
 
-	void setDetailsGenerations(const int generations) { this->detailsGenerations = generations; }
+	double cornerFillProb;
+	int cornerGenerations;
+	int cornerCalcRange;
+	// Minimum amount of filled cells within range to fill the current cell.
+	int cornerCalcMinFill;
+
+	int detailsGenerations;
+	int detailsCalcRange;
+	// Minimum amount of filled cells within range to fill the current cell.
+	int detailsCalcMinFill;
 
 private:
 	struct Corner {
@@ -38,25 +51,13 @@ private:
 		size_t top, yMid, bot;
 	};
 
-	unsigned int seed;
-
-	double shapeFillProb;
-	int shapeGenerations;
-	int shapeConsecutiveWallRange;
-	int shapeMinConsecutiveWall;
-	double shapeWallRandomness;
 	size_t blockSize;
-	std::vector<std::vector<BlockPosition>> blockPositions;
 
 	Terrain generateShape(const size_t xSize, const size_t ySize) const;
 	unsigned char calculateShape(const size_t x, const size_t y, const Terrain& terrain) const;
 
-	double cornerFillProb;
-	int cornerGenerations;
+	std::vector<std::vector<BlockPosition>> blockPositions;
 	std::vector<std::vector<Corner>> corners;
-
-	int detailsGenerations;
-
 	/* Finds all corners (empty cell with at least two neighboring filled cells such
 	 * that it is in a corner) in the provided Terrain.
 	 *

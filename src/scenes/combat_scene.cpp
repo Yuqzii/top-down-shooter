@@ -10,16 +10,29 @@
 CombatScene::CombatScene(Game& game_)
 	: Scene{game_}, player{instantiate<Player>(Vec2{700, 400}, &cam)} {
 	TerrainGenerator gen;
-	gen.setShapeGenerations(5);
-	gen.setShapeFillProb(0.2);
-	gen.setShapeWallRandomness(0.4);
-	gen.setShapeConsecutiveWallRange(1);
-	gen.setShapeMinConsecutiveWall(3);
-	gen.setCornerFillProb(0.3);
-	gen.setCornerGenerations(3);
-	gen.setDetailsGenerations(2);
+	// Shape parameters
+	gen.shapeFillProb = 0.2;
+	gen.shapeGenerations = 5;
+	gen.shapeCalcCloseRange = 1;
+	gen.shapeCalcFarRange = 4;
+	gen.shapeCalcMinCloseFill = 5;
+	gen.shapeCalcMaxFarFill = 15;
+	gen.shapeWallRandomness = 0.4;
+	gen.shapeConsecutiveWallRange = 1;
+	gen.shapeMinConsecutiveWall = 3;
 
-	gen.setSeed(std::time({}));
+	// Corner parameters
+	gen.cornerFillProb = 0.3;
+	gen.cornerGenerations = 3;
+	gen.cornerCalcRange = 1;
+	gen.cornerCalcMinFill = 3;
+
+	// Details parameters
+	gen.detailsGenerations = 2;
+	gen.detailsCalcRange = 2;
+	gen.detailsCalcMinFill = 8;
+
+	gen.seed = std::time({});
 	Terrain terrain = gen.generateTerrain(500, 500, 10);
 
 	terrainManager = std::make_unique<TerrainManager>(terrain, SDL_Color{56, 28, 40, 255}, *this);
