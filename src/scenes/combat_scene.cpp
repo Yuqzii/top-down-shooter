@@ -17,18 +17,18 @@ CombatScene::CombatScene(Game& game_)
 	gen.shapeCalcFarRange = 4;
 	gen.shapeCalcMinCloseFill = 5;
 	gen.shapeCalcMaxFarFill = 15;
-	gen.shapeWallRandomness = 0.4;
-	gen.shapeConsecutiveWallRange = 1;
-	gen.shapeMinConsecutiveWall = 3;
+	gen.shapeWallRandomness = 0.3;
+	gen.shapeConsecutiveWallRange = 2;
+	gen.shapeMinConsecutiveWall = 2;
 
 	// Corner parameters
 	gen.cornerFillProb = 0.3;
 	gen.cornerGenerations = 3;
 	gen.cornerCalcRange = 1;
-	gen.cornerCalcMinFill = 3;
+	gen.cornerCalcMinFill = 4;
 
 	// Details parameters
-	gen.detailsGenerations = 2;
+	gen.detailsGenerations = 1;
 	gen.detailsCalcRange = 2;
 	gen.detailsCalcMinFill = 8;
 
