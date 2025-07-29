@@ -27,24 +27,11 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 	blockSize = shapeSize;
 
 	Terrain shape = generateShape(xSize / shapeSize, ySize / shapeSize);
-	for (size_t x = 0; x < shape.getXSize(); x++) {
-		for (size_t y = 0; y < shape.getYSize(); y++) std::cout << (shape.map[y][x] ? '#' : '.');
-		std::cout << '\n';
-	}
-	std::cout << '\n';
+	outputTerrain(shape);
 	Terrain corners = generateCorners(shape);
-	for (size_t x = 0; x < corners.getXSize(); x++) {
-		for (size_t y = 0; y < corners.getYSize(); y++)
-			std::cout << (corners.map[y][x] ? '#' : '.');
-		std::cout << '\n';
-	}
-	std::cout << '\n';
+	outputTerrain(corners);
 	Terrain details = generateDetails(corners);
-	for (size_t x = 0; x < details.getXSize(); x++) {
-		for (size_t y = 0; y < details.getYSize(); y++)
-			std::cout << (details.map[y][x] ? '#' : '.');
-		std::cout << '\n';
-	}
+	outputTerrain(details);
 	return details;
 }
 
@@ -367,4 +354,13 @@ int TerrainGenerator::getWallCount(const size_t midX, const size_t midY, const i
 	}
 
 	return result;
+}
+
+void TerrainGenerator::outputTerrain(const Terrain& terrain) {
+	for (size_t x = 0; x < terrain.getXSize(); x++) {
+		for (size_t y = 0; y < terrain.getYSize(); y++)
+			std::cout << (terrain.map[y][x] ? '#' : '.');
+		std::cout << '\n';
+	}
+	std::cout << '\n';
 }

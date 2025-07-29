@@ -106,4 +106,6 @@ private:
 	unsigned char randomizeConsecutiveWall(const size_t x, const size_t y, const int range,
 										   const int wallLength, const double prob,
 										   const Terrain& terrain) const;
+
+	void outputTerrain(const Terrain& terrain);
 };
