@@ -97,8 +97,6 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 		Terrain curTerrain = terrain;
 		for (size_t x = 0; x < shape.getXSize(); x++) {
 			for (size_t y = 0; y < shape.getYSize(); y++) {
-				if (shape.map[y][x]) continue;
-
 				if (corners[y][x].topRight)
 					calculatePortion(blockPositions[y][x].xMid, blockPositions[y][x].top,
 									 blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
@@ -137,20 +135,21 @@ std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorner
 
 	for (size_t x = 0; x < terrain.getXSize(); x++) {
 		for (size_t y = 0; y < terrain.getYSize(); y++) {
-			if (terrain.map[y][x]) continue;
-
-			const bool topRight = x < terrain.getXSize() - 1 && y > 0 && terrain.map[y - 1][x] &&
-								  terrain.map[y][x + 1];
-			const bool botRight = x < terrain.getXSize() - 1 && y < terrain.getYSize() - 1 &&
-								  terrain.map[y + 1][x] && terrain.map[y][x + 1];
-			const bool botLeft = x > 0 && y < terrain.getYSize() - 1 && terrain.map[y + 1][x] &&
-								 terrain.map[y][x - 1];
-			const bool topLeft = x > 0 && y > 0 && terrain.map[y - 1][x] && terrain.map[y][x - 1];
-
-			result[y][x].topRight = topRight;
-			result[y][x].botRight = botRight;
-			result[y][x].botLeft = botLeft;
-			result[y][x].topLeft = topLeft;
+			const bool above = y > 0 && terrain.map[y - 1][x];
+			const bool below = y < terrain.getYSize() - 1 && terrain.map[y + 1][x];
+			const bool right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
+			const bool left = x > 0 && terrain.map[y][x - 1];
+			if (terrain.map[y][x]) {
+				result[y][x].topRight =!above && !right;
+				result[y][x].botRight =!below && !right;
+				result[y][x].botLeft = !below && !left;
+				result[y][x].topLeft = !above && !left;
+			} else {
+				result[y][x].topRight = above && right;
+				result[y][x].botRight = below && right;
+				result[y][x].botLeft = below && left;
+				result[y][x].topLeft = above && left;
+			}
 		}
 	}
 
@@ -166,10 +165,10 @@ std::vector<std::vector<TerrainGenerator::BlockPosition>> TerrainGenerator::getB
 		for (size_t y = 0; y < terrain.getYSize(); y++) {
 			result[y][x].left = x * blockSize;
 			result[y][x].xMid = x * blockSize + blockSize / 2;
-			result[y][x].right = (x + 1) * blockSize;
+			result[y][x].right = (x + 1) * blockSize - 1;
 			result[y][x].top = y * blockSize;
 			result[y][x].yMid = y * blockSize + blockSize / 2;
-			result[y][x].bot = (y + 1) * blockSize;
+			result[y][x].bot = (y + 1) * blockSize - 1;
 		}
 	}
 
