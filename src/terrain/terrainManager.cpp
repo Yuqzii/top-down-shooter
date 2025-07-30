@@ -7,33 +7,16 @@
 #include "engine/scene.h"
 #include "terrain/terrainCollider.h"
 
-TerrainManager::TerrainManager(const Terrain& terrain, const SDL_Color& color_, Scene& scene_)
-	: terrain{terrain},
-	  xSize{terrain.map.size()},
-	  ySize{terrain.map[0].size()},
-	  color{color_},
-	  scene{scene_} {
-	renderRects.resize(xSize);
-	for (auto& rectList : renderRects) rectList.resize(ySize);
+TerrainManager::TerrainManager(const Terrain& terrain, const int chunkSize,
+							   const int pixelSizeMultiplier, const SDL_Color& color_,
+							   Scene& scene_)
+	: pixelSize{Game::pixelSize * pixelSizeMultiplier}, color{color_}, scene{scene_} {
+	renderRects.resize(terrain.getYSize());
+	for (auto& rectList : renderRects) rectList.resize(terrain.getXSize());
 }
 
 void TerrainManager::updateRender() {
-	for (int x = 0; x < xSize; x++) {
-		for (int y = 0; y < ySize; y++) {
-			// Add render rect if there is terrain at the current position
-			if (terrain.map[x][y]) {
-				// Does this pixel need recalculation?
-				if (renderRects[x][y].w != 0) continue;
-
-				renderRects[x][y].x = x * pixelSize;
-				renderRects[x][y].y = y * pixelSize;
-				renderRects[x][y].w = renderRects[x][y].h = pixelSize;
-			} else {
-				// Zero rect so that is is not rendered
-				renderRects[x][y].w = renderRects[x][y].h = 0;
-			}
-		}
-	}
+	for (auto& vec : chunks) for (auto& chunk : vec) chunk->updateRender(pixelSize);
 }
 
 void TerrainManager::updateCollisions() {
@@ -220,4 +203,13 @@ std::pair<int, int> TerrainManager::posToTerrainCoord(const Vec2& position) cons
 	const int x = position.x / pixelSize;
 	const int y = position.y / pixelSize;
 	return std::move(std::pair<int, int>{x, y});
+}
+
+std::vector<std::vector<std::unique_ptr<Chunk>>> splitToChunks(const Terrain& terrain,
+															   const int chunkSize) {
+	assert(terrain.getXSize() % chunkSize == 0 && terrain.getYSize() % chunkSize == 0 &&
+		   "chunkSize must divide terrain x- and y-size.");
+
+	std::vector<std::vector<Chunk>> result(terrain.getYSize() / chunkSize,
+										   std::vector<Chunk>(terrain.getXSize() / chunkSize));
 }
