@@ -4,7 +4,6 @@
 #include <cassert>
 #include <cstdlib>
 #include <functional>
-#include <iostream>
 
 TerrainGenerator::TerrainGenerator(const unsigned int seed, const int shapeGenerations,
 								   const double shapeFillProb, const int detailsGenerations,
@@ -27,11 +26,11 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 	blockSize = shapeSize;
 
 	Terrain shape = generateShape(xSize / shapeSize, ySize / shapeSize);
-	outputTerrain(shape);
+	shape.printTerrain();
 	Terrain corners = generateCorners(shape);
-	outputTerrain(corners);
+	corners.printTerrain();
 	Terrain details = generateDetails(corners);
-	outputTerrain(details);
+	details.printTerrain();
 	return details;
 }
 
@@ -140,8 +139,8 @@ std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorner
 			const bool right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
 			const bool left = x > 0 && terrain.map[y][x - 1];
 			if (terrain.map[y][x]) {
-				result[y][x].topRight =!above && !right;
-				result[y][x].botRight =!below && !right;
+				result[y][x].topRight = !above && !right;
+				result[y][x].botRight = !below && !right;
 				result[y][x].botLeft = !below && !left;
 				result[y][x].topLeft = !above && !left;
 			} else {
@@ -353,13 +352,4 @@ int TerrainGenerator::getWallCount(const size_t midX, const size_t midY, const i
 	}
 
 	return result;
-}
-
-void TerrainGenerator::outputTerrain(const Terrain& terrain) {
-	for (size_t x = 0; x < terrain.getXSize(); x++) {
-		for (size_t y = 0; y < terrain.getYSize(); y++)
-			std::cout << (terrain.map[y][x] ? '#' : '.');
-		std::cout << '\n';
-	}
-	std::cout << '\n';
 }
