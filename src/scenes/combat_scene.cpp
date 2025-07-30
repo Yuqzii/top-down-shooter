@@ -42,7 +42,7 @@ void CombatScene::initialize() {
 	Scene::initialize();
 
 	enemyManager = EnemyManager();
-	terrainManager->updateCollisions();
+	terrainManager->updateColliders();
 	terrainManager->updateRender();
 }
 
