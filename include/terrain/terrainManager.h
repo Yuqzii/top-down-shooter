@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "SDL2/SDL_pixels.h"
-#include "SDL2/SDL_rect.h"
 #include "engine/Tree2D.h"
 #include "engine/game.h"
 #include "terrain/terrain.h"
@@ -23,41 +22,41 @@ public:
 	void updateColliders();
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
-	/* Creates a TerrainCollider at the middle point between start and end,
-	 * with a line collider from start to end.
-	 * @param start Start position of LineCollider.
-	 * @param end End position of LineCollider.
-	 * @param scene The scene to create the collider in.
-	 */
-	void createCollider(const Vec2& start, const Vec2& end);
-
-	void removePixel(const Vec2& position);
-	void removePixel(const std::pair<int, int>& position);
+	void setCell(const Vec2& position, const unsigned char value);
+	void setCell(const std::pair<int, int>& position, const unsigned char value);
 	/* Removes all pixels in range of the center and recalculates collisions.
 	 *
 	 * @param center Center position to remove from.
 	 * @param range The range to remove from. (Radius of circle).
 	 */
-	void removeInRange(const Vec2& center, const int range);
+	void setCellsInRange(const Vec2& center, int range, const unsigned char value);
 	/* Get the array indices of the terrain pixel at the given world position.
 	 *
 	 * @param position Position to translate to indices.
 	 * @return Array indices of the world position.
 	 */
-	std::pair<int, int> posToTerrainCoord(const Vec2& position) const;
+	std::pair<std::size_t, std::size_t> posToTerrainCoord(const Vec2& position) const;
 
+	std::size_t getChunksX() const { return chunks[0].size(); }
+	std::size_t getChunksY() const { return chunks.size(); }
 	int getPixelSize() const { return pixelSize; }
 	const Tree2D& getTree() const { return terrainTree; }
+	Scene& getScene() const { return scene; }
 
 private:
 	Scene& scene;
 
+	int pixelSize;
+
+	const int chunkSize;
+	const size_t terrainXSize;
+	const size_t terrainYSize;
 	std::vector<std::vector<std::unique_ptr<Chunk>>> chunks;
 	std::vector<std::vector<std::unique_ptr<Chunk>>> splitToChunks(const Terrain& terrain,
 																   const int chunkSize);
-	int pixelSize;
+	std::pair<std::size_t, std::size_t> posToChunk(
+		const std::pair<std::size_t, std::size_t>& pos) const;
 
-	std::vector<std::vector<SDL_Rect>> renderRects;
 
 	std::vector<GameObject*> terrainColliders;
 	Tree2D terrainTree;

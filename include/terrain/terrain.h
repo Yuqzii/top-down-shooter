@@ -11,5 +11,5 @@ struct Terrain {
 	size_t getXSize() const { return map[0].size(); }
 	size_t getYSize() const { return map.size(); }
 
-	void printTerrain();
+	void printTerrain() const;
 };

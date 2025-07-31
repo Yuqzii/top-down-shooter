@@ -5,6 +5,7 @@
 #include "SDL2/SDL.h"
 #include "engine/scene.h"
 #include "scenes/combat_scene.h"
+#include "terrain/chunk.h"
 
 Game::Game(const char* title, const int width, const int height)
 	: winDimensions{width, height},

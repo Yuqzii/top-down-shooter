@@ -35,6 +35,7 @@ set(SOURCE_FILES
 "src/terrain/terrainCollider.cpp"
 "src/terrain/terrainGenerator.cpp"
 "src/terrain/terrain.cpp"
+"src/terrain/chunk.cpp"
 )
 
 # Build the game as a static library

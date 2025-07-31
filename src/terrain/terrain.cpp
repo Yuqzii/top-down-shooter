@@ -8,7 +8,7 @@ Terrain::Terrain(const size_t xSize, const size_t ySize) {
 
 Terrain::Terrain(const std::vector<std::vector<unsigned char>>& map) : map{map} {}
 
-void Terrain::printTerrain() {
+void Terrain::printTerrain() const {
 	for (size_t x = 0; x < getXSize(); x++) {
 		for (size_t y = 0; y < getYSize(); y++)
 			std::cout << (map[y][x] ? '#' : '.');
