@@ -15,7 +15,8 @@ class Camera;
 
 class Chunk {
 public:
-	Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size_t originX, const std::size_t originY, TerrainManager& manager);
+	Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size_t originX,
+		  const std::size_t originY, TerrainManager& manager);
 
 	/* Sets the cell at position (x, y) to value.
 	 * x and y position is relative to this chunk.
@@ -28,11 +29,11 @@ public:
 	void updateRender(const int pixelSize);
 	void updateColliders();
 
-	const TerrainManager& getManager() const { return manager; }
+	TerrainManager& getManager() const { return manager; }
 	const Terrain& getTerrain() const { return terrain; }
 
 private:
-	const TerrainManager& manager;
+	TerrainManager& manager;
 
 	Terrain terrain;
 	const std::size_t originX;

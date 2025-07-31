@@ -10,14 +10,14 @@
 #include "terrain/chunk.h"
 #include "terrain/terrainCollider.h"
 
-TerrainManager::TerrainManager(const Terrain& terrain, const int chunkSize,
+TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
 							   const int pixelSizeMultiplier, const SDL_Color& color_,
 							   Scene& scene_)
 	: chunkSize{chunkSize},
 	  pixelSize{Game::pixelSize * pixelSizeMultiplier},
 	  color{color_},
 	  scene{scene_},
-	  chunks{splitToChunks(terrain, chunkSize)},
+	  chunks{std::move(splitToChunks(terrain, chunkSize))},
 	  terrainXSize{terrain.getXSize()},
 	  terrainYSize{terrain.getYSize()} {
 	updateRender();
@@ -26,20 +26,20 @@ TerrainManager::TerrainManager(const Terrain& terrain, const int chunkSize,
 	for (std::size_t x = 0; x < terrainXSize; x++) {
 		for (std::size_t y = 0; y < terrainYSize; y++) {
 			auto [cx, cy] = posToChunk(std::make_pair(x, y));
-			unsigned char cur = chunks[cy][cx]->getTerrain().map[y % chunkSize][x % chunkSize];
+			unsigned char cur = chunks[cy][cx].getTerrain().map[y % chunkSize][x % chunkSize];
 			std::cout << (cur ? '#' : '.');
 		}
 		std::cout << '\n';
 	}
 
 	for (std::size_t x = 0; x < getChunksX(); x++) {
-		for (std::size_t y = 0; y < getChunksY(); y++) chunks[y][x]->getTerrain().printTerrain();
+		for (std::size_t y = 0; y < getChunksY(); y++) chunks[y][x].getTerrain().printTerrain();
 	}
 }
 
 void TerrainManager::updateRender() {
 	for (auto& vec : chunks)
-		for (auto& chunk : vec) chunk->updateRender(pixelSize);
+		for (auto& chunk : vec) chunk.updateRender(pixelSize);
 }
 
 void TerrainManager::updateColliders() {
@@ -48,7 +48,7 @@ void TerrainManager::updateColliders() {
 	terrainColliders.clear();
 
 	for (auto& vec : chunks)
-		for (auto& chunk : vec) chunk->updateColliders();
+		for (auto& chunk : vec) chunk.updateColliders();
 
 	updateTree();
 }
@@ -62,7 +62,7 @@ void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
 	for (auto& chunkList : chunks) {
-		for (auto& chunk : chunkList) chunk->render(renderer, cam);
+		for (auto& chunk : chunkList) chunk.render(renderer, cam);
 	}
 }
 
@@ -76,7 +76,11 @@ void TerrainManager::setCell(const std::pair<int, int>& position, const unsigned
 	if (x >= terrainXSize || y >= terrainYSize) return;
 
 	auto [chunkX, chunkY] = posToChunk(position);
-	chunks[chunkY][chunkX]->setCell(x % chunkSize, y % chunkSize, value);
+	chunks[chunkY][chunkX].setCell(x % chunkSize, y % chunkSize, value);
+}
+
+void TerrainManager::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
+	setCell(std::make_pair(x, y), value);
 }
 
 void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsigned char value) {
@@ -105,7 +109,7 @@ void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsign
 
 	for (auto [chunk, posList] : chunkMap) {
 		auto [x, y] = chunk;
-		chunks[y][x]->setCellMultiple(posList, value);
+		chunks[y][x].setCellMultiple(posList, value);
 	}
 }
 
@@ -122,14 +126,14 @@ std::pair<std::size_t, std::size_t> TerrainManager::posToChunk(
 	return std::move(std::make_pair(x, y));
 }
 
-std::vector<std::vector<std::unique_ptr<Chunk>>> TerrainManager::splitToChunks(
-	const Terrain& terrain, const int chunkSize) {
+std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& terrain,
+															  const int chunkSize) {
 	assert(terrain.getXSize() % chunkSize == 0 && terrain.getYSize() % chunkSize == 0 &&
 		   "chunkSize must divide terrain x- and y-size.");
 
 	const std::size_t chunksX = terrain.getXSize() / chunkSize;
 	const std::size_t chunksY = terrain.getYSize() / chunkSize;
-	std::vector<std::vector<std::unique_ptr<Chunk>>> result(chunksY);
+	std::vector<std::vector<Chunk>> result(chunksY);
 
 	for (std::size_t y = 0; y < chunksY; y++) {
 		result[y].reserve(chunksX);
@@ -145,8 +149,8 @@ std::vector<std::vector<std::unique_ptr<Chunk>>> TerrainManager::splitToChunks(
 			}
 
 			result[y].emplace_back(
-				std::make_unique<Chunk>(chunkMap, x * chunkSize * pixelSize, y * chunkSize * pixelSize, *this));
+				Chunk{chunkMap, x * chunkSize * pixelSize, y * chunkSize * pixelSize, *this});
 		}
 	}
-	return result;
+	return std::move(result);
 }

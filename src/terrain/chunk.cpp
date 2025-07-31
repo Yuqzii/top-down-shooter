@@ -66,24 +66,27 @@ void Chunk::updateRender(const int pixelSize) {
 }
 
 void Chunk::updateColliders() {
+	for (auto& collider : colliders) collider.get().deleteObject = true;
+	colliders.clear();
+
 	std::map<std::pair<int, int>, std::pair<int, int>> currentColliders;  // Key: end, Value: start
 
 	for (std::size_t x = 0; x < terrain.getXSize(); ++x) {
-		const float xPos = x * manager.getPixelSize();
+		const float xPos = x * manager.getPixelSize() + originX;
 		for (std::size_t y = 0; y < terrain.getYSize(); ++y) {
-			if (!terrain.map[x][y]) continue;
+			if (!terrain.map[y][x]) continue;
 
-			const std::size_t yPos = y * manager.getPixelSize();
+			const std::size_t yPos = y * manager.getPixelSize() + originY;
 			const std::pair<int, int> topLeft{xPos, yPos};
 			const std::pair<int, int> topRight{xPos + manager.getPixelSize(), yPos};
 			const std::pair<int, int> botLeft{xPos, yPos + manager.getPixelSize()};
 			const std::pair<int, int> botRight{xPos + manager.getPixelSize(),
 											   yPos + manager.getPixelSize()};
 
-			const bool left = x > 0 && terrain.map[x - 1][y];
-			const bool right = x < terrain.getXSize() - 1 && terrain.map[x + 1][y];
-			const bool above = y > 0 && terrain.map[x][y - 1];
-			const bool below = y < terrain.getYSize() - 1 && terrain.map[x][y + 1];
+			const bool left = x > 0 && terrain.map[y][x - 1];
+			const bool right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
+			const bool above = y > 0 && terrain.map[y - 1][x];
+			const bool below = y < terrain.getYSize() - 1 && terrain.map[y + 1][x];
 
 			if (left && right && above && below)
 				continue;  // Terrain in all directions
@@ -143,9 +146,6 @@ void Chunk::updateColliders() {
 		}
 	}
 
-	for (auto& collider : colliders) collider.get().deleteObject = true;
-	colliders.clear();
-
 	// Construct colliders
 	colliders.reserve(currentColliders.size());
 	for (const auto& [end, start] : currentColliders)
@@ -159,18 +159,20 @@ void Chunk::tryExtendCollider(
 	const Vec2 endVec{end.first, end.second};
 
 	// Create collider if there already is one ending at end
-	if (currentColliders.count(end)) {
-		createCollider(Vec2{currentColliders[end].first, currentColliders[end].second}, endVec);
-		currentColliders.erase(end);
+	auto endIt = currentColliders.find(end);
+	if (endIt != currentColliders.end()) {
+		createCollider(Vec2{endIt->second.first, endIt->second.second}, endVec);
+		currentColliders.erase(endIt);
 	}
 
 	// Is there a collider ending at start?
-	if (currentColliders.count(start)) {
-		const Vec2 curStartVec{currentColliders[start].first, currentColliders[start].second};
+	auto startIt = currentColliders.find(start);
+	if (startIt != currentColliders.end()) {
+		const Vec2 curStartVec{startIt->second.first, startIt->second.second};
 
 		// Change end point if line is going the same direction
 		if ((startVec - curStartVec).normalized() == (endVec - startVec).normalized()) {
-			auto node = currentColliders.extract(start);
+			auto node = currentColliders.extract(startIt);
 			node.key() = end;
 			currentColliders.insert(std::move(node));
 			return;

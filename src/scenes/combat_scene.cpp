@@ -4,8 +4,8 @@
 
 #include "SDL2/SDL_mouse.h"
 #include "scenes/combat_map.h"
-#include "terrain/terrain.h"
 #include "terrain/chunk.h"
+#include "terrain/terrain.h"
 #include "terrain/terrainGenerator.h"
 
 CombatScene::CombatScene(Game& game_)
@@ -36,7 +36,7 @@ CombatScene::CombatScene(Game& game_)
 	gen.seed = std::time({});
 	Terrain terrain = gen.generateTerrain(500, 500, 10);
 
-	constexpr int chunkSize = 25;
+	constexpr std::size_t chunkSize = 100;
 	constexpr int pixelSizeMultiplier = 3;
 	terrainManager = std::make_unique<TerrainManager>(terrain, chunkSize, pixelSizeMultiplier,
 													  SDL_Color{56, 28, 40, 255}, *this);

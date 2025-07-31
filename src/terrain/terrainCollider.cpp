@@ -38,11 +38,11 @@ void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 			const int rx = std::round(newPos.x);
 			const int ry = std::round(newPos.y);
 			if (std::abs(rx - newPos.x) > std::abs(ry - newPos.y))
-				chunk->setCell(ox, ny, 0);
+				chunk->getManager().setCell(ox, ny, 0);
 			else
-				chunk->setCell(nx, oy, 0);
+				chunk->getManager().setCell(nx, oy, 0);
 		} else
-			chunk->setCell(nx, ny, 0);
+			chunk->getManager().setCell(nx, ny, 0);
 	}
 }
 
