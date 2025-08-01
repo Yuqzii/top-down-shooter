@@ -23,7 +23,7 @@ public:
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
 	void setCell(const Vec2& position, const unsigned char value);
-	void setCell(const std::pair<int, int>& position, const unsigned char value);
+	void setCell(const std::pair<std::size_t, std::size_t>& position, const unsigned char value);
 	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
 	/* Removes all pixels in range of the center and recalculates collisions.
 	 *

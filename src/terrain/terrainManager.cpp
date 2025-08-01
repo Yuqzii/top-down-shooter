@@ -2,8 +2,6 @@
 
 #include <cassert>
 #include <cstddef>
-#include <iostream>
-
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
 #include "engine/scene.h"
@@ -22,19 +20,6 @@ TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSi
 	  terrainYSize{terrain.getYSize()} {
 	updateRender();
 	updateColliders();
-
-	for (std::size_t x = 0; x < terrainXSize; x++) {
-		for (std::size_t y = 0; y < terrainYSize; y++) {
-			auto [cx, cy] = posToChunk(std::make_pair(x, y));
-			unsigned char cur = chunks[cy][cx].getTerrain().map[y % chunkSize][x % chunkSize];
-			std::cout << (cur ? '#' : '.');
-		}
-		std::cout << '\n';
-	}
-
-	for (std::size_t x = 0; x < getChunksX(); x++) {
-		for (std::size_t y = 0; y < getChunksY(); y++) chunks[y][x].getTerrain().printTerrain();
-	}
 }
 
 void TerrainManager::updateRender() {
@@ -71,11 +56,13 @@ void TerrainManager::setCell(const Vec2& position, const unsigned char value) {
 	setCell(pixelPos, value);
 }
 
-void TerrainManager::setCell(const std::pair<int, int>& position, const unsigned char value) {
+void TerrainManager::setCell(const std::pair<std::size_t, std::size_t>& position,
+							 const unsigned char value) {
 	auto [x, y] = position;
 	if (x >= terrainXSize || y >= terrainYSize) return;
 
 	auto [chunkX, chunkY] = posToChunk(position);
+	assert(chunkX >= 0 && chunkX < getChunksX() && chunkY >= 0 && chunkY < getChunksY());
 	chunks[chunkY][chunkX].setCell(x % chunkSize, y % chunkSize, value);
 }
 
@@ -114,13 +101,15 @@ void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsign
 }
 
 std::pair<std::size_t, std::size_t> TerrainManager::posToTerrainCoord(const Vec2& position) const {
-	const int x = position.x / pixelSize;
-	const int y = position.y / pixelSize;
-	return std::move(std::pair<int, int>{x, y});
+	const std::size_t x = position.x / pixelSize;
+	const std::size_t y = position.y / pixelSize;
+	return std::make_pair(x, y);
 }
 
 std::pair<std::size_t, std::size_t> TerrainManager::posToChunk(
 	const std::pair<std::size_t, std::size_t>& pos) const {
+	assert(chunkSize != 0);
+
 	const std::size_t x = pos.first / chunkSize;
 	const std::size_t y = pos.second / chunkSize;
 	return std::move(std::make_pair(x, y));

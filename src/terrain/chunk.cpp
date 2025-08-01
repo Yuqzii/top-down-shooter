@@ -1,7 +1,6 @@
 #include "terrain/chunk.h"
 
 #include <cassert>
-#include <iostream>
 
 #include "engine/scene.h"
 #include "terrain/terrainCollider.h"
@@ -14,7 +13,6 @@ Chunk::Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size
 }
 
 void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
-	std::cout << x << " " << y << "\n";
 	assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
 		   "Position (x, y) must be within the terrain size.");
 
@@ -184,6 +182,6 @@ void Chunk::tryExtendCollider(
 void Chunk::createCollider(const Vec2& start, const Vec2& end) {
 	const Vec2 position{start + (end - start) * 0.5f};
 	TerrainCollider& collider =
-		manager.getScene().instantiate<TerrainCollider>(position, start, end, *this);
+		manager.getScene().instantiate<TerrainCollider>(position, start, end, this);
 	colliders.push_back(collider);
 }
