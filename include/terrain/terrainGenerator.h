@@ -6,9 +6,6 @@
 
 class TerrainGenerator {
 public:
-	TerrainGenerator(const unsigned int seed, const int shapeGenerations,
-					 const double shapeFillProb, const int cornerGenerations,
-					 const double cornerFillProb);
 	TerrainGenerator();
 
 	Terrain generateTerrain(const size_t xSize, const size_t ySize, const size_t shapeSize);

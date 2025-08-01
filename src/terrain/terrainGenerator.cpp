@@ -5,16 +5,25 @@
 #include <cstdlib>
 #include <functional>
 
-TerrainGenerator::TerrainGenerator(const unsigned int seed, const int shapeGenerations,
-								   const double shapeFillProb, const int detailsGenerations,
-								   const double cornerFillProb)
-	: seed{seed},
-	  shapeGenerations{shapeGenerations},
-	  shapeFillProb{shapeFillProb},
-	  cornerGenerations{detailsGenerations},
-	  cornerFillProb{cornerFillProb} {}
-
-TerrainGenerator::TerrainGenerator() : TerrainGenerator{0, 1, 0.5, 1, 0.5} {}
+TerrainGenerator::TerrainGenerator()
+	: seed{0},
+	  shapeFillProb{0.5},
+	  shapeGenerations{1},
+	  shapeConsecutiveWallRange{1},
+	  shapeMinConsecutiveWall{1},
+	  shapeWallRandomness{0.5},
+	  shapeCalcCloseRange{1},
+	  shapeCalcFarRange{3},
+	  shapeCalcMinCloseFill{4},
+	  shapeCalcMaxFarFill{8},
+	  cornerFillProb{0.5},
+	  cornerGenerations{1},
+	  cornerCalcRange{1},
+	  cornerCalcMinFill{4},
+	  detailsGenerations{1},
+	  detailsCalcRange{1},
+	  detailsCalcMinFill{4},
+	  edgeThickness{50} {}
 
 Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize,
 										  const size_t shapeSize) {
@@ -223,7 +232,8 @@ Terrain TerrainGenerator::addEdges(const Terrain& reference) const {
 
 	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
 		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
-			if (x < edgeThickness || y < edgeThickness || x >= terrain.getXSize() - edgeThickness - 1 ||
+			if (x < edgeThickness || y < edgeThickness ||
+				x >= terrain.getXSize() - edgeThickness - 1 ||
 				y >= terrain.getYSize() - edgeThickness)
 				terrain.map[y][x] = 1;
 			else
