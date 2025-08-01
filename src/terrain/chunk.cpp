@@ -182,6 +182,6 @@ void Chunk::tryExtendCollider(
 void Chunk::createCollider(const Vec2& start, const Vec2& end) {
 	const Vec2 position{start + (end - start) * 0.5f};
 	TerrainCollider& collider =
-		manager.getScene().instantiate<TerrainCollider>(position, start, end, this);
+	manager.getScene().instantiate<TerrainCollider>(position, start, end, *this);
 	colliders.push_back(collider);
 }

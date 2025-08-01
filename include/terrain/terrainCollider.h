@@ -9,7 +9,7 @@ public:
 	TerrainCollider();
 
 	void initialize(const Scene& scene, const Vec2& position, const Vec2& start, const Vec2& end,
-					Chunk* chunk);
+					Chunk& chunk);
 
 	// ONLY USED FOR DEBUG_GIZMO
 	void update(Scene& scene, const float deltaTime) override;

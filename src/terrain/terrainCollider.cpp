@@ -8,7 +8,7 @@
 #include "terrain/chunk.h"
 #include "terrain/terrainManager.h"
 
-TerrainCollider::TerrainCollider() : GameObject{Vec2{}} {
+TerrainCollider::TerrainCollider() : GameObject{Vec2{}}, chunk{nullptr} {
 	// Create a static line collider and set this GameObject as static
 	collider = std::make_unique<LineCollider>(Collision::Line{}, true, this);
 	isStatic = true;
@@ -16,14 +16,14 @@ TerrainCollider::TerrainCollider() : GameObject{Vec2{}} {
 }
 
 void TerrainCollider::initialize(const Scene& scene, const Vec2& position, const Vec2& start,
-								 const Vec2& end, Chunk* chunk) {
+								 const Vec2& end, Chunk& chunk) {
 	GameObject::initialize(scene, position);
 
 	LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
 	lineCollider->line.start = start;
 	lineCollider->line.end = end;
 
-	this->chunk = chunk;
+	this->chunk = &chunk;
 }
 
 void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
