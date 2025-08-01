@@ -33,6 +33,8 @@ CombatScene::CombatScene(Game& game_)
 	gen.detailsCalcRange = 2;
 	gen.detailsCalcMinFill = 8;
 
+	gen.edgeThickness = 100;
+
 	gen.seed = std::time({});
 	Terrain terrain = gen.generateTerrain(500, 500, 10);
 

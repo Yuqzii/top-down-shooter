@@ -26,11 +26,9 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 	blockSize = shapeSize;
 
 	Terrain shape = generateShape(xSize / shapeSize, ySize / shapeSize);
-	shape.printTerrain();
 	Terrain corners = generateCorners(shape);
-	corners.printTerrain();
-	Terrain details = generateDetails(corners);
-	details.printTerrain();
+	Terrain edges = addEdges(corners);
+	Terrain details = generateDetails(edges);
 	return details;
 }
 
@@ -208,14 +206,6 @@ Terrain TerrainGenerator::generateDetails(const Terrain& reference) const {
 		terrain = curTerrain;
 	}
 
-	Terrain newTerrain = terrain;
-	for (size_t x = 1; x < terrain.getXSize() - 1; x++) {
-		for (size_t y = 1; y < terrain.getYSize() - 1; y++) {
-			// newTerrain.map[y][x] = randomDetails(x, y, 3, 3, terrain);
-		}
-	}
-	terrain = newTerrain;
-
 	return terrain;
 }
 
@@ -225,6 +215,23 @@ unsigned char TerrainGenerator::calculateDetails(const size_t x, const size_t y,
 	const int count = getWallCount(x, y, detailsCalcRange, terrain);
 
 	return count >= detailsCalcMinFill;
+}
+
+Terrain TerrainGenerator::addEdges(const Terrain& reference) const {
+	Terrain terrain{reference.getXSize() + edgeThickness * 2,
+					reference.getYSize() + edgeThickness * 2};
+
+	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
+		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
+			if (x < edgeThickness || y < edgeThickness || x >= terrain.getXSize() - edgeThickness - 1 ||
+				y >= terrain.getYSize() - edgeThickness)
+				terrain.map[y][x] = 1;
+			else
+				terrain.map[y][x] = reference.map[y - edgeThickness][x - edgeThickness];
+		}
+	}
+
+	return terrain;
 }
 
 void TerrainGenerator::fillAreaRandom(const size_t x1, const size_t y1, const size_t x2,

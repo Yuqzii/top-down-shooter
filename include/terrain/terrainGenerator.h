@@ -38,6 +38,9 @@ public:
 	// Minimum amount of filled cells within range to fill the current cell.
 	int detailsCalcMinFill;
 
+	// Added in addition to the size specified when calling generateTerrain.
+	int edgeThickness;
+
 private:
 	struct Corner {
 		bool topRight;
@@ -75,6 +78,8 @@ private:
 
 	Terrain generateDetails(const Terrain& reference) const;
 	unsigned char calculateDetails(const size_t x, const size_t y, const Terrain& terrain) const;
+
+	Terrain addEdges(const Terrain& reference) const;
 
 	int getWallCount(const size_t x, const size_t y, const int range, const Terrain& terrain) const;
 	/* Fills every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2
