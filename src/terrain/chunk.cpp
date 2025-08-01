@@ -27,7 +27,7 @@ void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned cha
 void Chunk::setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
 							const unsigned char value) {
 	for (auto [x, y] : positions) {
-		assert(x > 0 && x < terrain.getXSize() && y > 0 && y < terrain.getYSize() &&
+		assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
 			   "Position (x, y) must be within the terrain size.");
 		terrain.map[y][x] = value;
 	}
