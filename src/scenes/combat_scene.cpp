@@ -3,7 +3,6 @@
 #include <ctime>
 
 #include "SDL2/SDL_mouse.h"
-#include "scenes/combat_map.h"
 #include "terrain/chunk.h"
 #include "terrain/terrain.h"
 #include "terrain/terrainGenerator.h"
