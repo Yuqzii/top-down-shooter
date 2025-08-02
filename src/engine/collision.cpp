@@ -1,6 +1,7 @@
 #include "engine/collision.h"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <vector>
 

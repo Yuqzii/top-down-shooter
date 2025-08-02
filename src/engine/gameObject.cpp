@@ -51,8 +51,8 @@ void GameObject::initialize(const Scene& scene, const Vec2& startPosition) {
 	renderPosition.x = screenPosition.x - pivot.x;
 	renderPosition.y = screenPosition.y - pivot.y;
 
-	destRect.x = round(renderPosition.x);
-	destRect.y = round(renderPosition.y);
+	destRect.x = std::round(renderPosition.x);
+	destRect.y = std::round(renderPosition.y);
 }
 
 void GameObject::update(Scene& scene, const float deltaTime) {

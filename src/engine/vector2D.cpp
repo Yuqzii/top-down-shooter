@@ -3,20 +3,29 @@
 #include <cmath>
 
 // vector2Df
-Vec2::Vec2(const float& x, const float& y) {
+Vec2::Vec2(const float x, const float y) {
 	this->x = x;
 	this->y = y;
 }
-Vec2::Vec2(const int& x, const int& y) {
+
+Vec2::Vec2(const int x, const int y) {
 	this->x = x;
 	this->y = y;
 }
+
+Vec2::Vec2(const std::size_t x, const std::size_t y) {
+	this->x = static_cast<float>(x);
+	this->y = static_cast<float>(y);
+}
+
 Vec2::Vec2() { x = y = 0; }
-Vec2::Vec2(const float& degrees) {	// Creates direction vector from rotation in degrees
+
+Vec2::Vec2(const float degrees) {  // Creates direction vector from rotation in degrees
 	float radians = (degrees - 90) * M_PI / 180;
 	x = std::cos(radians);
 	y = std::sin(radians);
 }
+
 Vec2::Vec2(const Vec2& vec) {
 	x = vec.x;
 	y = vec.y;

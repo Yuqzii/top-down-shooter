@@ -1,6 +1,7 @@
 #include "terrain/terrainManager.h"
 
 #include <cassert>
+#include <cmath>
 #include <cstddef>
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
