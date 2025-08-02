@@ -1,7 +1,9 @@
 #pragma once
 
+#include <array>
 #include <cstddef>
 #include <map>
+#include <optional>
 
 #include "SDL2/SDL_rect.h"
 #include "terrain/terrain.h"
@@ -27,7 +29,10 @@ public:
 
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 	void updateRender(const int pixelSize);
+
 	void updateColliders();
+
+	void updateSpawnPositions();
 
 	TerrainManager& getManager() const { return manager; }
 	const Terrain& getTerrain() const { return terrain; }
@@ -59,4 +64,12 @@ private:
 	 * @param scene The scene to create the collider in.
 	 */
 	void createCollider(const Vec2& start, const Vec2& end);
+
+	static constexpr int minSpawnSpace = 15;
+	static std::array<int, minSpawnSpace> spawnCircleY;
+	std::vector<Vec2> spawnPositions;
+	// @return Position where there is terrain blocking. Has no value if none were found.
+	std::optional<std::pair<std::size_t, std::size_t>> evaluateSpawn(const std::size_t x,
+																	 const std::size_t y,
+																	 const Terrain& used) const;
 };
