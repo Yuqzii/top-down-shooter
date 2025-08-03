@@ -8,8 +8,8 @@
 
 #include "terrain/terrainManager.h"
 
-TerrainGenerator::TerrainGenerator()
-	: seed{0},
+TerrainGenerator::TerrainGenerator(std::mt19937& randGen)
+	: randGen{randGen},
 	  shapeFillProb{0.5},
 	  shapeGenerations{1},
 	  shapeConsecutiveWallRange{1},
@@ -32,8 +32,6 @@ Terrain TerrainGenerator::generateTerrain(const size_t xSize, const size_t ySize
 										  const size_t shapeSize) {
 	assert(xSize % shapeSize == 0 && ySize % shapeSize == 0 &&
 		   "shapeSize must divide xSize and ySize.");
-
-	randGen.seed(seed);
 
 	blockSize = shapeSize;
 

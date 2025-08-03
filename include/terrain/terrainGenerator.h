@@ -10,12 +10,10 @@ class TerrainManager;
 
 class TerrainGenerator {
 public:
-	TerrainGenerator();
+	TerrainGenerator(std::mt19937& randGen);
 
 	Terrain generateTerrain(const size_t xSize, const size_t ySize, const size_t shapeSize);
 	Vec2 getRandomSpawn(TerrainManager& manager);
-
-	unsigned int seed;
 
 	double shapeFillProb;
 	int shapeGenerations;
@@ -58,7 +56,7 @@ private:
 
 	size_t blockSize;
 
-	std::mt19937 randGen;
+	std::mt19937& randGen;
 
 	Terrain generateShape(const size_t xSize, const size_t ySize);
 	unsigned char calculateShape(const size_t x, const size_t y, const Terrain& terrain) const;

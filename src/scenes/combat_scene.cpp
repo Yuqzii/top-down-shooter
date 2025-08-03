@@ -7,9 +7,9 @@
 #include "terrain/terrain.h"
 #include "terrain/terrainGenerator.h"
 
-CombatScene::CombatScene(Game& game_)
-	: Scene{game_}, player{instantiate<Player>(Vec2{700, 400}, &cam)} {
-	TerrainGenerator gen;
+CombatScene::CombatScene(Game& game)
+	: Scene{game}, player{instantiate<Player>(Vec2{700, 400}, &cam)} {
+	TerrainGenerator gen{game.randGen};
 	// Shape parameters
 	gen.shapeFillProb = 0.2;
 	gen.shapeGenerations = 5;
@@ -34,7 +34,7 @@ CombatScene::CombatScene(Game& game_)
 
 	gen.edgeThickness = 100;
 
-	gen.seed = std::random_device{}();
+	game.randGen.seed(std::random_device{}());
 	Terrain terrain = gen.generateTerrain(500, 500, 10);
 
 	constexpr std::size_t chunkSize = 100;

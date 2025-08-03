@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+#include <random>
 #include <vector>
 
 #include "engine/gameObject.h"
@@ -14,6 +15,8 @@ class Game {
 public:
 	Game(const char* title, const int width, const int height);
 	~Game();
+
+	std::mt19937 randGen;
 
 	// Game loop
 	void handleEvents();
