@@ -66,10 +66,9 @@ public:
 
 protected:
 	Camera cam;
-
-private:
 	Game& game;
 
+private:
 	GameObjectVector gameObjects;
 	Tree2D objectTree;
 	void updateObjectTree();

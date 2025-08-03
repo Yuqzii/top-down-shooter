@@ -18,10 +18,7 @@ std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 
 Chunk::Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size_t originX,
 			 const std::size_t originY, TerrainManager& manager)
-	: terrain{map},
-	  manager{manager},
-	  originX{originX},
-	  originY{originY} {
+	: terrain{map}, manager{manager}, originX{originX}, originY{originY} {
 	renderRects.resize(terrain.getYSize(), std::vector<SDL_Rect>(terrain.getXSize()));
 	updateSpawnPositions();
 	for (auto& x : spawnPositions) std::cout << x << " ";
@@ -217,7 +214,8 @@ void Chunk::updateSpawnPositions() {
 				x = hitX + minSpawnSpace - (std::max(hitY, y) - std::min(hitY, y)) +
 					spawnCircleY.back() + 1;
 			} else {
-				spawnPositions.push_back(Vec2{x * manager.getPixelSize() + originX, y * manager.getPixelSize() + originY});
+				spawnPositions.push_back(Vec2{x * manager.getPixelSize() + originX,
+											  y * manager.getPixelSize() + originY});
 
 				// Set all positions inside the spawn area as used.
 				const int cornerDist = spawnCircleY.back() - 1;

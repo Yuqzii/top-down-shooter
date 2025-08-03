@@ -6,8 +6,6 @@
 #include <functional>
 #include <random>
 
-#include "terrain/terrainManager.h"
-
 TerrainGenerator::TerrainGenerator(std::mt19937& randGen)
 	: randGen{randGen},
 	  shapeFillProb{0.5},
@@ -373,11 +371,4 @@ int TerrainGenerator::getWallCount(const size_t midX, const size_t midY, const i
 	}
 
 	return result;
-}
-
-Vec2 TerrainGenerator::getRandomSpawn(TerrainManager& manager) {
-	auto spawns = manager.getAllSpawns();
-	std::uniform_int_distribution<std::size_t> dist{0, spawns.size() - 1};
-	std::size_t idx = dist(randGen);
-	return spawns[idx];
 }
