@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <random>
 
 #include "terrain/terrain.h"
 
@@ -53,7 +54,9 @@ private:
 
 	size_t blockSize;
 
-	Terrain generateShape(const size_t xSize, const size_t ySize) const;
+	std::mt19937 randGen;
+
+	Terrain generateShape(const size_t xSize, const size_t ySize);
 	unsigned char calculateShape(const size_t x, const size_t y, const Terrain& terrain) const;
 
 	std::vector<std::vector<BlockPosition>> blockPositions;
@@ -70,7 +73,7 @@ private:
 	/* Generates random terrain for corners in terrain. Requires corners variable to
 	 * match the provided terrain.
 	 */
-	void randomCorners(const size_t x, const size_t y, Terrain& terrain) const;
+	void randomCorners(const size_t x, const size_t y, Terrain& terrain);
 	unsigned char calculateCorners(const size_t x, const size_t y, const Terrain& terrain) const;
 
 	Terrain generateDetails(const Terrain& reference) const;
@@ -83,7 +86,7 @@ private:
 	 * with random values based on the fillProb and current seed.
 	 */
 	void fillAreaRandom(const size_t x1, const size_t y1, const size_t x2, const size_t y2,
-						Terrain& terrain, const double fillProb) const;
+						Terrain& terrain, const double fillProb);
 	void fillArea(const size_t x1, const size_t y1, const size_t x2, const size_t y2,
 				  Terrain& terrain, const unsigned char value) const;
 	/* Sets every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2 to the output
@@ -107,5 +110,5 @@ private:
 	 */
 	unsigned char randomizeConsecutiveWall(const size_t x, const size_t y, const int range,
 										   const int wallLength, const double prob,
-										   const Terrain& terrain) const;
+										   const Terrain& terrain);
 };

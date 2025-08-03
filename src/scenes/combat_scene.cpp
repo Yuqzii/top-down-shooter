@@ -34,7 +34,7 @@ CombatScene::CombatScene(Game& game_)
 
 	gen.edgeThickness = 100;
 
-	gen.seed = std::time({});
+	gen.seed = std::random_device{}();
 	Terrain terrain = gen.generateTerrain(500, 500, 10);
 
 	constexpr std::size_t chunkSize = 100;
