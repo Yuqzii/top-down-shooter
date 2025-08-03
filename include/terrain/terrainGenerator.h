@@ -3,13 +3,17 @@
 #include <functional>
 #include <random>
 
+#include "engine/vector2D.h"
 #include "terrain/terrain.h"
+
+class TerrainManager;
 
 class TerrainGenerator {
 public:
 	TerrainGenerator();
 
 	Terrain generateTerrain(const size_t xSize, const size_t ySize, const size_t shapeSize);
+	Vec2 getRandomSpawn(TerrainManager& manager);
 
 	unsigned int seed;
 

@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
 #include "engine/scene.h"
@@ -142,5 +143,16 @@ std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& ter
 				Chunk{chunkMap, x * chunkSize * pixelSize, y * chunkSize * pixelSize, *this});
 		}
 	}
-	return std::move(result);
+	return result;
+}
+
+std::vector<Vec2> TerrainManager::getAllSpawns() const {
+	std::vector<Vec2> spawns;
+	for (const auto& chunkList : chunks) {
+		for (const Chunk& chunk : chunkList) {
+			const auto chunkSpawns = chunk.getSpawnPositions();
+			spawns.insert(spawns.end(), chunkSpawns.begin(), chunkSpawns.end());
+		}
+	}
+	return spawns;
 }

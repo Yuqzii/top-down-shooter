@@ -36,6 +36,7 @@ public:
 
 	TerrainManager& getManager() const { return manager; }
 	const Terrain& getTerrain() const { return terrain; }
+	const std::vector<Vec2>& getSpawnPositions() const { return spawnPositions; }
 
 private:
 	TerrainManager& manager;

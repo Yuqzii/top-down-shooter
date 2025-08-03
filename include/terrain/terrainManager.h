@@ -45,6 +45,8 @@ public:
 	const Tree2D& getTree() const { return terrainTree; }
 	Scene& getScene() const { return scene; }
 
+	std::vector<Vec2> getAllSpawns() const;
+
 private:
 	Scene& scene;
 
