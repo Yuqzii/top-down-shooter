@@ -1,7 +1,6 @@
 #include "terrain/chunk.h"
 
 #include <cassert>
-#include <iostream>
 
 #include "engine/scene.h"
 #include "terrain/terrainCollider.h"
@@ -21,8 +20,6 @@ Chunk::Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size
 	: terrain{map}, manager{manager}, originX{originX}, originY{originY} {
 	renderRects.resize(terrain.getYSize(), std::vector<SDL_Rect>(terrain.getXSize()));
 	updateSpawnPositions();
-	for (auto& x : spawnPositions) std::cout << x << " ";
-	std::cout << '\n';
 }
 
 void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {

@@ -1,7 +1,5 @@
 #include "enemyManager.h"
 
-#include <iostream>
-
 #include "enemies/spider.h"
 #include "engine/game.h"
 #include "engine/scene.h"
@@ -45,11 +43,9 @@ void EnemyManager::spawnEnemy(Scene& scene) {
 
 	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[idx]);
 	enemies.push_back(&enemy);
-	std::cout << "Spawned enemy at " << spawnPositions[idx] << std::endl;
 }
 
 void EnemyManager::updateTree() {
-	enemyTree = std::make_unique<Tree2D>();	 // Create new tree
-	// Initialize tree with list of enemies
+	enemyTree = std::make_unique<Tree2D>();
 	enemyTree->initializeWithList(std::vector<GameObject*>(enemies.begin(), enemies.end()));
 }

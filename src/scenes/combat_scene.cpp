@@ -84,7 +84,7 @@ const Player& CombatScene::spawnPlayer() {
 	const std::size_t idx = dist(game.randGen);
 	const Vec2 spawnPos = spawns[idx];
 
-	std::cout << "Spawning player at " << spawnPos << std::endl;
 	const Player& player = instantiate<Player>(spawnPos, &cam);
+	std::cout << "Spawned player at " << spawnPos << std::endl;
 	return player;
 }
