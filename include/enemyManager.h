@@ -9,6 +9,8 @@ class Game;
 
 class EnemyManager {
 public:
+	EnemyManager(const std::vector<Vec2> spawnPositions);
+
 	void update(Scene& scene, const float deltaTime);
 
 	// Returns a vector of all enemies
@@ -18,8 +20,10 @@ public:
 
 private:
 	std::vector<Enemy*> enemies;
-	constexpr const static float startTime = 3;
-	float currentTime = 0;
+	constexpr static float spawnInterval = 3;
+	float spawnTimer = 0;
+
+	std::vector<Vec2> spawnPositions;
 
 	void spawnEnemy(Scene& scene);
 

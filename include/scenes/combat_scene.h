@@ -20,8 +20,8 @@ public:
 	const TerrainManager& getTerrainManager() const { return terrainManager; }
 
 private:
-	EnemyManager enemyManager;
 	TerrainManager terrainManager;
+	EnemyManager enemyManager;
 
 	TerrainManager generateTerrain();
 	const Player& spawnPlayer();

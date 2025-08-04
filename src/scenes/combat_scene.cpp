@@ -9,20 +9,20 @@
 #include "terrain/terrainGenerator.h"
 
 CombatScene::CombatScene(Game& game)
-	: Scene{game}, terrainManager{generateTerrain()}, player{spawnPlayer()} {}
+	: Scene{game},
+	  terrainManager{generateTerrain()},
+	  player{spawnPlayer()},
+	  enemyManager{std::move(terrainManager.getAllSpawns())} {}
 
 void CombatScene::initialize() {
 	Scene::initialize();
 
-	enemyManager = EnemyManager{};
 	terrainManager.updateColliders();
 	terrainManager.updateRender();
 }
 
 void CombatScene::initialize(GameObjectVector& persistentObjects) {
 	Scene::initialize(persistentObjects);
-
-	enemyManager = EnemyManager();
 }
 
 void CombatScene::update(const float deltaTime) {
