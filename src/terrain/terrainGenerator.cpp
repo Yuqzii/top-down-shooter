@@ -143,17 +143,12 @@ std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorner
 			const bool below = y < terrain.getYSize() - 1 && terrain.map[y + 1][x];
 			const bool right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
 			const bool left = x > 0 && terrain.map[y][x - 1];
-			if (terrain.map[y][x]) {
-				result[y][x].topRight = !above && !right;
-				result[y][x].botRight = !below && !right;
-				result[y][x].botLeft = !below && !left;
-				result[y][x].topLeft = !above && !left;
-			} else {
-				result[y][x].topRight = above && right;
-				result[y][x].botRight = below && right;
-				result[y][x].botLeft = below && left;
-				result[y][x].topLeft = above && left;
-			}
+			const bool flag = terrain.map[y][x];
+
+			result[y][x].topRight = (flag ^ above) && (flag ^ right);
+			result[y][x].botRight = (flag ^ below) && (flag ^ right);
+			result[y][x].botLeft = (flag ^ below) && (flag ^ left);
+			result[y][x].topLeft = (flag ^ above) && (flag ^ left);
 		}
 	}
 
