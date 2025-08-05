@@ -25,15 +25,15 @@ TEST(Tree2D, General) {
 	Tree2D tree;
 
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
-								Vec2(9, 1), Vec2(2, 7),	  Vec2(10, 19)};
+	                            Vec2(9, 1), Vec2(2, 7),   Vec2(10, 19)};
 
 	auto testData = testInit(points);
 	tree.initializeWithList(testData);
 
-	std::array<Vec2, 7> testPoints = {Vec2(10, 10), Vec2(8, 2), Vec2(4, 7),	 Vec2(16, 16),
-									  Vec2(12, 14), Vec2(0, 5), Vec2(11, 18)};
+	std::array<Vec2, 7> testPoints = {Vec2(10, 10), Vec2(8, 2), Vec2(4, 7),  Vec2(16, 16),
+	                                  Vec2(12, 14), Vec2(0, 5), Vec2(11, 18)};
 	std::array<Vec2, 7> expected = {Vec2(6, 12),  Vec2(9, 1), Vec2(3, 6),  Vec2(17, 15),
-									Vec2(13, 15), Vec2(2, 7), Vec2(10, 19)};
+	                                Vec2(13, 15), Vec2(2, 7), Vec2(10, 19)};
 
 	for (int i = 0; i < testPoints.size(); i++) {
 		const Vec2 result = tree.findClosestObject(testPoints[i])->getPosition();
@@ -47,10 +47,10 @@ TEST(Tree2D, CheckingWithExistingPoints) {
 	Tree2D tree;
 
 	std::vector<Vec2> points = {
-		Vec2(10, 10),
-		Vec2(20, 10),
-		Vec2(10, 5),
-		Vec2(5, 20),
+	    Vec2(10, 10),
+	    Vec2(20, 10),
+	    Vec2(10, 5),
+	    Vec2(5, 20),
 	};
 
 	auto testData = testInit(points);
@@ -131,7 +131,7 @@ TEST(Tree2D, MultiplePointQuery) {
 	Tree2D tree;
 
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
-								Vec2(9, 2), Vec2(2, 7),	  Vec2(10, 19)};
+	                            Vec2(9, 2), Vec2(2, 7),   Vec2(10, 19)};
 
 	auto testData = testInit(points);
 	tree.initializeWithList(testData);
@@ -139,21 +139,21 @@ TEST(Tree2D, MultiplePointQuery) {
 	std::array<Vec2, 3> testPoints = {Vec2(2, 5), Vec2(12, 12), Vec2(25, 5)};
 
 	std::array<std::vector<Vec2>, 3> expected = {
-		std::vector{Vec2(3, 6), Vec2(2, 7), Vec2(9, 2)},
-		std::vector{Vec2(13, 15), Vec2(17, 15), Vec2(6, 12), Vec2(10, 19)},
-		std::vector{Vec2(17, 15), Vec2(13, 15), Vec2(9, 2), Vec2(6, 12), Vec2(10, 19), Vec2(3, 6)}};
+	    std::vector{Vec2(3, 6), Vec2(2, 7), Vec2(9, 2)},
+	    std::vector{Vec2(13, 15), Vec2(17, 15), Vec2(6, 12), Vec2(10, 19)},
+	    std::vector{Vec2(17, 15), Vec2(13, 15), Vec2(9, 2), Vec2(6, 12), Vec2(10, 19), Vec2(3, 6)}};
 
 	for (int i = 0; i < testPoints.size(); i++) {
 		const std::vector<GameObject*> result =
-			tree.findKClosestObjects(testPoints[i], expected[i].size());
+		    tree.findKClosestObjects(testPoints[i], expected[i].size());
 
 		EXPECT_TRUE(result.size() == expected[i].size())
-			<< "Expected size: " << expected[i].size() << " Found size: " << result.size()
-			<< ". Subtest " << i;
+		    << "Expected size: " << expected[i].size() << " Found size: " << result.size()
+		    << ". Subtest " << i;
 
 		for (int j = 0; j < result.size(); j++) {
 			EXPECT_TRUE(result[j]->getPosition() == expected[i][j])
-				<< "Expected: " << expected[i][j] << " Found: " << result[j] << ". Subtest " << i;
+			    << "Expected: " << expected[i][j] << " Found: " << result[j] << ". Subtest " << i;
 		}
 	}
 
@@ -188,7 +188,7 @@ TEST(Tree2D, ObjectsInRange) {
 	Tree2D tree;
 
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
-								Vec2(9, 2), Vec2(2, 7),	  Vec2(10, 19)};
+	                            Vec2(9, 2), Vec2(2, 7),   Vec2(10, 19)};
 
 	auto testData = testInit(points);
 	tree.initializeWithList(testData);
@@ -197,17 +197,17 @@ TEST(Tree2D, ObjectsInRange) {
 	std::array<float, testPoints.size()> testRanges{6, 17.5, 10};
 
 	std::array<std::set<Vec2>, 3> expected{
-		std::set{Vec2(17, 15), Vec2(13, 15), Vec2(6, 12)},
-		std::set{Vec2(13, 15), Vec2(17, 15), Vec2(9, 2)},
-		std::set{Vec2(3, 6), Vec2(6, 12), Vec2(9, 2), Vec2(2, 7)}};
+	    std::set{Vec2(17, 15), Vec2(13, 15), Vec2(6, 12)},
+	    std::set{Vec2(13, 15), Vec2(17, 15), Vec2(9, 2)},
+	    std::set{Vec2(3, 6), Vec2(6, 12), Vec2(9, 2), Vec2(2, 7)}};
 
 	for (int i = 0; i < testPoints.size(); i++) {
 		const std::vector<GameObject*> result =
-			tree.findObjectsInRange(testPoints[i], testRanges[i]);
+		    tree.findObjectsInRange(testPoints[i], testRanges[i]);
 
 		EXPECT_TRUE(result.size() == expected[i].size())
-			<< "Incorrect result size. Expected: " << expected[i].size()
-			<< " Found: " << result.size();
+		    << "Incorrect result size. Expected: " << expected[i].size()
+		    << " Found: " << result.size();
 
 		std::set<Vec2> resultSet;
 		for (auto obj : result) {
