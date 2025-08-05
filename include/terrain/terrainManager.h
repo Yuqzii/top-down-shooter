@@ -1,12 +1,12 @@
 #pragma once
 
-#include <map>
 #include <vector>
 
 #include "SDL2/SDL_pixels.h"
-#include "SDL2/SDL_rect.h"
 #include "engine/Tree2D.h"
 #include "engine/game.h"
+#include "terrain/chunk.h"
+#include "terrain/terrain.h"
 
 struct SDL_Renderer;
 class Scene;
@@ -15,61 +15,57 @@ class Camera;
 
 class TerrainManager {
 public:
-	// Must be initialized with a non-empty terrainMap vector
-	TerrainManager(const std::vector<std::vector<char>>& terrainMap, const SDL_Color& color,
-				   Scene& scene);
+	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
+				   const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
 	void updateRender();
-	void updateCollisions();
+	void updateColliders();
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
-	void removePixel(const Vec2& position);
-	void removePixel(const std::pair<int, int>& position);
-	/*
-	 * @abstract	Removes all pixels in range of the center and recalculates collisions.
-	 * @param	center	Center position to remove from.
-	 * @param	range	The range to remove from. (Radius of circle).
+	void setCell(const Vec2& position, const unsigned char value);
+	void setCell(const std::pair<std::size_t, std::size_t>& position, const unsigned char value);
+	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
+	/* Removes all pixels in range of the center and recalculates collisions.
+	 *
+	 * @param center Center position to remove from.
+	 * @param range The range to remove from. (Radius of circle).
 	 */
-	void removeInRange(const Vec2& center, const int range);
-	/*
-	 * @abstract	Get the array indices of the terrain pixel at the given world position.
-	 * @param	position	Position to translate to indices.
-	 * @return	Array indices of the world position.
+	void setCellsInRange(const Vec2& center, int range, const unsigned char value);
+	/* Get the array indices of the terrain pixel at the given world position.
+	 *
+	 * @param position Position to translate to indices.
+	 * @return Array indices of the world position.
 	 */
-	std::pair<int, int> posToTerrainCoord(const Vec2& position) const;
+	std::pair<std::size_t, std::size_t> posToTerrainCoord(const Vec2& position) const;
 
+	std::size_t getChunksX() const { return chunks.empty() ? 0 : chunks[0].size(); }
+	std::size_t getChunksY() const { return chunks.size(); }
+	std::size_t getChunkSize() const { return chunkSize; }
+	int getPixelSize() const { return pixelSize; }
+	// DEPRECATED, does not return a correct tree.
 	const Tree2D& getTree() const { return terrainTree; }
+	Scene& getScene() const { return scene; }
+
+	std::vector<Vec2> getAllSpawns() const;
 
 private:
 	Scene& scene;
 
-	std::vector<std::vector<char>> terrainMap;
-	const size_t xSize, ySize;
-	constexpr static const int pixelSizeMultiplier = 5;
-	constexpr static const int pixelSize = Game::pixelSize * pixelSizeMultiplier;
+	int pixelSize;
 
-	std::vector<std::vector<SDL_Rect>> renderRects;
+	const std::size_t chunkSize;
+	const std::size_t terrainXSize;
+	const std::size_t terrainYSize;
+	std::vector<std::vector<Chunk>> chunks;
+	std::vector<std::vector<Chunk>> splitToChunks(const Terrain& terrain,
+												  const std::size_t chunkSize);
+	std::pair<std::size_t, std::size_t> posToChunk(
+		const std::pair<std::size_t, std::size_t>& pos) const;
 
+	// DEPRECATED. TerrainManager does not know about all it's terrainColliders.
 	std::vector<GameObject*> terrainColliders;
 	Tree2D terrainTree;
 	void updateTree();
-	/*
-	 * @abstract	Creates a TerrainCollider at the middle point between start and end,
-	 *			with a line collider from start to end.
-	 * @param	start	Start position of LineCollider.
-	 * @param	end		End position of LineCollider.
-	 * @param	scene	The scene to create the collider in.
-	 */
-	void createCollider(const Vec2& start, const Vec2& end);
-	/*
-	 * @abstract	Tries to extend an existing collider that ends at start to ending at end.
-	 * @param	start	Start position of new collider, used to check against existing ends.
-	 * @param	end		End position of new collider, existing collider is extended to this.
-	 * @param	currentColliders	Map of existing colliders. Key: end, Value: start.
-	 * @param	scene	The scene to create the colliders in.
-	 */
-	void tryExtendCollider(const std::pair<int, int>& start, const std::pair<int, int>& end,
-						   std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders);
 
 	SDL_Color color;
 };

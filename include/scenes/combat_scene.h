@@ -16,11 +16,17 @@ public:
 	void update(const float deltaTime) override;
 	void render(SDL_Renderer* renderer) const override;
 
-	const Player& player;
 	const EnemyManager& getEnemyManager() const { return enemyManager; }
 	const TerrainManager& getTerrainManager() const { return terrainManager; }
 
 private:
-	EnemyManager enemyManager;
 	TerrainManager terrainManager;
+	EnemyManager enemyManager;
+
+	TerrainManager generateTerrain();
+	const Player& spawnPlayer();
+
+public:
+	// Player must be initialized after terrainManager
+	const Player& player;
 };

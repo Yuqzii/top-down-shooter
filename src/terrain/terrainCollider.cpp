@@ -1,14 +1,14 @@
 #include "terrain/terrainCollider.h"
 
 #include <cmath>
-#include <utility>
 
 #include "bullet.h"
 #include "engine/game.h"
 #include "engine/scene.h"
+#include "terrain/chunk.h"
 #include "terrain/terrainManager.h"
 
-TerrainCollider::TerrainCollider() : GameObject{Vec2{}} {
+TerrainCollider::TerrainCollider() : GameObject{Vec2{}}, chunk{nullptr} {
 	// Create a static line collider and set this GameObject as static
 	collider = std::make_unique<LineCollider>(Collision::Line{}, true, this);
 	isStatic = true;
@@ -16,32 +16,33 @@ TerrainCollider::TerrainCollider() : GameObject{Vec2{}} {
 }
 
 void TerrainCollider::initialize(const Scene& scene, const Vec2& position, const Vec2& start,
-								 const Vec2& end, TerrainManager* manager) {
+								 const Vec2& end, Chunk& chunk) {
 	GameObject::initialize(scene, position);
 
 	LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
 	lineCollider->line.start = start;
 	lineCollider->line.end = end;
-	this->manager = manager;
+
+	this->chunk = &chunk;
 }
 
 void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
 	if (bullet) {
 		Vec2 newPos = event.position + bullet->getDirection() * 0.1f;
-		const auto [nx, ny] = manager->posToTerrainCoord(newPos);
-		const auto [ox, oy] = manager->posToTerrainCoord(event.position);
+		const auto [nx, ny] = chunk->getManager().posToTerrainCoord(newPos);
+		const auto [ox, oy] = chunk->getManager().posToTerrainCoord(event.position);
 		if (nx != ox && ny != oy) {
 			// newPos is beyond where it should be able to hit,
 			// so we choose the one closest to the original collision position.
 			const int rx = std::round(newPos.x);
 			const int ry = std::round(newPos.y);
 			if (std::abs(rx - newPos.x) > std::abs(ry - newPos.y))
-				manager->removePixel(std::make_pair(ox, ny));
+				chunk->getManager().setCell(ox, ny, 0);
 			else
-				manager->removePixel(std::make_pair(nx, oy));
+				chunk->getManager().setCell(nx, oy, 0);
 		} else
-			manager->removePixel(std::make_pair(nx, ny));
+			chunk->getManager().setCell(nx, ny, 0);
 	}
 }
 

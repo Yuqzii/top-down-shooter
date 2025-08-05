@@ -39,7 +39,7 @@ public:
 	 * @return	Pointer to the instantiated GameObject.
 	 */
 	template <class T, typename... Args>
-	T& instantiate(Args... args) {
+	T& instantiate(Args&&... args) {
 		// Compile time check that we don't try to instantiate a non-GameObject
 		static_assert(std::is_base_of<GameObject, T>(),
 					  "Object to instantiate must inherit from GameObject");
@@ -66,10 +66,9 @@ public:
 
 protected:
 	Camera cam;
-
-private:
 	Game& game;
 
+private:
 	GameObjectVector gameObjects;
 	Tree2D objectTree;
 	void updateObjectTree();

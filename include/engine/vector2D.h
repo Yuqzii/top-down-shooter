@@ -1,16 +1,16 @@
 #pragma once
 
-#include <cmath>
 #include <ostream>
 
 struct Vec2 {
 	float x;
 	float y;
 
-	Vec2(const float& x, const float& y);
-	Vec2(const int& x, const int& y);
+	Vec2(const float x, const float y);
+	Vec2(const int x, const int y);
+	Vec2(const std::size_t x, const std::size_t y);
 	Vec2();
-	Vec2(const float& degrees);
+	Vec2(const float degrees);
 	Vec2(const Vec2& vec);
 
 	float magnitude() const;
@@ -28,7 +28,7 @@ struct Vec2 {
 	bool operator<(const Vec2& rhs) const;
 	bool operator>(const Vec2& rhs) const;
 };
-//
+
 // Operator overloading
 // + and +=
 inline Vec2& operator+=(Vec2& lhs, const Vec2& rhs) {

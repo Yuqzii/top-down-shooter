@@ -2,14 +2,14 @@
 
 #include "engine/gameObject.h"
 
-class TerrainManager;
+class Chunk;
 
 class TerrainCollider : public GameObject {
 public:
 	TerrainCollider();
 
 	void initialize(const Scene& scene, const Vec2& position, const Vec2& start, const Vec2& end,
-					TerrainManager* manager);
+					Chunk& chunk);
 
 	// ONLY USED FOR DEBUG_GIZMO
 	void update(Scene& scene, const float deltaTime) override;
@@ -19,7 +19,7 @@ public:
 private:
 	SETOBJECTTEXTURE("empty.bmp");
 
-	TerrainManager* manager;
+	Chunk* chunk;
 
 	// testing, REMOVE
 	Vec2 normal;

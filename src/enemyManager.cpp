@@ -4,8 +4,7 @@
 #include "engine/game.h"
 #include "engine/scene.h"
 
-const std::array<const Vec2, 4> spawnPositions = {Vec2{200, 170}, Vec2{200, 550}, Vec2{1100, 350},
-												  Vec2{1200, 740}};
+EnemyManager::EnemyManager(std::vector<Vec2>&& spawnPositions) : spawnPositions{spawnPositions} {}
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
@@ -16,11 +15,11 @@ void EnemyManager::update(Scene& scene, const float deltaTime) {
 			it++;
 	}
 
-	currentTime -= deltaTime;  // Update timer
+	spawnTimer -= deltaTime;  // Update timer
 	// Spawn enemy if timer reaches 0
-	if (currentTime <= 0) {
+	if (spawnTimer <= 0) {
 		spawnEnemy(scene);
-		currentTime = startTime;
+		spawnTimer = spawnInterval;
 	}
 
 	// Update tree
@@ -38,15 +37,14 @@ const Enemy* EnemyManager::findClosestEnemy(const Vec2& target) const {
 }
 
 void EnemyManager::spawnEnemy(Scene& scene) {
-	srand(time(NULL));
-	int randIdx = rand() % spawnPositions.size();
+	std::uniform_int_distribution<std::size_t> dist{0, spawnPositions.size() - 1};
+	const std::size_t idx = dist(scene.getGame().randGen);
 
-	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[randIdx]);
+	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[idx]);
 	enemies.push_back(&enemy);
 }
 
 void EnemyManager::updateTree() {
-	enemyTree = std::make_unique<Tree2D>();	 // Create new tree
-	// Initialize tree with list of enemies
+	enemyTree = std::make_unique<Tree2D>();
 	enemyTree->initializeWithList(std::vector<GameObject*>(enemies.begin(), enemies.end()));
 }

@@ -1,164 +1,43 @@
 #include "terrain/terrainManager.h"
 
-#include <map>
+#include <cassert>
+#include <cmath>
+#include <cstddef>
 
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
 #include "engine/scene.h"
+#include "terrain/chunk.h"
 #include "terrain/terrainCollider.h"
 
-TerrainManager::TerrainManager(const std::vector<std::vector<char>>& terrainMap_,
-							   const SDL_Color& color_, Scene& scene_)
-	: terrainMap{terrainMap_},
-	  xSize{terrainMap.size()},
-	  ySize{terrainMap[0].size()},
+TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
+							   const int pixelSizeMultiplier, const SDL_Color& color_,
+							   Scene& scene_)
+	: chunkSize{chunkSize},
+	  pixelSize{Game::pixelSize * pixelSizeMultiplier},
 	  color{color_},
-	  scene{scene_} {
-	renderRects.resize(xSize);
-	for (auto& rectList : renderRects) rectList.resize(ySize);
+	  scene{scene_},
+	  chunks{std::move(splitToChunks(terrain, chunkSize))},
+	  terrainXSize{terrain.getXSize()},
+	  terrainYSize{terrain.getYSize()} {
+	updateRender();
+	updateColliders();
 }
 
 void TerrainManager::updateRender() {
-	for (int x = 0; x < xSize; x++) {
-		for (int y = 0; y < ySize; y++) {
-			// Add render rect if there is terrain at the current position
-			if (terrainMap[x][y]) {
-				// Does this pixel need recalculation?
-				if (renderRects[x][y].w != 0) continue;
-
-				renderRects[x][y].x = x * pixelSize;
-				renderRects[x][y].y = y * pixelSize;
-				renderRects[x][y].w = renderRects[x][y].h = pixelSize;
-			} else {
-				// Zero rect so that is is not rendered
-				renderRects[x][y].w = renderRects[x][y].h = 0;
-			}
-		}
-	}
+	for (auto& vec : chunks)
+		for (auto& chunk : vec) chunk.updateRender(pixelSize);
 }
 
-void TerrainManager::updateCollisions() {
+void TerrainManager::updateColliders() {
 	// Remove previous colliders
-	for (auto it = terrainColliders.begin(); it != terrainColliders.end();) {
-		(*it)->deleteObject = true;
-		it = terrainColliders.erase(it);
-	}
+	for (auto collider : terrainColliders) collider->deleteObject = true;
+	terrainColliders.clear();
 
-	std::map<std::pair<int, int>, std::pair<int, int>> currentColliders;  // Key: end, Value: start
-
-	for (int x = 0; x < xSize; ++x) {
-		const float xPos = x * pixelSize;
-		for (int y = 0; y < ySize; ++y) {
-			if (!terrainMap[x][y]) continue;
-
-			const float yPos = y * pixelSize;
-			const std::pair<int, int> topLeft{xPos, yPos};
-			const std::pair<int, int> topRight{xPos + pixelSize, yPos};
-			const std::pair<int, int> botLeft{xPos, yPos + pixelSize};
-			const std::pair<int, int> botRight{xPos + pixelSize, yPos + pixelSize};
-
-			const bool left = x > 0 && terrainMap[x - 1][y];
-			const bool right = x < xSize - 1 && terrainMap[x + 1][y];
-			const bool above = y > 0 && terrainMap[x][y - 1];
-			const bool below = y < ySize - 1 && terrainMap[x][y + 1];
-
-			if (left && right && above && below)
-				continue;  // Terrain in all directions
-			else if (!left && right && above && below) {
-				// Only empty to the left
-				tryExtendCollider(topLeft, botLeft, currentColliders);
-			} else if (left && !right && above && below) {
-				// Only empty to the right
-				tryExtendCollider(topRight, botRight, currentColliders);
-			} else if (left && right && !above && below) {
-				// Only empty above
-				tryExtendCollider(topLeft, topRight, currentColliders);
-			} else if (left && right && above && !below) {
-				// Only empty below
-				tryExtendCollider(botLeft, botRight, currentColliders);
-			} else if (!left && !right && above && below) {
-				// Straight vertical line
-				tryExtendCollider(topLeft, botLeft, currentColliders);
-				tryExtendCollider(topRight, botRight, currentColliders);
-			} else if ((!left && right && !above && below) || (left && !right && above && !below)) {
-				// Diagonal line from bottom left to top right
-				tryExtendCollider(botLeft, topRight, currentColliders);
-			} else if ((!left && right && above && !below) || (left && !right && !above && below)) {
-				// Diagonal from top left to bottom right
-				tryExtendCollider(topLeft, botRight, currentColliders);
-			} else if (left && right && !above && !below) {
-				// Straight horizontal line
-				tryExtendCollider(topLeft, topRight, currentColliders);
-				tryExtendCollider(botLeft, botRight, currentColliders);
-			} else if (!left && !right && !above && below) {
-				// Three lines, vertical left, horizontal above, and vertical right
-				tryExtendCollider(topLeft, botLeft, currentColliders);
-				tryExtendCollider(topLeft, topRight, currentColliders);
-				tryExtendCollider(topRight, botRight, currentColliders);
-			} else if (!left && !right && above && !below) {
-				// Three line, vertical left, vertical right, and horizontal below
-				tryExtendCollider(topLeft, botLeft, currentColliders);
-				tryExtendCollider(topRight, botRight, currentColliders);
-				tryExtendCollider(botLeft, botRight, currentColliders);
-			} else if (!left && right && !above && !below) {
-				// Three lines, vertical left, horizontal above, and horizontal below
-				tryExtendCollider(topLeft, botLeft, currentColliders);
-				tryExtendCollider(topLeft, topRight, currentColliders);
-				tryExtendCollider(botLeft, botRight, currentColliders);
-			} else if (left && !right && !above && !below) {
-				// Three lines, vertical right, horizontal above, and horizontal below
-				tryExtendCollider(topRight, botRight, currentColliders);
-				tryExtendCollider(topLeft, topRight, currentColliders);
-				tryExtendCollider(botLeft, botRight, currentColliders);
-			} else if (!left && !right && !above && !below) {
-				// Collidersr on every side
-				tryExtendCollider(topLeft, botLeft, currentColliders);
-				tryExtendCollider(topRight, botRight, currentColliders);
-				tryExtendCollider(topLeft, topRight, currentColliders);
-				tryExtendCollider(botLeft, botRight, currentColliders);
-			}
-		}
-	}
-
-	// Construct colliders
-	for (const auto& [end, start] : currentColliders) {
-		createCollider(Vec2{start.first, start.second}, Vec2{end.first, end.second});
-	}
+	for (auto& vec : chunks)
+		for (auto& chunk : vec) chunk.updateColliders();
 
 	updateTree();
-}
-
-void TerrainManager::tryExtendCollider(
-	const std::pair<int, int>& start, const std::pair<int, int>& end,
-	std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders) {
-	const Vec2 startVec{start.first, start.second};
-	const Vec2 endVec{end.first, end.second};
-
-	// Create collider if there already is one ending at end
-	if (currentColliders.count(end)) {
-		createCollider(Vec2{currentColliders[end].first, currentColliders[end].second}, endVec);
-		currentColliders.erase(end);
-	}
-
-	// Is there a collider ending at start?
-	if (currentColliders.count(start)) {
-		const Vec2 curStartVec{currentColliders[start].first, currentColliders[start].second};
-
-		// Change end point if line is going the same direction
-		if ((startVec - curStartVec).normalized() == (endVec - startVec).normalized()) {
-			auto node = currentColliders.extract(start);
-			node.key() = end;
-			currentColliders.insert(std::move(node));
-			return;
-		}
-	}
-	currentColliders[end] = start;
-}
-
-void TerrainManager::createCollider(const Vec2& start, const Vec2& end) {
-	const Vec2 position{start + (end - start) * 0.5f};
-	TerrainCollider& collider = scene.instantiate<TerrainCollider>(position, start, end, this);
-	terrainColliders.push_back(&collider);
 }
 
 void TerrainManager::updateTree() {
@@ -169,32 +48,31 @@ void TerrainManager::updateTree() {
 void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-	for (auto& rectList : renderRects) {
-		std::vector<SDL_Rect> rects{rectList};
-		for (auto& rect : rects) {
-			const Vec2 camPos = cam.getPos();
-			rect.x -= camPos.x;
-			rect.y -= camPos.y;
-		}
-		SDL_RenderFillRects(renderer, &rects[0], rects.size());
+	for (auto& chunkList : chunks) {
+		for (auto& chunk : chunkList) chunk.render(renderer, cam);
 	}
 }
 
-void TerrainManager::removePixel(const Vec2& position) {
+void TerrainManager::setCell(const Vec2& position, const unsigned char value) {
 	const auto pixelPos = posToTerrainCoord(position);
-	removePixel(pixelPos);
+	setCell(pixelPos, value);
 }
 
-void TerrainManager::removePixel(const std::pair<int, int>& position) {
-	const auto [x, y] = position;
-	if (x >= xSize || y >= ySize || !terrainMap[x][y]) return;
+void TerrainManager::setCell(const std::pair<std::size_t, std::size_t>& position,
+							 const unsigned char value) {
+	auto [x, y] = position;
+	if (x >= terrainXSize || y >= terrainYSize) return;
 
-	terrainMap[x][y] = false;
-	updateRender();
-	updateCollisions();
+	auto [chunkX, chunkY] = posToChunk(position);
+	assert(chunkX >= 0 && chunkX < getChunksX() && chunkY >= 0 && chunkY < getChunksY());
+	chunks[chunkY][chunkX].setCell(x % chunkSize, y % chunkSize, value);
 }
 
-void TerrainManager::removeInRange(const Vec2& center, int range) {
+void TerrainManager::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
+	setCell(std::make_pair(x, y), value);
+}
+
+void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsigned char value) {
 	++range;  // Increment range to make calculations work correctly
 
 	// Find the height (sine) of every x position based on the range (radius)
@@ -203,22 +81,78 @@ void TerrainManager::removeInRange(const Vec2& center, int range) {
 		maxY[x] = std::round(std::sin(std::acos((float)x / range)) * range);
 	}
 
-	const auto [cX, cY] = posToTerrainCoord(center);  // Get center to remove from
+	const auto [cX, cY] = posToTerrainCoord(center);
+	std::map<std::pair<std::size_t, std::size_t>, std::vector<std::pair<std::size_t, std::size_t>>>
+		chunkMap;
 	// Loop through and deactivate pixels
 	for (int x = -range + 1; x < range; ++x) {
-		if (cX + x < 0 || cX + x >= xSize) continue;
+		if (cX + x < 0 || cX + x >= terrainXSize) continue;
 		for (int y = -maxY[std::abs(x)] + 1; y < maxY[std::abs(x)]; ++y) {
-			if (cY + y < 0 || cY + y >= ySize) continue;
-			terrainMap[cX + x][cY + y] = false;
+			if (cY + y < 0 || cY + y >= terrainYSize) continue;
+
+			auto pos = posToChunk(std::make_pair(cX + x, cY + y));
+			auto chunkPos = std::make_pair((cX + x) % chunkSize, (cY + y) % chunkSize);
+			chunkMap[pos].push_back(chunkPos);
 		}
 	}
 
-	updateRender();
-	updateCollisions();
+	for (auto [chunk, posList] : chunkMap) {
+		auto [x, y] = chunk;
+		chunks[y][x].setCellMultiple(posList, value);
+	}
 }
 
-std::pair<int, int> TerrainManager::posToTerrainCoord(const Vec2& position) const {
-	const int x = position.x / pixelSize;
-	const int y = position.y / pixelSize;
-	return std::move(std::pair<int, int>{x, y});
+std::pair<std::size_t, std::size_t> TerrainManager::posToTerrainCoord(const Vec2& position) const {
+	const std::size_t x = position.x / pixelSize;
+	const std::size_t y = position.y / pixelSize;
+	return std::make_pair(x, y);
+}
+
+std::pair<std::size_t, std::size_t> TerrainManager::posToChunk(
+	const std::pair<std::size_t, std::size_t>& pos) const {
+	assert(chunkSize != 0);
+
+	const std::size_t x = pos.first / chunkSize;
+	const std::size_t y = pos.second / chunkSize;
+	return std::move(std::make_pair(x, y));
+}
+
+std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& terrain,
+															  const std::size_t chunkSize) {
+	assert(terrain.getXSize() % chunkSize == 0 && terrain.getYSize() % chunkSize == 0 &&
+		   "chunkSize must divide terrain x- and y-size.");
+
+	const std::size_t chunksX = terrain.getXSize() / chunkSize;
+	const std::size_t chunksY = terrain.getYSize() / chunkSize;
+	std::vector<std::vector<Chunk>> result(chunksY);
+
+	for (std::size_t y = 0; y < chunksY; y++) {
+		result[y].reserve(chunksX);
+		for (std::size_t x = 0; x < chunksX; x++) {
+			// Copy this chunk's part of the terrain map and initialize the chunk with it
+			std::vector<std::vector<unsigned char>> chunkMap(chunkSize,
+															 std::vector<unsigned char>(chunkSize));
+			for (int chunkY = y * chunkSize, localY = 0; chunkY < (y + 1) * chunkSize;
+				 chunkY++, localY++) {
+				std::copy(terrain.map[chunkY].begin() + x * chunkSize,
+						  terrain.map[chunkY].begin() + (x + 1) * chunkSize,
+						  chunkMap[localY].begin());
+			}
+
+			result[y].emplace_back(std::move(chunkMap), x * chunkSize * pixelSize,
+								   y * chunkSize * pixelSize, *this);
+		}
+	}
+	return result;
+}
+
+std::vector<Vec2> TerrainManager::getAllSpawns() const {
+	std::vector<Vec2> spawns;
+	for (const auto& chunkList : chunks) {
+		for (const Chunk& chunk : chunkList) {
+			const auto chunkSpawns = chunk.getSpawnPositions();
+			spawns.insert(spawns.end(), chunkSpawns.begin(), chunkSpawns.end());
+		}
+	}
+	return spawns;
 }
