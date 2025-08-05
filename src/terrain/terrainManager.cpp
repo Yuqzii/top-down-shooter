@@ -118,7 +118,7 @@ std::pair<std::size_t, std::size_t> TerrainManager::posToChunk(
 }
 
 std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& terrain,
-															  const int chunkSize) {
+															  const std::size_t chunkSize) {
 	assert(terrain.getXSize() % chunkSize == 0 && terrain.getYSize() % chunkSize == 0 &&
 		   "chunkSize must divide terrain x- and y-size.");
 
