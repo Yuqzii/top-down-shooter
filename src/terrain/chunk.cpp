@@ -10,21 +10,21 @@ std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 	std::array<int, minSpawnSpace> result;
 	for (int x = 0; x < minSpawnSpace; x++) {
 		result[x] =
-			std::round(std::sin(std::acos(static_cast<double>(x) / minSpawnSpace)) * minSpawnSpace);
+		    std::round(std::sin(std::acos(static_cast<double>(x) / minSpawnSpace)) * minSpawnSpace);
 	}
 	return result;
 }();
 
 Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
-			 const std::size_t originY, TerrainManager& manager)
-	: terrain{map}, manager{manager}, originX{originX}, originY{originY} {
+             const std::size_t originY, TerrainManager& manager)
+    : terrain{map}, manager{manager}, originX{originX}, originY{originY} {
 	renderRects.resize(terrain.getYSize(), std::vector<SDL_Rect>(terrain.getXSize()));
 	updateSpawnPositions();
 }
 
 void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
 	assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
-		   "Position (x, y) must be within the terrain size.");
+	       "Position (x, y) must be within the terrain size.");
 
 	terrain.map[y][x] = value;
 
@@ -33,10 +33,10 @@ void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned cha
 }
 
 void Chunk::setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
-							const unsigned char value) {
+                            const unsigned char value) {
 	for (auto [x, y] : positions) {
 		assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
-			   "Position (x, y) must be within the terrain size.");
+		       "Position (x, y) must be within the terrain size.");
 		terrain.map[y][x] = value;
 	}
 
@@ -62,7 +62,7 @@ void Chunk::updateRender(const int pixelSize) {
 	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
 		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
 			if (terrain.map[y][x]) {
-				if (renderRects[y][x].w == pixelSize) continue;	 // Already calculated
+				if (renderRects[y][x].w == pixelSize) continue;  // Already calculated
 
 				renderRects[y][x].x = x * pixelSize + originX;
 				renderRects[y][x].y = y * pixelSize + originY;
@@ -91,7 +91,7 @@ void Chunk::updateColliders() {
 			const std::pair<int, int> topRight{xPos + manager.getPixelSize(), yPos};
 			const std::pair<int, int> botLeft{xPos, yPos + manager.getPixelSize()};
 			const std::pair<int, int> botRight{xPos + manager.getPixelSize(),
-											   yPos + manager.getPixelSize()};
+			                                   yPos + manager.getPixelSize()};
 
 			const bool left = x > 0 && terrain.map[y][x - 1];
 			const bool right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
@@ -163,8 +163,8 @@ void Chunk::updateColliders() {
 }
 
 void Chunk::tryExtendCollider(
-	const std::pair<int, int>& start, const std::pair<int, int>& end,
-	std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders) {
+    const std::pair<int, int>& start, const std::pair<int, int>& end,
+    std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders) {
 	const Vec2 startVec{start.first, start.second};
 	const Vec2 endVec{end.first, end.second};
 
@@ -194,7 +194,7 @@ void Chunk::tryExtendCollider(
 void Chunk::createCollider(const Vec2& start, const Vec2& end) {
 	const Vec2 position{start + (end - start) * 0.5f};
 	TerrainCollider& collider =
-		manager.getScene().instantiate<TerrainCollider>(position, start, end, *this);
+	    manager.getScene().instantiate<TerrainCollider>(position, start, end, *this);
 	colliders.push_back(collider);
 }
 
@@ -211,16 +211,16 @@ void Chunk::updateSpawnPositions() {
 				// hitX + minSpawnSpace moves so that the entire area is outside,
 				// the y stuff moves back proportional to how high up we hit.
 				x = hitX + minSpawnSpace - (std::max(hitY, y) - std::min(hitY, y)) +
-					spawnCircleY.back() + 1;
+				    spawnCircleY.back() + 1;
 			} else {
 				spawnPositions.push_back(Vec2{x * manager.getPixelSize() + originX,
-											  y * manager.getPixelSize() + originY});
+				                              y * manager.getPixelSize() + originY});
 
 				// Set all positions inside the spawn area as used.
 				const int cornerDist = spawnCircleY.back() - 1;
 				for (int xAdd = -minSpawnSpace + 1; xAdd < minSpawnSpace; xAdd++) {
 					for (int yAdd = -spawnCircleY[std::abs(xAdd)];
-						 yAdd < spawnCircleY[std::abs(xAdd)]; yAdd++) {
+					     yAdd < spawnCircleY[std::abs(xAdd)]; yAdd++) {
 						used.map[y + yAdd][x + xAdd] = 1;
 					}
 				}
@@ -232,10 +232,10 @@ void Chunk::updateSpawnPositions() {
 }
 
 std::optional<std::pair<std::size_t, std::size_t>> Chunk::findObstruction(
-	const std::size_t cx, const std::size_t cy, const Terrain& used) const {
+    const std::size_t cx, const std::size_t cy, const Terrain& used) const {
 	assert(cx - minSpawnSpace >= 0 && cx + minSpawnSpace < used.getXSize() &&
-		   cy - minSpawnSpace >= 0 && cy + minSpawnSpace < used.getYSize() &&
-		   "Cannot evaluate spawn that goes outside of chunk bounds.");
+	       cy - minSpawnSpace >= 0 && cy + minSpawnSpace < used.getYSize() &&
+	       "Cannot evaluate spawn that goes outside of chunk bounds.");
 
 	// Check from right to left, because if there is something blocking further to the right
 	// and we move to avoid something to the left, the next check will anyways be negative.

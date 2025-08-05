@@ -26,8 +26,8 @@ void Scene::update(const float deltaTime) {
 
 	// Check for collisions after all GameObjects are updated
 	for (auto& object : gameObjects) {
-		if (object->getCollider() == nullptr) continue;		 // Collider does not exist
-		if (object->getCollider()->getIsStatic()) continue;	 // Don't check static colliders
+		if (object->getCollider() == nullptr) continue;      // Collider does not exist
+		if (object->getCollider()->getIsStatic()) continue;  // Don't check static colliders
 		object->getCollider()->checkCollisions(*this);
 	}
 
@@ -42,7 +42,7 @@ void Scene::updateDelete() {
 	// Delete objects marked for deletion
 	for (auto it = gameObjects.begin(); it != gameObjects.end();) {
 		if (it->get()->deleteObject) {
-			it = gameObjects.erase(it);	 // Delete GameObject
+			it = gameObjects.erase(it);  // Delete GameObject
 		} else
 			it++;
 	}
@@ -55,13 +55,13 @@ void Scene::render(SDL_Renderer* renderer) const {
 }
 
 void Scene::updateObjectTree() {
-	objectTree = Tree2D();	// Create new tree
+	objectTree = Tree2D();  // Create new tree
 
 	// Create vector of raw pointers from unique_ptr vector
 	const auto objectsRange =
-		gameObjects |
-		std::views::transform(
-			[](const std::unique_ptr<GameObject>& ptr) -> GameObject* { return ptr.get(); });
+	    gameObjects |
+	    std::views::transform(
+	        [](const std::unique_ptr<GameObject>& ptr) -> GameObject* { return ptr.get(); });
 	const std::vector<GameObject*> rawObjects(objectsRange.begin(), objectsRange.end());
 
 	// Create the tree from the GameObject vector

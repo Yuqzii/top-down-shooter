@@ -52,7 +52,7 @@ public:
 	virtual void onCollision(const Collision::Event& event, Scene& scene) {}
 	bool getIsStatic() const { return isStatic; }
 
-	bool deleteObject;	// When true object is deleted on next frame
+	bool deleteObject;  // When true object is deleted on next frame
 
 protected:
 	// Position and rotation
@@ -66,7 +66,7 @@ protected:
 	bool isStatic;
 
 	// Animation
-	bool isAnimated;	   // Set true to enable animation
+	bool isAnimated;       // Set true to enable animation
 	float animationSpeed;  // Scales all animations
 	virtual void changeAnimation(const int sequenceId);
 	// Use this function to define length and speed of different animations
@@ -106,7 +106,7 @@ private:
 
 	// Animation
 	void animationUpdate(Scene& scene, const double& deltaTime);
-	float animationCounter;	 // Keeps track of current animation frame, used as x position
-	int animationSequence;	 // Keeps track of current animation sequence, used as y position
+	float animationCounter;  // Keeps track of current animation frame, used as x position
+	int animationSequence;   // Keeps track of current animation sequence, used as y position
 	int prevFrame;
 };

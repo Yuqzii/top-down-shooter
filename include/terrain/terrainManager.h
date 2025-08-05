@@ -16,7 +16,7 @@ class Camera;
 class TerrainManager {
 public:
 	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
-				   const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
+	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
 	void updateRender();
 	void updateColliders();
@@ -58,9 +58,9 @@ private:
 	const std::size_t terrainYSize;
 	std::vector<std::vector<Chunk>> chunks;
 	std::vector<std::vector<Chunk>> splitToChunks(const Terrain& terrain,
-												  const std::size_t chunkSize);
+	                                              const std::size_t chunkSize);
 	std::pair<std::size_t, std::size_t> posToChunk(
-		const std::pair<std::size_t, std::size_t>& pos) const;
+	    const std::pair<std::size_t, std::size_t>& pos) const;
 
 	// DEPRECATED. TerrainManager does not know about all it's terrainColliders.
 	std::vector<GameObject*> terrainColliders;

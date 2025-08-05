@@ -51,29 +51,29 @@ private:
 
 	void initializeTree(const std::vector<GameObject*>& objects);
 	Node* insertRecursive(Node* node, const std::array<float, 2> point, GameObject* object,
-						  const int depth);
+	                      const int depth);
 
 	const Node* nearestNeighbor(const Node* node, const std::array<float, 2>& target,
-								const int depth) const;
+	                            const int depth) const;
 
 	const Node* kNearestNeighbors(const Node* node, const std::array<float, 2>& target,
-								  const int depth, std::list<std::pair<float, const Node*>>& heap,
-								  const int k) const;
+	                              const int depth, std::list<std::pair<float, const Node*>>& heap,
+	                              const int k) const;
 	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
-					const std::array<float, 2>& target, const int k) const;
+	                const std::array<float, 2>& target, const int k) const;
 
 	void nodesInRange(const Node* node, const std::array<float, 2>& target, const int depth,
-					  const float range, std::vector<const Node*>& nodesList) const;
+	                  const float range, std::vector<const Node*>& nodesList) const;
 
 	inline float distanceSquared(const std::array<float, 2>& a,
-								 const std::array<float, 2>& b) const {
+	                             const std::array<float, 2>& b) const {
 		const float delta[2] = {a[0] - b[0], a[1] - b[1]};
 		return delta[0] * delta[0] + delta[1] * delta[1];
 	}
 
 	// Returns the closest node that is not the target
 	const Node* findClosestNode(const std::array<float, 2>& target, const Node* a,
-								const Node* b) const;
+	                            const Node* b) const;
 
 	// Prints the tree
 	void printRecursive(Node* node, int depth) const;

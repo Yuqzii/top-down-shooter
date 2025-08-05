@@ -7,29 +7,29 @@
 #include <random>
 
 TerrainGenerator::TerrainGenerator(std::mt19937& randGen)
-	: randGen{randGen},
-	  shapeFillProb{0.5},
-	  shapeGenerations{1},
-	  shapeConsecutiveWallRange{1},
-	  shapeMinConsecutiveWall{1},
-	  shapeWallRandomness{0.5},
-	  shapeCalcCloseRange{1},
-	  shapeCalcFarRange{3},
-	  shapeCalcMinCloseFill{4},
-	  shapeCalcMaxFarFill{8},
-	  cornerFillProb{0.5},
-	  cornerGenerations{1},
-	  cornerCalcRange{1},
-	  cornerCalcMinFill{4},
-	  detailsGenerations{1},
-	  detailsCalcRange{1},
-	  detailsCalcMinFill{4},
-	  edgeThickness{50} {}
+    : randGen{randGen},
+      shapeFillProb{0.5},
+      shapeGenerations{1},
+      shapeConsecutiveWallRange{1},
+      shapeMinConsecutiveWall{1},
+      shapeWallRandomness{0.5},
+      shapeCalcCloseRange{1},
+      shapeCalcFarRange{3},
+      shapeCalcMinCloseFill{4},
+      shapeCalcMaxFarFill{8},
+      cornerFillProb{0.5},
+      cornerGenerations{1},
+      cornerCalcRange{1},
+      cornerCalcMinFill{4},
+      detailsGenerations{1},
+      detailsCalcRange{1},
+      detailsCalcMinFill{4},
+      edgeThickness{50} {}
 
 Terrain TerrainGenerator::generateTerrain(const std::size_t xSize, const std::size_t ySize,
-										  const std::size_t shapeSize) {
+                                          const std::size_t shapeSize) {
 	assert(xSize % shapeSize == 0 && ySize % shapeSize == 0 &&
-		   "shapeSize must divide xSize and ySize.");
+	       "shapeSize must divide xSize and ySize.");
 
 	blockSize = shapeSize;
 
@@ -63,8 +63,8 @@ Terrain TerrainGenerator::generateShape(const std::size_t xSize, const std::size
 	for (std::size_t x = 1; x < xSize - 1; x++) {
 		for (std::size_t y = 1; y < ySize - 1; y++) {
 			terrain.map[y][x] =
-				randomizeConsecutiveWall(x, y, shapeConsecutiveWallRange, shapeMinConsecutiveWall,
-										 shapeWallRandomness, terrain);
+			    randomizeConsecutiveWall(x, y, shapeConsecutiveWallRange, shapeMinConsecutiveWall,
+			                             shapeWallRandomness, terrain);
 		}
 	}
 
@@ -72,7 +72,7 @@ Terrain TerrainGenerator::generateShape(const std::size_t xSize, const std::size
 }
 
 unsigned char TerrainGenerator::calculateShape(const std::size_t x, const std::size_t y,
-											   const Terrain& terrain) const {
+                                               const Terrain& terrain) const {
 	const int wallsClose = getWallCount(x, y, shapeCalcCloseRange, terrain);
 	const int wallsFar = getWallCount(x, y, shapeCalcFarRange, terrain);
 
@@ -89,8 +89,8 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 		for (std::size_t y = 0; y < shape.getYSize(); y++) {
 			if (shape.map[y][x]) {
 				fillArea(x * blockSize, y * blockSize,
-						 std::min((x + 1) * blockSize, terrain.getXSize() - 1),
-						 std::min((y + 1) * blockSize, terrain.getYSize() - 1), terrain, 1);
+				         std::min((x + 1) * blockSize, terrain.getXSize() - 1),
+				         std::min((y + 1) * blockSize, terrain.getYSize() - 1), terrain, 1);
 			}
 			randomCorners(x, y, terrain);
 		}
@@ -103,20 +103,20 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 			for (std::size_t y = 0; y < shape.getYSize(); y++) {
 				if (corners[y][x].topRight)
 					calculateArea(blockPositions[y][x].xMid, blockPositions[y][x].top,
-								  blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
-								  curTerrain, calc);
+					              blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
+					              curTerrain, calc);
 				if (corners[y][x].botRight)
 					calculateArea(blockPositions[y][x].xMid, blockPositions[y][x].yMid,
-								  blockPositions[y][x].right, blockPositions[y][x].bot, terrain,
-								  curTerrain, calc);
+					              blockPositions[y][x].right, blockPositions[y][x].bot, terrain,
+					              curTerrain, calc);
 				if (corners[y][x].botLeft)
 					calculateArea(blockPositions[y][x].left, blockPositions[y][x].yMid,
-								  blockPositions[y][x].xMid, blockPositions[y][x].bot, terrain,
-								  curTerrain, calc);
+					              blockPositions[y][x].xMid, blockPositions[y][x].bot, terrain,
+					              curTerrain, calc);
 				if (corners[y][x].topLeft)
 					calculateArea(blockPositions[y][x].left, blockPositions[y][x].top,
-								  blockPositions[y][x].xMid, blockPositions[y][x].yMid, terrain,
-								  curTerrain, calc);
+					              blockPositions[y][x].xMid, blockPositions[y][x].yMid, terrain,
+					              curTerrain, calc);
 			}
 		}
 		terrain = curTerrain;
@@ -126,16 +126,16 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 }
 
 unsigned char TerrainGenerator::calculateCorners(const std::size_t x, const std::size_t y,
-												 const Terrain& terrain) const {
+                                                 const Terrain& terrain) const {
 	const int count = getWallCount(x, y, cornerCalcRange, terrain);
 
 	return count >= cornerCalcMinFill;
 }
 
 std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorners(
-	const Terrain& terrain) const {
+    const Terrain& terrain) const {
 	std::vector<std::vector<Corner>> result(terrain.getYSize(),
-											std::vector<Corner>(terrain.getXSize()));
+	                                        std::vector<Corner>(terrain.getXSize()));
 
 	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
 		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
@@ -153,9 +153,9 @@ std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorner
 }
 
 std::vector<std::vector<TerrainGenerator::BlockPosition>> TerrainGenerator::getBlockPositions(
-	const Terrain& terrain) const {
+    const Terrain& terrain) const {
 	std::vector<std::vector<BlockPosition>> result(terrain.getYSize(),
-												   std::vector<BlockPosition>(terrain.getXSize()));
+	                                               std::vector<BlockPosition>(terrain.getXSize()));
 
 	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
 		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
@@ -173,24 +173,24 @@ std::vector<std::vector<TerrainGenerator::BlockPosition>> TerrainGenerator::getB
 
 void TerrainGenerator::randomCorners(const std::size_t x, const std::size_t y, Terrain& terrain) {
 	assert(!corners.empty() && x < corners[0].size() && x >= 0 && y < corners.size() && y >= 0 &&
-		   "Corners must be generated for position X and Y.");
+	       "Corners must be generated for position X and Y.");
 
 	if (corners[y][x].topRight)
 		fillAreaRandom(blockPositions[y][x].xMid, blockPositions[y][x].top,
-					   blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
-					   cornerFillProb);
+		               blockPositions[y][x].right, blockPositions[y][x].yMid, terrain,
+		               cornerFillProb);
 	if (corners[y][x].botRight)
 		fillAreaRandom(blockPositions[y][x].xMid, blockPositions[y][x].yMid,
-					   blockPositions[y][x].right, blockPositions[y][x].bot, terrain,
-					   cornerFillProb);
+		               blockPositions[y][x].right, blockPositions[y][x].bot, terrain,
+		               cornerFillProb);
 	if (corners[y][x].botLeft)
 		fillAreaRandom(blockPositions[y][x].left, blockPositions[y][x].yMid,
-					   blockPositions[y][x].xMid, blockPositions[y][x].bot, terrain,
-					   cornerFillProb);
+		               blockPositions[y][x].xMid, blockPositions[y][x].bot, terrain,
+		               cornerFillProb);
 	if (corners[y][x].topLeft)
 		fillAreaRandom(blockPositions[y][x].left, blockPositions[y][x].top,
-					   blockPositions[y][x].xMid, blockPositions[y][x].yMid, terrain,
-					   cornerFillProb);
+		               blockPositions[y][x].xMid, blockPositions[y][x].yMid, terrain,
+		               cornerFillProb);
 }
 
 Terrain TerrainGenerator::generateDetails(Terrain terrain) const {
@@ -198,7 +198,7 @@ Terrain TerrainGenerator::generateDetails(Terrain terrain) const {
 	for (int gen = 0; gen < detailsGenerations; gen++) {
 		Terrain curTerrain = terrain;
 		calculateArea(0, 0, terrain.getXSize() - 1, terrain.getYSize() - 1, terrain, curTerrain,
-					  calc);
+		              calc);
 		terrain = curTerrain;
 	}
 
@@ -206,7 +206,7 @@ Terrain TerrainGenerator::generateDetails(Terrain terrain) const {
 }
 
 unsigned char TerrainGenerator::calculateDetails(const std::size_t x, const std::size_t y,
-												 const Terrain& terrain) const {
+                                                 const Terrain& terrain) const {
 	constexpr int closeRange = 2;
 	const int count = getWallCount(x, y, detailsCalcRange, terrain);
 
@@ -215,13 +215,13 @@ unsigned char TerrainGenerator::calculateDetails(const std::size_t x, const std:
 
 Terrain TerrainGenerator::addEdges(const Terrain& reference) const {
 	Terrain terrain{reference.getXSize() + edgeThickness * 2,
-					reference.getYSize() + edgeThickness * 2};
+	                reference.getYSize() + edgeThickness * 2};
 
 	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
 		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
 			if (x < edgeThickness || y < edgeThickness ||
-				x >= terrain.getXSize() - edgeThickness - 1 ||
-				y >= terrain.getYSize() - edgeThickness)
+			    x >= terrain.getXSize() - edgeThickness - 1 ||
+			    y >= terrain.getYSize() - edgeThickness)
 				terrain.map[y][x] = 1;
 			else
 				terrain.map[y][x] = reference.map[y - edgeThickness][x - edgeThickness];
@@ -232,12 +232,12 @@ Terrain TerrainGenerator::addEdges(const Terrain& reference) const {
 }
 
 void TerrainGenerator::fillAreaRandom(const std::size_t x1, const std::size_t y1,
-									  const std::size_t x2, const std::size_t y2, Terrain& terrain,
-									  const double fillProb) {
+                                      const std::size_t x2, const std::size_t y2, Terrain& terrain,
+                                      const double fillProb) {
 	assert(x1 >= 0 && x2 < terrain.getXSize() &&
-		   "X coordinates must be in the interval [0, xSize].");
+	       "X coordinates must be in the interval [0, xSize].");
 	assert(y1 >= 0 && y2 < terrain.getYSize() &&
-		   "Y coordinates must be in the interval [0, ySize].");
+	       "Y coordinates must be in the interval [0, ySize].");
 
 	std::uniform_real_distribution<double> dist{0, 1};
 	for (int x = x1; x <= x2; x++) {
@@ -249,10 +249,10 @@ void TerrainGenerator::fillAreaRandom(const std::size_t x1, const std::size_t y1
 }
 
 void TerrainGenerator::fillArea(const std::size_t x1, const std::size_t y1, const std::size_t x2,
-								const std::size_t y2, Terrain& terrain,
-								const unsigned char value) const {
+                                const std::size_t y2, Terrain& terrain,
+                                const unsigned char value) const {
 	assert(x1 >= 0 && x1 < terrain.getXSize() && y1 >= 0 && y2 < terrain.getYSize() &&
-		   "Coordinates must be within the terrain size.");
+	       "Coordinates must be within the terrain size.");
 
 	for (std::size_t y = y1; y <= y2; y++) {
 		std::fill(terrain.map[y].begin() + x1, terrain.map[y].begin() + x2 + 1, value);
@@ -260,14 +260,14 @@ void TerrainGenerator::fillArea(const std::size_t x1, const std::size_t y1, cons
 }
 
 void TerrainGenerator::calculateArea(
-	const std::size_t x1, const std::size_t y1, const std::size_t x2, const std::size_t y2,
-	const Terrain& refTerrain, Terrain& terrain,
-	std::function<unsigned char(const std::size_t, const std::size_t, const Terrain&)> func) const {
+    const std::size_t x1, const std::size_t y1, const std::size_t x2, const std::size_t y2,
+    const Terrain& refTerrain, Terrain& terrain,
+    std::function<unsigned char(const std::size_t, const std::size_t, const Terrain&)> func) const {
 	assert(refTerrain.getXSize() == terrain.getXSize() &&
-		   refTerrain.getYSize() == terrain.getYSize() &&
-		   "refTerrain and terrain must be the same size.");
+	       refTerrain.getYSize() == terrain.getYSize() &&
+	       "refTerrain and terrain must be the same size.");
 	assert(x1 >= 0 && x1 < terrain.getXSize() && y1 >= 0 && y1 < terrain.getYSize() &&
-		   "Coordinates must be inside the terrain size.");
+	       "Coordinates must be inside the terrain size.");
 
 	for (std::size_t x = x1; x <= x2; x++) {
 		for (std::size_t y = y1; y <= y2; y++) {
@@ -277,9 +277,9 @@ void TerrainGenerator::calculateArea(
 }
 
 unsigned char TerrainGenerator::randomizeConsecutiveWall(const std::size_t x, const std::size_t y,
-														 const int range, const int wallLength,
-														 const double prob,
-														 const Terrain& terrain) {
+                                                         const int range, const int wallLength,
+                                                         const double prob,
+                                                         const Terrain& terrain) {
 	auto checkVertical = [&terrain, x, this](const std::size_t y) -> bool {
 		const auto [above, right, below, left] = getNeighbors(x, y, terrain);
 		return ((above && below) && (left != right));
@@ -332,7 +332,7 @@ unsigned char TerrainGenerator::randomizeConsecutiveWall(const std::size_t x, co
 }
 
 int TerrainGenerator::getWallCount(const std::size_t midX, const std::size_t midY, const int range,
-								   const Terrain& terrain) const {
+                                   const Terrain& terrain) const {
 	int result = 0;
 	const std::size_t startX = std::max(static_cast<std::size_t>(0), midX - range);
 	const std::size_t endX = std::min(terrain.map[0].size() - 1, midX + range);
@@ -350,7 +350,7 @@ int TerrainGenerator::getWallCount(const std::size_t midX, const std::size_t mid
 }
 
 TerrainGenerator::Neighbors TerrainGenerator::getNeighbors(const std::size_t x, const std::size_t y,
-														   const Terrain& terrain) const {
+                                                           const Terrain& terrain) const {
 	Neighbors result;
 	result.above = y > 0 && terrain.map[y - 1][x];
 	result.below = y < terrain.getYSize() - 1 && terrain.map[y + 1][x];

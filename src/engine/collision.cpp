@@ -25,7 +25,7 @@ int roundUpToMultipleOfEight(int x) { return (x + (8 - 1)) & -8; }
 // Source: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
 bool onSegment(const Vec2& p, const Vec2& q, const Vec2& r) {
 	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) &&
-		q.y >= std::min(p.y, r.y))
+	    q.y >= std::min(p.y, r.y))
 		return true;
 
 	return false;
@@ -42,7 +42,7 @@ int orientation(const Vec2& p, const Vec2& q, const Vec2& r) {
 	// for details of below formula.
 	const int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
 
-	if (val == 0) return 0;	 // collinear
+	if (val == 0) return 0;  // collinear
 
 	return (val > 0) ? 1 : 2;  // clock or counterclock wise
 }
@@ -53,7 +53,7 @@ Vec2 closestPointOnLine(const Vec2& point, const Line& line) {
 	Vec2 tangent = line.end - line.start;
 
 	if ((point - line.start).dotProduct(tangent) <= 0) {
-		return line.start;	// point is at or before start of line
+		return line.start;  // point is at or before start of line
 	}
 
 	if ((point - line.end).dotProduct(tangent) >= 0) {
@@ -170,7 +170,7 @@ Vec2 resolveStaticLine(const Collision::Event& event, const Vec2& position) {
 	normal = Vec2{normal.y, normal.x * -1};
 	// Check what side of line position is on
 	const float angle = std::acos(normal.normalized().dotProduct(
-		(position - event.other->getParent()->getPosition()).normalized()));
+	    (position - event.other->getParent()->getPosition()).normalized()));
 	const float degrees = angle * 180 / M_PI;
 	// Calculate movement according to collision depth and what side position is on
 	if (degrees >= 90.0f && degrees <= 180.0f)
@@ -225,46 +225,46 @@ void drawCircleCollider(SDL_Renderer* renderer, const Circle& collider) {
 }  // namespace Collision
 
 Collider::Collider(const Collision::Types collisionType_, const bool isStatic_, GameObject* parent_)
-	: collisionType{collisionType_}, checkRadius{0.0f}, isStatic{isStatic_}, parent{parent_} {
+    : collisionType{collisionType_}, checkRadius{0.0f}, isStatic{isStatic_}, parent{parent_} {
 	if (!isStatic_) {
 		std::cout << "Collider used static constructor, but is not marked static.\n";
 	}
 }
 
 Collider::Collider(const Collision::Types collisionType_, const float checkRadius_,
-				   GameObject* parent_)
-	: collisionType{collisionType_}, checkRadius{checkRadius_}, isStatic{false}, parent{parent_} {}
+                   GameObject* parent_)
+    : collisionType{collisionType_}, checkRadius{checkRadius_}, isStatic{false}, parent{parent_} {}
 
 Collider::Collider(const Collision::Types collisionType_, const float checkRadius_)
-	: Collider{collisionType_, checkRadius_, nullptr} {}
+    : Collider{collisionType_, checkRadius_, nullptr} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const bool isStatic_, GameObject* parent)
-	: circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, isStatic_, parent} {}
+    : circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, isStatic_, parent} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const float checkRadius_,
-							   GameObject* parent_)
-	: circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, checkRadius_, parent_} {}
+                               GameObject* parent_)
+    : circle{std::move(circle_)}, Collider{Collision::Types::CIRCLE, checkRadius_, parent_} {}
 
 CircleCollider::CircleCollider(Collision::Circle circle_, const float checkRadius_)
-	: CircleCollider{std::move(circle_), checkRadius_, nullptr} {}
+    : CircleCollider{std::move(circle_), checkRadius_, nullptr} {}
 
 LineCollider::LineCollider(Collision::Line line_, const bool isStatic_, GameObject* parent)
-	: line{std::move(line_)}, Collider{Collision::Types::LINE, isStatic_, parent} {}
+    : line{std::move(line_)}, Collider{Collision::Types::LINE, isStatic_, parent} {}
 
 LineCollider::LineCollider(Collision::Line line_, const float checkRadius_, GameObject* parent)
-	: line{line_}, Collider{Collision::Types::LINE, checkRadius_, parent} {}
+    : line{line_}, Collider{Collision::Types::LINE, checkRadius_, parent} {}
 
 LineCollider::LineCollider(Collision::Line line_, const float checkRadius_)
-	: LineCollider{std::move(line_), checkRadius_, nullptr} {}
+    : LineCollider{std::move(line_), checkRadius_, nullptr} {}
 
 PointCollider::PointCollider(Vec2 point_, const bool isStatic_, GameObject* parent)
-	: point{std::move(point_)}, Collider{Collision::Types::POINT, isStatic_, parent} {}
+    : point{std::move(point_)}, Collider{Collision::Types::POINT, isStatic_, parent} {}
 
 PointCollider::PointCollider(Vec2 point_, const float checkRadius_, GameObject* parent)
-	: point{std::move(point_)}, Collider{Collision::Types::POINT, checkRadius_, parent} {}
+    : point{std::move(point_)}, Collider{Collision::Types::POINT, checkRadius_, parent} {}
 
 PointCollider::PointCollider(Vec2 point_, const float checkRadius_)
-	: PointCollider{std::move(point_), checkRadius_, nullptr} {}
+    : PointCollider{std::move(point_), checkRadius_, nullptr} {}
 
 void Collider::collisionUpdate(Scene& scene) {
 	for (const Collision::Event& event : collisionEvents) {
@@ -309,7 +309,7 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
 		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-			object == getParent())
+		    object == getParent())
 			continue;
 
 		switch (otherCollider->getCollisionType()) {
@@ -368,7 +368,7 @@ void LineCollider::checkCollisions(const Scene& scene) {
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
 		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-			object == getParent())
+		    object == getParent())
 			continue;
 
 		switch (otherCollider->getCollisionType()) {
@@ -420,7 +420,7 @@ void PointCollider::checkCollisions(const Scene& scene) {
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
 		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-			object == getParent())
+		    object == getParent())
 			continue;
 
 		switch (otherCollider->getCollisionType()) {

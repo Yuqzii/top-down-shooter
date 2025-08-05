@@ -9,10 +9,10 @@
 #include "terrain/terrainGenerator.h"
 
 CombatScene::CombatScene(Game& game)
-	: Scene{game},
-	  terrainManager{generateTerrain()},
-	  player{spawnPlayer()},
-	  enemyManager{std::move(terrainManager.getAllSpawns())} {}
+    : Scene{game},
+      terrainManager{generateTerrain()},
+      player{spawnPlayer()},
+      enemyManager{std::move(terrainManager.getAllSpawns())} {}
 
 void CombatScene::initialize() {
 	Scene::initialize();

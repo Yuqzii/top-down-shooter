@@ -13,12 +13,12 @@
 #include "terrain/terrainCollider.h"
 
 Player::Player()
-	: healthbarBG{Vec2(20, 0), Vec2(250, 30), SDL_Color{255, 0, 0, 255}},
-	  currentGun{std::make_shared<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
-	  timeSinceShot{0.0f},
-	  GameObject{
-		  std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
-	  circleCollider{static_cast<CircleCollider&>(*collider)} {
+    : healthbarBG{Vec2(20, 0), Vec2(250, 30), SDL_Color{255, 0, 0, 255}},
+      currentGun{std::make_shared<GunData>("Sick ass gun", 20, 2000, true, 0.1f)},
+      timeSinceShot{0.0f},
+      GameObject{
+          std::make_unique<CircleCollider>(std::move(Collision::Circle{40.0f}), 500.0f, this)},
+      circleCollider{static_cast<CircleCollider&>(*collider)} {
 	pivotOffset.y = 20;
 
 	healthbarSlider = new UI::Slider(SDL_Color{0, 255, 0, 255}, &healthbarBG);
@@ -49,14 +49,14 @@ void Player::update(Scene& scene, const float deltaTime) {
 		moveDir.y = 1;
 	}
 
-	moveDir = moveDir.normalized();	 // Normalize vector so that diagonal movement is not faster
-	velocity = moveDir * moveSpeed;	 // Update velocity
+	moveDir = moveDir.normalized();  // Normalize vector so that diagonal movement is not faster
+	velocity = moveDir * moveSpeed;  // Update velocity
 
 	GameObject::update(scene, deltaTime);  // Call base GameObject update (Updates position)
 	pointToMouse(scene);
 	cam->setPos(position - scene.getGame().getWinDimensions() * 0.5);
 
-	circleCollider.circle.position = position + getDirection() * 10.0f;	 // Update collider position
+	circleCollider.circle.position = position + getDirection() * 10.0f;  // Update collider position
 
 	timeSinceShot += deltaTime;
 	const bool enoughTimePassed = timeSinceShot >= currentGun->timeBetweenShots;
@@ -72,7 +72,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 	SDL_GetWindowSizeInPixels(scene.getGame().getWindow(), NULL, &windowHeight);
 	// Make space from bottom of screen to healthbar same as side of screen to healthbar
 	healthbarBG.localPosition.y =
-		windowHeight - healthbarBG.localSize.y - healthbarBG.localPosition.x;
+	    windowHeight - healthbarBG.localSize.y - healthbarBG.localPosition.x;
 	healthbarBG.calculatePosition();
 
 	// Tell UIManager to render healthbar
@@ -82,7 +82,7 @@ void Player::update(Scene& scene, const float deltaTime) {
 // Points player towards the mouse
 inline void Player::pointToMouse(const Scene& scene) {
 	Vec2 direction(scene.getGame().getMousePos().x - getScreenPosition().x,
-				   scene.getGame().getMousePos().y - getScreenPosition().y);
+	               scene.getGame().getMousePos().y - getScreenPosition().y);
 	rotation = direction.toDegrees() + 90;
 }
 
@@ -92,22 +92,22 @@ void Player::shoot(Scene& scene) {
 	constexpr float distMultiplier = 75;  // How much further than player center should bullet spawn
 	// Instantiate and initialize bullet with correct rotation
 	Bullet& bullet = scene.instantiate<Bullet>(
-		Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier),
-		direction, rotation, currentGun);
+	    Vec2(position.x + direction.x * distMultiplier, position.y + direction.y * distMultiplier),
+	    direction, rotation, currentGun);
 
 	timeSinceShot = 0.0f;
 }
 
 void Player::onCollision(const Collision::Event& event, Scene& scene) {
 	const EnemyAttackPoint* enemyAttackPoint =
-		dynamic_cast<const EnemyAttackPoint*>(event.other->getParent());
+	    dynamic_cast<const EnemyAttackPoint*>(event.other->getParent());
 	if (enemyAttackPoint) {
 		takeDamage(enemyAttackPoint->parent->damage);
 		return;
 	}
 
 	const TerrainCollider* terrainCollider =
-		dynamic_cast<const TerrainCollider*>(event.other->getParent());
+	    dynamic_cast<const TerrainCollider*>(event.other->getParent());
 	if (terrainCollider) {
 		position += Collision::resolveStaticLine(event, position);
 		return;

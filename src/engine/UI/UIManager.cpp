@@ -23,8 +23,8 @@ void UIManager::update() {
 	// Iterate over parents of render calls and check for deletion
 	for (auto it = renderCalls.cbegin(); it != renderCalls.cend();) {
 		if (it->second->deleteObject) {
-			it = renderCalls.erase(it);	 // Remove render call
-			renderCallCnt--;			 // Update call count
+			it = renderCalls.erase(it);  // Remove render call
+			renderCallCnt--;             // Update call count
 		} else
 			it++;
 	}

@@ -11,15 +11,15 @@
 #include "terrain/terrainCollider.h"
 
 TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
-							   const int pixelSizeMultiplier, const SDL_Color& color_,
-							   Scene& scene_)
-	: chunkSize{chunkSize},
-	  pixelSize{Game::pixelSize * pixelSizeMultiplier},
-	  color{color_},
-	  scene{scene_},
-	  chunks{std::move(splitToChunks(terrain, chunkSize))},
-	  terrainXSize{terrain.getXSize()},
-	  terrainYSize{terrain.getYSize()} {
+                               const int pixelSizeMultiplier, const SDL_Color& color_,
+                               Scene& scene_)
+    : chunkSize{chunkSize},
+      pixelSize{Game::pixelSize * pixelSizeMultiplier},
+      color{color_},
+      scene{scene_},
+      chunks{std::move(splitToChunks(terrain, chunkSize))},
+      terrainXSize{terrain.getXSize()},
+      terrainYSize{terrain.getYSize()} {
 	updateRender();
 	updateColliders();
 }
@@ -59,7 +59,7 @@ void TerrainManager::setCell(const Vec2& position, const unsigned char value) {
 }
 
 void TerrainManager::setCell(const std::pair<std::size_t, std::size_t>& position,
-							 const unsigned char value) {
+                             const unsigned char value) {
 	auto [x, y] = position;
 	if (x >= terrainXSize || y >= terrainYSize) return;
 
@@ -83,7 +83,7 @@ void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsign
 
 	const auto [cX, cY] = posToTerrainCoord(center);
 	std::map<std::pair<std::size_t, std::size_t>, std::vector<std::pair<std::size_t, std::size_t>>>
-		chunkMap;
+	    chunkMap;
 	// Loop through and deactivate pixels
 	for (int x = -range + 1; x < range; ++x) {
 		if (cX + x < 0 || cX + x >= terrainXSize) continue;
@@ -109,7 +109,7 @@ std::pair<std::size_t, std::size_t> TerrainManager::posToTerrainCoord(const Vec2
 }
 
 std::pair<std::size_t, std::size_t> TerrainManager::posToChunk(
-	const std::pair<std::size_t, std::size_t>& pos) const {
+    const std::pair<std::size_t, std::size_t>& pos) const {
 	assert(chunkSize != 0);
 
 	const std::size_t x = pos.first / chunkSize;
@@ -118,9 +118,9 @@ std::pair<std::size_t, std::size_t> TerrainManager::posToChunk(
 }
 
 std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& terrain,
-															  const std::size_t chunkSize) {
+                                                              const std::size_t chunkSize) {
 	assert(terrain.getXSize() % chunkSize == 0 && terrain.getYSize() % chunkSize == 0 &&
-		   "chunkSize must divide terrain x- and y-size.");
+	       "chunkSize must divide terrain x- and y-size.");
 
 	const std::size_t chunksX = terrain.getXSize() / chunkSize;
 	const std::size_t chunksY = terrain.getYSize() / chunkSize;
@@ -131,16 +131,16 @@ std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& ter
 		for (std::size_t x = 0; x < chunksX; x++) {
 			// Copy this chunk's part of the terrain map and initialize the chunk with it
 			std::vector<std::vector<unsigned char>> chunkMap(chunkSize,
-															 std::vector<unsigned char>(chunkSize));
+			                                                 std::vector<unsigned char>(chunkSize));
 			for (int chunkY = y * chunkSize, localY = 0; chunkY < (y + 1) * chunkSize;
-				 chunkY++, localY++) {
+			     chunkY++, localY++) {
 				std::copy(terrain.map[chunkY].begin() + x * chunkSize,
-						  terrain.map[chunkY].begin() + (x + 1) * chunkSize,
-						  chunkMap[localY].begin());
+				          terrain.map[chunkY].begin() + (x + 1) * chunkSize,
+				          chunkMap[localY].begin());
 			}
 
 			result[y].emplace_back(std::move(chunkMap), x * chunkSize * pixelSize,
-								   y * chunkSize * pixelSize, *this);
+			                       y * chunkSize * pixelSize, *this);
 		}
 	}
 	return result;

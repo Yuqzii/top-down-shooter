@@ -16,7 +16,7 @@ TerrainCollider::TerrainCollider() : GameObject{Vec2{}}, chunk{nullptr} {
 }
 
 void TerrainCollider::initialize(const Scene& scene, const Vec2& position, const Vec2& start,
-								 const Vec2& end, Chunk& chunk) {
+                                 const Vec2& end, Chunk& chunk) {
 	GameObject::initialize(scene, position);
 
 	LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
@@ -57,11 +57,11 @@ void TerrainCollider::update(Scene& scene, const float deltaTime) {
 	const Vec2 dir = Vec2(lineCollider->line.end - lineCollider->line.start).normalized();
 	normal = Vec2(dir.y, dir.x * -1.0f) * 25.0f;
 	scene.getGame().getRenderManager().addRenderCall(
-		[this](Scene& scene) {
-			const Vec2 camPos = scene.getCam().getPos();
-			SDL_RenderDrawLine(scene.getGame().getRenderer(), position.x - camPos.x,
-							   position.y - camPos.y, position.x - camPos.x + normal.x,
-							   position.y - camPos.y + normal.y);
-		},
-		this);
+	    [this](Scene& scene) {
+		    const Vec2 camPos = scene.getCam().getPos();
+		    SDL_RenderDrawLine(scene.getGame().getRenderer(), position.x - camPos.x,
+		                       position.y - camPos.y, position.x - camPos.x + normal.x,
+		                       position.y - camPos.y + normal.y);
+	    },
+	    this);
 }
