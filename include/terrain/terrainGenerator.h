@@ -77,7 +77,7 @@ private:
 	void randomCorners(const std::size_t x, const std::size_t y, Terrain& terrain);
 	unsigned char calculateCorners(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
 
-	Terrain generateDetails(const Terrain& reference) const;
+	Terrain generateDetails(Terrain terrain) const;
 	unsigned char calculateDetails(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
 
 	Terrain addEdges(const Terrain& reference) const;

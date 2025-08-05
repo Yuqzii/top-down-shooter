@@ -201,9 +201,7 @@ void TerrainGenerator::randomCorners(const std::size_t x, const std::size_t y, T
 					   cornerFillProb);
 }
 
-Terrain TerrainGenerator::generateDetails(const Terrain& reference) const {
-	Terrain terrain = reference;
-
+Terrain TerrainGenerator::generateDetails(Terrain terrain) const {
 	auto calc = std::bind_front(&TerrainGenerator::calculateDetails, this);
 	for (int gen = 0; gen < detailsGenerations; gen++) {
 		Terrain curTerrain = terrain;

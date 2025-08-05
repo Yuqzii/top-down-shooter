@@ -17,7 +17,7 @@ class Camera;
 
 class Chunk {
 public:
-	Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size_t originX,
+	Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
 		  const std::size_t originY, TerrainManager& manager);
 
 	/* Sets the cell at position (x, y) to value.

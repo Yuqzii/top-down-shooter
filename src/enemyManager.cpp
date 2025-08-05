@@ -4,8 +4,8 @@
 #include "engine/game.h"
 #include "engine/scene.h"
 
-EnemyManager::EnemyManager(const std::vector<Vec2> spawnPositions)
-	: spawnPositions{std::move(spawnPositions)} {}
+EnemyManager::EnemyManager(std::vector<Vec2>&& spawnPositions)
+	: spawnPositions{spawnPositions} {}
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted

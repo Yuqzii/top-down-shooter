@@ -15,7 +15,7 @@ std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 	return result;
 }();
 
-Chunk::Chunk(const std::vector<std::vector<unsigned char>>& map, const std::size_t originX,
+Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
 			 const std::size_t originY, TerrainManager& manager)
 	: terrain{map}, manager{manager}, originX{originX}, originY{originY} {
 	renderRects.resize(terrain.getYSize(), std::vector<SDL_Rect>(terrain.getXSize()));

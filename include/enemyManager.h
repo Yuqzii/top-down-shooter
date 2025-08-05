@@ -9,7 +9,7 @@ class Game;
 
 class EnemyManager {
 public:
-	EnemyManager(const std::vector<Vec2> spawnPositions);
+	EnemyManager(std::vector<Vec2>&& spawnPositions);
 
 	void update(Scene& scene, const float deltaTime);
 
