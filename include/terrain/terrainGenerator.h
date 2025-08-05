@@ -11,7 +11,8 @@ class TerrainGenerator {
 public:
 	TerrainGenerator(std::mt19937& randGen);
 
-	Terrain generateTerrain(const std::size_t xSize, const std::size_t ySize, const std::size_t shapeSize);
+	Terrain generateTerrain(const std::size_t xSize, const std::size_t ySize,
+							const std::size_t shapeSize);
 
 	double shapeFillProb;
 	int shapeGenerations;
@@ -47,6 +48,13 @@ private:
 		bool topLeft;
 	};
 
+	struct Neighbors {
+		bool above;
+		bool right;
+		bool below;
+		bool left;
+	};
+
 	struct BlockPosition {
 		std::size_t left, xMid, right;
 		std::size_t top, yMid, bot;
@@ -57,7 +65,8 @@ private:
 	std::mt19937& randGen;
 
 	Terrain generateShape(const std::size_t xSize, const std::size_t ySize);
-	unsigned char calculateShape(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
+	unsigned char calculateShape(const std::size_t x, const std::size_t y,
+								 const Terrain& terrain) const;
 
 	std::vector<std::vector<BlockPosition>> blockPositions;
 	std::vector<std::vector<Corner>> corners;
@@ -75,21 +84,24 @@ private:
 	 * match the provided terrain.
 	 */
 	void randomCorners(const std::size_t x, const std::size_t y, Terrain& terrain);
-	unsigned char calculateCorners(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
+	unsigned char calculateCorners(const std::size_t x, const std::size_t y,
+								   const Terrain& terrain) const;
 
 	Terrain generateDetails(Terrain terrain) const;
-	unsigned char calculateDetails(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
+	unsigned char calculateDetails(const std::size_t x, const std::size_t y,
+								   const Terrain& terrain) const;
 
 	Terrain addEdges(const Terrain& reference) const;
 
-	int getWallCount(const std::size_t x, const std::size_t y, const int range, const Terrain& terrain) const;
+	int getWallCount(const std::size_t x, const std::size_t y, const int range,
+					 const Terrain& terrain) const;
 	/* Fills every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2
 	 * with random values based on the fillProb and current seed.
 	 */
-	void fillAreaRandom(const std::size_t x1, const std::size_t y1, const std::size_t x2, const std::size_t y2,
-						Terrain& terrain, const double fillProb);
-	void fillArea(const std::size_t x1, const std::size_t y1, const std::size_t x2, const std::size_t y2,
-				  Terrain& terrain, const unsigned char value) const;
+	void fillAreaRandom(const std::size_t x1, const std::size_t y1, const std::size_t x2,
+						const std::size_t y2, Terrain& terrain, const double fillProb);
+	void fillArea(const std::size_t x1, const std::size_t y1, const std::size_t x2,
+				  const std::size_t y2, Terrain& terrain, const unsigned char value) const;
 	/* Sets every position (x, y) where x1 <= x <= x2 and y1 <= y <= y2 to the output
 	 * of the func parameter.
 	 *
@@ -99,7 +111,8 @@ private:
 	void calculateArea(
 		const std::size_t x1, const std::size_t y1, const std::size_t x2, const std::size_t y2,
 		const Terrain& refTerrain, Terrain& terrain,
-		std::function<unsigned char(const std::size_t, const std::size_t, const Terrain&)> func) const;
+		std::function<unsigned char(const std::size_t, const std::size_t, const Terrain&)> func)
+		const;
 
 	/* Checks if the location (x, y) is part of a straight horizontal or vertical wall with minimum
 	 * length wallLength.
@@ -109,7 +122,9 @@ private:
 	 * @param prob			The probability of the wall remaining a wall if it matches the previous
 	 *						requirements.
 	 */
-	unsigned char randomizeConsecutiveWall(const std::size_t x, const std::size_t y, const int range,
-										   const int wallLength, const double prob,
+	unsigned char randomizeConsecutiveWall(const std::size_t x, const std::size_t y,
+										   const int range, const int wallLength, const double prob,
 										   const Terrain& terrain);
+
+	inline Neighbors getNeighbors(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
 };

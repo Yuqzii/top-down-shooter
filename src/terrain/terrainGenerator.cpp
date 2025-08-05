@@ -139,10 +139,7 @@ std::vector<std::vector<TerrainGenerator::Corner>> TerrainGenerator::checkCorner
 
 	for (std::size_t x = 0; x < terrain.getXSize(); x++) {
 		for (std::size_t y = 0; y < terrain.getYSize(); y++) {
-			const bool above = y > 0 && terrain.map[y - 1][x];
-			const bool below = y < terrain.getYSize() - 1 && terrain.map[y + 1][x];
-			const bool right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
-			const bool left = x > 0 && terrain.map[y][x - 1];
+			const auto [above, right, below, left] = getNeighbors(x, y, terrain);
 			const bool flag = terrain.map[y][x];
 
 			result[y][x].topRight = (flag ^ above) && (flag ^ right);
@@ -283,17 +280,8 @@ unsigned char TerrainGenerator::randomizeConsecutiveWall(const std::size_t x, co
 														 const int range, const int wallLength,
 														 const double prob,
 														 const Terrain& terrain) {
-	assert(y < terrain.getYSize() - 1 && y > 0 &&
-		   "There must be at least one cell above and below.");
-	assert(x < terrain.getXSize() - 1 && x > 0 &&
-		   "There must be at least one cell to the left and right.");
-
-	auto checkVertical = [&terrain, x](const std::size_t y) -> bool {
-		const bool above = terrain.map[y - 1][x];
-		const bool right = terrain.map[y][x + 1];
-		const bool below = terrain.map[y + 1][x];
-		const bool left = terrain.map[y][x - 1];
-
+	auto checkVertical = [&terrain, x, this](const std::size_t y) -> bool {
+		const auto [above, right, below, left] = getNeighbors(x, y, terrain);
 		return ((above && below) && (left != right));
 	};
 	int vertical = 0;
@@ -316,12 +304,8 @@ unsigned char TerrainGenerator::randomizeConsecutiveWall(const std::size_t x, co
 		return result <= prob;
 	}
 
-	auto checkHorizontal = [&terrain, y](const std::size_t x) -> bool {
-		const bool above = terrain.map[y - 1][x];
-		const bool right = terrain.map[y][x + 1];
-		const bool below = terrain.map[y + 1][x];
-		const bool left = terrain.map[y][x - 1];
-
+	auto checkHorizontal = [&terrain, y, this](const std::size_t x) -> bool {
+		auto [above, right, below, left] = getNeighbors(x, y, terrain);
 		return ((left && right) && (above != below));
 	};
 	int horizontal = 0;
@@ -362,5 +346,15 @@ int TerrainGenerator::getWallCount(const std::size_t midX, const std::size_t mid
 		}
 	}
 
+	return result;
+}
+
+TerrainGenerator::Neighbors TerrainGenerator::getNeighbors(const std::size_t x, const std::size_t y,
+														   const Terrain& terrain) const {
+	Neighbors result;
+	result.above = y > 0 && terrain.map[y - 1][x];
+	result.below = y < terrain.getYSize() - 1 && terrain.map[y + 1][x];
+	result.right = x < terrain.getXSize() - 1 && terrain.map[y][x + 1];
+	result.left = x > 0 && terrain.map[y][x - 1];
 	return result;
 }
