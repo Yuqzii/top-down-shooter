@@ -53,8 +53,7 @@ Terrain TerrainGenerator::generateShape(const std::size_t xSize, const std::size
 	}
 
 	// Calculate the entire terrain per generation
-	auto calc = std::bind(&TerrainGenerator::calculateShape, this, std::placeholders::_1,
-						  std::placeholders::_2, std::placeholders::_3);
+	auto calc = std::bind_front(&TerrainGenerator::calculateShape, this);
 	for (int gen = 0; gen < shapeGenerations; gen++) {
 		Terrain curTerrain = terrain;
 		calculateArea(0, 0, xSize - 1, ySize - 1, terrain, curTerrain, calc);
@@ -97,8 +96,7 @@ Terrain TerrainGenerator::generateCorners(const Terrain& shape) {
 		}
 	}
 
-	auto calc = std::bind(&TerrainGenerator::calculateCorners, this, std::placeholders::_1,
-						  std::placeholders::_2, std::placeholders::_3);
+	auto calc = std::bind_front(&TerrainGenerator::calculateCorners, this);
 	for (int gen = 0; gen < cornerGenerations; gen++) {
 		Terrain curTerrain = terrain;
 		for (std::size_t x = 0; x < shape.getXSize(); x++) {
@@ -206,8 +204,7 @@ void TerrainGenerator::randomCorners(const std::size_t x, const std::size_t y, T
 Terrain TerrainGenerator::generateDetails(const Terrain& reference) const {
 	Terrain terrain = reference;
 
-	auto calc = std::bind(&TerrainGenerator::calculateDetails, this, std::placeholders::_1,
-						  std::placeholders::_2, std::placeholders::_3);
+	auto calc = std::bind_front(&TerrainGenerator::calculateDetails, this);
 	for (int gen = 0; gen < detailsGenerations; gen++) {
 		Terrain curTerrain = terrain;
 		calculateArea(0, 0, terrain.getXSize() - 1, terrain.getYSize() - 1, terrain, curTerrain,
