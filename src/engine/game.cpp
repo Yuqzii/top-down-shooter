@@ -7,12 +7,12 @@
 #include "scenes/combat_scene.h"
 
 Game::Game(const char* title, const int width, const int height)
-	: winDimensions{width, height},
-	  window{nullptr},
-	  renderer{nullptr},
-	  input{},
-	  mouseInput{},
-	  onMouseDown{} {
+    : winDimensions{width, height},
+      window{nullptr},
+      renderer{nullptr},
+      input{},
+      mouseInput{},
+      onMouseDown{} {
 	isRunning = true;
 
 	// Check that SDL initializes
@@ -24,7 +24,7 @@ Game::Game(const char* title, const int width, const int height)
 
 	// Create window and renderer
 	SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
-	SDL_SetWindowTitle(window, title);	// Set title
+	SDL_SetWindowTitle(window, title);  // Set title
 
 	// Make alpha/transparency work
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -101,10 +101,10 @@ void Game::update() {
 }
 
 void Game::render() const {
-	SDL_SetRenderDrawColor(renderer, 84, 47, 63, 255);	// Set background color
-	SDL_RenderClear(renderer);							// Clear screen
+	SDL_SetRenderDrawColor(renderer, 84, 47, 63, 255);  // Set background color
+	SDL_RenderClear(renderer);                          // Clear screen
 
-	scenes[currentScene]->render(renderer);		  // Render scene
+	scenes[currentScene]->render(renderer);       // Render scene
 	renderManager.render(*scenes[currentScene]);  // Render overlays passed to RenderManager
 
 	SDL_RenderPresent(renderer);  // Update screen

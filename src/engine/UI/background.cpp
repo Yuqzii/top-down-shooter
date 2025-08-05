@@ -5,8 +5,8 @@
 namespace UI {
 
 Background::Background(const Vec2& position, const Vec2& size, const SDL_Color& color,
-					   Widget* parent, AnchorType anchorPosition)
-	: Widget(parent, anchorPosition) {
+                       Widget* parent, AnchorType anchorPosition)
+    : Widget(parent, anchorPosition) {
 	// Set variables
 	localPosition = position;
 	localSize = size;

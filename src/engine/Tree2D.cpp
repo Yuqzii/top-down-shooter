@@ -44,7 +44,7 @@ GameObject* Tree2D::findClosestObject(const Vec2& target) const {
 	// Usually happens when there is only one enemy.
 	if (result->point[0] == target.x && result->point[1] == target.y) throw 2;
 
-	return result->object;	// Return the GameObject associated with the result node
+	return result->object;  // Return the GameObject associated with the result node
 }
 
 std::vector<GameObject*> Tree2D::findKClosestObjects(const Vec2& target, const int k) const {
@@ -83,14 +83,14 @@ std::vector<GameObject*> Tree2D::findObjectsInRange(const Vec2& target, const fl
 
 	// Get GameObjects from the nodes
 	auto nodesRange =
-		nodes | std::views::transform([](const Node* node) -> GameObject* { return node->object; });
+	    nodes | std::views::transform([](const Node* node) -> GameObject* { return node->object; });
 	std::vector<GameObject*> result(nodesRange.begin(), nodesRange.end());
 
-	return result;	// Return GameObjects
+	return result;  // Return GameObjects
 }
 
 Tree2D::Node::Node(const std::array<float, 2> pt, GameObject* obj)
-	: point(pt), object(obj), left(nullptr), right(nullptr) {}
+    : point(pt), object(obj), left(nullptr), right(nullptr) {}
 
 Tree2D::Node::~Node() {
 	delete left;
@@ -104,7 +104,7 @@ void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
 	for (GameObject* object : objects) {
 		const std::array<float, 2> point = {object->getPosition().x, object->getPosition().y};
 		sorted.push_back(std::make_pair(
-			std::array<float, 2>{object->getPosition().x, object->getPosition().y}, object));
+		    std::array<float, 2>{object->getPosition().x, object->getPosition().y}, object));
 	}
 
 	// Sort objects along x-axis to find median x.
@@ -112,18 +112,18 @@ void Tree2D::initializeTree(const std::vector<GameObject*>& objects) {
 	std::sort(sorted.begin(), sorted.end());
 
 	std::pair<std::array<float, 2>, GameObject*>* median =
-		&sorted[sorted.size() / 2];					 // Find the median element
-	root = new Node(median->first, median->second);	 // Set median as root
+	    &sorted[sorted.size() / 2];                  // Find the median element
+	root = new Node(median->first, median->second);  // Set median as root
 
 	// Insert remaining points into tree
 	for (int i = 0; i < sorted.size(); i++) {
-		if (i == sorted.size() / 2) continue;						  // Do not insert median again
+		if (i == sorted.size() / 2) continue;                         // Do not insert median again
 		insertRecursive(root, sorted[i].first, sorted[i].second, 0);  // Insert point
 	}
 }
 
 Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2> point,
-									  GameObject* object, const int depth) {
+                                      GameObject* object, const int depth) {
 	// Create new node if node is null, base case
 	if (node == nullptr) {
 		return new Node(point, object);
@@ -145,7 +145,7 @@ Tree2D::Node* Tree2D::insertRecursive(Node* node, const std::array<float, 2> poi
 
 // Returns the point closest to the target that is not the same as target
 const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<float, 2>& target,
-											const int depth) const {
+                                            const int depth) const {
 	// No possible paths from this node, return this node
 	if (node->left == nullptr && node->right == nullptr) return node;
 
@@ -199,9 +199,9 @@ const Tree2D::Node* Tree2D::nearestNeighbor(const Node* node, const std::array<f
 }
 
 const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node, const std::array<float, 2>& target,
-											  const int depth,
-											  std::list<std::pair<float, const Node*>>& heap,
-											  const int k) const {
+                                              const int depth,
+                                              std::list<std::pair<float, const Node*>>& heap,
+                                              const int k) const {
 	// Check every visited node against heap
 	updateHeap(heap, node, target, k);
 
@@ -259,7 +259,7 @@ const Tree2D::Node* Tree2D::kNearestNeighbors(const Node* node, const std::array
 }
 
 void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target, const int depth,
-						  const float range, std::vector<const Node*>& nodesList) const {
+                          const float range, std::vector<const Node*>& nodesList) const {
 	// Check if current node is inside range
 	const float targetDist = distanceSquared(node->point, target);
 	if (targetDist <= range) {
@@ -303,7 +303,7 @@ void Tree2D::nodesInRange(const Node* node, const std::array<float, 2>& target, 
 }
 
 void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
-						const std::array<float, 2>& target, const int k) const {
+                        const std::array<float, 2>& target, const int k) const {
 	// Node is the same as target, invalid
 	if (target[0] == node->point[0] && target[1] == node->point[1]) return;
 
@@ -315,7 +315,7 @@ void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const No
 	if (heap.size() < k || dist < heap.back().first) {
 		// Find position to insert in max heap
 		const auto heapPos =
-			std::lower_bound(heap.cbegin(), heap.cend(), std::make_pair(dist, node));
+		    std::lower_bound(heap.cbegin(), heap.cend(), std::make_pair(dist, node));
 		heap.insert(heapPos, std::make_pair(dist, node));
 	}
 	// Ensure correct heap size
@@ -325,7 +325,7 @@ void Tree2D::updateHeap(std::list<std::pair<float, const Node*>>& heap, const No
 }
 
 const Tree2D::Node* Tree2D::findClosestNode(const std::array<float, 2>& target, const Node* a,
-											const Node* b) const {
+                                            const Node* b) const {
 	// Check for nullptr input
 	if (a == nullptr && b != nullptr)
 		return b;

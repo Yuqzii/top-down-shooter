@@ -37,7 +37,7 @@ public:
 protected:
 	Widget* parent;
 
-	Vec2 position;	// Rendering position, pixels
+	Vec2 position;  // Rendering position, pixels
 	Vec2 size;
 
 private:

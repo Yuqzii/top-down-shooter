@@ -18,14 +18,14 @@ class Camera;
 class Chunk {
 public:
 	Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
-		  const std::size_t originY, TerrainManager& manager);
+	      const std::size_t originY, TerrainManager& manager);
 
 	/* Sets the cell at position (x, y) to value.
 	 * x and y position is relative to this chunk.
 	 */
 	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
 	void setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
-						 const unsigned char value);
+	                     const unsigned char value);
 
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 	void updateRender(const int pixelSize);
@@ -56,7 +56,7 @@ private:
 	 * @param scene The scene to create the colliders in.
 	 */
 	void tryExtendCollider(const std::pair<int, int>& start, const std::pair<int, int>& end,
-						   std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders);
+	                       std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders);
 	/* Creates a TerrainCollider at the middle point between start and end,
 	 * with a line collider from start to end.
 	 *
@@ -71,6 +71,6 @@ private:
 	std::vector<Vec2> spawnPositions;
 	// @return Position where there is terrain blocking. Has no value if none were found.
 	std::optional<std::pair<std::size_t, std::size_t>> findObstruction(const std::size_t x,
-																	   const std::size_t y,
-																	   const Terrain& used) const;
+	                                                                   const std::size_t y,
+	                                                                   const Terrain& used) const;
 };

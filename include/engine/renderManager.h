@@ -23,5 +23,5 @@ public:
 private:
 	// Render function, parent
 	std::vector<std::pair<std::function<void(Scene&)>, const GameObject*>> renderCalls;
-	int renderCallCnt;	// Keep track of amount of calls to avoid clearing vector every frame
+	int renderCallCnt;  // Keep track of amount of calls to avoid clearing vector every frame
 };

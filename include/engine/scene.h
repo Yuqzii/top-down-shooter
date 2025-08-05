@@ -42,7 +42,7 @@ public:
 	T& instantiate(Args&&... args) {
 		// Compile time check that we don't try to instantiate a non-GameObject
 		static_assert(std::is_base_of<GameObject, T>(),
-					  "Object to instantiate must inherit from GameObject");
+		              "Object to instantiate must inherit from GameObject");
 
 		// Create the new GameObject as a unique_ptr to clarify that Scene has ownership
 		std::unique_ptr<T> newObject = std::make_unique<T>();

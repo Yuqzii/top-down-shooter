@@ -12,7 +12,7 @@ Bullet::Bullet() : GameObject(Vec2(1, 2)) {
 }
 
 void Bullet::initialize(const Scene& scene, const Vec2& startPos, const Vec2& direction,
-						const float rotation, const std::shared_ptr<GunData>& data) {
+                        const float rotation, const std::shared_ptr<GunData>& data) {
 	GameObject::initialize(scene, startPos);  // Call base initialize
 	velocity.x = direction.x * data->bulletSpeed;
 	velocity.y = direction.y * data->bulletSpeed;
@@ -25,7 +25,7 @@ void Bullet::initialize(const Scene& scene, const Vec2& startPos, const Vec2& di
 void Bullet::update(Scene& scene, const float deltaTime) {
 	lineCollider->line.start = position;   // Change collision start before position update
 	GameObject::update(scene, deltaTime);  // Update position
-	lineCollider->line.end = position;	   // Change collision end after position update
+	lineCollider->line.end = position;     // Change collision end after position update
 
 	timeLeft -= deltaTime;
 	if (timeLeft <= 0) {

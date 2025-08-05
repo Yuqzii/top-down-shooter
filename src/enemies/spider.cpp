@@ -5,8 +5,8 @@
 #include "scenes/combat_scene.h"
 
 SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const float moveSpeed,
-						 const float maxSteer, const float steerMult, const float slowingRadius)
-	: Enemy(startHealth, damage, moveSpeed, maxSteer, steerMult, slowingRadius) {
+                         const float maxSteer, const float steerMult, const float slowingRadius)
+    : Enemy(startHealth, damage, moveSpeed, maxSteer, steerMult, slowingRadius) {
 	isAnimated = true;
 	circleCollider.circle.radius = 50;
 
@@ -14,7 +14,7 @@ SpiderEnemy::SpiderEnemy(const float startHealth, const float damage, const floa
 }
 
 void SpiderEnemy::update(Scene& scene, const float deltaTime) {
-	steering = Vec2();	// Reset steering
+	steering = Vec2();  // Reset steering
 	// Different movement depending on the current state
 	switch (getState()) {
 		using enum EnemyStates;
@@ -54,7 +54,7 @@ void SpiderEnemy::update(Scene& scene, const float deltaTime) {
 void SpiderEnemy::attack(Scene& scene) {
 	// Create attack point to check for collision against player
 	EnemyAttackPoint& attackPoint =
-		scene.instantiate<EnemyAttackPoint>(Vec2(position + Vec2(rotation) * 55.0f), this);
+	    scene.instantiate<EnemyAttackPoint>(Vec2(position + Vec2(rotation) * 55.0f), this);
 
 	setState(EnemyStates::REPOSITION);
 }

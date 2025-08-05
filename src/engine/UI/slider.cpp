@@ -5,7 +5,7 @@
 namespace UI {
 
 Slider::Slider(const SDL_Color& color, Widget* parent)
-	: Background(Vec2(), Vec2(100, 100), color, parent) {
+    : Background(Vec2(), Vec2(100, 100), color, parent) {
 	sliderValue = 100;
 }
 

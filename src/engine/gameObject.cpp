@@ -12,22 +12,22 @@
 // Initialize destination rectangle (part of screen GameObject is displayed on)
 // Create global macro or sum for size instead of 3?
 GameObject::GameObject(std::unique_ptr<Collider> collider_, const Vec2& srcRectSize)
-	: deleteObject{false},
-	  size{1, 1},
-	  baseSize{srcRectSize},
-	  srcRect{0, 0, (int)srcRectSize.x, (int)srcRectSize.y},
-	  destRect{0, 0, srcRect.w * Game::pixelSize, srcRect.h * Game::pixelSize},
-	  velocity{},
-	  pivotOffset{0, 0},
-	  isAnimated{false},
-	  animationCounter{0},
-	  animationSequence{0},
-	  prevFrame{0},
-	  collider{std::move(collider_)},
-	  rotation{0},
-	  flipType{SDL_FLIP_NONE},
-	  isStatic{false},
-	  renderObject{true} {}
+    : deleteObject{false},
+      size{1, 1},
+      baseSize{srcRectSize},
+      srcRect{0, 0, (int)srcRectSize.x, (int)srcRectSize.y},
+      destRect{0, 0, srcRect.w * Game::pixelSize, srcRect.h * Game::pixelSize},
+      velocity{},
+      pivotOffset{0, 0},
+      isAnimated{false},
+      animationCounter{0},
+      animationSequence{0},
+      prevFrame{0},
+      collider{std::move(collider_)},
+      rotation{0},
+      flipType{SDL_FLIP_NONE},
+      isStatic{false},
+      renderObject{true} {}
 
 GameObject::GameObject(const Vec2& srcRectSize) : GameObject{nullptr, srcRectSize} {}
 
@@ -110,7 +110,7 @@ void GameObject::animationUpdate(Scene& scene, const double& deltaTime) {
 		// Call event if animation sequence matches event,
 		// and the previous frame was before the event and the current is after.
 		if (event.sequenceId == animationSequence && event.time <= animationCounter &&
-			event.time >= prevAnimationCounter) {
+		    event.time >= prevAnimationCounter) {
 			event.event(scene);
 		}
 	}
@@ -149,28 +149,28 @@ std::function<void(Scene&)> GameObject::debugRender() const {
 			case CIRCLE: {
 				CircleCollider* circleCollider = static_cast<CircleCollider*>(collider.get());
 				Collision::drawCircleCollider(
-					renderer, Collision::Circle{circleCollider->circle.position - camPos,
-												circleCollider->circle.radius});
+				    renderer, Collision::Circle{circleCollider->circle.position - camPos,
+				                                circleCollider->circle.radius});
 				break;
 			}
 			case LINE: {
 				LineCollider* lineCollider = static_cast<LineCollider*>(collider.get());
 				SDL_RenderDrawLineF(renderer, lineCollider->line.start.x - camPos.x,
-									lineCollider->line.start.y - camPos.y,
-									lineCollider->line.end.x - camPos.x,
-									lineCollider->line.end.y - camPos.y);
+				                    lineCollider->line.start.y - camPos.y,
+				                    lineCollider->line.end.x - camPos.x,
+				                    lineCollider->line.end.y - camPos.y);
 			}
 			case POINT: {
 				PointCollider* pointCollider = static_cast<PointCollider*>(collider.get());
 				SDL_RenderDrawPoint(renderer, pointCollider->point.x - camPos.x,
-									pointCollider->point.y - camPos.y);
+				                    pointCollider->point.y - camPos.y);
 			}
 		}
 		SDL_RenderDrawPoint(renderer, screenPosition.x, screenPosition.y);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 		SDL_RenderDrawLine(renderer, screenPosition.x, screenPosition.y,
-						   screenPosition.x + velocity.x * 0.1,
-						   screenPosition.y + velocity.y * 0.1);
+		                   screenPosition.x + velocity.x * 0.1,
+		                   screenPosition.y + velocity.y * 0.1);
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawRect(renderer, &destRect);
 	};
