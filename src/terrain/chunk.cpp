@@ -45,15 +45,17 @@ void Chunk::setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positi
 }
 
 void Chunk::render(SDL_Renderer* renderer, const Camera& cam) const {
-	for (auto& rectList : renderRects) {
-		std::vector<SDL_Rect> rects{rectList};
-		for (auto& rect : rects) {
+	std::vector<SDL_Rect> rects;
+	rects.reserve(terrain.getXSize() * terrain.getYSize());
+	for (auto curRects : renderRects) {
+		for (auto& rect : curRects) {
 			const Vec2 camPos = cam.getPos();
 			rect.x -= camPos.x;
 			rect.y -= camPos.y;
 		}
-		SDL_RenderFillRects(renderer, &rects[0], rects.size());
+		rects.insert(rects.end(), curRects.begin(), curRects.end());
 	}
+		SDL_RenderFillRects(renderer, &rects[0], rects.size());
 }
 
 void Chunk::updateRender(const int pixelSize) {
@@ -227,9 +229,8 @@ void Chunk::updateSpawnPositions() {
 	}
 }
 
-std::optional<std::pair<std::size_t, std::size_t>> Chunk::findObstruction(const std::size_t cx,
-																		const std::size_t cy,
-																		const Terrain& used) const {
+std::optional<std::pair<std::size_t, std::size_t>> Chunk::findObstruction(
+	const std::size_t cx, const std::size_t cy, const Terrain& used) const {
 	assert(cx - minSpawnSpace >= 0 && cx + minSpawnSpace < used.getXSize() &&
 		   cy - minSpawnSpace >= 0 && cy + minSpawnSpace < used.getYSize() &&
 		   "Cannot evaluate spawn that goes outside of chunk bounds.");
