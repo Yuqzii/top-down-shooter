@@ -19,8 +19,10 @@ void Tree2D::initializeWithList(const std::vector<std::reference_wrapper<GameObj
 
 void Tree2D::insert(GameObject& object) {
 	const std::array<float, 2> arrPoint = {object.getPosition().x, object.getPosition().y};
-	// Insert from root and create root if it does not exist
-	insertRecursive(root.get(), arrPoint, object, 0);
+	if (root == nullptr)
+		root = std::make_unique<Node>(arrPoint, object);
+	else
+		insertRecursive(root.get(), arrPoint, object, 0);
 }
 
 void Tree2D::print() const {
