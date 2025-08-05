@@ -258,7 +258,7 @@ void TerrainGenerator::fillArea(const std::size_t x1, const std::size_t y1, cons
 		   "Coordinates must be within the terrain size.");
 
 	for (std::size_t y = y1; y <= y2; y++) {
-		std::fill(terrain.map[y].begin() + x1, terrain.map[y].begin() + x2, value);
+		std::fill(terrain.map[y].begin() + x1, terrain.map[y].begin() + x2 + 1, value);
 	}
 }
 
