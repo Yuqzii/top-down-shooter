@@ -55,7 +55,7 @@ void Chunk::render(SDL_Renderer* renderer, const Camera& cam) const {
 		}
 		rects.insert(rects.end(), curRects.begin(), curRects.end());
 	}
-		SDL_RenderFillRects(renderer, &rects[0], rects.size());
+	SDL_RenderFillRects(renderer, &rects[0], rects.size());
 }
 
 void Chunk::updateRender(const int pixelSize) {
@@ -224,6 +224,8 @@ void Chunk::updateSpawnPositions() {
 						used.map[y + yAdd][x + xAdd] = 1;
 					}
 				}
+
+				x += 2 * minSpawnSpace;
 			}
 		}
 	}
