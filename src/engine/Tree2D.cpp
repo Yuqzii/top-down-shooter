@@ -317,7 +317,7 @@ void Tree2D::updateHeap(std::vector<std::pair<float, std::reference_wrapper<cons
 		// Find position to insert in max heap
 		const auto heapPos =
 		    std::lower_bound(heap.cbegin(), heap.cend(), std::make_pair(dist, std::ref(node)),
-		                     [](const auto& l, const auto& r) { return l.first > r.first; });
+		                     [](const auto& l, const auto& r) { return l.first < r.first; });
 		heap.insert(heapPos, std::make_pair(dist, std::ref(node)));
 	}
 	// Ensure correct heap size
