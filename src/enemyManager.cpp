@@ -1,5 +1,7 @@
 #include "enemyManager.h"
 
+#include <ranges>
+
 #include "enemies/spider.h"
 #include "engine/game.h"
 #include "engine/scene.h"
@@ -8,8 +10,8 @@ EnemyManager::EnemyManager(std::vector<Vec2>&& spawnPositions) : spawnPositions{
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
-	for (std::vector<Enemy*>::iterator it = enemies.begin(); it != enemies.end();) {
-		if ((*it)->deleteObject) {
+	for (auto it = enemies.begin(); it != enemies.end();) {
+		if (it->get().deleteObject) {
 			it = enemies.erase(it);
 		} else
 			it++;
@@ -41,10 +43,15 @@ void EnemyManager::spawnEnemy(Scene& scene) {
 	const std::size_t idx = dist(scene.getGame().randGen);
 
 	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[idx]);
-	enemies.push_back(&enemy);
+	enemies.push_back(enemy);
 }
 
 void EnemyManager::updateTree() {
 	enemyTree = std::make_unique<Tree2D>();
-	enemyTree->initializeWithList(std::vector<GameObject*>(enemies.begin(), enemies.end()));
+	auto enemiesRange =
+	    enemies | std::views::transform([](std::reference_wrapper<Enemy> enemy) -> GameObject* {
+		    return &enemy.get();
+	    });
+	std::vector<GameObject*> enemyPtrs{enemiesRange.begin(), enemiesRange.end()};
+	enemyTree->initializeWithList(enemyPtrs);
 }

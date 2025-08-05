@@ -14,12 +14,12 @@ public:
 	void update(Scene& scene, const float deltaTime);
 
 	// Returns a vector of all enemies
-	const std::vector<Enemy*> getEnemies() const { return enemies; }
+	const std::vector<std::reference_wrapper<Enemy>>& getEnemies() const { return enemies; }
 	// Returns the position of the closest enemy
 	const Enemy* findClosestEnemy(const Vec2& target) const;
 
 private:
-	std::vector<Enemy*> enemies;
+	std::vector<std::reference_wrapper<Enemy>> enemies;
 	constexpr static float spawnInterval = 3;
 	float spawnTimer = 0;
 
