@@ -69,7 +69,10 @@ TerrainManager CombatScene::generateTerrain() {
 	gen.edgeThickness = 100;
 
 	game.randGen.seed(std::random_device{}());
-	Terrain terrain = gen.generateTerrain(500, 500, 10);
+	constexpr std::size_t terrainXSize = 500;
+	constexpr std::size_t terrainYSize = 500;
+	constexpr std::size_t shapeSize = 10;
+	Terrain terrain = gen.generateTerrain(terrainXSize, terrainYSize, shapeSize);
 
 	constexpr std::size_t chunkSize = 100;
 	constexpr int pixelSizeMultiplier = 3;

@@ -61,10 +61,11 @@ private:
 
 	std::vector<std::vector<BlockPosition>> blockPositions;
 	std::vector<std::vector<Corner>> corners;
-	/* Finds all corners (empty cell with at least two neighboring filled cells such
-	 * that it is in a corner) in the provided Terrain.
+	/* Finds all corners in the provided Terrain. Corners are empty cell with at least two
+	 * neighboring filled cells such that it is an inner corner, or a filled cell that have at least
+	 * two neighboring unfilled cells such that it is an outer corner.
 	 *
-	 * @return	2D vector with a bool array. Use the Corners enum for accessing.
+	 * @return Two dimensional vector of Corner struct.
 	 */
 	std::vector<std::vector<Corner>> checkCorners(const Terrain& terrain) const;
 	std::vector<std::vector<BlockPosition>> getBlockPositions(const Terrain& terrain) const;
@@ -95,7 +96,7 @@ private:
 	 * @param func	Callable function returning unsigned char taking in x and y position,
 	 *				and a Terrain& to calculate the the value for (x, y).
 	 */
-	void calculatePortion(
+	void calculateArea(
 		const size_t x1, const size_t y1, const size_t x2, const size_t y2,
 		const Terrain& refTerrain, Terrain& terrain,
 		std::function<unsigned char(const size_t, const size_t, const Terrain&)> func) const;

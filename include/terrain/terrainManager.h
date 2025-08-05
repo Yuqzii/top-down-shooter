@@ -42,6 +42,7 @@ public:
 	std::size_t getChunksY() const { return chunks.size(); }
 	std::size_t getChunkSize() const { return chunkSize; }
 	int getPixelSize() const { return pixelSize; }
+	// DEPRECATED, does not return a correct tree.
 	const Tree2D& getTree() const { return terrainTree; }
 	Scene& getScene() const { return scene; }
 
@@ -60,6 +61,7 @@ private:
 	std::pair<std::size_t, std::size_t> posToChunk(
 		const std::pair<std::size_t, std::size_t>& pos) const;
 
+	// DEPRECATED. TerrainManager does not know about all it's terrainColliders.
 	std::vector<GameObject*> terrainColliders;
 	Tree2D terrainTree;
 	void updateTree();

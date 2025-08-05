@@ -202,7 +202,7 @@ void Chunk::updateSpawnPositions() {
 	Terrain used{terrain.map};
 	for (std::size_t y = minSpawnSpace; y < terrain.getYSize() - minSpawnSpace; y++) {
 		for (std::size_t x = minSpawnSpace; x < terrain.getXSize() - minSpawnSpace; x++) {
-			auto result = evaluateSpawn(x, y, used);
+			auto result = findObstruction(x, y, used);
 			if (result.has_value()) {
 				// Move just enough to the right to avoid whatever we encountered.
 				auto [hitX, hitY] = result.value();
@@ -227,7 +227,7 @@ void Chunk::updateSpawnPositions() {
 	}
 }
 
-std::optional<std::pair<std::size_t, std::size_t>> Chunk::evaluateSpawn(const std::size_t cx,
+std::optional<std::pair<std::size_t, std::size_t>> Chunk::findObstruction(const std::size_t cx,
 																		const std::size_t cy,
 																		const Terrain& used) const {
 	assert(cx - minSpawnSpace >= 0 && cx + minSpawnSpace < used.getXSize() &&

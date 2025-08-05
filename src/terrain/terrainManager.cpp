@@ -139,8 +139,7 @@ std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& ter
 						  chunkMap[localY].begin());
 			}
 
-			result[y].emplace_back(
-				Chunk{chunkMap, x * chunkSize * pixelSize, y * chunkSize * pixelSize, *this});
+			result[y].emplace_back(chunkMap, x * chunkSize * pixelSize, y * chunkSize * pixelSize, *this);
 		}
 	}
 	return result;

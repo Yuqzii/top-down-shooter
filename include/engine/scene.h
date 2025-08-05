@@ -39,8 +39,8 @@ public:
 	 * @return	Pointer to the instantiated GameObject.
 	 */
 	template <class T, typename... Args>
-	// Compile time check that we don't try to instantiate a non-GameObject
 	T& instantiate(Args&&... args) {
+		// Compile time check that we don't try to instantiate a non-GameObject
 		static_assert(std::is_base_of<GameObject, T>(),
 					  "Object to instantiate must inherit from GameObject");
 
