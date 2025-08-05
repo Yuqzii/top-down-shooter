@@ -71,6 +71,6 @@ private:
 	std::vector<Vec2> spawnPositions;
 	// @return Position where there is terrain blocking. Has no value if none were found.
 	std::optional<std::pair<std::size_t, std::size_t>> findObstruction(const std::size_t x,
-																	 const std::size_t y,
-																	 const Terrain& used) const;
+																	   const std::size_t y,
+																	   const Terrain& used) const;
 };

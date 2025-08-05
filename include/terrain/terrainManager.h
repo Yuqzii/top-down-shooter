@@ -57,7 +57,8 @@ private:
 	const std::size_t terrainXSize;
 	const std::size_t terrainYSize;
 	std::vector<std::vector<Chunk>> chunks;
-	std::vector<std::vector<Chunk>> splitToChunks(const Terrain& terrain, const std::size_t chunkSize);
+	std::vector<std::vector<Chunk>> splitToChunks(const Terrain& terrain,
+												  const std::size_t chunkSize);
 	std::pair<std::size_t, std::size_t> posToChunk(
 		const std::pair<std::size_t, std::size_t>& pos) const;
 

@@ -126,5 +126,6 @@ private:
 										   const int range, const int wallLength, const double prob,
 										   const Terrain& terrain);
 
-	inline Neighbors getNeighbors(const std::size_t x, const std::size_t y, const Terrain& terrain) const;
+	inline Neighbors getNeighbors(const std::size_t x, const std::size_t y,
+								  const Terrain& terrain) const;
 };
