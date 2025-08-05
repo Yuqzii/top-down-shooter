@@ -48,10 +48,10 @@ void EnemyManager::spawnEnemy(Scene& scene) {
 
 void EnemyManager::updateTree() {
 	enemyTree = std::make_unique<Tree2D>();
-	auto enemiesRange =
-	    enemies | std::views::transform([](std::reference_wrapper<Enemy> enemy) -> GameObject* {
-		    return &enemy.get();
-	    });
-	std::vector<GameObject*> enemyPtrs{enemiesRange.begin(), enemiesRange.end()};
-	enemyTree->initializeWithList(enemyPtrs);
+	std::vector<std::reference_wrapper<GameObject>> objs;
+	objs.reserve(enemies.size());
+	for (Enemy& enemy : enemies) {
+		objs.emplace_back(enemy);
+	}
+	enemyTree->initializeWithList(objs);
 }

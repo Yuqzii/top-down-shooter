@@ -61,9 +61,9 @@ void Scene::updateObjectTree() {
 	const auto objectsRange =
 	    gameObjects |
 	    std::views::transform(
-	        [](const std::unique_ptr<GameObject>& ptr) -> GameObject* { return ptr.get(); });
-	const std::vector<GameObject*> rawObjects(objectsRange.begin(), objectsRange.end());
+	        [](const std::unique_ptr<GameObject>& ptr) -> GameObject& { return *ptr; });
+	const std::vector<std::reference_wrapper<GameObject>> objects(objectsRange.begin(),
+	                                                              objectsRange.end());
 
-	// Create the tree from the GameObject vector
-	objectTree.initializeWithList(rawObjects);
+	objectTree.initializeWithList(objects);
 }
