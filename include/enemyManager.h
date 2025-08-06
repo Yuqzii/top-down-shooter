@@ -27,6 +27,6 @@ private:
 
 	void spawnEnemy(Scene& scene);
 
-	std::unique_ptr<Tree2D> enemyTree;
+	Tree2D enemyTree;
 	void updateTree();
 };

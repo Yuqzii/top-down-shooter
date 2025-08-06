@@ -20,7 +20,9 @@ std::vector<GameObject*> makePtrVec(const std::vector<Vec2>& points) {
 std::vector<std::reference_wrapper<GameObject>> makeReference(
     const std::vector<GameObject*>& ptrs) {
 	auto range =
-	    ptrs | std::views::transform([](GameObject* ptr) -> std::reference_wrapper<GameObject> { return std::ref(*ptr); });
+	    ptrs | std::views::transform([](GameObject* ptr) -> std::reference_wrapper<GameObject> {
+		    return std::ref(*ptr);
+	    });
 	return std::vector<std::reference_wrapper<GameObject>>{range.begin(), range.end()};
 }
 
@@ -31,14 +33,12 @@ void testCleanup(std::vector<GameObject*>& objects) {
 }
 
 TEST(Tree2D, General) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
 	                            Vec2(9, 1), Vec2(2, 7),   Vec2(10, 19)};
 
 	auto testDataPtr = makePtrVec(points);
 	auto testData = makeReference(testDataPtr);
-	tree.initializeWithList(testData);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 7> testPoints = {Vec2(10, 10), Vec2(8, 2), Vec2(4, 7),  Vec2(16, 16),
 	                                  Vec2(12, 14), Vec2(0, 5), Vec2(11, 18)};
@@ -54,8 +54,6 @@ TEST(Tree2D, General) {
 }
 
 TEST(Tree2D, CheckingWithExistingPoints) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {
 	    Vec2(10, 10),
 	    Vec2(20, 10),
@@ -65,7 +63,7 @@ TEST(Tree2D, CheckingWithExistingPoints) {
 
 	auto testDataPtr = makePtrVec(points);
 	auto testData = makeReference(testDataPtr);
-	tree.initializeWithList(testData);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 2> testPoints = {Vec2(10, 10), Vec2(10, 5)};
 
@@ -139,14 +137,12 @@ TEST(Tree2D, DuplicateSinglePoints) {
 }
 
 TEST(Tree2D, MultiplePointQuery) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
 	                            Vec2(9, 2), Vec2(2, 7),   Vec2(10, 19)};
 
 	auto testDataPtr = makePtrVec(points);
 	auto testData = makeReference(testDataPtr);
-	tree.initializeWithList(testData);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 3> testPoints = {Vec2(2, 5), Vec2(12, 12), Vec2(25, 5)};
 
@@ -198,14 +194,12 @@ TEST(Tree2D, MultiplePoint_DuplicatePoints) {
 }
 
 TEST(Tree2D, ObjectsInRange) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
 	                            Vec2(9, 2), Vec2(2, 7),   Vec2(10, 19)};
 
 	auto testDataPtr = makePtrVec(points);
 	auto testData = makeReference(testDataPtr);
-	tree.initializeWithList(testData);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 3> testPoints{Vec2(12, 12), Vec2(25, 5), Vec2(2, 7)};
 	std::array<float, testPoints.size()> testRanges{6, 17.5, 10};

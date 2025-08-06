@@ -55,15 +55,12 @@ void Scene::render(SDL_Renderer* renderer) const {
 }
 
 void Scene::updateObjectTree() {
-	objectTree = Tree2D();  // Create new tree
-
-	// Create vector of raw pointers from unique_ptr vector
+	// Create vector of references from unique_ptr vector
 	const auto objectsRange =
 	    gameObjects |
 	    std::views::transform(
 	        [](const std::unique_ptr<GameObject>& ptr) -> GameObject& { return *ptr; });
 	const std::vector<std::reference_wrapper<GameObject>> objects(objectsRange.begin(),
 	                                                              objectsRange.end());
-
-	objectTree.initializeWithList(objects);
+	objectTree = Tree2D{objects};
 }

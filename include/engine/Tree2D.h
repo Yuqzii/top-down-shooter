@@ -11,14 +11,13 @@ class GameObject;
 // Two dimensional KD-Tree structure
 class Tree2D {
 public:
+	// Initializes the tree with the given list. Guarantees a balanced tree.
+	Tree2D(const std::vector<std::reference_wrapper<GameObject>>& objects);
 	Tree2D();
 
-	// Initializes the tree with the given list.
-	// Guarantees a balanced tree.
-	void initializeWithList(const std::vector<std::reference_wrapper<GameObject>>& objects);
-
-	// Inserts an object into the tree.
-	// NOTE: this can not guarantee a balanced tree.
+	/* Inserts an object into the tree.
+	 * NOTE: this can not guarantee a balanced tree.
+	 */
 	void insert(GameObject& object);
 
 	// Prints the tree to the console

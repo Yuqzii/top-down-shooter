@@ -1,7 +1,5 @@
 #include "enemyManager.h"
 
-#include <ranges>
-
 #include "enemies/spider.h"
 #include "engine/game.h"
 #include "engine/scene.h"
@@ -31,7 +29,7 @@ void EnemyManager::update(Scene& scene, const float deltaTime) {
 const Enemy* EnemyManager::findClosestEnemy(const Vec2& target) const {
 	try {
 		// Try to return as const Enemy*
-		return static_cast<const Enemy*>(enemyTree->findClosestObject(target));
+		return static_cast<const Enemy*>(enemyTree.findClosestObject(target));
 	} catch (int e) {
 		throw e;
 		return nullptr;
@@ -47,11 +45,10 @@ void EnemyManager::spawnEnemy(Scene& scene) {
 }
 
 void EnemyManager::updateTree() {
-	enemyTree = std::make_unique<Tree2D>();
 	std::vector<std::reference_wrapper<GameObject>> objs;
 	objs.reserve(enemies.size());
 	for (Enemy& enemy : enemies) {
 		objs.emplace_back(enemy);
 	}
-	enemyTree->initializeWithList(objs);
+	enemyTree = Tree2D{objs};
 }

@@ -8,14 +8,13 @@
 
 Tree2D::Tree2D() : root{nullptr} {}
 
-Tree2D::Node::Node(const std::array<float, 2> pt, GameObject& obj)
-    : point{pt}, object{obj}, left{nullptr}, right{nullptr} {}
-
-void Tree2D::initializeWithList(const std::vector<std::reference_wrapper<GameObject>>& objects) {
-	if (objects.empty()) return;  // Cannot build tree with no points
-
+Tree2D::Tree2D(const std::vector<std::reference_wrapper<GameObject>>& objects) : root{nullptr} {
+	if (objects.empty()) return;
 	initializeTree(objects);
 }
+
+Tree2D::Node::Node(const std::array<float, 2> pt, GameObject& obj)
+    : point{pt}, object{obj}, left{nullptr}, right{nullptr} {}
 
 void Tree2D::insert(GameObject& object) {
 	const std::array<float, 2> arrPoint = {object.getPosition().x, object.getPosition().y};
