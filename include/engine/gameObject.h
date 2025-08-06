@@ -3,7 +3,6 @@
 #include <cmath>
 #include <functional>
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "SDL2/SDL_render.h"
@@ -12,10 +11,10 @@
 #include "engine/vector2D.h"
 
 // Use this inside protected section of child class to set its texture
-#define SETOBJECTTEXTURE(FILE)                            \
-	const std::string& getTextureSheet() const override { \
-		static const std::string file = FILE;             \
-		return file;                                      \
+#define SETOBJECTTEXTURE(FILE)                                \
+	const std::string_view getTextureSheet() const override { \
+		static const std::string file = FILE;                 \
+		return file;                                          \
 	}
 
 class Scene;
@@ -86,7 +85,7 @@ protected:
 	Vec2 pivotOffset;
 
 	// Rendering
-	virtual const std::string& getTextureSheet() const {
+	virtual const std::string_view getTextureSheet() const {
 		static const std::string file = "default_gameobject.png";
 		return file;
 	};

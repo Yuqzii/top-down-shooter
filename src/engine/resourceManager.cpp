@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
-#include <unordered_map>
 
 #include "SDL2/SDL_surface.h"
 #include "engine/game.h"
@@ -24,27 +23,30 @@
 	} while (false)
 #endif
 
-namespace ResourceManager {
-std::unordered_map<std::string, SDL_Texture*> loadedTextures;
+ResourceManager::ResourceManager(std::string&& assetsPath) : assetsPath{std::move(assetsPath)} {}
 
-SDL_Texture* LoadTexture(const std::string& filename, Game& game) {
+SDL_Texture* ResourceManager::loadTexture(const std::string_view filename, Game& game) {
 	// Load texture if it is not already loaded
 	if (!loadedTextures.count(filename)) {
-// Check ASSETS_PATH is defined
-#ifndef ASSETS_PATH
-		std::cerr << "ERROR: ASSETS_PATH not defined." << std::endl;
-		game.clean();
-		std::terminate();
-#endif
-		const std::string path = ASSETS_PATH + filename;
+		std::string path{assetsPath};
+		path += filename;
 		// Check that file exists
-		ASSERT(std::filesystem::exists(path), "Could not load texture \"" + filename + "\"", game);
+		ASSERT(std::filesystem::exists(path),
+		       "Could not load texture \"" + static_cast<std::string>(filename) + "\"", game);
 		// Store loaded textures to avoid unnecessary load calls
 		SDL_Surface* surface = SDL_LoadBMP(path.c_str());
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(game.getRenderer(), surface);
 		loadedTextures[filename] = texture;
+		SDL_FreeSurface(surface);
 	}
 
 	return loadedTextures[filename];
 }
-}  // namespace ResourceManager
+
+void ResourceManager::destroyTextures() {
+	for (auto [filename, texture] : loadedTextures) {
+		SDL_DestroyTexture(texture);
+		texture = nullptr;
+	}
+	loadedTextures.clear();
+}
