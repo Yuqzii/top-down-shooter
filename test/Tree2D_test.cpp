@@ -2,17 +2,28 @@
 
 #include <gtest/gtest.h>
 
+#include <ranges>
+
 #include "engine/gameObject.h"
 #include "mockGameObject.h"
 
-std::vector<GameObject*> testInit(const std::vector<Vec2>& points) {
+std::vector<GameObject*> makePtrVec(const std::vector<Vec2>& points) {
 	std::vector<MockGameObject*> objects;
 	objects.reserve(points.size());
 	for (const Vec2& point : points) {
-		objects.push_back(new MockGameObject(point));
+		objects.push_back(new MockGameObject{point});
 	}
 
 	return std::vector<GameObject*>(objects.begin(), objects.end());
+}
+
+std::vector<std::reference_wrapper<GameObject>> makeReference(
+    const std::vector<GameObject*>& ptrs) {
+	auto range =
+	    ptrs | std::views::transform([](GameObject* ptr) -> std::reference_wrapper<GameObject> {
+		    return std::ref(*ptr);
+	    });
+	return std::vector<std::reference_wrapper<GameObject>>{range.begin(), range.end()};
 }
 
 void testCleanup(std::vector<GameObject*>& objects) {
@@ -22,13 +33,12 @@ void testCleanup(std::vector<GameObject*>& objects) {
 }
 
 TEST(Tree2D, General) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
 	                            Vec2(9, 1), Vec2(2, 7),   Vec2(10, 19)};
 
-	auto testData = testInit(points);
-	tree.initializeWithList(testData);
+	auto testDataPtr = makePtrVec(points);
+	auto testData = makeReference(testDataPtr);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 7> testPoints = {Vec2(10, 10), Vec2(8, 2), Vec2(4, 7),  Vec2(16, 16),
 	                                  Vec2(12, 14), Vec2(0, 5), Vec2(11, 18)};
@@ -40,12 +50,10 @@ TEST(Tree2D, General) {
 		EXPECT_TRUE(result == expected[i]) << "Expected: " << expected[i] << " Found: " << result;
 	}
 
-	testCleanup(testData);
+	testCleanup(testDataPtr);
 }
 
 TEST(Tree2D, CheckingWithExistingPoints) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {
 	    Vec2(10, 10),
 	    Vec2(20, 10),
@@ -53,8 +61,9 @@ TEST(Tree2D, CheckingWithExistingPoints) {
 	    Vec2(5, 20),
 	};
 
-	auto testData = testInit(points);
-	tree.initializeWithList(testData);
+	auto testDataPtr = makePtrVec(points);
+	auto testData = makeReference(testDataPtr);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 2> testPoints = {Vec2(10, 10), Vec2(10, 5)};
 
@@ -65,14 +74,14 @@ TEST(Tree2D, CheckingWithExistingPoints) {
 		EXPECT_TRUE(result == expected[i]) << "Expected: " << expected[i] << " Found: " << result;
 	}
 
-	testCleanup(testData);
+	testCleanup(testDataPtr);
 }
 
 TEST(Tree2D, SinglePoint) {
 	Tree2D tree;
 
 	auto object = std::make_unique<MockGameObject>(Vec2(10, 10));
-	tree.insert(object.get());
+	tree.insert(*object);
 
 	std::array<Vec2, 2> testPoints = {Vec2(10, 10), Vec2(10, 5)};
 
@@ -94,7 +103,7 @@ TEST(Tree2D, DuplicatePoints) {
 	objects.push_back(std::move(std::make_unique<MockGameObject>(Vec2(10, 10))));
 
 	for (auto& obj : objects) {
-		tree.insert(obj.get());
+		tree.insert(*obj);
 	}
 
 	Vec2 result = tree.findClosestObject(Vec2(5, 2))->getPosition();
@@ -118,7 +127,7 @@ TEST(Tree2D, DuplicateSinglePoints) {
 	objects.push_back(std::move(std::make_unique<MockGameObject>(Vec2(5, 3))));
 
 	for (auto& obj : objects) {
-		tree.insert(obj.get());
+		tree.insert(*obj);
 	}
 
 	EXPECT_THROW(tree.findClosestObject(Vec2(5, 3)), int) << "Expected error 2 thrown.";
@@ -128,13 +137,12 @@ TEST(Tree2D, DuplicateSinglePoints) {
 }
 
 TEST(Tree2D, MultiplePointQuery) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
 	                            Vec2(9, 2), Vec2(2, 7),   Vec2(10, 19)};
 
-	auto testData = testInit(points);
-	tree.initializeWithList(testData);
+	auto testDataPtr = makePtrVec(points);
+	auto testData = makeReference(testDataPtr);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 3> testPoints = {Vec2(2, 5), Vec2(12, 12), Vec2(25, 5)};
 
@@ -144,7 +152,7 @@ TEST(Tree2D, MultiplePointQuery) {
 	    std::vector{Vec2(17, 15), Vec2(13, 15), Vec2(9, 2), Vec2(6, 12), Vec2(10, 19), Vec2(3, 6)}};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const std::vector<GameObject*> result =
+		const std::vector<std::reference_wrapper<GameObject>> result =
 		    tree.findKClosestObjects(testPoints[i], expected[i].size());
 
 		EXPECT_TRUE(result.size() == expected[i].size())
@@ -152,12 +160,13 @@ TEST(Tree2D, MultiplePointQuery) {
 		    << ". Subtest " << i;
 
 		for (int j = 0; j < result.size(); j++) {
-			EXPECT_TRUE(result[j]->getPosition() == expected[i][j])
-			    << "Expected: " << expected[i][j] << " Found: " << result[j] << ". Subtest " << i;
+			EXPECT_TRUE(result[j].get().getPosition() == expected[i][j])
+			    << "Expected: " << expected[i][j] << " Found: " << result[j].get().getPosition()
+			    << ". Subtest " << i;
 		}
 	}
 
-	testCleanup(testData);
+	testCleanup(testDataPtr);
 }
 
 TEST(Tree2D, MultiplePoint_DuplicatePoints) {
@@ -172,7 +181,7 @@ TEST(Tree2D, MultiplePoint_DuplicatePoints) {
 	objects.push_back(std::move(std::make_unique<MockGameObject>(Vec2(10, 10))));
 
 	for (auto& obj : objects) {
-		tree.insert(obj.get());
+		tree.insert(*obj);
 	}
 
 	EXPECT_NO_THROW(tree.findKClosestObjects(Vec2(10, 10), 2));
@@ -185,13 +194,12 @@ TEST(Tree2D, MultiplePoint_DuplicatePoints) {
 }
 
 TEST(Tree2D, ObjectsInRange) {
-	Tree2D tree;
-
 	std::vector<Vec2> points = {Vec2(3, 6), Vec2(17, 15), Vec2(13, 15), Vec2(6, 12),
 	                            Vec2(9, 2), Vec2(2, 7),   Vec2(10, 19)};
 
-	auto testData = testInit(points);
-	tree.initializeWithList(testData);
+	auto testDataPtr = makePtrVec(points);
+	auto testData = makeReference(testDataPtr);
+	Tree2D tree{testData};
 
 	std::array<Vec2, 3> testPoints{Vec2(12, 12), Vec2(25, 5), Vec2(2, 7)};
 	std::array<float, testPoints.size()> testRanges{6, 17.5, 10};
@@ -202,7 +210,7 @@ TEST(Tree2D, ObjectsInRange) {
 	    std::set{Vec2(3, 6), Vec2(6, 12), Vec2(9, 2), Vec2(2, 7)}};
 
 	for (int i = 0; i < testPoints.size(); i++) {
-		const std::vector<GameObject*> result =
+		const std::vector<std::reference_wrapper<GameObject>> result =
 		    tree.findObjectsInRange(testPoints[i], testRanges[i]);
 
 		EXPECT_TRUE(result.size() == expected[i].size())
@@ -210,8 +218,8 @@ TEST(Tree2D, ObjectsInRange) {
 		    << " Found: " << result.size();
 
 		std::set<Vec2> resultSet;
-		for (auto obj : result) {
-			resultSet.insert(obj->getPosition());
+		for (GameObject& obj : result) {
+			resultSet.insert(obj.getPosition());
 		}
 
 		EXPECT_TRUE(resultSet == expected[i]) << "Test " << i;
@@ -232,13 +240,14 @@ TEST(Tree2D, ObjectsInRange_OtherBranch) {
 	}
 
 	for (auto& obj : objects) {
-		tree.insert(obj.get());
+		tree.insert(*obj);
 	}
 
-	const std::vector<GameObject*> result = tree.findObjectsInRange(Vec2(10, 10), 4);
+	const std::vector<std::reference_wrapper<GameObject>> result =
+	    tree.findObjectsInRange(Vec2(10, 10), 4);
 	std::set<Vec2> resultPos;
-	for (auto& res : result) {
-		resultPos.insert(res->getPosition());
+	for (GameObject& res : result) {
+		resultPos.insert(res.getPosition());
 	}
 
 	// EXPECT_TRUE(false);

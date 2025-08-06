@@ -8,8 +8,8 @@ EnemyManager::EnemyManager(std::vector<Vec2>&& spawnPositions) : spawnPositions{
 
 void EnemyManager::update(Scene& scene, const float deltaTime) {
 	// Remove pointer to enemies that will be deleted
-	for (std::vector<Enemy*>::iterator it = enemies.begin(); it != enemies.end();) {
-		if ((*it)->deleteObject) {
+	for (auto it = enemies.begin(); it != enemies.end();) {
+		if (it->get().deleteObject) {
 			it = enemies.erase(it);
 		} else
 			it++;
@@ -29,7 +29,7 @@ void EnemyManager::update(Scene& scene, const float deltaTime) {
 const Enemy* EnemyManager::findClosestEnemy(const Vec2& target) const {
 	try {
 		// Try to return as const Enemy*
-		return static_cast<const Enemy*>(enemyTree->findClosestObject(target));
+		return static_cast<const Enemy*>(enemyTree.findClosestObject(target));
 	} catch (int e) {
 		throw e;
 		return nullptr;
@@ -41,10 +41,14 @@ void EnemyManager::spawnEnemy(Scene& scene) {
 	const std::size_t idx = dist(scene.getGame().randGen);
 
 	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[idx]);
-	enemies.push_back(&enemy);
+	enemies.push_back(enemy);
 }
 
 void EnemyManager::updateTree() {
-	enemyTree = std::make_unique<Tree2D>();
-	enemyTree->initializeWithList(std::vector<GameObject*>(enemies.begin(), enemies.end()));
+	std::vector<std::reference_wrapper<GameObject>> objs;
+	objs.reserve(enemies.size());
+	for (Enemy& enemy : enemies) {
+		objs.emplace_back(enemy);
+	}
+	enemyTree = Tree2D{objs};
 }

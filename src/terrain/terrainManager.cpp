@@ -40,11 +40,6 @@ void TerrainManager::updateColliders() {
 	updateTree();
 }
 
-void TerrainManager::updateTree() {
-	terrainTree = Tree2D{};
-	terrainTree.initializeWithList(terrainColliders);
-}
-
 void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 

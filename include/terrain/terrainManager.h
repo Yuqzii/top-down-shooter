@@ -65,7 +65,7 @@ private:
 	// DEPRECATED. TerrainManager does not know about all it's terrainColliders.
 	std::vector<GameObject*> terrainColliders;
 	Tree2D terrainTree;
-	void updateTree();
+	void updateTree() {}
 
 	SDL_Color color;
 };

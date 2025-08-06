@@ -294,7 +294,7 @@ void Collider::onCollision(const Collision::Event& event, Scene& scene) {
 }
 
 void CircleCollider::checkCollisions(const Scene& scene) {
-	std::vector<GameObject*> closeObjects;
+	std::vector<std::reference_wrapper<GameObject>> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
 		closeObjects = scene.getObjectTree().findObjectsInRange(circle.position, getCheckRadius());
@@ -303,13 +303,13 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 		return;
 	}
 
-	for (GameObject* object : closeObjects) {
-		Collider* otherCollider = object->getCollider();
+	for (GameObject& object : closeObjects) {
+		Collider* otherCollider = object.getCollider();
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
 		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-		    object == getParent())
+		    &object == getParent())
 			continue;
 
 		switch (otherCollider->getCollisionType()) {
@@ -353,7 +353,7 @@ void CircleCollider::checkCollisions(const Scene& scene) {
 }
 
 void LineCollider::checkCollisions(const Scene& scene) {
-	std::vector<GameObject*> closeObjects;
+	std::vector<std::reference_wrapper<GameObject>> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
 		closeObjects = scene.getObjectTree().findObjectsInRange(line.start, getCheckRadius());
@@ -362,13 +362,13 @@ void LineCollider::checkCollisions(const Scene& scene) {
 		return;
 	}
 
-	for (GameObject* object : closeObjects) {
-		Collider* otherCollider = object->getCollider();
+	for (GameObject& object : closeObjects) {
+		Collider* otherCollider = object.getCollider();
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
 		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-		    object == getParent())
+		    &object == getParent())
 			continue;
 
 		switch (otherCollider->getCollisionType()) {
@@ -405,7 +405,7 @@ void LineCollider::checkCollisions(const Scene& scene) {
 }
 
 void PointCollider::checkCollisions(const Scene& scene) {
-	std::vector<GameObject*> closeObjects;
+	std::vector<std::reference_wrapper<GameObject>> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
 		closeObjects = scene.getObjectTree().findObjectsInRange(point, getCheckRadius());
@@ -414,13 +414,13 @@ void PointCollider::checkCollisions(const Scene& scene) {
 		return;
 	}
 
-	for (GameObject* object : closeObjects) {
-		Collider* otherCollider = object->getCollider();
+	for (GameObject& object : closeObjects) {
+		Collider* otherCollider = object.getCollider();
 		// No need to check collision if object is not collideable,
 		// or we know we have already collided,
 		// or if it is "colliding" with itself.
 		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-		    object == getParent())
+		    &object == getParent())
 			continue;
 
 		switch (otherCollider->getCollisionType()) {

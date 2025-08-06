@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <list>
+#include <memory>
 #include <vector>
 
 #include "engine/vector2D.h"
@@ -11,17 +11,14 @@ class GameObject;
 // Two dimensional KD-Tree structure
 class Tree2D {
 public:
-	// Constructor to initialize root to nullptr
+	// Initializes the tree with the given list. Guarantees a balanced tree.
+	Tree2D(const std::vector<std::reference_wrapper<GameObject>>& objects);
 	Tree2D();
-	~Tree2D();
 
-	// Initializes the tree with the given list.
-	// Guarantees a balanced tree.
-	void initializeWithList(const std::vector<GameObject*>& objects);
-
-	// Inserts an object into the tree.
-	// NOTE: this can not guarantee a balanced tree.
-	void insert(GameObject* object);
+	/* Inserts an object into the tree.
+	 * NOTE: this can not guarantee a balanced tree.
+	 */
+	void insert(GameObject& object);
 
 	// Prints the tree to the console
 	void print() const;
@@ -30,40 +27,42 @@ public:
 	GameObject* findClosestObject(const Vec2& target) const;
 
 	// Returns an std::vector of the k closest objects that are not the same as target
-	std::vector<GameObject*> findKClosestObjects(const Vec2& target, const int k) const;
+	std::vector<std::reference_wrapper<GameObject>> findKClosestObjects(const Vec2& target,
+	                                                                    const int k) const;
 
 	// Returns an std::vector of all GameObjects within the given range.
 	// Includes objects where the distance is zero, unlike the other queries.
-	std::vector<GameObject*> findObjectsInRange(const Vec2& target, const float range) const;
+	std::vector<std::reference_wrapper<GameObject>> findObjectsInRange(const Vec2& target,
+	                                                                   const float range) const;
 
 private:
 	struct Node {
 		const std::array<float, 2> point;
-		Node* left;
-		Node* right;
-		GameObject* object;
+		std::unique_ptr<Node> left;
+		std::unique_ptr<Node> right;
+		GameObject& object;
 
-		Node(const std::array<float, 2> pt, GameObject* obj);
-		~Node();
+		Node(const std::array<float, 2> pt, GameObject& obj);
 	};
 
-	Node* root;
+	std::unique_ptr<Node> root;
 
-	void initializeTree(const std::vector<GameObject*>& objects);
-	Node* insertRecursive(Node* node, const std::array<float, 2> point, GameObject* object,
-	                      const int depth);
+	void initializeTree(const std::vector<std::reference_wrapper<GameObject>>& objects);
+	void insertRecursive(Node* node, const std::array<float, 2> point, GameObject& object,
+	                     const int depth);
 
-	const Node* nearestNeighbor(const Node* node, const std::array<float, 2>& target,
+	const Node* nearestNeighbor(const Node& node, const std::array<float, 2>& target,
 	                            const int depth) const;
 
-	const Node* kNearestNeighbors(const Node* node, const std::array<float, 2>& target,
-	                              const int depth, std::list<std::pair<float, const Node*>>& heap,
-	                              const int k) const;
-	void updateHeap(std::list<std::pair<float, const Node*>>& heap, const Node* node,
-	                const std::array<float, 2>& target, const int k) const;
+	const Node* kNearestNeighbors(
+	    const Node& node, const std::array<float, 2>& target, const int depth,
+	    std::vector<std::pair<float, std::reference_wrapper<const Node>>>& heap, const int k) const;
+	void updateHeap(std::vector<std::pair<float, std::reference_wrapper<const Node>>>& heap,
+	                const Node& node, const std::array<float, 2>& target, const int k) const;
 
-	void nodesInRange(const Node* node, const std::array<float, 2>& target, const int depth,
-	                  const float range, std::vector<const Node*>& nodesList) const;
+	void nodesInRange(const Node& node, const std::array<float, 2>& target, const int depth,
+	                  const float range,
+	                  std::vector<std::reference_wrapper<const Node>>& nodesList) const;
 
 	inline float distanceSquared(const std::array<float, 2>& a,
 	                             const std::array<float, 2>& b) const {
@@ -76,5 +75,5 @@ private:
 	                            const Node* b) const;
 
 	// Prints the tree
-	void printRecursive(Node* node, int depth) const;
+	void printRecursive(const Node& node, int depth) const;
 };
