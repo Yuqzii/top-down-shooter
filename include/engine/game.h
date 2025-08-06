@@ -7,6 +7,7 @@
 
 #include "engine/gameObject.h"
 #include "engine/renderManager.h"
+#include "engine/resourceManager.h"
 #include "engine/vector2D.h"
 
 class Scene;
@@ -39,6 +40,7 @@ public:
 	const Vec2& getWinDimensions() const { return winDimensions; }
 
 	RenderManager& getRenderManager() { return renderManager; }
+	ResourceManager& getResourceManager() { return resourceManager; }
 
 	const std::array<bool, 256>& getInput() const { return input; }
 	// Button value true if button is being held
@@ -65,4 +67,7 @@ private:
 	constexpr static const uint16_t sceneCount = 1;
 
 	RenderManager renderManager;
+
+	ResourceManager resourceManager;
+	ResourceManager initializeResourceManager() const;
 };

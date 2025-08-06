@@ -12,7 +12,8 @@ Game::Game(const char* title, const int width, const int height)
       renderer{nullptr},
       input{},
       mouseInput{},
-      onMouseDown{} {
+      onMouseDown{},
+      resourceManager{initializeResourceManager()} {
 	isRunning = true;
 
 	// Check that SDL initializes
@@ -29,10 +30,13 @@ Game::Game(const char* title, const int width, const int height)
 	// Make alpha/transparency work
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
+#ifndef ASSETS_PATH
+	std::cerr << "ERROR: ASSETS_PATH not defined. Cannot load any textures." << std::endl;
+	clean();
+	std::terminate();
+#endif
 	// Initialize prevTime to ensure correct first deltaTime
 	prevTime = SDL_GetPerformanceCounter();
-
-	renderManager = RenderManager();  // Create RenderManager
 
 	// Add scenes
 	scenes.reserve(sceneCount);
@@ -111,6 +115,8 @@ void Game::render() const {
 }
 
 void Game::clean() {
+	resourceManager.destroyTextures();
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
@@ -136,3 +142,11 @@ void Game::addScene() {
 }
 // Create all valid templates
 template void Game::addScene<CombatScene>();
+
+ResourceManager Game::initializeResourceManager() const {
+#ifndef ASSETS_PATH
+	std::cerr << "ERROR: ASSETS_PATH not defined. Cannot load any assets." << std::endl;
+	std::terminate();
+#endif
+	return ResourceManager{ASSETS_PATH};
+}

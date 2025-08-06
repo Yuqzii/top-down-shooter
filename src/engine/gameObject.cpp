@@ -35,7 +35,7 @@ GameObject::GameObject() : GameObject{nullptr} {}
 
 void GameObject::initialize(const Scene& scene, const Vec2& startPosition) {
 	// Load texture
-	texture = ResourceManager::LoadTexture(getTextureSheet(), scene.getGame());
+	texture = scene.getGame().getResourceManager().loadTexture(getTextureSheet(), scene.getGame());
 
 	// Initialize pivot
 	pivot.x = (float)destRect.w / 2 + pivotOffset.x;
