@@ -24,9 +24,10 @@ TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSi
 	updateColliders();
 }
 
-void TerrainManager::update() {
-	for (auto& vec : chunks)
-		for (Chunk& chunk : vec) chunk.update(scene);
+void TerrainManager::update(const Vec2& playerPos) {
+	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
+	const auto chunksToUpdate = getChunksInRange(chunkX, chunkY, 1);
+	for (Chunk& chunk : chunksToUpdate) chunk.update(scene);
 }
 
 void TerrainManager::collisionUpdate() {
@@ -50,12 +51,13 @@ void TerrainManager::updateColliders() {
 	updateTree();
 }
 
-void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
+void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam,
+                            const Vec2& playerPos) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-	for (auto& chunkList : chunks) {
-		for (auto& chunk : chunkList) chunk.render(renderer, cam);
-	}
+	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
+	const auto chunksToRender = getConstChunksInRange(chunkX, chunkY, 1);
+	for (const Chunk& chunk : chunksToRender) chunk.render(renderer, cam);
 }
 
 void TerrainManager::setCell(const Vec2& position, const unsigned char value) {
@@ -148,6 +150,35 @@ std::vector<std::vector<Chunk>> TerrainManager::splitToChunks(const Terrain& ter
 			                       y * chunkSize * pixelSize, *this);
 		}
 	}
+	return result;
+}
+
+std::vector<std::reference_wrapper<Chunk>> TerrainManager::getChunksInRange(const std::size_t midX,
+                                                                            const std::size_t midY,
+                                                                            const int range) {
+	std::vector<std::reference_wrapper<Chunk>> result;
+	const std::size_t minX = (midX > range) ? midX - range : 0;
+	const std::size_t maxX = std::min(midX + range, getChunksX() - 1);
+	const std::size_t minY = (midY > range) ? midY - range : 0;
+	const std::size_t maxY = std::min(midY + range, getChunksY() - 1);
+
+	for (std::size_t x = minX; x <= maxX; x++)
+		for (std::size_t y = minY; y <= maxY; y++) result.push_back(chunks[y][x]);
+
+	return result;
+}
+
+std::vector<std::reference_wrapper<const Chunk>> TerrainManager::getConstChunksInRange(
+    const std::size_t midX, const std::size_t midY, const int range) const {
+	std::vector<std::reference_wrapper<const Chunk>> result;
+	const std::size_t minX = std::max(midX - range, static_cast<std::size_t>(0));
+	const std::size_t maxX = std::min(midX + range, getChunksX() - 1);
+	const std::size_t minY = std::max(midY - range, static_cast<std::size_t>(0));
+	const std::size_t maxY = std::min(midY + range, getChunksY() - 1);
+
+	for (std::size_t x = minX; x <= maxX; x++)
+		for (std::size_t y = minY; y <= maxY; y++) result.push_back(chunks[y][x]);
+
 	return result;
 }
 
