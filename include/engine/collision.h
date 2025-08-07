@@ -90,9 +90,7 @@ public:
 	float getCheckRadius() const { return checkRadius; }
 	bool getIsStatic() const { return isStatic; }
 
-	virtual std::string_view getTag() const {
-		return "";
-	}
+	virtual std::string_view getTag() const { return ""; }
 
 protected:
 	/*

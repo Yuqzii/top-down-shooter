@@ -13,14 +13,16 @@ constexpr float collisionCheckRadius = 500.0f;
 TerrainCollider::TerrainCollider(Vec2&& position, Vec2&& start, Vec2&& end, Chunk& chunk)
     : chunk{chunk},
       LineCollider{Collision::Line{std::move(position), std::move(start), std::move(end)},
-                   collisionCheckRadius} {}
+                   collisionCheckRadius} {
+#ifdef DEBUG_GIZMO
+	fakeObject = std::make_unique<GameObject>();
+#endif
+}
 
 void TerrainCollider::update(Scene& scene) {
 	LineCollider::checkCollisions(scene);
 
 #ifdef DEBUG_GIZMO
-	// Using DEBUG_GIZMO causes memory leak here. Will be fixed later.
-	GameObject* temp = new GameObject;
 	scene.getGame().getRenderManager().addRenderCall(
 	    [this](Scene& scene) {
 		    const Vec2& camPos = scene.getCam().getPos();
@@ -29,7 +31,7 @@ void TerrainCollider::update(Scene& scene) {
 		                       line.start.y - camPos.y, line.end.x - camPos.x,
 		                       line.end.y - camPos.y);
 	    },
-	    temp);
+	    fakeObject.get());
 #endif
 }
 
@@ -45,10 +47,10 @@ void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 			const int rx = std::round(newPos.x);
 			const int ry = std::round(newPos.y);
 			if (std::abs(rx - newPos.x) > std::abs(ry - newPos.y))
-				chunk.getManager().setCell(ox, ny, 0);
+				chunk.getManager().changeTerrain(ox, ny, 0);
 			else
-				chunk.getManager().setCell(nx, oy, 0);
+				chunk.getManager().changeTerrain(nx, oy, 0);
 		} else
-			chunk.getManager().setCell(nx, ny, 0);
+			chunk.getManager().changeTerrain(nx, ny, 0);
 	}
 }

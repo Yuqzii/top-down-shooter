@@ -1,5 +1,6 @@
 #pragma once
 
+#include <queue>
 #include <vector>
 
 #include "SDL2/SDL_pixels.h"
@@ -13,27 +14,34 @@ class Scene;
 class TerrainCollider;
 class Camera;
 
+struct TerrainChange {
+	const std::size_t x;
+	const std::size_t y;
+	const unsigned char value;
+};
+
 class TerrainManager {
 public:
 	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
 	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
 	void update(const Vec2& playerPos);
-	void collisionUpdate();
+	void collisionUpdate(const Vec2& playerPos);
 
 	void updateRender();
 	void updateColliders();
 	void render(SDL_Renderer* renderer, const Camera& cam, const Vec2& playerPos) const;
 
-	void setCell(const Vec2& position, const unsigned char value);
-	void setCell(const std::pair<std::size_t, std::size_t>& position, const unsigned char value);
-	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
+	void changeTerrain(const Vec2& position, const unsigned char value);
+	void changeTerrain(const std::pair<std::size_t, std::size_t>& position,
+	                   const unsigned char value);
+	void changeTerrain(const std::size_t x, const std::size_t y, const unsigned char value);
 	/* Removes all pixels in range of the center and recalculates collisions.
 	 *
 	 * @param center Center position to remove from.
 	 * @param range The range to remove from. (Radius of circle).
 	 */
-	void setCellsInRange(const Vec2& center, int range, const unsigned char value);
+	void changeTerrainInRange(const Vec2& center, int range, const unsigned char value);
 	/* Get the array indices of the terrain pixel at the given world position.
 	 *
 	 * @param position Position to translate to indices.
@@ -73,6 +81,9 @@ private:
 	std::vector<std::reference_wrapper<const Chunk>> getConstChunksInRange(const std::size_t x,
 	                                                                       const std::size_t y,
 	                                                                       const int range) const;
+
+	std::queue<TerrainChange> pendingTerrainChanges;
+	void executeTerrainChanges();
 
 	// DEPRECATED. TerrainManager does not know about all it's terrainColliders.
 	std::vector<GameObject*> terrainColliders;

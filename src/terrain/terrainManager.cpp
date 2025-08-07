@@ -25,14 +25,17 @@ TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSi
 }
 
 void TerrainManager::update(const Vec2& playerPos) {
+	if (!pendingTerrainChanges.empty()) executeTerrainChanges();
+
 	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
-	const auto chunksToUpdate = getChunksInRange(chunkX, chunkY, 1);
+	const auto chunksToUpdate = getChunksInRange(chunkX, chunkY, 10);
 	for (Chunk& chunk : chunksToUpdate) chunk.update(scene);
 }
 
-void TerrainManager::collisionUpdate() {
-	for (auto& vec : chunks)
-		for (Chunk& chunk : vec) chunk.collisionUpdate(scene);
+void TerrainManager::collisionUpdate(const Vec2& playerPos) {
+	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
+	const auto chunksToUpdate = getChunksInRange(chunkX, chunkY, 10);
+	for (Chunk& chunk : chunksToUpdate) chunk.collisionUpdate(scene);
 }
 
 void TerrainManager::updateRender() {
@@ -60,26 +63,24 @@ void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam,
 	for (const Chunk& chunk : chunksToRender) chunk.render(renderer, cam);
 }
 
-void TerrainManager::setCell(const Vec2& position, const unsigned char value) {
+void TerrainManager::changeTerrain(const Vec2& position, const unsigned char value) {
 	const auto pixelPos = posToTerrainCoord(position);
-	setCell(pixelPos, value);
+	changeTerrain(pixelPos, value);
 }
 
-void TerrainManager::setCell(const std::pair<std::size_t, std::size_t>& position,
-                             const unsigned char value) {
-	auto [x, y] = position;
+void TerrainManager::changeTerrain(const std::pair<std::size_t, std::size_t>& position,
+                                   const unsigned char value) {
+	changeTerrain(position.first, position.second, value);
+}
+
+void TerrainManager::changeTerrain(const std::size_t x, const std::size_t y,
+                                   const unsigned char value) {
 	if (x >= terrainXSize || y >= terrainYSize) return;
-
-	auto [chunkX, chunkY] = posToChunk(position);
-	assert(chunkX >= 0 && chunkX < getChunksX() && chunkY >= 0 && chunkY < getChunksY());
-	chunks[chunkY][chunkX].setCell(x % chunkSize, y % chunkSize, value);
+	pendingTerrainChanges.emplace(x, y, value);
 }
 
-void TerrainManager::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
-	setCell(std::make_pair(x, y), value);
-}
-
-void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsigned char value) {
+void TerrainManager::changeTerrainInRange(const Vec2& center, int range,
+                                          const unsigned char value) {
 	++range;  // Increment range to make calculations work correctly
 
 	// Find the height (sine) of every x position based on the range (radius)
@@ -96,16 +97,26 @@ void TerrainManager::setCellsInRange(const Vec2& center, int range, const unsign
 		if (cX + x < 0 || cX + x >= terrainXSize) continue;
 		for (int y = -maxY[std::abs(x)] + 1; y < maxY[std::abs(x)]; ++y) {
 			if (cY + y < 0 || cY + y >= terrainYSize) continue;
-
-			auto pos = posToChunk(std::make_pair(cX + x, cY + y));
-			auto chunkPos = std::make_pair((cX + x) % chunkSize, (cY + y) % chunkSize);
-			chunkMap[pos].push_back(chunkPos);
+			changeTerrain(cX + x, cY + y, value);
 		}
 	}
+}
 
-	for (auto [chunk, posList] : chunkMap) {
+void TerrainManager::executeTerrainChanges() {
+	std::map<std::pair<std::size_t, std::size_t>, std::vector<TerrainChange>> chunkMap;
+
+	while (!pendingTerrainChanges.empty()) {
+		TerrainChange change = std::move(pendingTerrainChanges.front());
+		pendingTerrainChanges.pop();
+		auto chunkPos = posToChunk(std::make_pair(change.x, change.y));
+		auto localX = change.x % chunkSize;
+		auto localY = change.y % chunkSize;
+		chunkMap[chunkPos].emplace_back(localX, localY, change.value);
+	}
+
+	for (auto& [chunk, changes] : chunkMap) {
 		auto [x, y] = chunk;
-		chunks[y][x].setCellMultiple(posList, value);
+		chunks[y][x].changeTerrainMultiple(changes);
 	}
 }
 

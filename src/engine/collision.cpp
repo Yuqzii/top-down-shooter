@@ -1,6 +1,7 @@
 #include "engine/collision.h"
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -362,46 +363,46 @@ void LineCollider::checkCollisions(const Scene& scene) {
 		return;
 	}
 
-		for (GameObject& object : closeObjects) {
-			Collider* otherCollider = object.getCollider();
-			// No need to check collision if object is not collideable,
-			// or we know we have already collided,
-			// or if it is "colliding" with itself.
-			if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-			    &object == getParent())
-				continue;
+	for (GameObject& object : closeObjects) {
+		Collider* otherCollider = object.getCollider();
+		// No need to check collision if object is not collideable,
+		// or we know we have already collided,
+		// or if it is "colliding" with itself.
+		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
+		    &object == getParent())
+			continue;
 
-			switch (otherCollider->getCollisionType()) {
-				using enum Collision::Types;
+		switch (otherCollider->getCollisionType()) {
+			using enum Collision::Types;
 
-				case CIRCLE: {
-					CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
-					Collision::Event event = Collision::checkCollision(otherCircle->circle, line);
-					if (event.collided) {
-						event.other = otherCircle;
-						addCollision(event);
-						event.other = this;
-						otherCollider->addCollision(event);
-					}
-					break;
+			case CIRCLE: {
+				CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
+				Collision::Event event = Collision::checkCollision(otherCircle->circle, line);
+				if (event.collided) {
+					event.other = otherCircle;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
-				case LINE: {
-					LineCollider* otherLine = static_cast<LineCollider*>(otherCollider);
-					Collision::Event event = Collision::checkCollision(line, otherLine->line);
-					if (event.collided) {
-						event.other = otherLine;
-						addCollision(event);
-						event.other = this;
-						otherCollider->addCollision(event);
-					}
-					break;
+				break;
+			}
+			case LINE: {
+				LineCollider* otherLine = static_cast<LineCollider*>(otherCollider);
+				Collision::Event event = Collision::checkCollision(line, otherLine->line);
+				if (event.collided) {
+					event.other = otherLine;
+					addCollision(event);
+					event.other = this;
+					otherCollider->addCollision(event);
 				}
-				case POINT: {
-					// Currently no support for Line-Point collision
-					break;
-				}
+				break;
+			}
+			case POINT: {
+				// Currently no support for Line-Point collision
+				break;
 			}
 		}
+	}
 }
 
 void PointCollider::checkCollisions(const Scene& scene) {

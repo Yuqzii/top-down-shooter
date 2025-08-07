@@ -2,6 +2,11 @@
 
 #include "engine/collision.h"
 
+#ifdef DEBUG_GIZMO
+#include <memory>
+class GameObject;
+#endif
+
 class Chunk;
 
 class TerrainCollider : public LineCollider {
@@ -19,6 +24,7 @@ private:
 
 	Vec2 position;
 
-	// testing, REMOVE
-	Vec2 normal;
+#ifdef DEBUG_GIZMO
+	std::unique_ptr<GameObject> fakeObject;
+#endif
 };

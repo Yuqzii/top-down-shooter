@@ -24,16 +24,17 @@ void CombatScene::initialize() {
 void CombatScene::update(const float deltaTime) {
 	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
 		const Vec2 pos = getGame().getMousePos() + cam.getPos();
-		terrainManager.setCellsInRange(pos, 5, 0);
+		terrainManager.changeTerrainInRange(pos, 5, 0);
 	}
 
 	Scene::update(deltaTime);
 
-	enemyManager.update(*this, deltaTime);
 	terrainManager.update(player.getPosition());
 
 	Scene::updateCollision();
-	terrainManager.collisionUpdate();
+	terrainManager.collisionUpdate(player.getPosition());
+
+	enemyManager.update(*this, deltaTime);
 }
 
 void CombatScene::render(SDL_Renderer* renderer) const {

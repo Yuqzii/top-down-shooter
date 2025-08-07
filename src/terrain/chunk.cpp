@@ -30,19 +30,18 @@ void Chunk::collisionUpdate(Scene& scene) {
 	for (TerrainCollider& collider : colliders) collider.collisionUpdate(scene);
 }
 
-void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
-	assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
-	       "Position (x, y) must be within the terrain size.");
+void Chunk::changeTerrain(const TerrainChange& change) {
+	assert(change.x >= 0 && change.x < terrain.getXSize() && change.y >= 0 &&
+	       change.y < terrain.getYSize() && "Position (x, y) must be within the terrain size.");
 
-	terrain.map[y][x] = value;
+	terrain.map[change.y][change.x] = change.value;
 
 	updateColliders();
 	updateRender(manager.getPixelSize());
 }
 
-void Chunk::setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
-                            const unsigned char value) {
-	for (auto [x, y] : positions) {
+void Chunk::changeTerrainMultiple(const std::vector<TerrainChange>& changes) {
+	for (auto [x, y, value] : changes) {
 		assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
 		       "Position (x, y) must be within the terrain size.");
 		terrain.map[y][x] = value;

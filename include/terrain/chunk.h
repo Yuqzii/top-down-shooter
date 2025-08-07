@@ -10,10 +10,11 @@
 #include "terrain/terrainCollider.h"
 
 class Scene;
-class TerrainManager;
 struct Vec2;
 struct SDL_Renderer;
 class Camera;
+class TerrainChange;
+class TerrainManager;
 
 class Chunk {
 public:
@@ -23,9 +24,8 @@ public:
 	/* Sets the cell at position (x, y) to value.
 	 * x and y position is relative to this chunk.
 	 */
-	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
-	void setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
-	                     const unsigned char value);
+	void changeTerrain(const TerrainChange& change);
+	void changeTerrainMultiple(const std::vector<TerrainChange>& changes);
 
 	void update(Scene& scene);
 	void collisionUpdate(Scene& scene);
