@@ -1,6 +1,7 @@
 #include "player.h"
 
 #include <cmath>
+#include <iostream>
 #include <memory>
 
 #include "SDL2/SDL_mouse.h"
@@ -106,9 +107,7 @@ void Player::onCollision(const Collision::Event& event, Scene& scene) {
 		return;
 	}
 
-	const TerrainCollider* terrainCollider =
-	    dynamic_cast<const TerrainCollider*>(event.other->getParent());
-	if (terrainCollider) {
+	if (event.other->getTag() == "Terrain") {
 		position += Collision::resolveStaticLine(event, position);
 		return;
 	}

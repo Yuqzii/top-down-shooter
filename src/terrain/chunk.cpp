@@ -22,6 +22,14 @@ Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t or
 	updateSpawnPositions();
 }
 
+void Chunk::update(Scene& scene) {
+	for (TerrainCollider& collider : colliders) collider.update(scene);
+}
+
+void Chunk::collisionUpdate(Scene& scene) {
+	for (TerrainCollider& collider : colliders) collider.collisionUpdate(scene);
+}
+
 void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
 	assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
 	       "Position (x, y) must be within the terrain size.");

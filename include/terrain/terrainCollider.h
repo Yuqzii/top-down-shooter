@@ -1,22 +1,22 @@
 #pragma once
 
-#include "engine/gameObject.h"
+#include "engine/collision.h"
 
 class Chunk;
 
-class TerrainCollider {
+class TerrainCollider : public LineCollider {
 public:
 	TerrainCollider(Vec2&& position, Vec2&& start, Vec2&& end, Chunk& chunk);
 
-	// ONLY USED FOR DEBUG_GIZMO
-	void update(Scene& scene, const float deltaTime);
+	void update(Scene& scene);
 
-	void onCollision(const Collision::Event& event, Scene& scene);
+	void onCollision(const Collision::Event& event, Scene& scene) override;
+
+	std::string_view getTag() const override { return "Terrain"; }
 
 private:
 	Chunk& chunk;
 
-	LineCollider collider;
 	Vec2 position;
 
 	// testing, REMOVE

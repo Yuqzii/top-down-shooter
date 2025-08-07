@@ -68,6 +68,13 @@ protected:
 	Camera cam;
 	Game& game;
 
+	/* Updates all GameObjects according to registered collisions.
+	 * This is not automatically called inside Scene::update, and is left up to inheriting scenes
+	 * to decide when this update should happen.
+	 * If not called collisions have no effect.
+	 */
+	void updateCollision();
+
 private:
 	GameObjectVector gameObjects;
 	Tree2D objectTree;

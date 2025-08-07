@@ -30,6 +30,10 @@ void CombatScene::update(const float deltaTime) {
 	Scene::update(deltaTime);
 
 	enemyManager.update(*this, deltaTime);
+	terrainManager.update();
+
+	Scene::updateCollision();
+	terrainManager.collisionUpdate();
 }
 
 void CombatScene::render(SDL_Renderer* renderer) const {

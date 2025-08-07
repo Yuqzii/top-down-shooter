@@ -169,8 +169,8 @@ Vec2 resolveStaticLine(const Collision::Event& event, const Vec2& position) {
 	Vec2 normal = Vec2{line.line.start - line.line.end}.normalized();
 	normal = Vec2{normal.y, normal.x * -1};
 	// Check what side of line position is on
-	const float angle = std::acos(normal.normalized().dotProduct(
-	    (position - line.line.position).normalized()));
+	const float angle =
+	    std::acos(normal.normalized().dotProduct((position - line.line.position).normalized()));
 	const float degrees = angle * 180 / M_PI;
 	// Calculate movement according to collision depth and what side position is on
 	if (degrees >= 90.0f && degrees <= 180.0f)
@@ -356,52 +356,52 @@ void LineCollider::checkCollisions(const Scene& scene) {
 	std::vector<std::reference_wrapper<GameObject>> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(line.start, getCheckRadius());
+		closeObjects = scene.getObjectTree().findObjectsInRange(line.position, getCheckRadius());
 	} catch (int e) {
 		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
 		return;
 	}
 
-	for (GameObject& object : closeObjects) {
-		Collider* otherCollider = object.getCollider();
-		// No need to check collision if object is not collideable,
-		// or we know we have already collided,
-		// or if it is "colliding" with itself.
-		if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
-		    &object == getParent())
-			continue;
+		for (GameObject& object : closeObjects) {
+			Collider* otherCollider = object.getCollider();
+			// No need to check collision if object is not collideable,
+			// or we know we have already collided,
+			// or if it is "colliding" with itself.
+			if (otherCollider == nullptr || haveCollidedWith.count(otherCollider) ||
+			    &object == getParent())
+				continue;
 
-		switch (otherCollider->getCollisionType()) {
-			using enum Collision::Types;
+			switch (otherCollider->getCollisionType()) {
+				using enum Collision::Types;
 
-			case CIRCLE: {
-				CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
-				Collision::Event event = Collision::checkCollision(otherCircle->circle, line);
-				if (event.collided) {
-					event.other = otherCircle;
-					addCollision(event);
-					event.other = this;
-					otherCollider->addCollision(event);
+				case CIRCLE: {
+					CircleCollider* otherCircle = static_cast<CircleCollider*>(otherCollider);
+					Collision::Event event = Collision::checkCollision(otherCircle->circle, line);
+					if (event.collided) {
+						event.other = otherCircle;
+						addCollision(event);
+						event.other = this;
+						otherCollider->addCollision(event);
+					}
+					break;
 				}
-				break;
-			}
-			case LINE: {
-				LineCollider* otherLine = static_cast<LineCollider*>(otherCollider);
-				Collision::Event event = Collision::checkCollision(line, otherLine->line);
-				if (event.collided) {
-					event.other = otherLine;
-					addCollision(event);
-					event.other = this;
-					otherCollider->addCollision(event);
+				case LINE: {
+					LineCollider* otherLine = static_cast<LineCollider*>(otherCollider);
+					Collision::Event event = Collision::checkCollision(line, otherLine->line);
+					if (event.collided) {
+						event.other = otherLine;
+						addCollision(event);
+						event.other = this;
+						otherCollider->addCollision(event);
+					}
+					break;
 				}
-				break;
-			}
-			case POINT: {
-				// Currently no support for Line-Point collision
-				break;
+				case POINT: {
+					// Currently no support for Line-Point collision
+					break;
+				}
 			}
 		}
-	}
 }
 
 void PointCollider::checkCollisions(const Scene& scene) {

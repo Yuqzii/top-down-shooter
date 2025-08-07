@@ -8,10 +8,30 @@
 #include "terrain/chunk.h"
 #include "terrain/terrainManager.h"
 
+constexpr float collisionCheckRadius = 500.0f;
+
 TerrainCollider::TerrainCollider(Vec2&& position, Vec2&& start, Vec2&& end, Chunk& chunk)
     : chunk{chunk},
-      collider{Collision::Line{position, std::move(start), std::move(end)}, true},
-      position{std::move(position)} {}
+      LineCollider{Collision::Line{std::move(position), std::move(start), std::move(end)},
+                   collisionCheckRadius} {}
+
+void TerrainCollider::update(Scene& scene) {
+	LineCollider::checkCollisions(scene);
+
+#ifdef DEBUG_GIZMO
+	// Using DEBUG_GIZMO causes memory leak here. Will be fixed later.
+	GameObject* temp = new GameObject;
+	scene.getGame().getRenderManager().addRenderCall(
+	    [this](Scene& scene) {
+		    const Vec2& camPos = scene.getCam().getPos();
+		    SDL_SetRenderDrawColor(scene.getGame().getRenderer(), 0, 255, 255, 255);
+		    SDL_RenderDrawLine(scene.getGame().getRenderer(), line.start.x - camPos.x,
+		                       line.start.y - camPos.y, line.end.x - camPos.x,
+		                       line.end.y - camPos.y);
+	    },
+	    temp);
+#endif
+}
 
 void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 	const Bullet* bullet = dynamic_cast<const Bullet*>(event.other->getParent());
@@ -31,21 +51,4 @@ void TerrainCollider::onCollision(const Collision::Event& event, Scene& scene) {
 		} else
 			chunk.getManager().setCell(nx, ny, 0);
 	}
-}
-
-// ONLY USED FOR DEBUG GIZMOS
-void TerrainCollider::update(Scene& scene, const float deltaTime) {
-#ifndef DEBUG_GIZMO
-	return;
-#endif
-//	const Vec2 dir = Vec2(collider.line.end - collider.line.start).normalized();
-//	normal = Vec2(dir.y, dir.x * -1.0f) * 25.0f;
-//	scene.getGame().getRenderManager().addRenderCall(
-//	    [this](Scene& scene) {
-//		    const Vec2 camPos = scene.getCam().getPos();
-//		    SDL_RenderDrawLine(scene.getGame().getRenderer(), position.x - camPos.x,
-//		                       position.y - camPos.y, position.x - camPos.x + normal.x,
-//		                       position.y - camPos.y + normal.y);
-//	    },
-//	    this);
 }

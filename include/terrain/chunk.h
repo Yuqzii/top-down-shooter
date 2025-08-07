@@ -27,7 +27,8 @@ public:
 	void setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
 	                     const unsigned char value);
 
-	void update(const float deltaTime);
+	void update(Scene& scene);
+	void collisionUpdate(Scene& scene);
 
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 	void updateRender(const int pixelSize);

@@ -24,9 +24,19 @@ TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSi
 	updateColliders();
 }
 
+void TerrainManager::update() {
+	for (auto& vec : chunks)
+		for (Chunk& chunk : vec) chunk.update(scene);
+}
+
+void TerrainManager::collisionUpdate() {
+	for (auto& vec : chunks)
+		for (Chunk& chunk : vec) chunk.collisionUpdate(scene);
+}
+
 void TerrainManager::updateRender() {
 	for (auto& vec : chunks)
-		for (auto& chunk : vec) chunk.updateRender(pixelSize);
+		for (Chunk& chunk : vec) chunk.updateRender(pixelSize);
 }
 
 void TerrainManager::updateColliders() {
@@ -35,7 +45,7 @@ void TerrainManager::updateColliders() {
 	terrainColliders.clear();
 
 	for (auto& vec : chunks)
-		for (auto& chunk : vec) chunk.updateColliders();
+		for (Chunk& chunk : vec) chunk.updateColliders();
 
 	updateTree();
 }

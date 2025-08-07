@@ -18,6 +18,9 @@ public:
 	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
 	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
+	void update();
+	void collisionUpdate();
+
 	void updateRender();
 	void updateColliders();
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
