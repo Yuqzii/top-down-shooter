@@ -21,10 +21,6 @@ void CombatScene::initialize() {
 	terrainManager.updateRender();
 }
 
-void CombatScene::initialize(GameObjectVector& persistentObjects) {
-	Scene::initialize(persistentObjects);
-}
-
 void CombatScene::update(const float deltaTime) {
 	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
 		const Vec2 pos = getGame().getMousePos() + cam.getPos();

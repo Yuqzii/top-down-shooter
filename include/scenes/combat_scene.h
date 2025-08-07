@@ -10,7 +10,6 @@ class CombatScene : public Scene {
 public:
 	CombatScene(Game& game_);
 
-	void initialize(GameObjectVector& persistentObjects) override;
 	void initialize() override;
 
 	void update(const float deltaTime) override;

@@ -4,7 +4,7 @@
 
 Scene::Scene(Game& game_) : game(game_) {}
 
-void Scene::initialize(std::vector<std::unique_ptr<GameObject>>& persistentObjects) {
+void Scene::initialize(GameObjectVector&& persistentObjects) {
 	// Transfer ownership of persistent GameObjects to this scene
 	gameObjects = std::move(persistentObjects);
 }

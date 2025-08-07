@@ -21,7 +21,7 @@ public:
 	/*
 	 * @param	persistentObjects	The gameObjects this scene will be initialized with.
 	 */
-	virtual void initialize(GameObjectVector& persistentObjects);
+	virtual void initialize(GameObjectVector&& persistentObjects);
 	virtual void initialize();
 
 	/*
