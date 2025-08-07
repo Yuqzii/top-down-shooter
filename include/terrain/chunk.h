@@ -7,10 +7,10 @@
 
 #include "SDL2/SDL_rect.h"
 #include "terrain/terrain.h"
+#include "terrain/terrainCollider.h"
 
 class Scene;
 class TerrainManager;
-class TerrainCollider;
 struct Vec2;
 struct SDL_Renderer;
 class Camera;
@@ -26,6 +26,8 @@ public:
 	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
 	void setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
 	                     const unsigned char value);
+
+	void update(const float deltaTime);
 
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 	void updateRender(const int pixelSize);
@@ -46,7 +48,7 @@ private:
 	const std::size_t originY;
 
 	std::vector<std::vector<SDL_Rect>> renderRects;
-	std::vector<std::reference_wrapper<TerrainCollider>> colliders;
+	std::vector<TerrainCollider> colliders;
 
 	/* Tries to extend an existing collider that ends at start to ending at end.
 	 *
@@ -64,7 +66,7 @@ private:
 	 * @param end End position of LineCollider.
 	 * @param scene The scene to create the collider in.
 	 */
-	void createCollider(const Vec2& start, const Vec2& end);
+	void createCollider(Vec2&& start, Vec2&& end);
 
 	static constexpr int minSpawnSpace = 15;
 	static std::array<int, minSpawnSpace> spawnCircleY;

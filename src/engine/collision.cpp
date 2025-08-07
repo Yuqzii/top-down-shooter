@@ -170,7 +170,7 @@ Vec2 resolveStaticLine(const Collision::Event& event, const Vec2& position) {
 	normal = Vec2{normal.y, normal.x * -1};
 	// Check what side of line position is on
 	const float angle = std::acos(normal.normalized().dotProduct(
-	    (position - event.other->getParent()->getPosition()).normalized()));
+	    (position - line.line.position).normalized()));
 	const float degrees = angle * 180 / M_PI;
 	// Calculate movement according to collision depth and what side position is on
 	if (degrees >= 90.0f && degrees <= 180.0f)

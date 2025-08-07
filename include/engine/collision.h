@@ -44,11 +44,14 @@ struct Circle {
 };
 
 struct Line {
+	Vec2 position;
 	Vec2 start;
 	Vec2 end;
 
 	Line() : start(), end() {}
-	Line(const Vec2& s, const Vec2& e) : start(s), end(e) {}
+	Line(const Vec2& s, const Vec2& e) : start{s}, end{e}, position{s + (e - s) * 0.5f} {}
+	Line(const Vec2& pos, const Vec2& s, const Vec2& e)
+	    : start{s}, end{e}, position{pos} {}
 };
 
 Vec2 closestPointOnLine(const Vec2& point, const Line& line);

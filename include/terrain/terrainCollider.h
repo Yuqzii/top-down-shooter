@@ -4,22 +4,20 @@
 
 class Chunk;
 
-class TerrainCollider : public GameObject {
+class TerrainCollider {
 public:
-	TerrainCollider();
-
-	void initialize(const Scene& scene, const Vec2& position, const Vec2& start, const Vec2& end,
-	                Chunk& chunk);
+	TerrainCollider(Vec2&& position, Vec2&& start, Vec2&& end, Chunk& chunk);
 
 	// ONLY USED FOR DEBUG_GIZMO
-	void update(Scene& scene, const float deltaTime) override;
+	void update(Scene& scene, const float deltaTime);
 
-	void onCollision(const Collision::Event& event, Scene& scene) override;
+	void onCollision(const Collision::Event& event, Scene& scene);
 
 private:
-	SETOBJECTTEXTURE("empty.bmp");
+	Chunk& chunk;
 
-	Chunk* chunk;
+	LineCollider collider;
+	Vec2 position;
 
 	// testing, REMOVE
 	Vec2 normal;
