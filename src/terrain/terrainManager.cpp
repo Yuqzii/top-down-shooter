@@ -27,15 +27,12 @@ TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSi
 void TerrainManager::update(const Vec2& playerPos) {
 	if (!pendingTerrainChanges.empty()) executeTerrainChanges();
 
-	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
-	const auto chunksToUpdate = getChunksInRange(chunkX, chunkY, 10);
-	for (Chunk& chunk : chunksToUpdate) chunk.update(scene);
+	updateActiveChunks(playerPos, chunkRange);
+	for (Chunk& chunk : activeChunks) chunk.update(scene);
 }
 
-void TerrainManager::collisionUpdate(const Vec2& playerPos) {
-	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
-	const auto chunksToUpdate = getChunksInRange(chunkX, chunkY, 10);
-	for (Chunk& chunk : chunksToUpdate) chunk.collisionUpdate(scene);
+void TerrainManager::collisionUpdate() {
+	for (Chunk& chunk : activeChunks) chunk.collisionUpdate(scene);
 }
 
 void TerrainManager::updateRender() {
@@ -54,13 +51,15 @@ void TerrainManager::updateColliders() {
 	updateTree();
 }
 
-void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam,
-                            const Vec2& playerPos) const {
+void TerrainManager::updateActiveChunks(const Vec2& pos, const int range) {
+	const auto [x, y] = posToChunk(posToTerrainCoord(pos));
+	activeChunks = getChunksInRange(x, y, range);
+}
+
+void TerrainManager::render(SDL_Renderer* renderer, const Camera& cam) const {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-	const auto [chunkX, chunkY] = posToChunk(posToTerrainCoord(playerPos));
-	const auto chunksToRender = getConstChunksInRange(chunkX, chunkY, 1);
-	for (const Chunk& chunk : chunksToRender) chunk.render(renderer, cam);
+	for (const Chunk& chunk : activeChunks) chunk.render(renderer, cam);
 }
 
 void TerrainManager::changeTerrain(const Vec2& position, const unsigned char value) {

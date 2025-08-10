@@ -32,7 +32,7 @@ void CombatScene::update(const float deltaTime) {
 	terrainManager.update(player.getPosition());
 
 	Scene::updateCollision();
-	terrainManager.collisionUpdate(player.getPosition());
+	terrainManager.collisionUpdate();
 
 	enemyManager.update(*this, deltaTime);
 }
@@ -40,7 +40,7 @@ void CombatScene::update(const float deltaTime) {
 void CombatScene::render(SDL_Renderer* renderer) const {
 	Scene::render(renderer);
 
-	terrainManager.render(renderer, getCam(), player.getPosition());
+	terrainManager.render(renderer, getCam());
 }
 
 TerrainManager CombatScene::generateTerrain() {

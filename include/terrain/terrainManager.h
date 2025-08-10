@@ -26,11 +26,18 @@ public:
 	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
 	void update(const Vec2& playerPos);
-	void collisionUpdate(const Vec2& playerPos);
+	void collisionUpdate();
 
 	void updateRender();
 	void updateColliders();
-	void render(SDL_Renderer* renderer, const Camera& cam, const Vec2& playerPos) const;
+	/* Updates the activeChunks variable with all the chunks in range of pos.
+	 * These are the chunks that are rendered and checked for collisions.
+	 *
+	 * @param pos Center position to check from. Probably want this to be the player position.
+	 * @param range Amount of chunks in each direction that will be set as active.
+	 */
+	void updateActiveChunks(const Vec2& pos, const int range);
+	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
 	void changeTerrain(const Vec2& position, const unsigned char value);
 	void changeTerrain(const std::pair<std::size_t, std::size_t>& position,
@@ -68,6 +75,8 @@ private:
 	const std::size_t terrainXSize;
 	const std::size_t terrainYSize;
 	std::vector<std::vector<Chunk>> chunks;
+	constexpr static int chunkRange = 1;
+	std::vector<std::reference_wrapper<Chunk>> activeChunks;
 	std::vector<std::vector<Chunk>> splitToChunks(const Terrain& terrain,
 	                                              const std::size_t chunkSize);
 	std::pair<std::size_t, std::size_t> posToChunk(
