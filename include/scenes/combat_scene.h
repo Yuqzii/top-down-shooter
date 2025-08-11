@@ -10,8 +10,6 @@ class CombatScene : public Scene {
 public:
 	CombatScene(Game& game_);
 
-	void initialize() override;
-
 	void update(const float deltaTime) override;
 	void render(SDL_Renderer* renderer) const override;
 

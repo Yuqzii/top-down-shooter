@@ -14,13 +14,6 @@ CombatScene::CombatScene(Game& game)
       player{spawnPlayer()},
       enemyManager{std::move(terrainManager.getAllSpawns())} {}
 
-void CombatScene::initialize() {
-	Scene::initialize();
-
-	terrainManager.updateColliders();
-	terrainManager.updateRender();
-}
-
 void CombatScene::update(const float deltaTime) {
 	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
 		const Vec2 pos = getGame().getMousePos() + cam.getPos();

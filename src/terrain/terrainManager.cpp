@@ -17,12 +17,11 @@ TerrainManager::TerrainManager(const Terrain& terrain, const std::size_t chunkSi
       pixelSize{Game::pixelSize * pixelSizeMultiplier},
       color{color_},
       scene{scene_},
-      chunks{std::move(splitToChunks(terrain, chunkSize))},
+      chunks{splitToChunks(terrain, chunkSize)},
       terrainXSize{terrain.getXSize()},
-      terrainYSize{terrain.getYSize()} {
-	updateRender();
-	updateColliders();
-}
+      terrainYSize{terrain.getYSize()} {}
+
+TerrainManager::~TerrainManager() = default;
 
 void TerrainManager::update(const Vec2& playerPos) {
 	if (!pendingTerrainChanges.empty()) executeTerrainChanges();
@@ -41,14 +40,8 @@ void TerrainManager::updateRender() {
 }
 
 void TerrainManager::updateColliders() {
-	// Remove previous colliders
-	for (auto collider : terrainColliders) collider->deleteObject = true;
-	terrainColliders.clear();
-
 	for (auto& vec : chunks)
 		for (Chunk& chunk : vec) chunk.updateColliders();
-
-	updateTree();
 }
 
 void TerrainManager::updateActiveChunks(const Vec2& pos, const int range) {
