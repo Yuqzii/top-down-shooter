@@ -6,7 +6,6 @@
 #include "engine/scene.h"
 #include "player.h"
 #include "scenes/combat_scene.h"
-#include "terrain/terrainCollider.h"
 
 Enemy::Enemy(const float health_, const float damage_, const float speed, const float steer,
              const float sMult, const float slowing)
@@ -75,9 +74,7 @@ void Enemy::onCollision(const Collision::Event& event, Scene& scene) {
 		return;
 	}
 
-	const TerrainCollider* terrainCollider =
-	    dynamic_cast<const TerrainCollider*>(event.other->getParent());
-	if (terrainCollider) {
+	if (event.other->getTag() == "Terrain") {
 		position += Collision::resolveStaticLine(event, position);
 		return;
 	}

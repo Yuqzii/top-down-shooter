@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "engine/scene.h"
+#include "engine/camera.h"
 #include "terrain/terrainCollider.h"
 #include "terrain/terrainManager.h"
 
@@ -22,19 +22,26 @@ Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t or
 	updateSpawnPositions();
 }
 
-void Chunk::setCell(const std::size_t x, const std::size_t y, const unsigned char value) {
-	assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
-	       "Position (x, y) must be within the terrain size.");
+void Chunk::update(Scene& scene) {
+	for (TerrainCollider& collider : colliders) collider.update(scene);
+}
 
-	terrain.map[y][x] = value;
+void Chunk::collisionUpdate(Scene& scene) {
+	for (TerrainCollider& collider : colliders) collider.collisionUpdate(scene);
+}
+
+void Chunk::changeTerrain(const TerrainChange& change) {
+	assert(change.x >= 0 && change.x < terrain.getXSize() && change.y >= 0 &&
+	       change.y < terrain.getYSize() && "Position (x, y) must be within the terrain size.");
+
+	terrain.map[change.y][change.x] = change.value;
 
 	updateColliders();
 	updateRender(manager.getPixelSize());
 }
 
-void Chunk::setCellMultiple(const std::vector<std::pair<size_t, size_t>>& positions,
-                            const unsigned char value) {
-	for (auto [x, y] : positions) {
+void Chunk::changeTerrainMultiple(const std::vector<TerrainChange>& changes) {
+	for (auto [x, y, value] : changes) {
 		assert(x >= 0 && x < terrain.getXSize() && y >= 0 && y < terrain.getYSize() &&
 		       "Position (x, y) must be within the terrain size.");
 		terrain.map[y][x] = value;
@@ -49,7 +56,7 @@ void Chunk::render(SDL_Renderer* renderer, const Camera& cam) const {
 	rects.reserve(terrain.getXSize() * terrain.getYSize());
 	for (auto curRects : renderRects) {
 		for (auto& rect : curRects) {
-			const Vec2 camPos = cam.getPos();
+			const Vec2& camPos = cam.getPos();
 			rect.x -= camPos.x;
 			rect.y -= camPos.y;
 		}
@@ -76,7 +83,6 @@ void Chunk::updateRender(const int pixelSize) {
 }
 
 void Chunk::updateColliders() {
-	for (auto& collider : colliders) collider.get().deleteObject = true;
 	colliders.clear();
 
 	std::map<std::pair<int, int>, std::pair<int, int>> currentColliders;  // Key: end, Value: start
@@ -166,12 +172,12 @@ void Chunk::tryExtendCollider(
     const std::pair<int, int>& start, const std::pair<int, int>& end,
     std::map<std::pair<int, int>, std::pair<int, int>>& currentColliders) {
 	const Vec2 startVec{start.first, start.second};
-	const Vec2 endVec{end.first, end.second};
+	Vec2 endVec{end.first, end.second};
 
 	// Create collider if there already is one ending at end
 	auto endIt = currentColliders.find(end);
 	if (endIt != currentColliders.end()) {
-		createCollider(Vec2{endIt->second.first, endIt->second.second}, endVec);
+		createCollider(Vec2{endIt->second.first, endIt->second.second}, std::move(endVec));
 		currentColliders.erase(endIt);
 	}
 
@@ -191,11 +197,9 @@ void Chunk::tryExtendCollider(
 	currentColliders[end] = start;
 }
 
-void Chunk::createCollider(const Vec2& start, const Vec2& end) {
-	const Vec2 position{start + (end - start) * 0.5f};
-	TerrainCollider& collider =
-	    manager.getScene().instantiate<TerrainCollider>(position, start, end, *this);
-	colliders.push_back(collider);
+void Chunk::createCollider(Vec2&& start, Vec2&& end) {
+	Vec2 position{start + (end - start) * 0.5f};
+	colliders.emplace_back(std::move(position), std::move(start), std::move(end), *this);
 }
 
 void Chunk::updateSpawnPositions() {

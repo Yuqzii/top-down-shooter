@@ -31,9 +31,10 @@ TEST(Terrain, CollisionGeneration) {
 	Game game{"", 1, 1};
 	MockScene scene{game};
 	const std::size_t chunkSize = terrainMap.size();
-	TerrainManager manager{terrain, chunkSize, 1, SDL_Color{1, 1, 1, 1}, scene};
+	TerrainManager manager{terrain, chunkSize, 1, SDL_Color{}, scene};
+	const Chunk& chunk = manager.getChunks()[0][0];
 
-	constexpr int expected = 44;
-	EXPECT_TRUE(scene.objCount() == expected)
-	    << "Expected " << expected << " colliders, found " << scene.objCount();
+	constexpr std::size_t expected = 44;
+	EXPECT_TRUE(chunk.getColliderCount() == expected)
+	    << "Expected " << expected << " colliders, found " << chunk.getColliderCount();
 }

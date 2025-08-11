@@ -1,5 +1,6 @@
 #pragma once
 
+#include <queue>
 #include <vector>
 
 #include "SDL2/SDL_pixels.h"
@@ -13,24 +14,41 @@ class Scene;
 class TerrainCollider;
 class Camera;
 
+struct TerrainChange {
+	const std::size_t x;
+	const std::size_t y;
+	const unsigned char value;
+};
+
 class TerrainManager {
 public:
 	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
 	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
+	void update(const Vec2& playerPos);
+	void collisionUpdate();
+
 	void updateRender();
 	void updateColliders();
+	/* Updates the activeChunks variable with all the chunks in range of pos.
+	 * These are the chunks that are rendered and checked for collisions.
+	 *
+	 * @param pos Center position to check from. Probably want this to be the player position.
+	 * @param range Amount of chunks in each direction that will be set as active.
+	 */
+	void updateActiveChunks(const Vec2& pos, const int range);
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
 
-	void setCell(const Vec2& position, const unsigned char value);
-	void setCell(const std::pair<std::size_t, std::size_t>& position, const unsigned char value);
-	void setCell(const std::size_t x, const std::size_t y, const unsigned char value);
+	void changeTerrain(const Vec2& position, const unsigned char value);
+	void changeTerrain(const std::pair<std::size_t, std::size_t>& position,
+	                   const unsigned char value);
+	void changeTerrain(const std::size_t x, const std::size_t y, const unsigned char value);
 	/* Removes all pixels in range of the center and recalculates collisions.
 	 *
 	 * @param center Center position to remove from.
 	 * @param range The range to remove from. (Radius of circle).
 	 */
-	void setCellsInRange(const Vec2& center, int range, const unsigned char value);
+	void changeTerrainInRange(const Vec2& center, int range, const unsigned char value);
 	/* Get the array indices of the terrain pixel at the given world position.
 	 *
 	 * @param position Position to translate to indices.
@@ -41,6 +59,7 @@ public:
 	std::size_t getChunksX() const { return chunks.empty() ? 0 : chunks[0].size(); }
 	std::size_t getChunksY() const { return chunks.size(); }
 	std::size_t getChunkSize() const { return chunkSize; }
+	const std::vector<std::vector<Chunk>>& getChunks() const { return chunks; }
 	int getPixelSize() const { return pixelSize; }
 	// DEPRECATED, does not return a correct tree.
 	const Tree2D& getTree() const { return terrainTree; }
@@ -57,10 +76,24 @@ private:
 	const std::size_t terrainXSize;
 	const std::size_t terrainYSize;
 	std::vector<std::vector<Chunk>> chunks;
+	constexpr static int chunkRange = 1;
+	std::vector<std::reference_wrapper<Chunk>> activeChunks;
 	std::vector<std::vector<Chunk>> splitToChunks(const Terrain& terrain,
 	                                              const std::size_t chunkSize);
 	std::pair<std::size_t, std::size_t> posToChunk(
 	    const std::pair<std::size_t, std::size_t>& pos) const;
+	/* @param x Center X-position in chunk coordinates.
+	 * @param y Center Y-position in chunk coordinates.
+	 */
+	std::vector<std::reference_wrapper<Chunk>> getChunksInRange(const std::size_t x,
+	                                                            const std::size_t y,
+	                                                            const int range);
+	std::vector<std::reference_wrapper<const Chunk>> getConstChunksInRange(const std::size_t x,
+	                                                                       const std::size_t y,
+	                                                                       const int range) const;
+
+	std::queue<TerrainChange> pendingTerrainChanges;
+	void executeTerrainChanges();
 
 	// DEPRECATED. TerrainManager does not know about all it's terrainColliders.
 	std::vector<GameObject*> terrainColliders;

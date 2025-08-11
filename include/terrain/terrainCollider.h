@@ -1,26 +1,30 @@
 #pragma once
 
-#include "engine/gameObject.h"
+#include "engine/collision.h"
+
+#ifdef DEBUG_GIZMO
+#include <memory>
+class GameObject;
+#endif
 
 class Chunk;
 
-class TerrainCollider : public GameObject {
+class TerrainCollider : public LineCollider {
 public:
-	TerrainCollider();
+	TerrainCollider(Vec2&& position, Vec2&& start, Vec2&& end, Chunk& chunk);
 
-	void initialize(const Scene& scene, const Vec2& position, const Vec2& start, const Vec2& end,
-	                Chunk& chunk);
-
-	// ONLY USED FOR DEBUG_GIZMO
-	void update(Scene& scene, const float deltaTime) override;
+	void update(Scene& scene);
 
 	void onCollision(const Collision::Event& event, Scene& scene) override;
 
+	std::string_view getTag() const override { return "Terrain"; }
+
 private:
-	SETOBJECTTEXTURE("empty.bmp");
+	Chunk& chunk;
 
-	Chunk* chunk;
+	Vec2 position;
 
-	// testing, REMOVE
-	Vec2 normal;
+#ifdef DEBUG_GIZMO
+	std::unique_ptr<GameObject> fakeObject;
+#endif
 };

@@ -1,6 +1,7 @@
 #include "engine/collision.h"
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -169,8 +170,8 @@ Vec2 resolveStaticLine(const Collision::Event& event, const Vec2& position) {
 	Vec2 normal = Vec2{line.line.start - line.line.end}.normalized();
 	normal = Vec2{normal.y, normal.x * -1};
 	// Check what side of line position is on
-	const float angle = std::acos(normal.normalized().dotProduct(
-	    (position - event.other->getParent()->getPosition()).normalized()));
+	const float angle =
+	    std::acos(normal.normalized().dotProduct((position - line.line.position).normalized()));
 	const float degrees = angle * 180 / M_PI;
 	// Calculate movement according to collision depth and what side position is on
 	if (degrees >= 90.0f && degrees <= 180.0f)
@@ -356,7 +357,7 @@ void LineCollider::checkCollisions(const Scene& scene) {
 	std::vector<std::reference_wrapper<GameObject>> closeObjects;
 	try {
 		// Get all GameObjects withing our bounding circle
-		closeObjects = scene.getObjectTree().findObjectsInRange(line.start, getCheckRadius());
+		closeObjects = scene.getObjectTree().findObjectsInRange(line.position, getCheckRadius());
 	} catch (int e) {
 		std::cerr << "Exception " << e << " when checking collisions. Tree was likely not built.\n";
 		return;
