@@ -34,6 +34,7 @@ public:
 	void updateRender(const int pixelSize);
 
 	void updateColliders();
+	std::size_t getColliderCount() const { return colliders.size(); }
 
 	void updateSpawnPositions();
 

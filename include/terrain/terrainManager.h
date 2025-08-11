@@ -59,6 +59,7 @@ public:
 	std::size_t getChunksX() const { return chunks.empty() ? 0 : chunks[0].size(); }
 	std::size_t getChunksY() const { return chunks.size(); }
 	std::size_t getChunkSize() const { return chunkSize; }
+	const std::vector<std::vector<Chunk>>& getChunks() const { return chunks; }
 	int getPixelSize() const { return pixelSize; }
 	// DEPRECATED, does not return a correct tree.
 	const Tree2D& getTree() const { return terrainTree; }
