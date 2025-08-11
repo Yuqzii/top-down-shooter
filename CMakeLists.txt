@@ -38,8 +38,8 @@ set(SOURCE_FILES
 "src/terrain/chunk.cpp"
 )
 
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+#add_compile_options(-fsanitize=address)
+#add_link_options(-fsanitize=address)
 
 # Build the game as a static library
 add_library(${PROJECT_NAME}_lib STATIC ${SOURCE_FILES})
