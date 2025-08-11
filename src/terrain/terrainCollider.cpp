@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "bullet.h"
+#include "enemies/enemy.h"
 #include "engine/game.h"
 #include "engine/scene.h"
 #include "terrain/chunk.h"
@@ -13,10 +14,13 @@ constexpr float collisionCheckRadius = 500.0f;
 TerrainCollider::TerrainCollider(Vec2&& position, Vec2&& start, Vec2&& end, Chunk& chunk)
     : chunk{chunk},
       LineCollider{Collision::Line{std::move(position), std::move(start), std::move(end)},
-                   collisionCheckRadius} {
+                   collisionCheckRadius},
 #ifdef DEBUG_GIZMO
-	fakeObject = std::make_unique<GameObject>();
+      fakeObject{std::make_unique<GameObject>()}
+#else
+      fakeObject{nullptr}
 #endif
+{
 }
 
 void TerrainCollider::update(Scene& scene) {

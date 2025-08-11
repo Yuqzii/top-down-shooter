@@ -17,9 +17,16 @@ std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 
 Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
              const std::size_t originY, TerrainManager& manager)
-    : terrain{map}, manager{manager}, originX{originX}, originY{originY} {
+    : manager{manager},
+      terrain{std::move(map)},
+      originX{originX},
+      originY{originY},
+      renderRects{},
+      colliders{} {
 	renderRects.resize(terrain.getYSize(), std::vector<SDL_Rect>(terrain.getXSize()));
+	updateColliders();
 	updateSpawnPositions();
+	updateRender(manager.getPixelSize());
 }
 
 void Chunk::update(Scene& scene) {
@@ -163,7 +170,7 @@ void Chunk::updateColliders() {
 	}
 
 	// Construct colliders
-	colliders.reserve(currentColliders.size());
+	colliders.reserve(colliders.size() + currentColliders.size());
 	for (const auto& [end, start] : currentColliders)
 		createCollider(Vec2{start.first, start.second}, Vec2{end.first, end.second});
 }

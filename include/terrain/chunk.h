@@ -21,6 +21,12 @@ public:
 	Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
 	      const std::size_t originY, TerrainManager& manager);
 
+	// Delete copy
+	Chunk(const Chunk&) = delete;
+	Chunk& operator=(const Chunk&) = delete;
+
+	Chunk(Chunk&&) = default;
+
 	/* Sets the cell at position (x, y) to value.
 	 * x and y position is relative to this chunk.
 	 */

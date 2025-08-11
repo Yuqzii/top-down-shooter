@@ -28,7 +28,7 @@ TEST(Terrain, CollisionGeneration) {
 	};
 
 	Terrain terrain{std::move(terrainMap)};
-	Game game{"", 1, 1};
+	Game game{"", 0, 0};
 	MockScene scene{game};
 	const std::size_t chunkSize = terrainMap.size();
 	TerrainManager manager{terrain, chunkSize, 1, SDL_Color{}, scene};
@@ -37,4 +37,5 @@ TEST(Terrain, CollisionGeneration) {
 	constexpr std::size_t expected = 44;
 	EXPECT_TRUE(chunk.getColliderCount() == expected)
 	    << "Expected " << expected << " colliders, found " << chunk.getColliderCount();
+	game.clean();
 }

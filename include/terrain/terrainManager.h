@@ -25,6 +25,12 @@ public:
 	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
 	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
 
+	~TerrainManager();
+
+	TerrainManager(const TerrainManager&) = delete;
+	TerrainManager& operator=(const Chunk&) = delete;
+	TerrainManager(TerrainManager&&) = default;
+
 	void update(const Vec2& playerPos);
 	void collisionUpdate();
 
