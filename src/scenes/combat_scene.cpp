@@ -9,10 +9,7 @@
 #include "terrain/terrainGenerator.h"
 
 CombatScene::CombatScene(Game& game)
-    : Scene{game},
-      chunkManager{generateTerrain()},
-      player{spawnPlayer()},
-      enemyManager{std::move(chunkManager.getAllSpawns())} {}
+    : Scene{game}, enemyManager{}, chunkManager{generateTerrain()}, player{spawnPlayer()} {}
 
 void CombatScene::update(const float deltaTime) {
 	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
@@ -22,12 +19,12 @@ void CombatScene::update(const float deltaTime) {
 
 	Scene::update(deltaTime);
 
-	chunkManager.update(player.getPosition());
+	chunkManager.update(deltaTime, player.getPosition());
 
 	Scene::updateCollision();
 	chunkManager.collisionUpdate();
 
-	enemyManager.update(*this, deltaTime);
+	enemyManager.update();
 }
 
 void CombatScene::render(SDL_Renderer* renderer) const {
@@ -71,7 +68,7 @@ ChunkManager CombatScene::generateTerrain() {
 	constexpr std::size_t chunkSize = 100;
 	constexpr int pixelSizeMultiplier = 3;
 	constexpr SDL_Color terrainColor{56, 28, 40, 255};
-	ChunkManager manager{terrain, chunkSize, pixelSizeMultiplier, terrainColor, *this};
+	ChunkManager manager{terrain, chunkSize, pixelSizeMultiplier, terrainColor, *this, enemyManager};
 	return manager;
 }
 

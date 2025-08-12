@@ -17,8 +17,8 @@ public:
 	const ChunkManager& getChunkManager() const { return chunkManager; }
 
 private:
-	ChunkManager chunkManager;
 	EnemyManager enemyManager;
+	ChunkManager chunkManager;
 
 	ChunkManager generateTerrain();
 	const Player& spawnPlayer();

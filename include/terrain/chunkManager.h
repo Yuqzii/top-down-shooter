@@ -23,7 +23,7 @@ struct TerrainChange {
 class ChunkManager {
 public:
 	ChunkManager(const Terrain& terrain, const std::size_t chunkSize, const int pixelSizeMultiplier,
-	             const SDL_Color& color, Scene& scene);
+	             const SDL_Color& color, Scene& scene, EnemyManager& enemyManager);
 
 	~ChunkManager();
 
@@ -31,7 +31,7 @@ public:
 	ChunkManager& operator=(const Chunk&) = delete;
 	ChunkManager(ChunkManager&&) = default;
 
-	void update(const Vec2& playerPos);
+	void update(const float deltaTime, const Vec2& playerPos);
 	void collisionUpdate();
 
 	void updateRender();
@@ -75,6 +75,7 @@ public:
 
 private:
 	Scene& scene;
+	EnemyManager& enemyManager;
 
 	int pixelSize;
 

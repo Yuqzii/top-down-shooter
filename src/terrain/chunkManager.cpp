@@ -11,22 +11,24 @@
 #include "terrain/terrainCollider.h"
 
 ChunkManager::ChunkManager(const Terrain& terrain, const std::size_t chunkSize,
-                           const int pixelSizeMultiplier, const SDL_Color& color_, Scene& scene_)
+                           const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene,
+                           EnemyManager& enemyManager)
     : chunkSize{chunkSize},
       pixelSize{Game::pixelSize * pixelSizeMultiplier},
-      color{color_},
-      scene{scene_},
+      color{color},
+      scene{scene},
+      enemyManager{enemyManager},
       chunks{splitToChunks(terrain, chunkSize)},
       terrainXSize{terrain.getXSize()},
       terrainYSize{terrain.getYSize()} {}
 
 ChunkManager::~ChunkManager() = default;
 
-void ChunkManager::update(const Vec2& playerPos) {
+void ChunkManager::update(const float deltaTime, const Vec2& playerPos) {
 	if (!pendingTerrainChanges.empty()) executeTerrainChanges();
 
 	updateActiveChunks(playerPos, chunkRange);
-	for (Chunk& chunk : activeChunks) chunk.update(scene);
+	for (Chunk& chunk : activeChunks) chunk.update(scene, deltaTime);
 }
 
 void ChunkManager::collisionUpdate() {
@@ -172,7 +174,7 @@ std::vector<std::vector<Chunk>> ChunkManager::splitToChunks(const Terrain& terra
 			}
 
 			result[y].emplace_back(std::move(chunkMap), x * chunkSize * pixelSize,
-			                       y * chunkSize * pixelSize, *this);
+			                       y * chunkSize * pixelSize, *this, enemyManager);
 		}
 	}
 	return result;
@@ -211,7 +213,7 @@ std::vector<Vec2> ChunkManager::getAllSpawns() const {
 	std::vector<Vec2> spawns;
 	for (const auto& chunkList : chunks) {
 		for (const Chunk& chunk : chunkList) {
-			const auto chunkSpawns = chunk.getSpawnPositions();
+			const auto chunkSpawns = chunk.findSpawnPositions();
 			spawns.insert(spawns.end(), chunkSpawns.begin(), chunkSpawns.end());
 		}
 	}
