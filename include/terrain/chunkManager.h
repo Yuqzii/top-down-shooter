@@ -75,6 +75,8 @@ public:
 
 private:
 	Scene& scene;
+	// ChunkManager needs a reference to the EnemyManager because the EnemySpawner in each chunk
+	// needs a reference to the EnemyManager.
 	EnemyManager& enemyManager;
 
 	int pixelSize;
