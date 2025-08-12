@@ -27,6 +27,13 @@ public:
 
 	Chunk(Chunk&&) = default;
 
+	enum States {
+		NORMAL = 0,  // Not in any of the other categories
+		CENTER, // The center chunk (usually the one the player is in)
+		EDGE,  // Chunks at the edge of what is loaded.
+	};
+	States state;
+
 	/* Sets the cell at position (x, y) to value.
 	 * x and y position is relative to this chunk.
 	 */

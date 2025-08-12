@@ -17,7 +17,8 @@ std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 
 Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
              const std::size_t originY, ChunkManager& manager)
-    : manager{manager},
+    : state{},
+	manager{manager},
       terrain{std::move(map)},
       originX{originX},
       originY{originY},

@@ -44,8 +44,32 @@ void ChunkManager::updateColliders() {
 }
 
 void ChunkManager::updateActiveChunks(const Vec2& pos, const int range) {
-	const auto [x, y] = posToChunk(posToTerrainCoord(pos));
-	activeChunks = getChunksInRange(x, y, range);
+	const auto [midX, midY] = posToChunk(posToTerrainCoord(pos));
+	activeChunks.clear();
+
+	// Set top and bottom chunks to EDGE
+	for (std::size_t x = midX - range; x <= midX + range; x++) {
+		chunks[midY - range][x].state = Chunk::EDGE;
+		activeChunks.emplace_back(chunks[midY - range][x]);
+
+		chunks[midY + range][x].state = Chunk::EDGE;
+		activeChunks.emplace_back(chunks[midY + range][x]);
+	}
+	// Set leftmost and rightmost chunks to EDGE
+	for (std::size_t y = midY - range + 1; y < midY + range; y++) {
+		chunks[y][midX - range].state = Chunk::EDGE;
+		activeChunks.emplace_back(chunks[y][midX - range]);
+
+		chunks[y][midX + range].state = Chunk::EDGE;
+		activeChunks.emplace_back(chunks[y][midX + range]);
+	}
+
+	// Get the rest of the chunks that are not on the edge
+	auto normalChunks = getChunksInRange(midX, midY, range - 1);
+	for (Chunk& chunk : normalChunks) chunk.state = Chunk::NORMAL;
+	chunks[midY][midX].state = Chunk::CENTER;
+
+	activeChunks.insert(activeChunks.end(), normalChunks.begin(), normalChunks.end());
 }
 
 void ChunkManager::render(SDL_Renderer* renderer, const Camera& cam) const {
