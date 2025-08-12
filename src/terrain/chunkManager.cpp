@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
-#include <iostream>
 
 #include "SDL2/SDL_render.h"
 #include "engine/game.h"
@@ -50,44 +49,28 @@ void ChunkManager::updateActiveChunks(const Vec2& pos, const int range) {
 	const auto [midX, midY] = posToChunk(posToTerrainCoord(pos));
 	activeChunks.clear();
 
+	std::size_t startX = std::max(static_cast<std::size_t>(0), midX - range);
+	std::size_t endX = std::min(getChunksX() - 1, midX + range);
+	std::size_t startY = std::max(static_cast<std::size_t>(0), midY - range + 1);
+	std::size_t endY = std::min(getChunksY() - 1, midY + range - 1);
+
+	auto setChunkAsEdge = [this](Chunk& chunk) {
+		chunk.state = Chunk::EDGE;
+		activeChunks.emplace_back(chunk);
+	};
+
 	// Set top chunks to EDGE
-	if (midY >= range) {
-		std::size_t startX = std::max(static_cast<std::size_t>(0), midX - range);
-		std::size_t endX = std::min(getChunksX() - 1, midX + range);
-		for (std::size_t x = startX; x <= endX; x++) {
-			chunks[midY - range][x].state = Chunk::EDGE;
-			activeChunks.emplace_back(chunks[midY - range][x]);
-		}
-	}
+	if (midY >= range)
+		for (std::size_t x = startX; x <= endX; x++) setChunkAsEdge(chunks[midY - range][x]);
 	// Set bottom chunks to EDGE
-	if (midY + range < getChunksY()) {
-		std::size_t startX = std::max(static_cast<std::size_t>(0), midX - range);
-		std::size_t endX = std::min(getChunksX() - 1, midX + range);
-		for (std::size_t x = startX; x <= endX; x++) {
-			chunks[midY + range][x].state = Chunk::EDGE;
-			activeChunks.emplace_back(chunks[midY + range][x]);
-		}
-	}
+	if (midY + range < getChunksY())
+		for (std::size_t x = startX; x <= endX; x++) setChunkAsEdge(chunks[midY + range][x]);
 	// Set leftmost chunks to EDGE
-	if (midX >= range) {
-		std::size_t startY = std::max(static_cast<std::size_t>(0), midY - range + 1);
-		std::size_t endY = std::min(getChunksY() - 1, midY + range - 1);
-		for (std::size_t y = startY; y <= endY; y++) {
-			chunks[y][midX - range].state = Chunk::EDGE;
-			activeChunks.emplace_back(chunks[y][midX - range]);
-		}
-	}
+	if (midX >= range)
+		for (std::size_t y = startY; y <= endY; y++) setChunkAsEdge(chunks[y][midX - range]);
 	// Set rightmost chunks to EDGE
-	if (midX + range < getChunksX()) {
-		std::cout << "si" << std::endl;
-		std::size_t startY = std::max(static_cast<std::size_t>(0), midY - range + 1);
-		std::size_t endY = std::min(getChunksY() - 1, midY + range - 1);
-		for (std::size_t y = startY; y <= endY; y++) {
-			chunks[y][midX + range].state = Chunk::EDGE;
-			activeChunks.emplace_back(chunks[y][midX + range]);
-			std::cout << "muy bien" << std::endl;
-		}
-	}
+	if (midX + range < getChunksX())
+		for (std::size_t y = startY; y <= endY; y++) setChunkAsEdge(chunks[y][midX + range]);
 
 	// Get the rest of the chunks that are not on the edge
 	auto normalChunks = getChunksInRange(midX, midY, range - 1);
