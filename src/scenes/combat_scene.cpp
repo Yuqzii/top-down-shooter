@@ -68,7 +68,8 @@ ChunkManager CombatScene::generateTerrain() {
 	constexpr std::size_t chunkSize = 100;
 	constexpr int pixelSizeMultiplier = 3;
 	constexpr SDL_Color terrainColor{56, 28, 40, 255};
-	ChunkManager manager{terrain, chunkSize, pixelSizeMultiplier, terrainColor, *this, enemyManager};
+	ChunkManager manager{terrain,      chunkSize, pixelSizeMultiplier,
+	                     terrainColor, *this,     enemyManager};
 	return manager;
 }
 
