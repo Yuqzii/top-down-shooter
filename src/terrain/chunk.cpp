@@ -3,8 +3,8 @@
 #include <cassert>
 
 #include "engine/camera.h"
+#include "terrain/chunkManager.h"
 #include "terrain/terrainCollider.h"
-#include "terrain/terrainManager.h"
 
 std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 	std::array<int, minSpawnSpace> result;
@@ -16,20 +16,23 @@ std::array<int, Chunk::minSpawnSpace> Chunk::spawnCircleY = [] {
 }();
 
 Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
-             const std::size_t originY, TerrainManager& manager)
-    : manager{manager},
+             const std::size_t originY, ChunkManager& manager, EnemyManager& enemyManager)
+    : state{},
+      manager{manager},
       terrain{std::move(map)},
       originX{originX},
       originY{originY},
       renderRects{},
-      colliders{} {
+      colliders{},
+      enemySpawner{enemyManager} {
 	renderRects.resize(terrain.getYSize(), std::vector<SDL_Rect>(terrain.getXSize()));
 	updateColliders();
 	updateSpawnPositions();
 	updateRender(manager.getPixelSize());
 }
 
-void Chunk::update(Scene& scene) {
+void Chunk::update(Scene& scene, const float deltaTime) {
+	if (state == EDGE) enemySpawner.update(scene, deltaTime);
 	for (TerrainCollider& collider : colliders) collider.update(scene);
 }
 
@@ -209,8 +212,10 @@ void Chunk::createCollider(Vec2&& start, Vec2&& end) {
 	colliders.emplace_back(std::move(position), std::move(start), std::move(end), *this);
 }
 
-void Chunk::updateSpawnPositions() {
-	spawnPositions.clear();
+void Chunk::updateSpawnPositions() { enemySpawner.updateSpawnPositions(findSpawnPositions()); }
+
+std::vector<Vec2> Chunk::findSpawnPositions() const {
+	std::vector<Vec2> positions;
 
 	Terrain used{terrain.map};
 	for (std::size_t y = minSpawnSpace; y < terrain.getYSize() - minSpawnSpace; y++) {
@@ -224,8 +229,8 @@ void Chunk::updateSpawnPositions() {
 				x = hitX + minSpawnSpace - (std::max(hitY, y) - std::min(hitY, y)) +
 				    spawnCircleY.back() + 1;
 			} else {
-				spawnPositions.push_back(Vec2{x * manager.getPixelSize() + originX,
-				                              y * manager.getPixelSize() + originY});
+				positions.emplace_back(x * manager.getPixelSize() + originX,
+				                       y * manager.getPixelSize() + originY);
 
 				// Set all positions inside the spawn area as used.
 				const int cornerDist = spawnCircleY.back() - 1;
@@ -240,6 +245,8 @@ void Chunk::updateSpawnPositions() {
 			}
 		}
 	}
+
+	return positions;
 }
 
 std::optional<std::pair<std::size_t, std::size_t>> Chunk::findObstruction(

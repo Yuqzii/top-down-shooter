@@ -9,34 +9,31 @@
 #include "terrain/terrainGenerator.h"
 
 CombatScene::CombatScene(Game& game)
-    : Scene{game},
-      terrainManager{generateTerrain()},
-      player{spawnPlayer()},
-      enemyManager{std::move(terrainManager.getAllSpawns())} {}
+    : Scene{game}, enemyManager{}, chunkManager{generateTerrain()}, player{spawnPlayer()} {}
 
 void CombatScene::update(const float deltaTime) {
 	if (getGame().getOnMouseDown()[SDL_BUTTON_RIGHT]) {
 		const Vec2 pos = getGame().getMousePos() + cam.getPos();
-		terrainManager.changeTerrainInRange(pos, 5, 0);
+		chunkManager.changeTerrainInRange(pos, 5, 0);
 	}
 
 	Scene::update(deltaTime);
 
-	terrainManager.update(player.getPosition());
+	chunkManager.update(deltaTime, player.getPosition());
 
 	Scene::updateCollision();
-	terrainManager.collisionUpdate();
+	chunkManager.collisionUpdate();
 
-	enemyManager.update(*this, deltaTime);
+	enemyManager.update();
 }
 
 void CombatScene::render(SDL_Renderer* renderer) const {
 	Scene::render(renderer);
 
-	terrainManager.render(renderer, getCam());
+	chunkManager.render(renderer, getCam());
 }
 
-TerrainManager CombatScene::generateTerrain() {
+ChunkManager CombatScene::generateTerrain() {
 	TerrainGenerator gen{game.randGen};
 	// Shape parameters
 	gen.shapeFillProb = 0.2;
@@ -71,12 +68,13 @@ TerrainManager CombatScene::generateTerrain() {
 	constexpr std::size_t chunkSize = 100;
 	constexpr int pixelSizeMultiplier = 3;
 	constexpr SDL_Color terrainColor{56, 28, 40, 255};
-	TerrainManager manager{terrain, chunkSize, pixelSizeMultiplier, terrainColor, *this};
+	ChunkManager manager{terrain,      chunkSize, pixelSizeMultiplier,
+	                     terrainColor, *this,     enemyManager};
 	return manager;
 }
 
 const Player& CombatScene::spawnPlayer() {
-	const auto spawns = terrainManager.getAllSpawns();
+	const auto spawns = chunkManager.getAllSpawns();
 	std::uniform_int_distribution<std::size_t> dist{0, spawns.size() - 1};
 	const std::size_t idx = dist(game.randGen);
 	const Vec2 spawnPos = spawns[idx];

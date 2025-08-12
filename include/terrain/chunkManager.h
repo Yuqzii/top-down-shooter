@@ -20,18 +20,18 @@ struct TerrainChange {
 	const unsigned char value;
 };
 
-class TerrainManager {
+class ChunkManager {
 public:
-	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
-	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
+	ChunkManager(const Terrain& terrain, const std::size_t chunkSize, const int pixelSizeMultiplier,
+	             const SDL_Color& color, Scene& scene, EnemyManager& enemyManager);
 
-	~TerrainManager();
+	~ChunkManager();
 
-	TerrainManager(const TerrainManager&) = delete;
-	TerrainManager& operator=(const Chunk&) = delete;
-	TerrainManager(TerrainManager&&) = default;
+	ChunkManager(const ChunkManager&) = delete;
+	ChunkManager& operator=(const Chunk&) = delete;
+	ChunkManager(ChunkManager&&) = default;
 
-	void update(const Vec2& playerPos);
+	void update(const float deltaTime, const Vec2& playerPos);
 	void collisionUpdate();
 
 	void updateRender();
@@ -75,6 +75,9 @@ public:
 
 private:
 	Scene& scene;
+	// ChunkManager needs a reference to the EnemyManager because the EnemySpawner in each chunk
+	// needs a reference to the EnemyManager.
+	EnemyManager& enemyManager;
 
 	int pixelSize;
 

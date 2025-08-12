@@ -4,10 +4,9 @@
 #include "engine/game.h"
 #include "engine/scene.h"
 
-EnemyManager::EnemyManager(std::vector<Vec2>&& spawnPositions)
-    : spawnPositions{std::move(spawnPositions)} {}
+EnemyManager::EnemyManager() : enemies{}, enemyTree{} {}
 
-void EnemyManager::update(Scene& scene, const float deltaTime) {
+void EnemyManager::update() {
 	// Remove pointer to enemies that will be deleted
 	for (auto it = enemies.begin(); it != enemies.end();) {
 		if (it->get().deleteObject) {
@@ -16,14 +15,6 @@ void EnemyManager::update(Scene& scene, const float deltaTime) {
 			it++;
 	}
 
-	spawnTimer -= deltaTime;  // Update timer
-	// Spawn enemy if timer reaches 0
-	if (spawnTimer <= 0) {
-		spawnEnemy(scene);
-		spawnTimer = spawnInterval;
-	}
-
-	// Update tree
 	updateTree();
 }
 
@@ -37,13 +28,7 @@ const Enemy* EnemyManager::findClosestEnemy(const Vec2& target) const {
 	}
 }
 
-void EnemyManager::spawnEnemy(Scene& scene) {
-	std::uniform_int_distribution<std::size_t> dist{0, spawnPositions.size() - 1};
-	const std::size_t idx = dist(scene.getGame().randGen);
-
-	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[idx]);
-	enemies.push_back(enemy);
-}
+void EnemyManager::addEnemy(Enemy& enemy) { enemies.emplace_back(enemy); }
 
 void EnemyManager::updateTree() {
 	std::vector<std::reference_wrapper<GameObject>> objs;
@@ -52,4 +37,29 @@ void EnemyManager::updateTree() {
 		objs.emplace_back(enemy);
 	}
 	enemyTree = Tree2D{objs};
+}
+
+EnemySpawner::EnemySpawner(EnemyManager& manager) : manager{manager}, timer{timeMax} {}
+
+void EnemySpawner::update(Scene& scene, const float deltaTime) {
+	if (spawnPositions.empty()) return;
+
+	timer -= deltaTime;
+	if (timer <= 0) {
+		spawn(scene);
+		std::uniform_real_distribution<float> dist{timeMin, timeMax};
+		timer = dist(scene.getGame().randGen);
+	}
+}
+
+void EnemySpawner::updateSpawnPositions(std::vector<Vec2>&& newSpawns) {
+	spawnPositions = std::move(newSpawns);
+}
+
+void EnemySpawner::spawn(Scene& scene) {
+	std::uniform_int_distribution<std::size_t> dist{0, spawnPositions.size() - 1};
+	const std::size_t idx = dist(scene.getGame().randGen);
+
+	Enemy& enemy = scene.instantiate<SpiderEnemy>(spawnPositions[idx]);
+	manager.addEnemy(enemy);
 }

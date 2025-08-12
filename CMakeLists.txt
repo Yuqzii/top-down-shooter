@@ -31,7 +31,7 @@ set(SOURCE_FILES
 "src/engine/Tree2D.cpp"
 "src/scenes/combat_scene.cpp"
 "src/enemies/spider.cpp"
-"src/terrain/terrainManager.cpp"
+"src/terrain/chunkManager.cpp"
 "src/terrain/terrainCollider.cpp"
 "src/terrain/terrainGenerator.cpp"
 "src/terrain/terrain.cpp"

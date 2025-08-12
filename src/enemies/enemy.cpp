@@ -149,7 +149,7 @@ void Enemy::avoidTerrain(const float strength, const float avoidDist) {
 	try {
 		// Find closest terrain object
 		const GameObject* closest =
-		    combatScene->getTerrainManager().getTree().findClosestObject(position);
+		    combatScene->getChunkManager().getTree().findClosestObject(position);
 		// Find the closest point to this enemy on the LineCollider
 		const Collision::Line& line = static_cast<LineCollider*>(closest->getCollider())->line;
 		const Vec2 closestPoint = Collision::closestPointOnLine(position, line);

@@ -9,9 +9,11 @@ class Game;
 
 class EnemyManager {
 public:
-	EnemyManager(std::vector<Vec2>&& spawnPositions);
+	EnemyManager();
 
-	void update(Scene& scene, const float deltaTime);
+	void update();
+
+	void addEnemy(Enemy& enemy);
 
 	// Returns a vector of all enemies
 	const std::vector<std::reference_wrapper<Enemy>>& getEnemies() const { return enemies; }
@@ -20,13 +22,28 @@ public:
 
 private:
 	std::vector<std::reference_wrapper<Enemy>> enemies;
-	constexpr static float spawnInterval = 3;
-	float spawnTimer = 0;
-
-	std::vector<Vec2> spawnPositions;
-
-	void spawnEnemy(Scene& scene);
 
 	Tree2D enemyTree;
 	void updateTree();
+};
+
+class EnemySpawner {
+public:
+	EnemySpawner(EnemyManager& manager);
+
+	void update(Scene& scene, const float deltaTime);
+
+	void updateSpawnPositions(std::vector<Vec2>&& newSpawns);
+
+private:
+	EnemyManager& manager;
+
+	std::vector<Vec2> spawnPositions;
+
+	float timer;
+	static constexpr float timeMin = 2;
+	static constexpr float timeMax = 5;
+
+	// Randomly chooses a position from spawnPositions and spawns an enemy there.
+	void spawn(Scene& scene);
 };

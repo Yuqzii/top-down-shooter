@@ -6,6 +6,7 @@
 #include <optional>
 
 #include "SDL2/SDL_rect.h"
+#include "enemyManager.h"
 #include "terrain/terrain.h"
 #include "terrain/terrainCollider.h"
 
@@ -14,12 +15,12 @@ struct Vec2;
 struct SDL_Renderer;
 class Camera;
 class TerrainChange;
-class TerrainManager;
+class ChunkManager;
 
 class Chunk {
 public:
 	Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
-	      const std::size_t originY, TerrainManager& manager);
+	      const std::size_t originY, ChunkManager& manager, EnemyManager& enemyManager);
 
 	// Delete copy
 	Chunk(const Chunk&) = delete;
@@ -27,13 +28,20 @@ public:
 
 	Chunk(Chunk&&) = default;
 
+	enum States {
+		NORMAL = 0,  // Not in any of the other categories
+		CENTER,      // The center chunk (usually the one the player is in)
+		EDGE,        // Chunks at the edge of what is loaded.
+	};
+	States state;
+
 	/* Sets the cell at position (x, y) to value.
 	 * x and y position is relative to this chunk.
 	 */
 	void changeTerrain(const TerrainChange& change);
 	void changeTerrainMultiple(const std::vector<TerrainChange>& changes);
 
-	void update(Scene& scene);
+	void update(Scene& scene, const float deltaTime);
 	void collisionUpdate(Scene& scene);
 
 	void render(SDL_Renderer* renderer, const Camera& cam) const;
@@ -43,13 +51,13 @@ public:
 	std::size_t getColliderCount() const { return colliders.size(); }
 
 	void updateSpawnPositions();
+	std::vector<Vec2> findSpawnPositions() const;
 
-	TerrainManager& getManager() const { return manager; }
+	ChunkManager& getManager() const { return manager; }
 	const Terrain& getTerrain() const { return terrain; }
-	const std::vector<Vec2>& getSpawnPositions() const { return spawnPositions; }
 
 private:
-	TerrainManager& manager;
+	ChunkManager& manager;
 
 	Terrain terrain;
 	const std::size_t originX;
@@ -76,9 +84,9 @@ private:
 	 */
 	void createCollider(Vec2&& start, Vec2&& end);
 
+	EnemySpawner enemySpawner;
 	static constexpr int minSpawnSpace = 15;
 	static std::array<int, minSpawnSpace> spawnCircleY;
-	std::vector<Vec2> spawnPositions;
 	// @return Position where there is terrain blocking. Has no value if none were found.
 	std::optional<std::pair<std::size_t, std::size_t>> findObstruction(const std::size_t x,
 	                                                                   const std::size_t y,
