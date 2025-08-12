@@ -32,7 +32,7 @@ Chunk::Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t or
 }
 
 void Chunk::update(Scene& scene, const float deltaTime) {
-	enemySpawner.update(scene, deltaTime);
+	if (state == EDGE) enemySpawner.update(scene, deltaTime);
 	for (TerrainCollider& collider : colliders) collider.update(scene);
 }
 
