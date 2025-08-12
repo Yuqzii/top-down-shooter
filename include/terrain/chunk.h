@@ -14,12 +14,12 @@ struct Vec2;
 struct SDL_Renderer;
 class Camera;
 class TerrainChange;
-class TerrainManager;
+class ChunkManager;
 
 class Chunk {
 public:
 	Chunk(std::vector<std::vector<unsigned char>>&& map, const std::size_t originX,
-	      const std::size_t originY, TerrainManager& manager);
+	      const std::size_t originY, ChunkManager& manager);
 
 	// Delete copy
 	Chunk(const Chunk&) = delete;
@@ -44,12 +44,12 @@ public:
 
 	void updateSpawnPositions();
 
-	TerrainManager& getManager() const { return manager; }
+	ChunkManager& getManager() const { return manager; }
 	const Terrain& getTerrain() const { return terrain; }
 	const std::vector<Vec2>& getSpawnPositions() const { return spawnPositions; }
 
 private:
-	TerrainManager& manager;
+	ChunkManager& manager;
 
 	Terrain terrain;
 	const std::size_t originX;

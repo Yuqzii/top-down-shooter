@@ -20,16 +20,16 @@ struct TerrainChange {
 	const unsigned char value;
 };
 
-class TerrainManager {
+class ChunkManager {
 public:
-	TerrainManager(const Terrain& terrain, const std::size_t chunkSize,
-	               const int pixelSizeMultiplier, const SDL_Color& color, Scene& scene);
+	ChunkManager(const Terrain& terrain, const std::size_t chunkSize, const int pixelSizeMultiplier,
+	             const SDL_Color& color, Scene& scene);
 
-	~TerrainManager();
+	~ChunkManager();
 
-	TerrainManager(const TerrainManager&) = delete;
-	TerrainManager& operator=(const Chunk&) = delete;
-	TerrainManager(TerrainManager&&) = default;
+	ChunkManager(const ChunkManager&) = delete;
+	ChunkManager& operator=(const Chunk&) = delete;
+	ChunkManager(ChunkManager&&) = default;
 
 	void update(const Vec2& playerPos);
 	void collisionUpdate();

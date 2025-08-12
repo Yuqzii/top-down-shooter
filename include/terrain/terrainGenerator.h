@@ -5,7 +5,7 @@
 
 #include "terrain/terrain.h"
 
-class TerrainManager;
+class ChunkManager;
 
 class TerrainGenerator {
 public:

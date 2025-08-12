@@ -7,7 +7,7 @@
 #include "engine/game.h"
 #include "engine/scene.h"
 #include "terrain/chunk.h"
-#include "terrain/terrainManager.h"
+#include "terrain/chunkManager.h"
 
 constexpr float collisionCheckRadius = 500.0f;
 

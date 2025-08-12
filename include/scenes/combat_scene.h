@@ -2,7 +2,7 @@
 
 #include "enemyManager.h"
 #include "engine/scene.h"
-#include "terrain/terrainManager.h"
+#include "terrain/chunkManager.h"
 
 class Player;
 
@@ -14,16 +14,16 @@ public:
 	void render(SDL_Renderer* renderer) const override;
 
 	const EnemyManager& getEnemyManager() const { return enemyManager; }
-	const TerrainManager& getTerrainManager() const { return terrainManager; }
+	const ChunkManager& getChunkManager() const { return chunkManager; }
 
 private:
-	TerrainManager terrainManager;
+	ChunkManager chunkManager;
 	EnemyManager enemyManager;
 
-	TerrainManager generateTerrain();
+	ChunkManager generateTerrain();
 	const Player& spawnPlayer();
 
 public:
-	// Player must be initialized after terrainManager
+	// Player must be initialized after chunkManager
 	const Player& player;
 };

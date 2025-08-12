@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "mockScene.h"
-#include "terrain/terrainManager.h"
+#include "terrain/chunkManager.h"
 
 TEST(Terrain, CollisionGeneration) {
 	const std::vector<std::vector<unsigned char>> terrainMap{
@@ -31,7 +31,7 @@ TEST(Terrain, CollisionGeneration) {
 	Game game{"", 0, 0};
 	MockScene scene{game};
 	const std::size_t chunkSize = terrainMap.size();
-	TerrainManager manager{terrain, chunkSize, 1, SDL_Color{}, scene};
+	ChunkManager manager{terrain, chunkSize, 1, SDL_Color{}, scene};
 	const Chunk& chunk = manager.getChunks()[0][0];
 
 	constexpr std::size_t expected = 44;
