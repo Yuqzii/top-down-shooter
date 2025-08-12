@@ -31,7 +31,8 @@ TEST(Terrain, CollisionGeneration) {
 	Game game{"", 0, 0};
 	MockScene scene{game};
 	const std::size_t chunkSize = terrainMap.size();
-	ChunkManager manager{terrain, chunkSize, 1, SDL_Color{}, scene};
+	EnemyManager enemyManager{};
+	ChunkManager manager{terrain, chunkSize, 1, SDL_Color{}, scene, enemyManager};
 	const Chunk& chunk = manager.getChunks()[0][0];
 
 	constexpr std::size_t expected = 44;
